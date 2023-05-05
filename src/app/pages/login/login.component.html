@@ -1,0 +1,53 @@
+<body>
+    <img  class="wave" src="assets/img/siniestro-protecta.jpg">
+    <div class="container2">
+        <div class="img">
+              <img src="assets/img/logo.png">
+         </div>
+
+         <div class="login-content">
+            <div class="card ">
+                <div class="card-body">
+                    <form class="m-5">
+                        <h2 class="title mt-3 mb-3">SINIESTROS</h2>
+                        <div class="input-div one mt-5">
+                            <div class="i">
+                               <i class="fa fa-user fa-2x"></i>
+                            </div>
+                            <div class="div">
+                               <h5>Usuario</h5>
+                               <input type="text" class="input" id="InputUsername"  name="username" [(ngModel)]="user.susername">
+                            </div>
+                         </div>
+                         <div class="input-div pass mt-5">
+                            <div class="i"> 
+                               <i class="fa fa-lock fa-2x"></i>
+                            </div>
+                            <div class="div">
+                               <h5>Contraseña</h5>
+                               <div class="row">
+                                   <div class="col-9"></div>
+                                   <div class="col-3"></div>
+                               </div>
+                               <input [type]="pass" class="input inputPass" id="InputPassword" name="spassword" [(ngModel)]="user.spassword">
+                               <div class="prueba"> 
+                                 <button class="i btnVer" > 
+                                     <i class="fa fa-eye"  (click)="MostrarPass()" name="show" *ngIf="!eye.show"></i>
+                                     <i class="fa fa-eye-slash" (click)="MostrarPass()" name="show" *ngIf="eye.show"></i>
+                                  </button>
+                               </div>
+                               
+                                 
+                             
+                            </div>
+                         </div> 
+        
+                         <button class="btnLogin mt-5" (click)="login()">Ingresar</button>  
+                    </form>
+                </div>
+              </div>
+
+            
+         </div>
+    </div>
+</body>

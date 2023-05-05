@@ -1,0 +1,17 @@
+::ng-deep .my-class .modal-dialog { 
+    max-width: 50%;
+}
+
+.nav-decla{
+    background-color: #fcc79d !important;
+}
+
+.nav-recha{
+    background-color: #f7b9b9!important;
+}
+
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #ffffff;
+    background-color: #fdb477!important;
+}

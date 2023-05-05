@@ -1,0 +1,22 @@
+<div class="container mt-3">
+    <div class="row border_head">
+        <div class="col-sm-8">
+            <h3 *ngIf="!tituloState">Tratamiento de caso</h3>
+            <h3 *ngIf="tituloState">Tratamiento de siniestro</h3>
+        </div>
+        <div class="col-sm-4 text-end float-end" *ngIf="!tituloState">
+            <nav class="nav nav-pills nav-fill">
+                <a class="nav-link {{registroActive}}" style="cursor: pointer;" (click)="tabControl(1)">Registrar</a>
+                <a class="nav-link {{consultaActive}}" style="cursor: pointer;" (click)="tabControl(2)">Consultar</a>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="body-tratamiento mt-3" *ngIf="tipoTab == 1">
+    <app-form-caso [tipoForm]="true"></app-form-caso>
+</div>
+
+<div class="body-tratamiento mt-3" *ngIf="tipoTab == 2">
+    <app-form-caso [tipoForm]="false" (tituloTratamiento)="getvalueTitulo($event)"></app-form-caso>
+</div>

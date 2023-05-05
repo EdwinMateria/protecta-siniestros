@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1, 
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "protecta-siniestros": {
@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "protecta-siniestros"
+    }
+  },
+  "defaultProject": "protecta-siniestros",
+  "cli": {
+    "analytics": "7ab233df-624b-4655-9178-d267f8c4276e"
+  }
 }
