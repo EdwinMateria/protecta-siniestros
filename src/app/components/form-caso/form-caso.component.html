@@ -1,10 +1,10 @@
-<div class="row ml-2 mb-2" *ngIf="showBotones">
+<div class="row ml-1 mb-2" *ngIf="showBotones">
     <nav class="nav nav-pills nav-fill">
-        <a *ngIf="tipoTab == 0 || tipoTab == 1" class="nav-link nav-decla {{declararActive}}" style="cursor: pointer; color: #f06f06" (click)="tabControl(1)">Declarar siniestro</a>
-        <a *ngIf="tipoTab == 0 || tipoTab == 2" class="nav-link nav-decla {{modificarActive}} ml-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(2)">
+        <a *ngIf="tipoTab == 0 || tipoTab == 1" class="nav-link nav-decla {{declararActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(1)">Declarar siniestro</a>
+        <a *ngIf="tipoTab == 0 || tipoTab == 2" class="nav-link nav-decla {{modificarActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(2)">
             <i class="fa fa-edit mr-1"></i>Modificar
         </a>
-        <a *ngIf="tipoTab == 0 || tipoTab == 3" class="nav-link nav-recha ml-2" style="cursor: pointer; color: #f00606" (click)="rechazarCaso()">
+        <a *ngIf="tipoTab == 0 || tipoTab == 3" class="nav-link nav-recha" style="cursor: pointer; color: #f00606" (click)="rechazarCaso()">
             <i class="fa fa-close mr-1"></i>Rechazar
         </a>
     </nav>
@@ -191,13 +191,13 @@
         </div>
         <div class="row" *ngIf="tipoForm">
             <div class="col-sm-12" align="end">
-                <button class="btn btn-success">Guardar</button>
+                <button class="btn btn-success mb-3">Guardar</button>
             </div>
         </div>
         <div class="row" *ngIf="tipoTab == 2">
             <div class="col-sm-12" align="end">
-                <button class="btn mr-2" (click)="opcionVolver()">Volver</button>
-                <button class="btn btn-success">Guardar</button>
+                <button class="btn mr-2 mb-3" (click)="opcionVolver()">Volver</button>
+                <button class="btn btn-success mb-3">Guardar</button>
             </div>
         </div>
         <!-- RECHAZAR -->
