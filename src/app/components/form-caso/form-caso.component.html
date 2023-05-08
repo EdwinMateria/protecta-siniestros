@@ -1,6 +1,9 @@
 <div class="row ml-1 mb-2" *ngIf="showBotones">
     <nav class="nav nav-pills nav-fill">
-        <a *ngIf="tipoTab == 0 || tipoTab == 1" class="nav-link nav-decla {{declararActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(1)">Declarar siniestro</a>
+        <a *ngIf="tipoTab == 0 || tipoTab == 1" class="nav-link nav-decla {{declararActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(1, false)">
+            <span *ngIf="!stateTituloSiniestro" >Declarar siniestro</span>
+            <span *ngIf="stateTituloSiniestro" >Editar siniestro</span>
+        </a>
         <a *ngIf="tipoTab == 0 || tipoTab == 2" class="nav-link nav-decla {{modificarActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(2)">
             <i class="fa fa-edit mr-1"></i>Modificar
         </a>
@@ -10,32 +13,31 @@
     </nav>
 </div> 
 <div *ngIf="tipoTab != 1">
-    <form>
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group">
                     <label *ngIf="tipoForm">Póliza</label>
                     <label *ngIf="!tipoForm">Nro. de caso</label>
-                    <input type="email" class="form-control" placeholder="Escribir nro. de póliza" (keyup.enter)="buscador()" [disabled] = "tipoTab == 2">
+                    <input class="form-control" [placeholder]="!this.tipoForm ? 'Escribir nro. de caso' : 'Escribir nro. de poliza'" (keyup.enter)="buscador()" [disabled] = "tipoTab == 2">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Certificado</label>
-                    <input type="email" class="form-control" disabled>
+                    <input class="form-control" [(ngModel)]="tratamientoCaso.certificado" disabled>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Nro. de placa</label>
-                    <input type="email" class="form-control" disabled>
+                    <input class="form-control" [(ngModel)]="tratamientoCaso.nroPlaca" disabled>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label *ngIf="!tipoForm">Póliza</label>
                     <label *ngIf="tipoForm">Nro. de caso</label>
-                    <input type="email" class="form-control" disabled>
+                    <input class="form-control" disabled>
                 </div>
             </div>
         </div>
@@ -43,24 +45,30 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Fecha de ocurrencia</label>
-                    <input type="date" class="form-control" placeholder="dd/mm/aaaa" [disabled]="!tipoForm">
+                    <div class="input-group">
+                        <input type="date" class="form-control" [disabled]="!tipoForm" [(ngModel)]="tratamientoCaso.fechaOcurrencia">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Hora de ocurrencia</label>
-                    <input type="time" class="form-control"  placeholder="00:00:00" [disabled]="!tipoForm">
+                    <div class="input-group">
+                        <input type="time" class="form-control" [disabled]="!tipoForm" [(ngModel)]="tratamientoCaso.horaOcurrencia">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Culpabilidad</label>
                     <select class="form-control" [disabled]="!tipoForm">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        <option>Culpable</option>
                       </select>
                 </div>
             </div>
@@ -68,32 +76,34 @@
                 <div class="form-group">
                     <label>Causa de siniestro</label>
                     <select class="form-control" [disabled]="!tipoForm">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        <option>Exceso de velocidad</option>
                       </select>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label>Inicio de vigencia</label>
-                    <input type="date" class="form-control" placeholder="dd/mm/aaaa" disabled>
+            <div class="col-sm-3 form-group">
+                <label>Inicio de vigencia</label>
+                <div class="input-group">
+                    <input class="form-control" [(ngModel)]="tratamientoCaso.inicioVigencia" disabled>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label>Fin de vigencia</label>
-                    <input type="date" class="form-control" placeholder="dd/mm/aaaa" disabled>
+            <div class="col-sm-3 form-group">
+                <label>Fin de vigencia</label>
+                <div class="input-group">
+                    <input class="form-control" [(ngModel)]="tratamientoCaso.finVigencia" disabled>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Nombre del contratante</label>
-                    <input type="email" class="form-control" disabled>
+                    <input class="form-control" [(ngModel)]="tratamientoCaso.contratante" disabled>
                 </div>
             </div>
         </div>
@@ -101,25 +111,30 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Tipo de documento - documento contratante</label>
-                    <input type="text" class="form-control"    disabled>
+                    <input class="form-control"  [(ngModel)]="tratamientoCaso.documentoContratante" disabled>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Nombre del conductor</label>
-                    <input type="text" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                    <input type="text" [(ngModel)]="tratamientoCaso.nombreConductor" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Tipo de documento - documento conductor</label>
-                    <input type="text" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  >
+                    <input type="text" [(ngModel)]="tratamientoCaso.documentoConductor" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  >
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Fecha de nacimiento conductor</label>
-                    <input type="date" class="form-control" [disabled]="!tipoForm && tipoTab != 2"   placeholder="dd/mm/aaaa">
+                    <div class="input-group">
+                        <input type="date" class="form-control" [disabled]="!tipoForm && tipoTab != 2" [(ngModel)]="tratamientoCaso.fechaNacimiento">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -127,13 +142,13 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Ubicación</label>
-                    <input type="text" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                    <input type="text" [(ngModel)]="tratamientoCaso.ubicacion" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Referencia</label>
-                    <input type="text" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                    <input type="text" [(ngModel)]="tratamientoCaso.referencia" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
                 </div>
             </div>
         </div>
@@ -141,18 +156,14 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Delegación</label>
-                    <input type="text" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  >
+                    <input type="text" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  [(ngModel)]="tratamientoCaso.delegacion">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Departamento</label>
                     <select class="form-control" [disabled]="!tipoForm && tipoTab != 2" >
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        <option>Lima</option>
                       </select>
                 </div>
             </div>
@@ -160,11 +171,7 @@
                 <div class="form-group">
                     <label>Provincia</label>
                     <select class="form-control" [disabled]="!tipoForm && tipoTab != 2">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        <option>Lima</option>
                       </select>
                 </div>
             </div>
@@ -172,11 +179,7 @@
                 <div class="form-group">
                     <label>Distrito</label>
                     <select class="form-control" [disabled]="!tipoForm && tipoTab != 2">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        <option>San Isidro</option>
                       </select>
                 </div>
             </div>
@@ -185,13 +188,13 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Observación</label>
-                    <input type="text" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  >
+                    <input type="text" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  [(ngModel)]="tratamientoCaso.observacion">
                 </div>
             </div>
         </div>
         <div class="row" *ngIf="tipoForm">
             <div class="col-sm-12" align="end">
-                <button class="btn btn-success mb-3">Guardar</button>
+                <button class="btn btn-success mb-3" (click)="saveCaso()">Guardar</button>
             </div>
         </div>
         <div class="row" *ngIf="tipoTab == 2">
@@ -217,7 +220,6 @@
                 <button class="btn btn-success mt-3">Guardar</button>
             </div>
         </div>
-    </form>
     
     <div class="row" *ngIf="showBotones && tipoTab == 0">
         <div class="col-sm-12" style="padding-top: 10px !important; padding-bottom: 10px !important; border-top: 1px solid #ccc!important;">
@@ -243,7 +245,7 @@
                 <td>25/04/2023</td>
                 <td>
                     <button class="btn btn-primary mr-3" (click)="consultaSiniestro()"><i class="fa fa-eye"></i></button>
-                    <button class="btn btn-success"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-success" (click)="tabControl(1, true)"><i class="fa fa-edit"></i></button>
                 </td>
               </tr>
               <tr>
@@ -263,5 +265,5 @@
 </div>
 
 <div *ngIf="tipoTab == 1">
-    <app-form-siniestro></app-form-siniestro>
+    <app-form-siniestro (cancelBool)="siniestroCancel($event)"></app-form-siniestro>
 </div>

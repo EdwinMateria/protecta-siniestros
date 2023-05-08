@@ -1,0 +1,228 @@
+<app-navbar></app-navbar>
+<div class="container mt-3">
+    <div class="row border_head">
+        <div class="col-sm-8">
+            <h3>Reserva de siniestro</h3>
+        </div>
+        <div class="col-sm-4 text-end float-end">
+            <nav class="nav nav-pills nav-fill">
+                <a class="nav-link {{registroActive}}" style="cursor: pointer;" (click)="tabControl(1)">Registrar</a>
+                <a class="nav-link {{consultaActive}}" style="cursor: pointer;" (click)="tabControl(2)">Consultar</a>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="body-reserva mt-3">
+    <div class="row">
+        <div class="col-sm-3 form-group">
+            <label>Caso</label>
+            <input class="form-control" (keyup.enter)="buscadorSiniestro()" [(ngModel)]="caso">
+        </div>
+        <div class="col-sm-3 form-group">
+            <label>Nro. de siniestro</label>
+            <select class="form-control" [(ngModel)]="siniestro" (change)="buscadorGlobal()">
+                <option value="0" [disabled]="siniestros.length != 0">(SELECCIONE)</option>
+                <option *ngFor="let sntro of siniestros" [value]="sntro.id">{{sntro.nombre}}</option>
+            </select>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label>Póliza</label>
+            <input class="form-control" disabled [(ngModel)]="reservaCaso.poliza">
+        </div>
+        <div class="col-sm-3 form-group">
+            <label>Certificado</label>
+            <input class="form-control" disabled [(ngModel)]="reservaCaso.certificado">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label>Afectado</label>
+            <input class="form-control" disabled [(ngModel)]="reservaCaso.afectado">
+        </div>
+        <div class="col-sm-3 form-group">
+            <label>Fecha de ocurrencia</label>
+            <div class="input-group">
+                <input type="text" class="form-control" disabled [(ngModel)]="reservaCaso.fechaOcurrencia">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label>Hora de ocurrencia</label>
+            <div class="input-group">
+                <input type="text" class="form-control" disabled [(ngModel)]="reservaCaso.horaOcurrencia">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 form-group">
+            <label>Tipo de atención</label>
+            <select class="form-control" disabled [(ngModel)]="reservaCaso.tipoAtencion">
+                <option value="1">A-Ambulatorio</option>
+            </select>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label>UIT</label>
+            <input class="form-control" disabled [(ngModel)]="reservaCaso.UIT">
+        </div>
+    </div>
+</div>
+<div class="table-reserva mt-3 pb-4" *ngIf="showTable">
+    <table class="table table-striped w-100">
+        <thead>
+            <tr>
+                <th scope="col">Afectado</th>
+                <th scope="col">Moneda</th>
+                <th scope="col">Cobertura</th>
+                <th scope="col">UIT</th>
+                <th scope="col">Suma asegurada</th>
+                <th scope="col">Tipo movimiento</th>
+                <th scope="col">Monto reserva</th>
+                <th scope="col">Nro. de carta</th>
+                <th scope="col">Reserva acumulada</th>
+                <th scope="col">Beneficiario</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>020000080639830 - Luis Escobar Suarez</td>
+                <td>Soles</td>
+                <td>1 - Muerte</td>
+                <td>4</td>
+                <td>19,800</td>
+                <td>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3">
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="normal" /> <i class="fa fa-arrow-up"></i>
+                            </label>
+                            
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="high" /> <i class="fa fa-arrow-down"></i>
+                            </label>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="btn btn-primary mr-3"><i class="fa fa-eye"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>020000080639830 - Luis Escobar Suarez</td>
+                <td>Soles</td>
+                <td>2 - Incapacidad moral</td>
+                <td>1</td>
+                <td>4,950</td>
+                <td>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3">
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="normal" /> <i class="fa fa-arrow-up"></i>
+                            </label>
+                            
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="high" /> <i class="fa fa-arrow-down"></i>
+                            </label>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="btn btn-primary mr-3"><i class="fa fa-eye"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>020000080639830 - Luis Escobar Suarez</td>
+                <td>Soles</td>
+                <td>3 - Invalidez permanente</td>
+                <td>4</td>
+                <td>19,800</td>
+                <td>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3">
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="normal" /> <i class="fa fa-arrow-up"></i>
+                            </label>
+                            
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="high" /> <i class="fa fa-arrow-down"></i>
+                            </label>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="btn btn-primary mr-3"><i class="fa fa-eye"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>020000080639830 - Luis Escobar Suarez</td>
+                <td>Soles</td>
+                <td>4 - Gastos médicos</td>
+                <td>5</td>
+                <td>24,750</td>
+                <td>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3">
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="normal" /> <i class="fa fa-arrow-up"></i>
+                            </label>
+                            
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="high" /> <i class="fa fa-arrow-down"></i>
+                            </label>
+                        </div>
+                    </div>
+                </td>
+                <td>1,550</td>
+                <td>158745</td>
+                <td></td>
+                <td>
+                    <button class="btn btn-primary mr-3"><i class="fa fa-eye"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>020000080639830 - Luis Escobar Suarez</td>
+                <td>Soles</td>
+                <td>5 - Gastos de sepelio</td>
+                <td>1</td>
+                <td>4,950</td>
+                <td>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3">
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="normal" /> <i class="fa fa-arrow-up"></i>
+                            </label>
+                            
+                            <label class="radio-inline" style="vertical-align:middle;">
+                                <input type="radio" name="myField" value="high" /> <i class="fa fa-arrow-down"></i>
+                            </label>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="btn btn-primary mr-3"><i class="fa fa-eye"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row pb-4">
+        <div class="col-sm-12" align="end">
+            <button class="btn btn-success">Guardar</button>
+        </div>
+    </div>
+</div>

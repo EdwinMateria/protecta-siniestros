@@ -18,7 +18,6 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
   }
 
   getActiveRegimiento(indice) {
-    //await this.setVariableRegimen(regimen)
     if (indice === 0) {
       return 'active'
     } else {
@@ -38,8 +37,10 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
   }
 
   getvalueTitulo(state:any){
-    console.log(state);
     this.tituloState = state
+    if(!state){
+      this.tabControl(2);
+    }
   }
 
 }

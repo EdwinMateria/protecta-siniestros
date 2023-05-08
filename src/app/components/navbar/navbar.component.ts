@@ -90,7 +90,7 @@ export class NavbarComponent implements OnInit {
   llenarMenu(){
     this.optionList.push({nTieneHijo :1 , sName : 'SINIESTROS', subgruposnuevos :[
       {sName : 'TRATAMIENTO DE CASO / SINIESTRO', sRouterLink : 'tratamiento-caso-siniestro'},
-      {sName : 'RESERVA DE SINIESTRO', sRouterLink: 'reserva_siniestro'}
+      {sName : 'RESERVA DE SINIESTRO', sRouterLink: 'reserva-siniestro'}
     ]})
   }
 

@@ -3,6 +3,24 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConsultaSiniestroComponent } from 'src/app/pages/siniestros/tratamiento-caso-siniestro/consulta-siniestro/consulta-siniestro.component';
 import Swal from 'sweetalert2';
 
+export class TratamientoCaso{
+  certificado : string;
+  nroPlaca: string;
+  inicioVigencia:string;
+  finVigencia:string;
+  contratante:string;
+  documentoContratante:string;
+  nombreConductor: string;
+  documentoConductor: string;
+  ubicacion:string;
+  referencia:string;
+  delegacion:string;
+  observacion:string;
+  fechaOcurrencia:any;
+  horaOcurrencia:any;
+  fechaNacimiento:any;
+}
+
 @Component({
   selector: 'app-form-caso',
   templateUrl: './form-caso.component.html',
@@ -16,6 +34,10 @@ export class FormCasoComponent implements OnInit {
   modificarActive = '';
   tipoTab = 0;
   @Output() tituloTratamiento = new EventEmitter<boolean>();
+  stateTituloSiniestro = false;
+
+  //RESULTADO
+  tratamientoCaso = new TratamientoCaso();
 
   constructor(private modalService: NgbModal) { }
 
@@ -24,8 +46,27 @@ export class FormCasoComponent implements OnInit {
 
   buscador(){
     if(!this.tipoForm){
+      this.tratamientoCaso.nroPlaca = "2676"
       this.showBotones = true
+      this.llenarTratamiento();
+    }else{
+      this.llenarTratamiento();
     }
+  }
+
+  llenarTratamiento(){
+    this.tratamientoCaso.certificado = "0";
+    this.tratamientoCaso.nroPlaca = "WR4-567";
+    this.tratamientoCaso.inicioVigencia = "25/04/2022";
+    this.tratamientoCaso.finVigencia = "25/04/2023";
+    this.tratamientoCaso.contratante = "0200018143 - Escajadillo Chamorro Miguel Angel";
+    this.tratamientoCaso.documentoContratante = "DNI - 45348029";
+    this.tratamientoCaso.nombreConductor = "Pedro Suarez M";
+    this.tratamientoCaso.documentoConductor = "DNI - 44047021";
+    this.tratamientoCaso.ubicacion = "Calle Chinchón 508 - San Isidro";
+    this.tratamientoCaso.referencia = "Cruce con Petit Thouars";
+    this.tratamientoCaso.delegacion = "Comisaría Santa Rosa";
+    this.tratamientoCaso.observacion = "El siniestro tiene que ser evaluado";
   }
 
   consultaSiniestro() {
@@ -36,12 +77,17 @@ export class FormCasoComponent implements OnInit {
     });
   }
 
-  tabControl(index:number){
+  tabControl(index:number, stateTituloSiniestro?:boolean){
     this.tipoTab = index
     if(this.tipoTab == 1){
       this.declararActive = 'active'
       this.modificarActive = ''
       this.tituloTratamiento.emit(true);
+      if(stateTituloSiniestro){
+        this.stateTituloSiniestro = true
+      }else{
+        this.stateTituloSiniestro = false
+      }
     }
     if(this.tipoTab == 2){
       this.declararActive = ''
@@ -69,12 +115,46 @@ export class FormCasoComponent implements OnInit {
   }
 
   opcionVolver(){
-    this.showBotones = true 
     this.tipoTab = 0;
     this.modificarActive = '';
     this.declararActive = '';
+    this.stateTituloSiniestro = false;
+    this.tituloTratamiento.emit(false);
+    this.tratamientoCaso = new TratamientoCaso();
+    this.showBotones = false;
   }
 
-  
+  siniestroCancel(cancel:boolean){
+    if(cancel){
+      this.opcionVolver();
+    }
+  }
+
+  saveCaso(){
+    if(this.tratamientoCaso.fechaNacimiento == null || this.tratamientoCaso.fechaNacimiento == null 
+      || this.tratamientoCaso.horaOcurrencia == null){
+        Swal.fire('Información','Debe completar todos los campos','warning');
+        return;
+      }
+      else{
+        this.tratamientoCaso.nroPlaca = "2676"
+        Swal.fire({
+          title: 'Información',
+          text: "Se declaró el caso correctamente: 2676. ¿Desea declarar los siniestros?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'De acuerdo',
+          cancelButtonText: 'No',
+          reverseButtons: true
+        }).then((result) => {
+          
+          if(result.isConfirmed){
+            this.tipoForm = false;
+            this.showBotones = true
+            this.tabControl(1,false);
+          }
+        })
+      }
+  }
 
 }
