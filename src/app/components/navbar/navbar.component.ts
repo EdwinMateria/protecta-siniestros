@@ -92,6 +92,10 @@ export class NavbarComponent implements OnInit {
       {sName : 'TRATAMIENTO DE CASO / SINIESTRO', sRouterLink : 'tratamiento-caso-siniestro'},
       {sName : 'RESERVA DE SINIESTRO', sRouterLink: 'reserva-siniestro'}
     ]})
+
+    this.optionList.push({nTieneHijo :1 , sName : 'LIQUIDACION', subgruposnuevos :[
+      {sName : 'GASTOS DE CURACION', sRouterLink : 'gastos-curacion'},
+    ]})
   }
 
 }

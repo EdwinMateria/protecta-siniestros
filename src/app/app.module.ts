@@ -12,6 +12,8 @@ import { FormCasoComponent } from './components/form-caso/form-caso.component';
 import { ConsultaSiniestroComponent } from './pages/siniestros/tratamiento-caso-siniestro/consulta-siniestro/consulta-siniestro.component';
 import { FormSiniestroComponent } from './components/form-siniestro/form-siniestro.component';
 import { ReservaSiniestroComponent } from './pages/siniestros/reserva-siniestro/reserva-siniestro.component';
+import { ModalCoberturaComponent } from './pages/siniestros/reserva-siniestro/modal-cobertura/modal-cobertura.component';
+import { GastosCuracionComponent } from './pages/liquidacion/gastos-curacion/gastos-curacion.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { ReservaSiniestroComponent } from './pages/siniestros/reserva-siniestro/
     FormCasoComponent,
     ConsultaSiniestroComponent,
     FormSiniestroComponent,
-    ReservaSiniestroComponent
+    ReservaSiniestroComponent,
+    ModalCoberturaComponent,
+    GastosCuracionComponent
   ],
   imports: [
     BrowserModule,

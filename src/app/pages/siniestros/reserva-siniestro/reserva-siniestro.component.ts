@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { ModalCoberturaComponent } from './modal-cobertura/modal-cobertura.component';
 
 export class ReservaCaso{
   poliza :string;
@@ -28,7 +30,7 @@ export class ReservaSiniestroComponent implements OnInit {
   reservaCaso : ReservaCaso = new ReservaCaso();
   showTable = false;
 
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
   }
@@ -70,6 +72,15 @@ export class ReservaSiniestroComponent implements OnInit {
       this.reservaCaso.UIT = "4,950";
       this.showTable = true;
     }
+  }
+
+  openModalCobertura(origen:number){
+    const modalRef = this.modalService.open(ModalCoberturaComponent,  { windowClass : "my-class"});
+    modalRef.componentInstance.reference = modalRef;
+    modalRef.componentInstance.data = origen;
+    modalRef.result.then((Interval) => {
+      
+    });
   }
 
 }
