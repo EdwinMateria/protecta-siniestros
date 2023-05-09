@@ -1,14 +1,13 @@
 <div class="row ml-1 mb-2" *ngIf="showBotones">
     <nav class="nav nav-pills nav-fill">
-        <a *ngIf="tipoTab == 0 || tipoTab == 1" class="nav-link nav-decla {{declararActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(1, false)">
-            <span *ngIf="!stateTituloSiniestro" >Declarar siniestro</span>
-            <span *ngIf="stateTituloSiniestro" >Editar siniestro</span>
+        <a *ngIf="tipoTab == 0 || tipoTab == 1" class="nav-link nav-decla {{declararActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(1, 2)">
+            <span *ngIf="stateTituloSiniestro == 2" >Declarar siniestro</span>
+            <span *ngIf="stateTituloSiniestro == 1" >Editar siniestro</span>
+            <span *ngIf="stateTituloSiniestro == 3" >Rechazar siniestro</span>
+
         </a>
         <a *ngIf="tipoTab == 0 || tipoTab == 2" class="nav-link nav-decla {{modificarActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(2)">
             <i class="fa fa-edit mr-1"></i>Modificar
-        </a>
-        <a *ngIf="tipoTab == 0 || tipoTab == 3" class="nav-link nav-recha" style="cursor: pointer; color: #f00606" (click)="rechazarCaso()">
-            <i class="fa fa-close mr-1"></i>Rechazar
         </a>
     </nav>
 </div> 
@@ -110,7 +109,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label>Tipo de documento - documento contratante</label>
+                    <label>Tipo documento- documento contratante</label>
                     <input class="form-control"  [(ngModel)]="tratamientoCaso.documentoContratante" disabled>
                 </div>
             </div>
@@ -122,7 +121,27 @@
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label>Tipo de documento - documento conductor</label>
+                    <label>Apellido Paterno del conductor</label>
+                    <input type="text" [(ngModel)]="tratamientoCaso.nombreConductor" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>Apellido Materno del conductor</label>
+                    <input type="text" [(ngModel)]="tratamientoCaso.nombreConductor" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 form-group">
+                <label>Tipo de documento</label>
+                    <select class="form-control" [disabled]="!tipoForm && tipoTab != 2" >
+                        <option>DNI</option>
+                    </select>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>Documento del conductor</label>
                     <input type="text" [(ngModel)]="tratamientoCaso.documentoConductor" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  >
                 </div>
             </div>
@@ -204,22 +223,7 @@
             </div>
         </div>
         <!-- RECHAZAR -->
-        <div class="row" *ngIf="tipoTab == 3">
-            <div class="col-sm-5 form-group">
-                    <label>Motivo de rechazo</label>
-                    <select class="form-control">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                      </select>
-            </div>
-            <div class="col-sm-7" align="end">
-                <button class="btn mr-2 mt-3" (click)="opcionVolver()">Volver</button>
-                <button class="btn btn-success mt-3">Guardar</button>
-            </div>
-        </div>
+        
     
     <div class="row" *ngIf="showBotones && tipoTab == 0">
         <div class="col-sm-12" style="padding-top: 10px !important; padding-bottom: 10px !important; border-top: 1px solid #ccc!important;">
@@ -244,8 +248,9 @@
                 <td>02/01/2023</td>
                 <td>25/04/2023</td>
                 <td>
-                    <button class="btn btn-primary mr-3" (click)="consultaSiniestro()"><i class="fa fa-eye"></i></button>
-                    <button class="btn btn-success" (click)="tabControl(1, true)"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-sm btn-primary mr-3" (click)="consultaSiniestro()"><i class="fa fa-eye"></i></button>
+                    <button class="btn btn-sm btn-success mr-3" (click)="tabControl(1, 1)"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger"  (click)="rechazarSiniestro()"><i class="fa fa-close"></i></button>
                 </td>
               </tr>
               <tr>
@@ -255,8 +260,9 @@
                 <td>02/01/2023</td>
                 <td>-</td>
                 <td>
-                    <button class="btn btn-primary mr-3"><i class="fa fa-eye"></i></button>
-                    <button class="btn btn-success"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-sm btn-primary mr-3"><i class="fa fa-eye"></i></button>
+                    <button class="btn btn-sm btn-success mr-3"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger"><i class="fa fa-close"></i></button>
                 </td>
               </tr>
             </tbody>
@@ -265,5 +271,5 @@
 </div>
 
 <div *ngIf="tipoTab == 1">
-    <app-form-siniestro (cancelBool)="siniestroCancel($event)"></app-form-siniestro>
+    <app-form-siniestro (cancelBool)="siniestroCancel($event)" [estadoForm] = "stateTituloSiniestro" ></app-form-siniestro>
 </div>

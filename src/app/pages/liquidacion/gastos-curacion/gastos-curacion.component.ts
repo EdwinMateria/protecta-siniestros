@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { ModalGastosCoberturaComponent } from './modal-gastos-cobertura/modal-gastos-cobertura.component';
 
 export class Movimiento{
   nroSiniestro:string;
@@ -8,6 +10,9 @@ export class Movimiento{
   tipoMovimiento:string;
   importe:string;
   datoAdicional:string;
+  tipoCobertura:number;
+  seleccion:boolean;
+  id: number
 }
 
 export class Detalle{
@@ -32,20 +37,22 @@ export class GastosCuracionComponent implements OnInit {
   detalle: Detalle = new Detalle;
   mostrarTable= false;
 
-  constructor() { }
+  movimientosPago: Movimiento[]=[];
+
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Inicio reserva", importe: "548", datoAdicional: "3735195"
+      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Inicio reserva", importe: "548", datoAdicional: "3735195", tipoCobertura : 1, seleccion : false, id:1
     });
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: "1000", datoAdicional: "3735195"
+      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: "1000", datoAdicional: "3735195", tipoCobertura : 1, seleccion : false, id:2
     })
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: "-300", datoAdicional: "Ajuste 105"
+      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: "-300", datoAdicional: "Ajuste 105", tipoCobertura : 1, seleccion : false, id:3
     })
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Funeraria Jardines", cobertura: "Gastos de sepelio", tipoMovimiento: "Ajuste", importe: "2000", datoAdicional: ""
+      nroSiniestro: "44573", beneficiario: "Funeraria Jardines", cobertura: "Gastos de sepelio", tipoMovimiento: "Ajuste", importe: "2000", datoAdicional: "", tipoCobertura : 2, seleccion : false, id:4
     })
   }
 
@@ -63,6 +70,44 @@ export class GastosCuracionComponent implements OnInit {
       this.detalle.horaOcurrencia = "11:00:00";
       this.detalle.siniestrado = "Leva Palomino Camila";
       this.detalle.UIT = "4.950"
+    }
+  }
+
+
+  seleccionChechbox(movimiento: Movimiento){
+    let movTemp : Movimiento[]=[];
+
+    if(movimiento.seleccion == true){
+
+      this.movimientos.forEach(x => {
+        if(x.tipoCobertura == movimiento.tipoCobertura){
+          x.seleccion = true;
+          this.movimientosPago.push(x);
+        }else{
+          x.seleccion = false
+          this.movimientosPago = this.movimientosPago.filter(m => m.id != x.id)
+        }
+      })
+    }else{
+      //this.movimientosPago = this.movimientosPago.filter(x => x.id != movimiento.id)
+      this.movimientosPago.forEach(x => {
+        x.seleccion = false
+      });
+      this.movimientosPago = [];
+    }
+
+  }
+
+  procesoPago(){
+    if(this.movimientosPago.length == 0){
+      Swal.fire('Información','Debe seleccionar movimientos', 'warning');
+      return;
+    }else{
+      const modalRef = this.modalService.open(ModalGastosCoberturaComponent,  { windowClass : "my-class"});
+      modalRef.componentInstance.reference = modalRef;
+      modalRef.componentInstance.data = this.movimientosPago;
+      modalRef.result.then((Interval) => {
+      });
     }
   }
 

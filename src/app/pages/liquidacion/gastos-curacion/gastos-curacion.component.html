@@ -76,7 +76,7 @@
             <tr *ngFor="let movimiento of movimientos; let i = index">
                 <td>
                     <div class="form-check">
-                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox">
+                        <input [(ngModel)]="movimientos[i].seleccion" class="form-check-input position-static" type="checkbox" (change)="seleccionChechbox(movimiento)" >
                     </div>
                 </td>
                 <td>{{i+1}}</td>
@@ -93,7 +93,7 @@
 
     <div class="row mt-3" *ngIf="mostrarTable">
         <div class="col-sm-12" align="end">
-            <button class="btn btn-success mb-3">Proceso de pago</button>
+            <button class="btn btn-success mb-3" (click)="procesoPago()">Proceso de pago</button>
         </div>
     </div>
 </div>

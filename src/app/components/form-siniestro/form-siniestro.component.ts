@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-form-siniestro',
@@ -8,6 +8,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 export class FormSiniestroComponent implements OnInit {
 
   @Output() cancelBool = new EventEmitter<boolean>();
+  @Input() estadoForm : number;
+
   constructor() { }
 
   ngOnInit(): void {

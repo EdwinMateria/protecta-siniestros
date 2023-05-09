@@ -34,7 +34,7 @@ export class FormCasoComponent implements OnInit {
   modificarActive = '';
   tipoTab = 0;
   @Output() tituloTratamiento = new EventEmitter<boolean>();
-  stateTituloSiniestro = false;
+  stateTituloSiniestro = 2;
 
   //RESULTADO
   tratamientoCaso = new TratamientoCaso();
@@ -62,7 +62,7 @@ export class FormCasoComponent implements OnInit {
     this.tratamientoCaso.contratante = "0200018143 - Escajadillo Chamorro Miguel Angel";
     this.tratamientoCaso.documentoContratante = "DNI - 45348029";
     this.tratamientoCaso.nombreConductor = "Pedro Suarez M";
-    this.tratamientoCaso.documentoConductor = "DNI - 44047021";
+    this.tratamientoCaso.documentoConductor = "44047021";
     this.tratamientoCaso.ubicacion = "Calle Chinchón 508 - San Isidro";
     this.tratamientoCaso.referencia = "Cruce con Petit Thouars";
     this.tratamientoCaso.delegacion = "Comisaría Santa Rosa";
@@ -77,22 +77,45 @@ export class FormCasoComponent implements OnInit {
     });
   }
 
-  tabControl(index:number, stateTituloSiniestro?:boolean){
+  rechazarSiniestro(){
+    Swal.fire({
+      title: 'Información',
+      text: "¿Deseas rechazar el caso del siniestro?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'De acuerdo',
+      cancelButtonText: 'No',
+      reverseButtons: true
+    }).then((result) => {
+      
+      if(result.isConfirmed){
+        this.declararActive = 'active'
+        this.modificarActive = ''
+        this.tituloTratamiento.emit(true);
+        this.stateTituloSiniestro = 3
+        this.tipoTab = 1;
+      }
+    })
+  }
+
+  tabControl(index:number, stateTituloSiniestro?:number){
     this.tipoTab = index
     if(this.tipoTab == 1){
+      if(stateTituloSiniestro == 1){
+        this.stateTituloSiniestro = 1
+      }else if(stateTituloSiniestro == 2){
+        this.stateTituloSiniestro = 2
+      }
+      
       this.declararActive = 'active'
       this.modificarActive = ''
       this.tituloTratamiento.emit(true);
-      if(stateTituloSiniestro){
-        this.stateTituloSiniestro = true
-      }else{
-        this.stateTituloSiniestro = false
-      }
     }
     if(this.tipoTab == 2){
       this.declararActive = ''
       this.modificarActive = 'active'
       this.tituloTratamiento.emit(false);
+      this.tipoTab = index
     }
   }
 
@@ -118,7 +141,7 @@ export class FormCasoComponent implements OnInit {
     this.tipoTab = 0;
     this.modificarActive = '';
     this.declararActive = '';
-    this.stateTituloSiniestro = false;
+    this.stateTituloSiniestro = 2;
     this.tituloTratamiento.emit(false);
     this.tratamientoCaso = new TratamientoCaso();
     this.showBotones = false;
@@ -151,7 +174,7 @@ export class FormCasoComponent implements OnInit {
           if(result.isConfirmed){
             this.tipoForm = false;
             this.showBotones = true
-            this.tabControl(1,false);
+            this.tabControl(1,2);
           }
         })
       }

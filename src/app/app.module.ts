@@ -27,7 +27,7 @@ import { GastosCuracionComponent } from './pages/liquidacion/gastos-curacion/gas
     FormSiniestroComponent,
     ReservaSiniestroComponent,
     ModalCoberturaComponent,
-    GastosCuracionComponent
+    GastosCuracionComponent,
   ],
   imports: [
     BrowserModule,
