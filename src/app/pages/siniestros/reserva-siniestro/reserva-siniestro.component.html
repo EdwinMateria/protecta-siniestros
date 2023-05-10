@@ -84,7 +84,8 @@
                 <th scope="col">Monto reserva</th>
                 <th scope="col">Nro. de carta</th>
                 <th scope="col">Reserva acumulada</th>
-                <th scope="col">Beneficiario</th>
+                <th scope="col">Datos adicionales</th>
+                <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -111,13 +112,18 @@
                 <td></td>
                 <td></td>
                 <td>
-                    <button class="btn btn-primary mr-3" (click)="openModalCobertura(1)"><i class="fa fa-eye"></i></button>
+                    <div class="form-check">
+                        <input class="form-check-input position-static" type="checkbox" >
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-busqueda mr-3" (click)="openModalCobertura(1)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
             <tr>
                 <td>020000080639830 - Luis Escobar Suarez</td>
                 <td>Soles</td>
-                <td>2 - Incapacidad moral</td>
+                <td>2 - Incapacidad temporal</td>
                 <td>1</td>
                 <td>4,950</td>
                 <td>
@@ -136,6 +142,11 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input position-static" type="checkbox" >
+                    </div>
+                </td>
                 <td>
                     <button class="btn btn-primary mr-3" (click)="openModalCobertura(2)"><i class="fa fa-eye"></i></button>
                 </td>
@@ -163,6 +174,11 @@
                 <td></td>
                 <td></td>
                 <td>
+                    <div class="form-check">
+                        <input class="form-check-input position-static" type="checkbox" >
+                    </div>
+                </td>
+                <td>
                     <button class="btn btn-primary mr-3" (click)="openModalCobertura(3)"><i class="fa fa-eye"></i></button>
                 </td>
             </tr>
@@ -189,7 +205,12 @@
                 <td>158745</td>
                 <td></td>
                 <td>
-                    <button class="btn btn-primary mr-3" (click)="openModalCobertura(4)"><i class="fa fa-eye"></i></button>
+                    <div class="form-check">
+                        <input class="form-check-input position-static" type="checkbox" >
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-busqueda mr-3" (click)="openModalCobertura(4)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
             <tr>
@@ -214,6 +235,11 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input position-static" type="checkbox" >
+                    </div>
+                </td>
                 <td>
                     <button class="btn btn-primary mr-3" (click)="openModalCobertura(5)"><i class="fa fa-eye"></i></button>
                 </td>

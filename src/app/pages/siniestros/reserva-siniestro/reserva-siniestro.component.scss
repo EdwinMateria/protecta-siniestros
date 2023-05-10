@@ -20,5 +20,10 @@
 }
 
 ::ng-deep .my-class .modal-dialog { 
-    max-width: 48%;
+    max-width: 60%;
+}
+
+.btn-busqueda{
+    background-color: rgb(235, 156, 9);
+    color: white
 }

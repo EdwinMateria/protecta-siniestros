@@ -1,5 +1,5 @@
 <div class="modal-header w-100">
-    <h4 class="modal-title" id="modal-basic-title">Datos cobertura: 
+    <h4 class="modal-title" id="modal-basic-title">Datos cobertura:
         <span *ngIf="data == 1">1 - Muerte</span>
         <span *ngIf="data == 2">2 - Incapacidad Temporal</span>
         <span *ngIf="data == 3">3 - Invalidez Permanente</span>
@@ -18,39 +18,39 @@
                 <select class="form-control ml-3">
                     <option>SI</option>
                     <option>NO</option>
-                  </select>
-              </div>
+                </select>
+            </div>
         </div>
         <div class="col-sm-5">
             <div class="form-inline">
                 <label>Fecha fin de análisis: </label>
-                    <div class="input-group">
-                        <input type="date" class="form-control ml-3">
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                        </div>
+                <div class="input-group">
+                    <input type="date" class="form-control ml-3">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row mt-3">
+    <div class="row mt-1">
         <div class="col-sm-12">
             <span>BENEFICIARIOS: </span>
             <table class="table table-striped w-100">
                 <thead>
                     <tr>
-                      <th scope="col">Código cliente</th>
-                      <th scope="col">Beneficiario</th>
-                      <th scope="col">Tipo Documento</th>
-                      <th scope="col">Nro. Documento</th>
-                      <th scope="col">Tipo Beneficiario</th>
-                      <th scope="col">Cobertura</th>
-                      <th scope="col">Banco</th>
-                      <th scope="col">Nro. Cuenta</th>
-                      <th scope="col" *ngIf="data == 1"></th>
+                        <th scope="col">Código cliente</th>
+                        <th scope="col">Beneficiario</th>
+                        <th scope="col">Tipo Documento</th>
+                        <th scope="col">Nro. Documento</th>
+                        <th scope="col">Tipo Beneficiario</th>
+                        <th scope="col">Cobertura</th>
+                        <th scope="col">Banco</th>
+                        <th scope="col">Nro. Cuenta</th>
+                        <th scope="col" *ngIf="data == 1"></th>
                     </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody>
                     <tr *ngFor="let beneficiario of beneficiarios; let i = index">
                         <td>
                             {{beneficiarios[i].codigoCliente}}
@@ -62,7 +62,8 @@
                             {{beneficiarios[i].tipoDocumento}}
                         </td>
                         <td>
-                            <input type="text" class="form-control" [(ngModel)]="beneficiarios[i].nroDocumento" (keyup.enter)="completarCampos(i)">
+                            <input type="text" class="form-control" [(ngModel)]="beneficiarios[i].nroDocumento"
+                                (keyup.enter)="completarCampos(i)">
                         </td>
                         <td>
                             {{beneficiarios[i].tipoBeneficiario}}
@@ -79,24 +80,39 @@
                             <input type="text" class="form-control">
                         </td>
                         <td *ngIf="data == 1">
-                            <button *ngIf="beneficiarios.length == i + 1" class="btn btn-primary" (click)="addRow(i)"><i class="fa fa-plus"></i></button>
+                            <button *ngIf="beneficiarios.length == i + 1" class="btn btn-primary" (click)="addRow(i)"><i
+                                    class="fa fa-plus"></i></button>
                         </td>
                     </tr>
-                  </tbody>
+                </tbody>
             </table>
         </div>
     </div>
-    <div class="row mt-2">
-        <div class="col-sm-5">
-            <div class="form-inline">
-                <label>Código Diagnostico (CIE10): </label>
-                <select class="form-control ml-3">
-                    <option>T07</option>
-                  </select>
-              </div>
+    <div class="row">
+        <div class="col-sm-3 form-group">
+            <label>Código Diagnostico (CIE10) </label>
+            <select class="form-control">
+                <option>T07</option>
+            </select>
+        </div>
+        <div class="col-sm-5 form-group">
+            <label>Diagnóstico (CIE10)</label>
+            <input class="form-control" value="Traumatismo múltiples, no especificados" disabled>
+        </div>
+        <div class="col-sm-2 form-group">
+            <label>Especialidad</label>
+            <input class="form-control">
+        </div>
+        <div class="col-sm-2 form-group">
+            <label>Complejidad Diagnostico</label>
+            <select class="form-control">
+                <option>Leve</option>
+                <option>Moderado</option>
+                <option>Severo</option>
+            </select>
         </div>
     </div>
-    <div class="row mt-2" *ngIf="data == 2">
+    <!-- <div class="row mt-2" *ngIf="data == 2">
         <div class="col-sm-5">
             <div class="form-inline">
                 <label>Complejidad Diagnostico: </label>
@@ -104,104 +120,95 @@
                     <option>Leve</option>
                     <option>Moderado</option>
                     <option>Severo</option>
-                  </select>
-              </div>
+                </select>
+            </div>
         </div>
-    </div>
+    </div> -->
 
-    <div class="row mt-2">
-        <div class="col-sm-5">
-            <div class="form-inline">
-                <label>Tramitador: </label>
-                <select class="form-control ml-3" [(ngModel)]="datosTramitador">
-                    <option value="1">SI</option>
-                    <option value="2">NO</option>
-                  </select>
-              </div>
+    <div class="row">
+        <div class="col-sm-3 form-group">
+            <label>Tramitador </label>
+            <select class="form-control" [(ngModel)]="datosTramitador">
+                <option value="1">SI</option>
+                <option value="2">NO</option>
+            </select>
+        </div>
+        <div *ngIf="datosTramitador == '1'" class="col-sm-5 form-group">
+            <label>Nombre del tramitador: </label>
+            <input class="form-control" value="Nombre del tramitador" disabled>
+        </div>
+        <div *ngIf="datosTramitador == '1'" class="col-sm-3 form-group">
+            <label>Zona del tramitador: </label>
+            <input class="form-control">
         </div>
     </div>
-    <div class="row mt-2" *ngIf="datosTramitador == '1'">
-        <div class="col-sm-6">
-            <div class="form-inline">
-                <label>Nombre del tramitador: </label>
-                <input type="text" class="form-control ml-3 w-50">
-              </div>
-        </div>
-        <div class="col-sm-5">
-            <div class="form-inline">
-                <label>Zona del tramitador: </label>
-                <input type="text" class="form-control ml-3 w-50">
-              </div>
-        </div>
-    </div>
-
     <div *ngIf="data != 4 && data != 5">
         <div *ngIf="data == 2 || data == 3" class="row mt-2">
             <div class="col-sm-6">
                 <div class="form-inline">
                     <label>Médico tratante: </label>
                     <input type="text" class="form-control ml-3 w-50">
-                  </div>
+                </div>
             </div>
             <div class="col-sm-5">
                 <div class="form-inline">
                     <label>IPRESS de atención: </label>
                     <input type="text" class="form-control ml-3 w-50">
-                  </div>
+                </div>
             </div>
         </div>
-    
+
         <div class="row mt-2" *ngIf="data == 3">
             <div class="col-sm-4">
                 <div class="form-inline">
                     <label>Menoscabo: </label>
                     <input type="text" class="form-control ml-3 w-50">
-                  </div>
+                </div>
             </div>
             <div class="col-sm-5">
                 <div class="form-inline">
                     <label>Monto reserva: </label>
                     <input type="text" class="form-control ml-3 w-50">
-                  </div>
+                </div>
             </div>
         </div>
-    
+
         <div *ngIf="data == 2">
             <div class="row mt-2">
                 <div class="col-sm-3">
                     <div class="form-inline">
                         <label>Inicio de descanso: </label>
-                            <div class="input-group">
-                                <input type="date" class="form-control ml-1">
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                </div>
+                        <div class="input-group">
+                            <input type="date" class="form-control ml-1">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                             </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-inline">
                         <label>Fin de descanso: </label>
-                            <div class="input-group">
-                                <input type="date" class="form-control ml-1">
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                </div>
+                        <div class="input-group">
+                            <input type="date" class="form-control ml-1">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                             </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-inline">
                         <label>RMV: </label>
                         <input type="text" class="form-control ml-1" disabled>
-                      </div>
+                    </div>
                 </div>
-    
+
                 <div class="col-sm-3">
                     <div class="form-inline">
                         <label>Monto reserva: </label>
                         <input type="text" class="form-control ml-1" disabled>
-                      </div>
+                    </div>
                 </div>
             </div>
             <div class="row mt-2">
@@ -209,11 +216,11 @@
                     <div class="form-inline">
                         <label>Días de descanso: </label>
                         <input type="text" class="form-control ml-1" disabled>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
-    
+
         <div *ngIf="data == 2 || data == 3">
             <div class="row mt-2">
                 <div class="col-sm-3">
@@ -222,122 +229,104 @@
                         <select class="form-control ml-3">
                             <option>Si</option>
                             <option>No</option>
-                          </select>
-                      </div>
+                        </select>
+                    </div>
                 </div>
-    
+
                 <div class="col-sm-3 w-50">
                     <div class="form-inline">
                         <label>Nro expediente INR: </label>
                         <input type="text" class="form-control ml-1">
-                      </div>
+                    </div>
                 </div>
-    
+
                 <div class="col-sm-3">
                     <div class="form-inline">
                         <label>Fec derivación INR: </label>
-                            <div class="input-group">
-                                <input type="date" class="form-control ml-1">
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                </div>
+                        <div class="input-group">
+                            <input type="date" class="form-control ml-1">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                             </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="form-inline">
                         <label>Fec. respuesta INR : </label>
-                            <div class="input-group">
-                                <input type="date" class="form-control ml-1">
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                </div>
+                        <div class="input-group">
+                            <input type="date" class="form-control ml-1">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div *ngIf="data == 4 || data == 5" class="mt-3">
+    <div *ngIf="data == 4 || data == 5" class="mt-1">
         <div class="row">
             <div class="col-sm-12" style="border-bottom: 1px solid #ccc!important; width: 100% !important;">
                 <span>Datos del comprobante o Sustento</span>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-sm-3">
-                <div class="form-inline">
-                    <label>Tipo de comprobante: </label>
-                    <select class="form-control ml-3">
-                        <option>Boleta</option>
-                        <option>Factura</option>
-                      </select>
-                  </div>
+            <div class="col-sm-3 form-group">
+                <label>Tipo de comprobante </label>
+                <select class="form-control">
+                    <option>Boleta</option>
+                    <option>Factura</option>
+                </select>
             </div>
 
-            <div class="col-sm-3">
-                <div class="form-inline">
-                    <label>Nro. Comprobante: </label>
-                    <input type="text" class="form-control ml-3 w-50">
-                  </div>
+            <div class="col-sm-2 form-group">
+                <label>Nro. Comprobante </label>
+                <input type="text" class="form-control">
             </div>
 
-            <div class="col-sm-3">
-                <div class="form-inline">
-                    <label>Fecha emisión: </label>
-                        <div class="input-group">
-                            <input type="date" class="form-control ml-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                            </div>
-                        </div>
+            <div class="col-sm-3 form-group">
+                <label>Fecha emisión </label>
+                <div class="input-group">
+                    <input type="date" class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="form-inline">
-                    <label>Fecha recepción: </label>
-                        <div class="input-group">
-                            <input type="date" class="form-control ml-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                            </div>
-                        </div>
+            <div class="col-sm-3 form-group">
+                <label>Fecha recepción </label>
+                <div class="input-group">
+                    <input type="date" class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-2">
-            <div class="col-sm-9">
-                <div class="form-inline">
-                    <label>Nombre Referencial / IPRESS: </label>
-                    <input type="text" class="form-control ml-3 w-75">
-                  </div>
+        <div class="row">
+            <div class="col-sm-5 form-group">
+                <label>Nombre Referencial / IPRESS </label>
+                <input type="text" class="form-control" disabled>
             </div>
-            <div class="col-sm-3">
-                <div class="form-inline">
-                    <label>Ruc: </label>
-                    <input type="text" class="form-control ml-3">
-                  </div>
+            <div class="col-sm-3 form-group">
+                <label>Ruc: </label>
+                <input type="text" class="form-control">
             </div>
         </div>
-        <div class="row mt-2">
-            <div class="col-sm-3">
-                <div class="form-inline">
-                    <label>Base Imponible: </label>
-                    <input type="text" class="form-control ml-3">
-                  </div>
+        <div class="row">
+            <div class="col-sm-3 form-group">
+                <label>Base Imponible</label>
+                <input type="text" class="form-control">
             </div>
-            <div class="col-sm-3">
-                <div class="form-inline">
-                    <label>IGV: </label>
-                    <input type="text" class="form-control ml-3" disabled>
-                  </div>
+            <div class="col-sm-2 form-group">
+                <label>IGV</label>
+                <input type="text" class="form-control" disabled>
             </div>
-            <div class="col-sm-4">
-                <div class="form-inline">
-                    <label>Total comprobante: </label>
-                    <input type="text" class="form-control ml-3" disabled>
-                  </div>
+            <div class="col-sm-3 form-group">
+                <label>Total comprobante: </label>
+                <input type="text" class="form-control" disabled>
             </div>
         </div>
         <div class="row mt-2" *ngIf="data == 4">
@@ -347,8 +336,8 @@
                     <select class="form-control ml-3">
                         <option>Si</option>
                         <option>No</option>
-                      </select>
-                  </div>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
