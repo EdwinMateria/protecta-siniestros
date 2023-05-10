@@ -1,5 +1,5 @@
 <div class="modal-header w-100">
-    <h4 class="modal-title" id="modal-basic-title">Cobertura: Gastos de curación</h4>
+    <h4 class="modal-title" id="modal-basic-title">Cobertura: {{titulo}}</h4>
     <button type="button" aria-label="Close" (click)="closeModal()" style="cursor: pointer;">
         <i class="fa fa-close"></i>
     </button>
@@ -82,74 +82,210 @@
             style="padding-top: 10px !important; padding-bottom: 10px !important; border-top: 1px solid #ccc!important;">
             <h3>Datos del comprobante</h3>
         </div>
-        <div class="col-sm-3 form-group">
-            <label>Nro. de factura</label>
-            <input type="text" class="form-control">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Fecha emisión de factura</label>
-            <div class="input-group">
+    </div>
+    <div *ngIf="tipoCobertura == 1 || tipoCobertura == 2">
+        <div class="row">
+            <div class="col-sm-3 form-group">
+                <label>Nro. de factura</label>
                 <input type="text" class="form-control">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label>Fecha emisión de factura</label>
+                <div class="input-group">
+                    <input type="date" class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label>Fecha recepción de factura</label>
+                <div class="input-group">
+                    <input type="date" class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-3 form-group">
-            <label>Fecha recepción de factura</label>
-            <div class="input-group">
+        <div class="row">
+            <div class="col-sm-3 form-group">
+                <label>Base imponible</label>
+                <input type="number" class="form-control" [(ngModel)]="baseImponible">
+            </div>
+            <div class="col-sm-3 form-group">
+                <label>IGV</label>
+                <input type="text" class="form-control" [(ngModel)]="igv" disabled>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label>Total de comprobante</label>
+                <input class="form-control" [(ngModel)]="totalComprobante" disabled>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 form-group">
+                <label>Tipo de pago</label>
+                <select class="form-control">
+                    <option>Transferencia</option>
+                </select>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label>Banco</label>
+                <select class="form-control">
+                    <option>Banco de crédito</option>
+                </select>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label>Nro. de cuenta</label>
                 <input type="text" class="form-control">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label>Observaciones</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="col-sm-3 form-group">
+                <label>Total de factura</label>
+                <input [value]="totalFactura" class="form-control" disabled>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-3 form-group">
-            <label>Base imponible</label>
-            <input type="text" class="form-control">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>IGV</label>
-            <input type="text" class="form-control" disabled>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Total de comprobante</label>
-            <input type="text" class="form-control" disabled>
-        </div>
+    <div *ngIf="tipoCobertura == 3 || tipoCobertura == 4">
+        <table class="table table-striped w-100 mt-2">
+            <thead>
+                <tr>
+                    <th scope="col">Beneficiario</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Tipo de pago</th>
+                    <th scope="col">Banco</th>
+                    <th scope="col">Nro. de cuenta</th>
+                    <th scope="col">Observaciones</th>
+                    <th scope="col">Total a pagar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let movimiento of data">
+                    <td>
+                        {{movimiento.beneficiario}}
+                    </td>
+                    <td>
+                        DNI - 77666553
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option>Transferencia</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option>Banco de crédito</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" value="23456789">
+                    </td>
+                    <td>
+                        <input class="form-control">
+                    </td>
+                    <td>
+                        <span *ngIf="tipoCobertura == 3">{{movimiento.importe | number : '1.2-2' }}</span>
+                        <input *ngIf="tipoCobertura == 4" class="form-control">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <div class="row">
-        <div class="col-sm-3 form-group">
-            <label>Tipo de pago</label>
-            <select class="form-control">
-                <option>Transferencia</option>
-            </select>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Banco</label>
-            <select class="form-control">
-                <option>Banco de crédito</option>
-            </select>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Nro. de cuenta</label>
-            <input type="text" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 form-group">
-            <label>Observaciones</label>
-            <input type="text" class="form-control">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Nro. de factura</label>
-            <input type="text" class="form-control" disabled>
-        </div>
+    <div *ngIf="tipoCobertura == 5">
+        <table class="table table-striped w-100 mt-2">
+            <thead>
+                <tr>
+                    <th scope="col">Beneficiario</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Tipo de pago</th>
+                    <th scope="col">Banco</th>
+                    <th scope="col">Nro. de cuenta</th>
+                    <th scope="col">Observaciones</th>
+                    <th scope="col">Total a pagar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Leva Palomino Camila</td>
+                    <td>DNI - 77666553</td>
+                    <td>
+                        <select class="form-control">
+                            <option>Transferencia</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option>Banco de crédito</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" value="23456789">
+                    </td>
+                    <td>
+                        <input class="form-control">
+                    </td>
+                    <td>
+                        {{baseImponible / 3 | number : '1.2-2' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ramirez Quispe Mateo</td>
+                    <td>C.E. - 862349998</td>
+                    <td>
+                        <select class="form-control">
+                            <option>Cheque de gerencia</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" disabled>
+                            <option>Banco de crédito</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" disabled>
+                    </td>
+                    <td>
+                        <input class="form-control">
+                    </td>
+                    <td>
+                        {{baseImponible / 3 | number : '1.2-2' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sanchez Jazmin</td>
+                    <td>DNI - 76237386 </td>
+                    <td>
+                        <select class="form-control">
+                            <option></option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control">
+                            <option></option>
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control" disabled>
+                    </td>
+                    <td>
+                        <input class="form-control">
+                    </td>
+                    <td>
+                        {{baseImponible / 3 | number : '1.2-2' }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="row">
         <div class="col-sm-12" align="end">
-            <button class="btn btn-success mb-3">Guardar</button>
+            <button *ngIf="tipoCobertura == 1 || tipoCobertura == 2" class="btn btn-success mb-3">Guardar</button>
+            <button *ngIf="tipoCobertura != 1 && tipoCobertura != 2" class="btn btn-success mb-3">Pagar</button>
         </div>
     </div>
 </div>

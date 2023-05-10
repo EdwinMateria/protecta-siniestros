@@ -8,7 +8,7 @@ export class Movimiento{
   beneficiario:string;
   cobertura:string;
   tipoMovimiento:string;
-  importe:string;
+  importe:number;
   datoAdicional:string;
   tipoCobertura:number;
   seleccion:boolean;
@@ -42,17 +42,37 @@ export class GastosCuracionComponent implements OnInit {
   constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
+    //GASTOS DE CURACION
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Inicio reserva", importe: "548", datoAdicional: "3735195", tipoCobertura : 1, seleccion : false, id:1
+      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Inicio reserva", importe: 548, datoAdicional: "3735195", tipoCobertura : 1, seleccion : false, id:1
     });
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: "1000", datoAdicional: "3735195", tipoCobertura : 1, seleccion : false, id:2
+      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: 1000, datoAdicional: "3735195", tipoCobertura : 1, seleccion : false, id:2
     })
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: "-300", datoAdicional: "Ajuste 105", tipoCobertura : 1, seleccion : false, id:3
+      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: -300, datoAdicional: "Ajuste 105", tipoCobertura : 1, seleccion : false, id:3
+    })
+    //GASTOS DE SEPELIO
+    this.movimientos.push({
+      nroSiniestro: "44573", beneficiario: "Funeraria Jardines", cobertura: "Gastos de sepelio", tipoMovimiento: "Ajuste", importe: 2000, datoAdicional: "", tipoCobertura : 2, seleccion : false, id:4
+    })
+    //INVALIDEZ PERMANENTE
+    this.movimientos.push({
+      nroSiniestro: "44573", beneficiario: "Leva Palomino", cobertura: "Invalidez permanente", tipoMovimiento: "Inicio reserva", importe: 18000, datoAdicional: "", tipoCobertura : 3, seleccion : false, id:5
     })
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Funeraria Jardines", cobertura: "Gastos de sepelio", tipoMovimiento: "Ajuste", importe: "2000", datoAdicional: "", tipoCobertura : 2, seleccion : false, id:4
+      nroSiniestro: "44573", beneficiario: "Alva Palomino", cobertura: "Invalidez permanente", tipoMovimiento: "Inicio reserva", importe: 10000, datoAdicional: "", tipoCobertura : 3, seleccion : false, id:6
+    })
+    //INVALIDEZ TEMPORAL
+    this.movimientos.push({
+      nroSiniestro: "44573", beneficiario: "Jose Palomino", cobertura: "Invalidez permanente", tipoMovimiento: "Inicio reserva", importe: 500, datoAdicional: "", tipoCobertura : 4, seleccion : false, id:7
+    })
+    this.movimientos.push({
+      nroSiniestro: "44573", beneficiario: "Andrea Palomino", cobertura: "Invalidez permanente", tipoMovimiento: "Inicio reserva", importe: 300, datoAdicional: "", tipoCobertura : 4, seleccion : false, id:8
+    })
+    //MUERTE
+    this.movimientos.push({
+      nroSiniestro: "44573", beneficiario: "Varios", cobertura: "Muerte", tipoMovimiento: "Inicio reserva", importe: 198000, datoAdicional: "", tipoCobertura : 5, seleccion : false, id:9
     })
   }
 
