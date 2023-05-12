@@ -26,6 +26,9 @@ export class ReservaSiniestroComponent implements OnInit {
   caso = "";
   siniestro = 0;
 
+  //PRUEBA
+  arrayChech : boolean[]=[];
+
   //RESULT
   reservaCaso : ReservaCaso = new ReservaCaso();
   showTable = false;
@@ -44,6 +47,9 @@ export class ReservaSiniestroComponent implements OnInit {
       this.registroActive = ''
       this.consultaActive = 'active'
     }
+    this.arrayChech = [
+      false, false, false, false, false
+    ]
   }
 
   buscadorSiniestro(){
@@ -81,6 +87,12 @@ export class ReservaSiniestroComponent implements OnInit {
     modalRef.result.then((Interval) => {
       
     });
+  }
+
+  reserva(event:any, origen: number){
+    if(event){
+      this.openModalCobertura(origen)
+    }
   }
 
 }

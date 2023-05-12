@@ -143,122 +143,96 @@
         </div>
     </div>
     <div *ngIf="data != 4 && data != 5">
-        <div *ngIf="data == 2 || data == 3" class="row mt-2">
-            <div class="col-sm-6">
-                <div class="form-inline">
-                    <label>Médico tratante: </label>
-                    <input type="text" class="form-control ml-3 w-50">
-                </div>
+        <div *ngIf="data == 2 || data == 3" class="row">
+            <div class="col-sm-3 form-group">
+                <label>Médico tratante</label>
+                <input type="text" class="form-control">
             </div>
-            <div class="col-sm-5">
-                <div class="form-inline">
-                    <label>IPRESS de atención: </label>
-                    <input type="text" class="form-control ml-3 w-50">
-                </div>
+            <div class="col-sm-5 form-group">
+                <label>IPRESS de atención: </label>
+                <input type="text" class="form-control">
             </div>
         </div>
 
-        <div class="row mt-2" *ngIf="data == 3">
-            <div class="col-sm-4">
-                <div class="form-inline">
-                    <label>Menoscabo: </label>
-                    <input type="text" class="form-control ml-3 w-50">
-                </div>
+        <div class="row" *ngIf="data == 3">
+            <div class="col-sm-3 form-group">
+                <label>Menoscabo: </label>
+                <input type="text" class="form-control">
             </div>
-            <div class="col-sm-5">
-                <div class="form-inline">
-                    <label>Monto reserva: </label>
-                    <input type="text" class="form-control ml-3 w-50">
-                </div>
+            <div class="col-sm-2 form-group">
+                <label>Monto reserva</label>
+                <input type="text" class="form-control" disabled>
             </div>
         </div>
 
         <div *ngIf="data == 2">
-            <div class="row mt-2">
-                <div class="col-sm-3">
-                    <div class="form-inline">
-                        <label>Inicio de descanso: </label>
-                        <div class="input-group">
-                            <input type="date" class="form-control ml-1">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                            </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label>Inicio de descanso: </label>
+                    <div class="input-group">
+                        <input type="date" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-inline">
-                        <label>Fin de descanso: </label>
-                        <div class="input-group">
-                            <input type="date" class="form-control ml-1">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                            </div>
+                <div class="col-sm-3 form-group">
+                    <label>Fin de descanso: </label>
+                    <div class="input-group">
+                        <input type="date" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-inline">
-                        <label>RMV: </label>
-                        <input type="text" class="form-control ml-1" disabled>
-                    </div>
+                <div class="col-sm-2 form-group">
+                    <label>RMV: </label>
+                    <input type="text" class="form-control" disabled>
                 </div>
 
-                <div class="col-sm-3">
-                    <div class="form-inline">
-                        <label>Monto reserva: </label>
-                        <input type="text" class="form-control ml-1" disabled>
-                    </div>
+                <div class="col-sm-3 form-group">
+                    <label>Monto reserva: </label>
+                    <input type="text" class="form-control" disabled>
                 </div>
             </div>
-            <div class="row mt-2">
-                <div class="col-sm-5">
-                    <div class="form-inline">
-                        <label>Días de descanso: </label>
-                        <input type="text" class="form-control ml-1" disabled>
-                    </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label>Días de descanso: </label>
+                    <input type="text" class="form-control" disabled>
                 </div>
             </div>
         </div>
 
         <div *ngIf="data == 2 || data == 3">
-            <div class="row mt-2">
-                <div class="col-sm-3">
-                    <div class="form-inline">
-                        <label>Derivación al INR: </label>
-                        <select class="form-control ml-3">
-                            <option>Si</option>
-                            <option>No</option>
-                        </select>
-                    </div>
+            <div class="row">
+                <div class="col-sm-3 form-group">
+                    <label>Derivación al INR: </label>
+                    <select class="form-control">
+                        <option>Si</option>
+                        <option>No</option>
+                    </select>
                 </div>
 
-                <div class="col-sm-3 w-50">
-                    <div class="form-inline">
-                        <label>Nro expediente INR: </label>
-                        <input type="text" class="form-control ml-1">
-                    </div>
+                <div class="col-sm-2 form-group">
+                    <label>Nro expediente INR: </label>
+                    <input type="text" class="form-control">
                 </div>
 
-                <div class="col-sm-3">
-                    <div class="form-inline">
-                        <label>Fec derivación INR: </label>
-                        <div class="input-group">
-                            <input type="date" class="form-control ml-1">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                            </div>
+                <div class="col-sm-3 form-group">
+                    <label>Fecha derivación INR: </label>
+                    <div class="input-group">
+                        <input type="date" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-inline">
-                        <label>Fec. respuesta INR : </label>
-                        <div class="input-group">
-                            <input type="date" class="form-control ml-1">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                            </div>
+                <div class="col-sm-3 form-group">
+                    <label>Fecha respuesta INR : </label>
+                    <div class="input-group">
+                        <input type="date" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
                     </div>
                 </div>

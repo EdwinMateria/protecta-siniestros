@@ -18,6 +18,7 @@
                     <label *ngIf="tipoForm">Póliza</label>
                     <label *ngIf="!tipoForm">Nro. de caso</label>
                     <input class="form-control" [placeholder]="!this.tipoForm ? 'Escribir nro. de caso' : 'Escribir nro. de poliza'" (keyup.enter)="buscador()" [disabled] = "tipoTab == 2">
+                    <small id="emailHelp" class="form-text text-danger">We'll never share your email with anyone else.</small>
                 </div>
             </div>
             <div class="col-sm-3">
