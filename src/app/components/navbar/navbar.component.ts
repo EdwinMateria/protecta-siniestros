@@ -88,13 +88,10 @@ export class NavbarComponent implements OnInit {
   }
 
   llenarMenu(){
-    this.optionList.push({nTieneHijo :1 , sName : 'SINIESTROS', subgruposnuevos :[
+    this.optionList.push({nTieneHijo :1 , sName : 'SINIESTROS SOAT', subgruposnuevos :[
       {sName : 'TRATAMIENTO DE CASO / SINIESTRO', sRouterLink : 'tratamiento-caso-siniestro'},
-      {sName : 'RESERVA DE SINIESTRO', sRouterLink: 'reserva-siniestro'}
-    ]})
-
-    this.optionList.push({nTieneHijo :1 , sName : 'LIQUIDACION', subgruposnuevos :[
-      {sName : 'GASTOS DE CURACION', sRouterLink : 'gastos-curacion'},
+      {sName : 'RESERVA DE SINIESTRO', sRouterLink: 'reserva-siniestro'},
+      {sName : 'LIQUIDACION DE SINIESTRO', sRouterLink: 'liquidacion-siniestro'}
     ]})
   }
 

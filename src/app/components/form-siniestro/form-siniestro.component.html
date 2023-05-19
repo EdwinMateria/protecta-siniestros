@@ -139,13 +139,22 @@
                 <option>OTROS</option>
               </select>
     </div>
-    <div class="col-sm-4 form-group">
+    <!-- <div class="col-sm-4 form-group">
         <label>Detalle de la observación</label>
         <input type="text" class="form-control">
+    </div> -->
+    <div class="col-sm-4 form-group" *ngIf="eliminado">
+        <label>Fecha de rechazo</label>
+        <div class="input-group">
+            <input class="form-control" disabled>
+            <div class="input-group-append">
+                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
     </div>
 
-    <div class="col-sm-5" align="end">
+    <div [ngClass]="{'col-sm-9': eliminado == false, 'col-sm-5' : eliminado == true }" align="end">
         <button class="btn mr-2 mt-3" (click)="opcionVolver()">Volver</button>
-        <button class="btn btn-success mt-3">Guardar</button>
+        <button class="btn btn-success mt-3" (click)="eventoSiniestro()">Guardar</button>
     </div>
 </div>

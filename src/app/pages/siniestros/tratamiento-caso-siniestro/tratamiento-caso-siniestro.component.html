@@ -5,7 +5,7 @@
             <h3 *ngIf="!tituloState">Tratamiento de caso</h3>
             <h3 *ngIf="tituloState">Tratamiento de siniestro</h3>
         </div>
-        <div class="col-sm-4 text-end float-end" *ngIf="!tituloState">
+        <div class="col-sm-4 text-end float-end">
             <nav class="nav nav-pills nav-fill">
                 <a class="nav-link {{registroActive}}" style="cursor: pointer;" (click)="tabControl(1)">Registrar</a>
                 <a class="nav-link {{consultaActive}}" style="cursor: pointer;" (click)="tabControl(2)">Consultar</a>
@@ -15,9 +15,9 @@
 </div>
 
 <div class="body-tratamiento mt-3" *ngIf="tipoTab == 1">
-    <app-form-caso [tipoForm]="true" (tituloTratamiento)="getvalueTitulo($event)"></app-form-caso>
+    <app-form-caso [tipoForm]="true" [tipoTab]="tipoTabForm" (tituloTratamiento)="getvalueTitulo($event)"></app-form-caso>
 </div>
 
 <div class="body-tratamiento mt-3" *ngIf="tipoTab == 2">
-    <app-form-caso [tipoForm]="false" (tituloTratamiento)="getvalueTitulo($event)"></app-form-caso>
+    <app-form-caso [tipoForm]="false" [tipoTab]="tipoTabForm" (tituloTratamiento)="getvalueTitulo($event)"></app-form-caso>
 </div>

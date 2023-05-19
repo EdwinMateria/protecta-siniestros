@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class TratamientoCasoSiniestroComponent implements OnInit {
 
   tipoTab = 1;
+  tipoTabForm = 0;
   registroActive = 'active';
   consultaActive = '';
   tituloState = false;
@@ -31,15 +32,21 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
       this.registroActive = 'active'
       this.consultaActive = ''
     }else{
+      //  2
       this.registroActive = ''
-      this.consultaActive = 'active'
+      this.consultaActive = 'active';
+      this.tipoTabForm = 2
     }
+    this.tituloState = false
   }
 
   getvalueTitulo(state:any){
     this.tituloState = state
     if(!state){
       this.tabControl(2);
+    }else{
+      this.registroActive = 'active'
+      this.consultaActive = ''
     }
   }
 

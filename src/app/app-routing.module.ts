@@ -21,7 +21,7 @@ const routes: Routes = [
     path: 'reserva-siniestro', component: ReservaSiniestroComponent
   },
   {
-    path: 'gastos-curacion', component: GastosCuracionComponent
+    path: 'liquidacion-siniestro', component: GastosCuracionComponent
   }
 ];
 

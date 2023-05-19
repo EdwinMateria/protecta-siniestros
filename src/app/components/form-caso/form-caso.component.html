@@ -1,43 +1,48 @@
 <div class="row ml-1 mb-2" *ngIf="showBotones">
-    <nav class="nav nav-pills nav-fill">
-        <a *ngIf="tipoTab == 0 || tipoTab == 1" class="nav-link nav-decla {{declararActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(1, 2)">
+    <nav class="nav nav-pills nav-fill" *ngIf="tipoTab != 1">
+        <a class="nav-link nav-decla {{declararActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(1, 2)">
             <span *ngIf="stateTituloSiniestro == 2" >Declarar siniestro</span>
             <span *ngIf="stateTituloSiniestro == 1" >Editar siniestro</span>
             <span *ngIf="stateTituloSiniestro == 3" >Rechazar siniestro</span>
-
         </a>
-        <a *ngIf="tipoTab == 0 || tipoTab == 2" class="nav-link nav-decla {{modificarActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(2)">
+        
+        <a *ngIf="stateTituloSiniestro != 3" class="nav-link nav-decla {{modificarActive}} mr-2" style="cursor: pointer; color: #f06f06" (click)="tabControl(2,3)">
             <i class="fa fa-edit mr-1"></i>Modificar
         </a>
     </nav>
 </div> 
 <div *ngIf="tipoTab != 1">
+    <form [formGroup]="form">
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group">
                     <label *ngIf="tipoForm">Póliza</label>
                     <label *ngIf="!tipoForm">Nro. de caso</label>
-                    <input class="form-control" [placeholder]="!this.tipoForm ? 'Escribir nro. de caso' : 'Escribir nro. de poliza'" (keyup.enter)="buscador()" [disabled] = "tipoTab == 2">
-                    <small id="emailHelp" class="form-text text-danger">We'll never share your email with anyone else.</small>
+                    <input class="form-control"
+                        [ngClass]="{'is-invalid': form.get('poliza').invalid && form.get('poliza').touched}" 
+                        formControlName="poliza"
+                        #referencia
+                        [placeholder]="!this.tipoForm ? 'Escribir nro. de caso' : 'Escribir nro. de poliza'" 
+                        (keyup.enter)="buscador()">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Certificado</label>
-                    <input class="form-control" [(ngModel)]="tratamientoCaso.certificado" disabled>
+                    <input class="form-control" formControlName="certificado">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Nro. de placa</label>
-                    <input class="form-control" [(ngModel)]="tratamientoCaso.nroPlaca" disabled>
+                    <input class="form-control" formControlName="nroPlaca">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label *ngIf="!tipoForm">Póliza</label>
                     <label *ngIf="tipoForm">Nro. de caso</label>
-                    <input class="form-control" disabled>
+                    <input class="form-control" formControlName="nroCaso">
                 </div>
             </div>
         </div>
@@ -46,7 +51,7 @@
                 <div class="form-group">
                     <label>Fecha de ocurrencia</label>
                     <div class="input-group">
-                        <input type="date" class="form-control" [disabled]="!tipoForm" [(ngModel)]="tratamientoCaso.fechaOcurrencia">
+                        <input type="date" class="form-control"  formControlName="fechaOcurrencia" [ngClass]="{'is-invalid': form.get('fechaOcurrencia').invalid && form.get('fechaOcurrencia').touched}" >
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
@@ -57,7 +62,7 @@
                 <div class="form-group">
                     <label>Hora de ocurrencia</label>
                     <div class="input-group">
-                        <input type="time" class="form-control" [disabled]="!tipoForm" [(ngModel)]="tratamientoCaso.horaOcurrencia">
+                        <input type="time" class="form-control"  formControlName="horaOcurrencia" [ngClass]="{'is-invalid': form.get('horaOcurrencia').invalid && form.get('horaOcurrencia').touched}" >
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
                         </div>
@@ -67,16 +72,18 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Culpabilidad</label>
-                    <select class="form-control" [disabled]="!tipoForm">
-                        <option>Culpable</option>
+                    <select class="form-control"  formControlName="culpabilidad" [ngClass]="{'is-invalid': form.get('culpabilidad').invalid && form.get('culpabilidad').touched}" >
+                        <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let culpable of culpabilidad" [value]="culpable.id">{{culpable.nombre}}</option>
                       </select>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Causa de siniestro</label>
-                    <select class="form-control" [disabled]="!tipoForm">
-                        <option>Exceso de velocidad</option>
+                    <select class="form-control"  formControlName="causaSiniestro" [ngClass]="{'is-invalid': form.get('causaSiniestro').invalid && form.get('causaSiniestro').touched}" >
+                        <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let causa of causaSiniestro" [value]="causa.id">{{causa.nombre}}</option>
                       </select>
                 </div>
             </div>
@@ -85,7 +92,7 @@
             <div class="col-sm-3 form-group">
                 <label>Inicio de vigencia</label>
                 <div class="input-group">
-                    <input class="form-control" [(ngModel)]="tratamientoCaso.inicioVigencia" disabled>
+                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="inicioVigencia">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
@@ -94,63 +101,67 @@
             <div class="col-sm-3 form-group">
                 <label>Fin de vigencia</label>
                 <div class="input-group">
-                    <input class="form-control" [(ngModel)]="tratamientoCaso.finVigencia" disabled>
+                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="finVigencia">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-3">
                 <div class="form-group">
                     <label>Nombre del contratante</label>
-                    <input class="form-control" [(ngModel)]="tratamientoCaso.contratante" disabled>
+                    <input class="form-control" placeholder="Escribir nombre" formControlName="nombreContratante">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>Tipo documento- documento contratante</label>
+                    <input class="form-control" placeholder="Documento" formControlName="documentoContratante">
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label>Tipo documento- documento contratante</label>
-                    <input class="form-control"  [(ngModel)]="tratamientoCaso.documentoContratante" disabled>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-group">
                     <label>Nombre del conductor</label>
-                    <input type="text" [(ngModel)]="tratamientoCaso.nombreConductor" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                    <input type="text" class="form-control"  placeholder="Escribir nombre" formControlName="nombreConductor">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Apellido Paterno del conductor</label>
-                    <input type="text" [(ngModel)]="tratamientoCaso.nombreConductor" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                    <input type="text" class="form-control"  
+                     placeholder="Escribir apellido paterno" formControlName="apellidoPaternoConductor">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Apellido Materno del conductor</label>
-                    <input type="text" [(ngModel)]="tratamientoCaso.nombreConductor" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                    <input type="text" class="form-control"  
+                     placeholder="Escribir apellido materno" formControlName="apellidoMaternoConductor">
                 </div>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label>Tipo de documento</label>
+                    <select class="form-control"  formControlName="tipoDocumentoConductor">
+                        <option value="">(SELECCIONE)</option>
+                        <option value="1">DNI</option>
+                    </select>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-3 form-group">
-                <label>Tipo de documento</label>
-                    <select class="form-control" [disabled]="!tipoForm && tipoTab != 2" >
-                        <option>DNI</option>
-                    </select>
-            </div>
             <div class="col-sm-3">
                 <div class="form-group">
-                    <label>Documento del conductor</label>
-                    <input type="text" [(ngModel)]="tratamientoCaso.documentoConductor" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  >
+                    <label>Nro. de documento</label>
+                    <input type="text" class="form-control" 
+                      placeholder="Escribir número de documento" formControlName="nroDocumentoConductor">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Fecha de nacimiento conductor</label>
                     <div class="input-group">
-                        <input type="date" class="form-control" [disabled]="!tipoForm && tipoTab != 2" [(ngModel)]="tratamientoCaso.fechaNacimiento">
+                        <input type="date" class="form-control"   placeholder="dd/mm/aaaa" formControlName="fechaNacimientoConductor">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
@@ -162,13 +173,14 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Ubicación</label>
-                    <input type="text" [(ngModel)]="tratamientoCaso.ubicacion" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                    <input type="text" class="form-control"  
+                     placeholder="Escribir ubicación" formControlName="ubicacion" [ngClass]="{'is-invalid': form.get('ubicacion').invalid && form.get('ubicacion').touched}">
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Referencia</label>
-                    <input type="text" [(ngModel)]="tratamientoCaso.referencia" class="form-control"  [disabled]="!tipoForm && tipoTab != 2" >
+                    <input type="text" class="form-control"  placeholder="Escribir referencia" formControlName="referencia" [ngClass]="{'is-invalid': form.get('referencia').invalid && form.get('referencia').touched}">
                 </div>
             </div>
         </div>
@@ -176,30 +188,33 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Delegación</label>
-                    <input type="text" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  [(ngModel)]="tratamientoCaso.delegacion">
+                    <input type="text" class="form-control"  placeholder="Escribir delegación" formControlName="delegacion" [ngClass]="{'is-invalid': form.get('delegacion').invalid && form.get('delegacion').touched}">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Departamento</label>
-                    <select class="form-control" [disabled]="!tipoForm && tipoTab != 2" >
-                        <option>Lima</option>
+                    <select class="form-control"  formControlName="departamento" [ngClass]="{'is-invalid': form.get('departamento').invalid && form.get('departamento').touched}">
+                        <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let departamento of departamentos" [value]="departamento.id">{{departamento.nombre}}</option>
                       </select>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Provincia</label>
-                    <select class="form-control" [disabled]="!tipoForm && tipoTab != 2">
-                        <option>Lima</option>
+                    <select class="form-control"  formControlName="provincia" [ngClass]="{'is-invalid': form.get('provincia').invalid && form.get('provincia').touched}">
+                        <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let provincia of provincias" [value]="provincia.id">{{provincia.nombre}}</option>
                       </select>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Distrito</label>
-                    <select class="form-control" [disabled]="!tipoForm && tipoTab != 2">
-                        <option>San Isidro</option>
+                    <select class="form-control"  formControlName="distrito" [ngClass]="{'is-invalid': form.get('distrito').invalid && form.get('distrito').touched}">
+                        <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let distrito of distritos" [value]="distrito.id">{{distrito.nombre}}</option>
                       </select>
                 </div>
             </div>
@@ -208,10 +223,11 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Observación</label>
-                    <input type="text" class="form-control" [disabled]="!tipoForm && tipoTab != 2"  [(ngModel)]="tratamientoCaso.observacion">
+                    <input type="text" class="form-control"   placeholder="Escribir observación" formControlName="observacion">
                 </div>
             </div>
         </div>
+    </form>
         <div class="row" *ngIf="tipoForm">
             <div class="col-sm-12" align="end">
                 <button class="btn btn-success mb-3" (click)="saveCaso()">Guardar</button>
@@ -230,7 +246,7 @@
         <div class="col-sm-12" style="padding-top: 10px !important; padding-bottom: 10px !important; border-top: 1px solid #ccc!important;">
             <h3>Siniestros asociados</h3>
         </div>
-        <table class="table table-striped w-100">
+        <table class="table table-striped w-100 mb-4">
             <thead>
               <tr>
                 <th scope="col">Nro de siniestro</th>

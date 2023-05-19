@@ -9,14 +9,20 @@ export class FormSiniestroComponent implements OnInit {
 
   @Output() cancelBool = new EventEmitter<boolean>();
   @Input() estadoForm : number;
+  eliminado = false;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
 
   opcionVolver(){
     this.cancelBool.emit(true)
+  }
+
+  eventoSiniestro(){
+    this.eliminado = true
   }
 
 
