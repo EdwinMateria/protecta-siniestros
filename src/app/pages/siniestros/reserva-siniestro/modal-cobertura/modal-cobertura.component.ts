@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { ModalBeneficiarioComponent } from '../modal-beneficiario/modal-beneficiario.component';
 
 
 export class Beneficiario {
@@ -25,12 +27,12 @@ export class ModalCoberturaComponent implements OnInit {
   beneficiarios: Beneficiario[] = [];
   datosTramitador = "1";
 
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
-    this.beneficiarios.push({
-      codigoCliente: "", beneficiario: "", tipoDocumento: "", tipoBeneficiario: "", nroCuenta: "", cobertura: "", nroDocumento: ""
-    })
+    // this.beneficiarios.push({
+    //   codigoCliente: "", beneficiario: "", tipoDocumento: "", tipoBeneficiario: "", nroCuenta: "", cobertura: "", nroDocumento: ""
+    // })
   }
 
   closeModal() {
@@ -64,6 +66,15 @@ export class ModalCoberturaComponent implements OnInit {
       if(this.data == 4)  this.beneficiarios[index].cobertura = "4- Gastos Médicos";
       if(this.data == 5)  this.beneficiarios[index].cobertura = "5- Gastos de Sepelio";      
     }
+  }
+
+
+  openBeneficiario(){
+    const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
+    modalRef.componentInstance.reference = modalRef;  
+    modalRef.result.then((Interval) => {
+      console.log('Cerrado');
+    });
   }
 
 

@@ -42,10 +42,13 @@ export class FormCasoComponent implements OnInit {
   showBotones = false;
   declararActive = '';
   modificarActive = '';
-  @Input() tipoTab = 0;
+  tipoTab = 0;
   @Output() tituloTratamiento = new EventEmitter<boolean>();
   stateTituloSiniestro = 2;
   form!: FormGroup;
+
+
+  @Input() tipoTabForm = 0;
 
   //RESULTADO
   tratamientoCaso = new TratamientoCaso();
@@ -193,8 +196,6 @@ export class FormCasoComponent implements OnInit {
       this.form.controls['culpabilidad'].enable();
       this.form.controls['causaSiniestro'].enable();
     }
-    console.log(this.stateTituloSiniestro);
-    
   }
 
   rechazarCaso(){

@@ -33,9 +33,18 @@
             </div>
         </div>
     </div>
+    <!-- style="position: absolute; right: 0px; padding: 10px" -->
     <div class="row mt-1">
         <div class="col-sm-12">
-            <span>BENEFICIARIOS: </span>
+            <div class="d-flex">
+                <div class="mr-auto p-2">
+                    <strong>BENEFICIARIOS:</strong>
+                </div>
+                <div class="p-2">
+                    <button class="btn btn-primary text-end float-end" align="end" (click)="openBeneficiario()"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+            
             <table class="table table-striped w-100">
                 <thead>
                     <tr>
@@ -47,7 +56,6 @@
                         <th scope="col">Cobertura</th>
                         <th scope="col">Banco</th>
                         <th scope="col">Nro. Cuenta</th>
-                        <th scope="col" *ngIf="data == 1"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,8 +70,9 @@
                             {{beneficiarios[i].tipoDocumento}}
                         </td>
                         <td>
-                            <input type="text" class="form-control" [(ngModel)]="beneficiarios[i].nroDocumento"
-                                (keyup.enter)="completarCampos(i)">
+                            {{beneficiarios[i].nroDocumento}}
+                            <!-- <input type="text" class="form-control" [(ngModel)]="beneficiarios[i].nroDocumento"
+                                (keyup.enter)="completarCampos(i)"> -->
                         </td>
                         <td>
                             {{beneficiarios[i].tipoBeneficiario}}
@@ -79,16 +88,12 @@
                         <td>
                             <input type="text" class="form-control">
                         </td>
-                        <td *ngIf="data == 1">
-                            <button *ngIf="beneficiarios.length == i + 1" class="btn btn-primary" (click)="addRow(i)"><i
-                                    class="fa fa-plus"></i></button>
-                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-sm-3 form-group">
             <label>Código Diagnostico (CIE10) </label>
             <select class="form-control">
@@ -112,18 +117,6 @@
             </select>
         </div>
     </div>
-    <!-- <div class="row mt-2" *ngIf="data == 2">
-        <div class="col-sm-5">
-            <div class="form-inline">
-                <label>Complejidad Diagnostico: </label>
-                <select class="form-control ml-3">
-                    <option>Leve</option>
-                    <option>Moderado</option>
-                    <option>Severo</option>
-                </select>
-            </div>
-        </div>
-    </div> -->
 
     <div class="row">
         <div class="col-sm-3 form-group">

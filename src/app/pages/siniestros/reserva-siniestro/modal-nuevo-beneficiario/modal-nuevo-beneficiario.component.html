@@ -1,0 +1,221 @@
+<div class="modal-header w-100">
+    <h4 class="modal-title" id="modal-basic-title">INGRESAR BENEFICIARIO</h4>
+    <button type="button" aria-label="Close" (click)="closeModal()" style="cursor: pointer;">
+        <i class="fa fa-close"></i>
+    </button>
+</div>
+<div class="modal-body w-100">
+    <form>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Tipo Documento(*)</label>
+                <div class="col-sm-4">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Nro Documento(*)</label>
+                <div class="col-sm-4">
+                    <input class="form-control" placeholder="Nro Documento">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Apellido Paterno(*)</label>
+                <div class="col-sm-4">
+                    <input class="form-control" placeholder="Apellido Paterno">
+                </div>
+                <label class="col-sm-2 col-form-label">Apellido Materno(*)</label>
+                <div class="col-sm-4">
+                    <input class="form-control" placeholder="Apellido Materno">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Nombres(*)</label>
+                <div class="col-sm-10">
+                    <input class="form-control" placeholder="Nombres">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Fecha Nacimiento(*)</label>
+                <div class="col-sm-4">
+                    <input type="date" class="form-control">
+                </div>
+                <label class="col-sm-2 col-form-label">Sexo(*)</label>
+                <div class="col-sm-4">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Estado Civil(*)</label>
+                <div class="col-sm-4">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Nacionalidad(*)</label>
+                <div class="col-sm-4">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Tipo Vía(*)</label>
+                <div class="col-sm-2">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Dirección(*)</label>
+                 <div class="col-sm-6">
+                    <input class="form-control" placeholder="Dirección">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Número(*)</label>
+                 <div class="col-sm-2">
+                    <input class="form-control" placeholder="Nro.">
+                </div>
+                <label class="col-sm-2 col-form-label">Pref. Depart.</label>
+                <div class="col-sm-2">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Interior</label>
+                 <div class="col-sm-2">
+                    <input class="form-control" placeholder="Int.">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Manzana</label>
+                 <div class="col-sm-2">
+                    <input class="form-control" placeholder="Mz.">
+                </div>
+                <label class="col-sm-2 col-form-label">Lote</label>
+                <div class="col-sm-2">
+                    <input class="form-control" placeholder="Lt.">
+                </div>
+                <label class="col-sm-2 col-form-label">Etapa</label>
+                 <div class="col-sm-2">
+                    <input class="form-control" placeholder="Etapa">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Conj. Hab. </label>
+                <div class="col-sm-2">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Nom. Conj. Hab.</label>
+                 <div class="col-sm-6">
+                    <input class="form-control" placeholder="Nombre de Conjunto Habitacional">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Bloque/ Chalet</label>
+                 <div class="col-sm-2">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Num./ Let</label>
+                <div class="col-sm-2">
+                    <input class="form-control" placeholder="Num./ Let">
+                </div>
+                <label class="col-sm-2 col-form-label">Referencia</label>
+                 <div class="col-sm-2">
+                    <input class="form-control" placeholder="Referencia">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Departamento(*)</label>
+                 <div class="col-sm-2">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Provincia(*)</label>
+                <div class="col-sm-2">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Distrito(*)</label>
+                 <div class="col-sm-2">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Código</label>
+                 <div class="col-sm-2">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Teléfono Domiciliario</label>
+                 <div class="col-sm-2">
+                    <input class="form-control" placeholder="Teléfono Domiciliario">
+                </div>
+                <label class="col-sm-2 col-form-label">Celular</label>
+                 <div class="col-sm-2">
+                    <input class="form-control" placeholder="Celular">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Teléfono Oficina</label>
+                 <div class="col-sm-2">
+                    <input class="form-control" placeholder="Teléfono Oficina">
+                </div>
+                <label class="col-sm-2 col-form-label">Anexo</label>
+                 <div class="col-sm-2">
+                    <input class="form-control" placeholder="Anexo">
+                </div>
+                <label class="col-sm-2 col-form-label">Correo</label>
+                 <div class="col-sm-2 pl-0">
+                    <input class="form-control" placeholder="Correo">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Vía de Pago</label>
+                <div class="col-sm-4">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Banco</label>
+                <div class="col-sm-4">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Tipo Cuenta</label>
+                <div class="col-sm-4">
+                    <select class="form-control">
+                        <option value="">(SELECCIONE)</option>
+                    </select>
+                </div>
+                <label class="col-sm-2 col-form-label">Nro Cuenta</label>
+                <div class="col-sm-4">
+                    <input class="form-control" placeholder="Nro Cuenta">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Nro De Cuenta CCI</label>
+                <div class="col-sm-10">
+                    <input class="form-control" placeholder="Nro De Cuenta CCI">
+                </div>
+            </div>
+    </form>
+    <div class="row">
+        <div class="col-sm-12" align="end">
+            <button class="btn btn-success" (click)="closeModal()">Agregar</button>
+        </div>
+    </div>
+</div>

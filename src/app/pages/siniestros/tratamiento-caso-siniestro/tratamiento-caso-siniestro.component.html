@@ -15,9 +15,9 @@
 </div>
 
 <div class="body-tratamiento mt-3" *ngIf="tipoTab == 1">
-    <app-form-caso [tipoForm]="true" [tipoTab]="tipoTabForm" (tituloTratamiento)="getvalueTitulo($event)"></app-form-caso>
+    <app-form-caso [tipoForm]="true" (tituloTratamiento)="getvalueTitulo($event)"></app-form-caso>
 </div>
 
 <div class="body-tratamiento mt-3" *ngIf="tipoTab == 2">
-    <app-form-caso [tipoForm]="false" [tipoTab]="tipoTabForm" (tituloTratamiento)="getvalueTitulo($event)"></app-form-caso>
+    <app-form-caso [tipoForm]="false"  (tituloTratamiento)="getvalueTitulo($event)"></app-form-caso>
 </div>
