@@ -44,6 +44,10 @@ export class FormCasoComponent implements OnInit {
   modificarActive = '';
   tipoTab = 0;
   @Output() tituloTratamiento = new EventEmitter<boolean>();
+  @Output() formSiniestro = new EventEmitter<boolean>();
+
+
+
   stateTituloSiniestro = 2;
   form!: FormGroup;
 
@@ -160,6 +164,7 @@ export class FormCasoComponent implements OnInit {
         this.declararActive = 'active'
         this.modificarActive = ''
         this.tituloTratamiento.emit(true);
+        this.formSiniestro.emit(false);
         this.stateTituloSiniestro = 3
         this.tipoTab = 1;
       }
@@ -180,6 +185,7 @@ export class FormCasoComponent implements OnInit {
       this.declararActive = 'active'
       this.modificarActive = ''
       this.tituloTratamiento.emit(true);
+      this.formSiniestro.emit(true);
     }
     if(this.tipoTab == 2){
       this.declararActive = ''

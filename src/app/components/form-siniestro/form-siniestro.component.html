@@ -1,4 +1,7 @@
 <div class="row">
+    <div *ngIf="!estadoForm" class="col-sm-12 mb-2">
+        <button class="btn btn-danger"><i class="fa fa-close mr-2"></i>Rechazar</button>
+    </div>
     <div class="col-sm-3 form-group">
         <label>Póliza</label>
         <input type="text" class="form-control" disabled>
@@ -50,7 +53,7 @@
     <div class="col-sm-3 form-group">
         <label>Fecha de denuncia</label>
         <div class="input-group">
-            <input type="date" class="form-control" [disabled]="estadoForm == 3">
+            <input type="date" class="form-control" [disabled]="!estadoForm">
             <div class="input-group-append">
                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
             </div>
@@ -59,7 +62,7 @@
     <div class="col-sm-3 form-group">
         <label>Hora de recepción</label>
         <div class="input-group">
-            <input type="time" class="form-control" [disabled]="estadoForm == 3">
+            <input type="time" class="form-control" [disabled]="!estadoForm">
             <div class="input-group-append">
                 <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
             </div>
@@ -68,7 +71,7 @@
     <div class="col-sm-3 form-group">
         <label>Fecha de apertura</label>
         <div class="input-group">
-            <input type="date" class="form-control" [disabled]="estadoForm == 3">
+            <input type="date" class="form-control" [disabled]="!estadoForm">
             <div class="input-group-append">
                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
             </div>
@@ -79,7 +82,7 @@
     <div class="col-sm-6 form-group">
         <label>Afectado (siniestro)</label>
         <div class="input-group">
-            <input type="text" class="form-control" [disabled]="estadoForm == 3">
+            <input type="text" class="form-control" [disabled]="!estadoForm">
             <div class="input-group-append">
                 <span class="input-group-text"><i class="fa fa-search"></i></span>
             </div>
@@ -87,7 +90,7 @@
     </div>
     <div class="col-sm-3 form-group">
         <label>Tipo de ocupante</label>
-        <select class="form-control" [disabled]="estadoForm == 3">
+        <select class="form-control" [disabled]="!estadoForm">
             <option>1</option>
           </select>
     </div>
@@ -95,20 +98,20 @@
 <div class="row">
     <div class="col-sm-3 form-group">
         <label>Tipo de atención</label>
-        <select class="form-control" [disabled]="estadoForm == 3">
+        <select class="form-control" [disabled]="!estadoForm">
             <option>1</option>
           </select>
     </div>
     <div class="col-sm-3 form-group">
         <label>Diagnóstico</label>
-        <select class="form-control" [disabled]="estadoForm == 3">
+        <select class="form-control" [disabled]="!estadoForm">
             <option>1</option>
           </select>
     </div>
     <div class="col-sm-3 form-group">
         <label>Fecha de fallecido</label>
         <div class="input-group">
-            <input type="date" class="form-control" [disabled]="estadoForm == 3" >
+            <input type="date" class="form-control" [disabled]="!estadoForm" >
             <div class="input-group-append">
                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
             </div>
@@ -118,20 +121,19 @@
 <div class="row">
     <div class="col-sm-3 form-group">
         <label>Siniestro equivalente</label>
-        <input type="text" class="form-control"  [disabled]="estadoForm == 3">
+        <input type="text" class="form-control"  [disabled]="!estadoForm">
     </div>
 </div>
-<div class="row" *ngIf="estadoForm != 3">
+<div class="row" *ngIf="estadoForm">
     <div class="col-sm-12" align="end">
-        <button class="btn mr-2 mb-3" (click)="opcionVolver()">Volver</button>
         <button class="btn btn-success mb-3">Guardar</button>
     </div>
 </div>
 
-<div class="row" *ngIf="estadoForm == 3">
+<div class="row" *ngIf="!estadoForm">
     <div class="col-sm-3 form-group">
             <label>Motivo de rechazo</label>
-            <select class="form-control">
+            <select class="form-control" [disabled]="eliminado">
                 <option>MOTIVO 1</option>
                 <option>MOTIVO 2</option>
                 <option>MOTIVO 3</option>

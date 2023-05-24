@@ -13,6 +13,8 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
   consultaActive = '';
   tituloState = false;
 
+  formSiniestro = false;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -43,10 +45,23 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
   getvalueTitulo(state:any){
     this.tituloState = state
     if(!state){
+      //rechazar siniestro
       this.tabControl(2);
     }else{
       this.registroActive = 'active'
       this.consultaActive = ''
+      //this.tipoTab = 3;
+    }
+  }
+
+  estadoFormSiniestro(estado:any){
+    this.tipoTab = 3;
+    this.formSiniestro = estado
+  }
+
+  cancelSiniestro(estado:any){
+    if(estado){
+      this.tabControl(2);
     }
   }
 

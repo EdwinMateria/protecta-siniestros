@@ -112,12 +112,12 @@
                 <td></td>
                 <td></td>
                 <td>
-                    <div class="form-check">
+                    <div class="form-check" *ngIf="tipoTab == 1">
                         <input class="form-check-input position-static" type="checkbox" [(ngModel)]="arrayChech[0]" (change)="reserva(arrayChech[0] , 1)">
                     </div>
                 </td>
                 <td>
-                    <button class="btn btn-busqueda mr-3"><i class="fa fa-edit"></i></button>
+                    <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(1)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
             <tr>
@@ -143,12 +143,12 @@
                 <td></td>
                 <td></td>
                 <td>
-                    <div class="form-check">
+                    <div class="form-check" *ngIf="tipoTab == 1">
                         <input class="form-check-input position-static" type="checkbox" [(ngModel)]="arrayChech[1]" (change)="reserva(arrayChech[1], 2)">
                     </div>
                 </td>
                 <td>
-                    <button class="btn btn-busqueda mr-3"><i class="fa fa-edit"></i></button>
+                    <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(2)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
             <tr>
@@ -174,12 +174,12 @@
                 <td></td>
                 <td></td>
                 <td>
-                    <div class="form-check">
+                    <div class="form-check" *ngIf="tipoTab == 1">
                         <input class="form-check-input position-static" type="checkbox" [(ngModel)]="arrayChech[2]" (change)="reserva(arrayChech[2], 3)" >
                     </div>
                 </td>
                 <td>
-                    <button class="btn btn-busqueda mr-3"><i class="fa fa-edit"></i></button>
+                    <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(3)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
             <tr>
@@ -205,12 +205,12 @@
                 <td>158745</td>
                 <td></td>
                 <td>
-                    <div class="form-check">
+                    <div class="form-check" *ngIf="tipoTab == 1">
                         <input class="form-check-input position-static" type="checkbox" [(ngModel)]="arrayChech[3]" (change)="reserva(arrayChech[3],4)" >
                     </div>
                 </td>
                 <td>
-                    <button class="btn btn-busqueda mr-3"><i class="fa fa-edit"></i></button>
+                    <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(4)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
             <tr>
@@ -236,12 +236,12 @@
                 <td></td>
                 <td></td>
                 <td>
-                    <div class="form-check">
+                    <div class="form-check" *ngIf="tipoTab == 1">
                         <input class="form-check-input position-static" type="checkbox" [(ngModel)]="arrayChech[4]" (change)="reserva(arrayChech[4],5)" >
                     </div>
                 </td>
                 <td>
-                    <button class="btn btn-primary mr-3"><i class="fa fa-eye"></i></button>
+                    <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(5)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
         </tbody>

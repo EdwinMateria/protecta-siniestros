@@ -47,6 +47,10 @@ export class ReservaSiniestroComponent implements OnInit {
       this.registroActive = ''
       this.consultaActive = 'active'
     }
+    this.caso = "";
+    this.siniestro = 0;
+    this.showTable = false
+
     this.arrayChech = [
       false, false, false, false, false
     ]
