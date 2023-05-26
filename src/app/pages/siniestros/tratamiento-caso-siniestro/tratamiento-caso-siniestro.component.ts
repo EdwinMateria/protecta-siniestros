@@ -13,7 +13,7 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
   consultaActive = '';
   tituloState = false;
 
-  formSiniestro = false;
+  formSiniestro = 0;
 
   constructor() { }
 

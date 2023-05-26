@@ -14,6 +14,7 @@ export class ModalBeneficiarioComponent implements OnInit {
   @Input() public reference: any;
   beneficiarios: Beneficiario[] = [];
   buscador = "";
+  selectBeneficio =  new Beneficiario();
 
   constructor(private modalService: NgbModal) { }
 
@@ -21,7 +22,7 @@ export class ModalBeneficiarioComponent implements OnInit {
   }
 
   closeModal(buscador?:any) {
-    this.reference.close(buscador);
+    this.reference.close(this.selectBeneficio);
   }
 
   llenarBeneficiarios(){
@@ -62,6 +63,10 @@ export class ModalBeneficiarioComponent implements OnInit {
     modalRef.result.then((Interval) => {
       this.closeModal('a');
     });
+  }
+
+  selectBeneficiario(beneficiario: Beneficiario){
+    this.selectBeneficio = beneficiario;
   }
 
 }

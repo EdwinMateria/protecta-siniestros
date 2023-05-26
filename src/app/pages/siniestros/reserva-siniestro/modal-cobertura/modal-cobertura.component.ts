@@ -72,8 +72,8 @@ export class ModalCoberturaComponent implements OnInit {
   openBeneficiario(){
     const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
-    modalRef.result.then((Interval) => {
-      console.log('Cerrado');
+    modalRef.result.then((benef) => {
+      console.log(benef);
     });
   }
 

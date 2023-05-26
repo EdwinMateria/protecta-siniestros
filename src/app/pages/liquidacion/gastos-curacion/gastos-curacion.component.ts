@@ -65,10 +65,10 @@ export class GastosCuracionComponent implements OnInit {
     })
     //INVALIDEZ TEMPORAL
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Jose Palomino", cobertura: "Invalidez permanente", tipoMovimiento: "Inicio reserva", importe: 500, datoAdicional: "", tipoCobertura : 4, seleccion : false, id:7
+      nroSiniestro: "44573", beneficiario: "Jose Palomino", cobertura: "Invalidez temporal", tipoMovimiento: "Inicio reserva", importe: 500, datoAdicional: "", tipoCobertura : 4, seleccion : false, id:7
     })
     this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Andrea Palomino", cobertura: "Invalidez permanente", tipoMovimiento: "Inicio reserva", importe: 300, datoAdicional: "", tipoCobertura : 4, seleccion : false, id:8
+      nroSiniestro: "44573", beneficiario: "Andrea Palomino", cobertura: "Invalidez temporal", tipoMovimiento: "Inicio reserva", importe: 300, datoAdicional: "", tipoCobertura : 4, seleccion : false, id:8
     })
     //MUERTE
     this.movimientos.push({

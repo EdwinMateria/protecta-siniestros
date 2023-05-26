@@ -38,7 +38,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let beneficiario of beneficiarios">
+            <tr *ngFor="let beneficiario of beneficiarios" style="cursor: pointer;" (click)="selectBeneficiario(beneficiario)">
                 <td>{{beneficiario.codigoCliente}}</td>
                 <td>{{beneficiario.beneficiario}}</td>
             </tr>

@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-siniestro',
@@ -9,9 +10,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class FormSiniestroComponent implements OnInit {
 
   @Output() cancelBool = new EventEmitter<boolean>();
-  @Input() estadoForm : boolean;
+  @Input() estadoForm : number;
   eliminado = false;
   form!: FormGroup;
+  eliminarSiniestro = '';
 
   constructor(public fb: FormBuilder) {
   }
@@ -26,24 +28,56 @@ export class FormSiniestroComponent implements OnInit {
       horaOcurrencia: [{value:'', disabled: true}],
       causaSiniestro: [{value:'', disabled: true}],
       moneda: [{value:'', disabled: true}],
-      fechaDenuncia : [{value:'', disabled: true}, Validators.required],
-      horaRecepcion: [{value:'', disabled: true}, Validators.required],
-      fechaApertura: [{value:'', disabled: true}, Validators.required],
-      afectado: [{value:'', disabled: true}, Validators.required],
-      tipoOcupante : [{value:'', disabled: true}, Validators.required],
-      tipoAtencion: [{value:'', disabled: true}, Validators.required],
-      diagnostico: [{value:'', disabled: true}, Validators.required],
-      fechaFallecido: [{value:'', disabled: true}],
-      siniestroEquivalente: [{value:'', disabled: true}],
+      fechaDenuncia : [{value:'', disabled: false}, Validators.required],
+      horaRecepcion: [{value:'', disabled: false}, Validators.required],
+      fechaApertura: [{value:'', disabled: false}, Validators.required],
+      afectado: [{value:'', disabled: false}, Validators.required],
+      tipoOcupante : [{value:'', disabled: false}, Validators.required],
+      tipoAtencion: [{value:'', disabled: false}, Validators.required],
+      diagnostico: [{value:'', disabled: false}, Validators.required],
+      fechaFallecido: [{value:'', disabled: false}],
+      siniestroEquivalente: [{value:'', disabled: false}],
     })
+    this.disabledForm();
+    //this.estadoForm = false ? true : false
   }
 
   opcionVolver(){
     this.cancelBool.emit(true)
   }
 
-  eventoSiniestro(){
-    this.eliminado = true
+  rechazoSiniestro(){
+    if(this.eliminarSiniestro != ''){
+      this.eliminado = true
+    }else{
+      Swal.fire('Información','Debe seleccionar un motivo de rechazo', 'warning');
+    }
+  }
+
+  saveSiniestro(){
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+    }
+  }
+
+  disabledForm(){
+    if(this.estadoForm == 3){
+      this.form.controls['fechaDenuncia'].disable();
+      this.form.controls['horaRecepcion'].disable();
+      this.form.controls['fechaApertura'].disable();
+      this.form.controls['afectado'].disable();
+      this.form.controls['tipoOcupante'].disable();
+      this.form.controls['tipoAtencion'].disable();
+      this.form.controls['diagnostico'].disable();
+      this.form.controls['fechaFallecido'].disable();
+      this.form.controls['siniestroEquivalente'].disable();
+    }
+
+    if(this.estadoForm == 1){
+      this.form.controls['fechaDenuncia'].disable();
+      this.form.controls['horaRecepcion'].disable();
+      this.form.controls['diagnostico'].disable();
+    }
   }
 
 
