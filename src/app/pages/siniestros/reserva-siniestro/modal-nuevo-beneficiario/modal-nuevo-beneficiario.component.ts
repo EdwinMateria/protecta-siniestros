@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { ClaimBeneficiarioModelRequestBM } from 'src/app/core/models/claimBeneficiarioModelRequest';
+import { ReserveService } from 'src/app/core/services/reserve/reserve.service';
+import { distinctUntilChanged } from "rxjs/operators";
 
 export class TipoDocumento{
   id: number;
@@ -20,8 +22,9 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   labelNombres = 'Nombres';
 
   showApellidos = true;
+  objBeneficiarioModel = new ClaimBeneficiarioModelRequestBM();
 
-  constructor(public fb: FormBuilder) { }
+  constructor(public fb: FormBuilder, public reserveService: ReserveService) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -63,7 +66,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       nroCuentaCCI: [ '' ],
     })
 
-
+    this.obtenerComboBeneficiarios()
     //Tipos Documentos
     this.documentos.push({ id : 1, nombre: 'SIN CÓDIGO'})
     this.documentos.push({ id : 2, nombre: 'DNI'})
@@ -73,6 +76,14 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   
   closeModal() {
     this.reference.close();
+  }
+
+  obtenerComboBeneficiarios(){
+    this.reserveService.GetComboBeneficiarios().subscribe(
+      res =>{
+        this.objBeneficiarioModel = res;
+      }
+    )
   }
 
   tipoDocumentoSeleccion(){

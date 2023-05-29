@@ -1,0 +1,75 @@
+export class ClaimComboBERequestBM{
+    Codigo      :   string;
+    Descripcion :   string;
+}
+
+
+export class ClaimBeneficiarioModelRequestBM {
+    sCLIENT_ANT         :   string;
+    accion              :   string;
+    tipoDocumento       :   string;
+    sCLIENT             :   string;
+    nroDocumento        :   string;
+    apellidoPaterno     :   string;
+    apellidoMaterno     :   string;
+    nombres             :   string;
+    razonSocial         :   string;
+    fechaNacimiento     :   string;
+    sexo                :   string;
+    estadoCivil         :   string;
+    nacionalidad        :   string;
+    via                 :   string;
+    lote                :   string;
+    piso                :   string;
+    apartamento         :   string;
+    ubicacion           :   string;
+    departamento        :   string;
+    provincia           :   string;
+    distrito            :   string;
+    teleDom             :   string;
+    celular             :   string;
+    teleOfi             :   string;
+    codViaPago          :   string;
+    codTipoCuenta       :   string;
+    codBanco            :   string;
+    nroCuenta           :   string;
+    nroCuentaCCI        :   string;
+    codigoUsuario       :   string;
+    codTipoVia          :   string;
+    codBloque           :   string;
+    codTipoInt          :   string;
+    codConHab           :   string;
+    codArea             :   string;
+    direccion           :   string;
+    nro                 :   string;
+    interior            :   string;
+    manzana             :   string;
+    etapa               :   string;
+    nomConjHabit        :   string;
+    numLet              :   string;
+    referencia          :   string;
+    anexo               :   string;
+    correo              :   string;
+    lstTipoDoc          :   ClaimComboBERequestBM[];
+    lstSexo             :   ClaimComboBERequestBM[];
+    lstEstadoCivil      :   ClaimComboBERequestBM[];
+    lstNacionalidad     :   ClaimComboBERequestBM[];
+    lstDepartamento     :   ClaimComboBERequestBM[];
+    lstProvincia        :   ClaimComboBERequestBM[];
+    lstDistrito         :   ClaimComboBERequestBM[];
+    lstViaPago          :   ClaimComboBERequestBM[];
+    lstTipoCuenta       :   ClaimComboBERequestBM[];
+    lstBanco            :   ClaimComboBERequestBM[];
+    lstTipoVia          :   ClaimComboBERequestBM[];
+    lstBloque           :   ClaimComboBERequestBM[];
+    lstTipoInt          :   ClaimComboBERequestBM[];
+    lstConHab           :   ClaimComboBERequestBM[];
+    lstArea             :   ClaimComboBERequestBM[];
+    aPIGestorClienteURL :   string;
+    aPIGestorClienteUser:   string;
+    fechaFinPagoPension :   string;
+    fechaFallecimientoPensionista: string;
+    condicionEstudiante :   string;
+    edad                :   number;
+    porcentajeBeneficiario: number;
+}

@@ -1,4 +1,5 @@
 <div class="modal-header w-100">
+    <!-- objBeneficiarioModel -->
     <h4 class="modal-title" id="modal-basic-title">INGRESAR BENEFICIARIO</h4>
     <button type="button" aria-label="Close" (click)="closeModal()" style="cursor: pointer;">
         <i class="fa fa-close"></i>
@@ -14,7 +15,8 @@
                         [ngClass]="{'is-invalid': form.get('tipoDocumento').invalid && form.get('tipoDocumento').touched}"
                         (change)="tipoDocumentoSeleccion()">
                         <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let documento of documentos" [value]="documento.id">{{documento.nombre}}</option>
+                        <option *ngFor="let documento of objBeneficiarioModel.lstTipoDoc" [value]="documento.Codigo">{{documento.Descripcion}}</option>
+                        <!-- <option *ngFor="let documento of documentos" [value]="documento.id">{{documento.nombre}}</option> -->
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Nro Documento(*)</label>
@@ -47,7 +49,7 @@
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="sexo" [ngClass]="{'is-invalid': form.get('sexo').invalid && form.get('sexo').touched}">
                         <option value="">(SELECCIONE)</option>
-                        <option value="1">M</option>
+                        <option *ngFor="let sexo of objBeneficiarioModel.lstSexo" [value]="sexo.Codigo">{{sexo.Descripcion}}</option>
                     </select>
                 </div>
             </div>
@@ -56,14 +58,14 @@
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="estadoCivil" [ngClass]="{'is-invalid': form.get('estadoCivil').invalid && form.get('estadoCivil').touched}">
                         <option value="">(SELECCIONE)</option>
-                        <option value="1">S</option>
+                        <option *ngFor="let estado of objBeneficiarioModel.lstEstadoCivil" [value]="estado.Codigo">{{estado.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Nacionalidad(*)</label>
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="nacionalidad" [ngClass]="{'is-invalid': form.get('nacionalidad').invalid && form.get('nacionalidad').touched}">
                         <option value="">(SELECCIONE)</option>
-                        <option value="1">N</option>
+                        <option *ngFor="let nacionalidad of objBeneficiarioModel.lstNacionalidad" [value]="nacionalidad.Codigo">{{nacionalidad.Descripcion}}</option>
                     </select>
                 </div>
             </div>
@@ -72,7 +74,7 @@
                 <div class="col-sm-2">
                     <select class="form-control" formControlName="tipoVia" [ngClass]="{'is-invalid': form.get('tipoVia').invalid && form.get('tipoVia').touched}">
                         <option value="">(SELECCIONE)</option>
-                        <option value="1">TV</option>
+                        <option *ngFor="let tipoVia of objBeneficiarioModel.lstTipoVia" [value]="tipoVia.Codigo">{{tipoVia.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Dirección(*)</label>
@@ -89,6 +91,7 @@
                 <div class="col-sm-2">
                     <select class="form-control" formControlName="prefDepart">
                         <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let interior of objBeneficiarioModel.lstTipoInt" [value]="interior.Codigo">{{interior.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Interior</label>
@@ -115,6 +118,7 @@
                 <div class="col-sm-2">
                     <select class="form-control" formControlName="conjHab">
                         <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let conHab of objBeneficiarioModel.lstConHab" [value]="conHab.Codigo">{{conHab.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Nom. Conj. Hab.</label>
@@ -127,6 +131,7 @@
                  <div class="col-sm-2">
                     <select class="form-control" formControlName="bloqueChalet">
                         <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let bloque of objBeneficiarioModel.lstBloque" [value]="bloque.Codigo">{{bloque.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Num./ Let</label>
@@ -143,7 +148,7 @@
                  <div class="col-sm-2">
                     <select class="form-control" formControlName="departamento" [ngClass]="{'is-invalid': form.get('departamento').invalid && form.get('departamento').touched}">
                         <option value="">(SELECCIONE)</option>
-                        <option value="1">D</option>
+                        <option *ngFor="let departamento of objBeneficiarioModel.lstDepartamento" [value]="departamento.Codigo">{{departamento.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Provincia(*)</label>
@@ -166,6 +171,7 @@
                  <div class="col-sm-2">
                     <select class="form-control" formControlName="codigo">
                         <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let area of objBeneficiarioModel.lstArea" [value]="area.Codigo">{{area.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Teléfono Domiciliario</label>
@@ -196,12 +202,14 @@
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="viaPago">
                         <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let viaPago of objBeneficiarioModel.lstViaPago" [value]="viaPago.Codigo">{{viaPago.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Banco</label>
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="banco">
                         <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let banco of objBeneficiarioModel.lstBanco" [value]="banco.Codigo">{{banco.Descripcion}}</option>
                     </select>
                 </div>
             </div>
@@ -210,6 +218,7 @@
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="tipoCuenta">
                         <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let tipoCta of objBeneficiarioModel.lstTipoCuenta" [value]="tipoCta.Codigo">{{tipoCta.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Nro Cuenta</label>

@@ -16,33 +16,33 @@
     <div class="row">
         <div class="col-sm-3 form-group">
             <label>Caso</label>
-            <input class="form-control" (keyup.enter)="buscadorSiniestro()" [(ngModel)]="caso">
+            <input class="form-control" type="number" (keyup.enter)="buscadorSiniestro()" [(ngModel)]="claimRequest.NCASE">
         </div>
         <div class="col-sm-3 form-group">
             <label>Nro. de siniestro</label>
-            <select class="form-control" [(ngModel)]="siniestro" (change)="buscadorGlobal()">
-                <option value="0" [disabled]="siniestros.length != 0">(SELECCIONE)</option>
-                <option *ngFor="let sntro of siniestros" [value]="sntro.id">{{sntro.nombre}}</option>
+            <select class="form-control" (change)="buscadorGlobal()" [(ngModel)]="siniestro">
+                <option *ngFor="let sntro of siniestros" [value]="sntro.CODIGO" [disabled]="sntro.CODIGO == 0">{{sntro.DESCRIPCION}}</option>
             </select>
         </div>
         <div class="col-sm-3 form-group">
             <label>Póliza</label>
-            <input class="form-control" disabled [(ngModel)]="reservaCaso.poliza">
+
+            <input class="form-control" disabled [(ngModel)]="reservaCaso.NPOLICY">
         </div>
         <div class="col-sm-3 form-group">
             <label>Certificado</label>
-            <input class="form-control" disabled [(ngModel)]="reservaCaso.certificado">
+            <input class="form-control" disabled [(ngModel)]="reservaCaso.NCERTIF">
         </div>
     </div>
     <div class="row">
         <div class="col-sm-6 form-group">
             <label>Afectado</label>
-            <input class="form-control" disabled [(ngModel)]="reservaCaso.afectado">
+            <input class="form-control" disabled [(ngModel)]="reservaCaso.SCLIENAME">
         </div>
         <div class="col-sm-3 form-group">
             <label>Fecha de ocurrencia</label>
             <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="reservaCaso.fechaOcurrencia">
+                <input type="text" class="form-control" disabled [(ngModel)]="reservaCaso.DOCCURDAT">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                 </div>
@@ -51,9 +51,9 @@
         <div class="col-sm-3 form-group">
             <label>Hora de ocurrencia</label>
             <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="reservaCaso.horaOcurrencia">
+                <input type="text" class="form-control" disabled [(ngModel)]="reservaCaso.HORAOCURRENCIA">
                 <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
                 </div>
             </div>
         </div>
@@ -61,8 +61,8 @@
     <div class="row">
         <div class="col-sm-3 form-group">
             <label>Tipo de atención</label>
-            <select class="form-control" disabled [(ngModel)]="reservaCaso.tipoAtencion">
-                <option value="1">A-Ambulatorio</option>
+            <select class="form-control" disabled [(ngModel)]="reservaCaso.STIPOATENCION">
+                <option *ngFor="let atencion of (tiposAtencion) | async" [value]="atencion.SCODIGO">{{atencion.SCODIGO}} - {{atencion.SDESCRIPCION}}</option>
             </select>
         </div>
         <div class="col-sm-3 form-group">
@@ -89,12 +89,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>020000080639830 - Luis Escobar Suarez</td>
-                <td>Soles</td>
-                <td>1 - Muerte</td>
-                <td>4</td>
-                <td>19,800</td>
+            <tr *ngFor="let claim of reservaCaso.LISTA_COVERCLAIM">
+                <td>{{claim.SCLIENT}} - {{claim.SCLIENAME}}</td>
+                <td>{{claim.SCURRDES}}</td>
+                <td>{{claim.NCOVER}} - {{claim.SDESCOVER}}</td>
+                <td>{{claim.NDAMAGES}}</td>
+                <td>{{claim.NSUMINSURED}}</td>
                 <td>
                     <div class="form-group">
                         <div class="col-sm-offset-3">
@@ -113,14 +113,14 @@
                 <td></td>
                 <td>
                     <div class="form-check" *ngIf="tipoTab == 1">
-                        <input class="form-check-input position-static" type="checkbox" [(ngModel)]="arrayChech[0]" (change)="reserva(arrayChech[0] , 1)">
+                        <input class="form-check-input position-static" type="checkbox" (change)="reserva($event, claim.NCOVER)">
                     </div>
                 </td>
                 <td>
                     <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(1)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
-            <tr>
+            <!-- <tr>
                 <td>020000080639830 - Luis Escobar Suarez</td>
                 <td>Soles</td>
                 <td>2 - Incapacidad temporal</td>
@@ -243,7 +243,7 @@
                 <td>
                     <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(5)"><i class="fa fa-edit"></i></button>
                 </td>
-            </tr>
+            </tr> -->
         </tbody>
     </table>
     <div class="row pb-4">

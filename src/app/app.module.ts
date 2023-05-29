@@ -17,6 +17,8 @@ import { GastosCuracionComponent } from './pages/liquidacion/gastos-curacion/gas
 import { ModalGastosCoberturaComponent } from './pages/liquidacion/gastos-curacion/modal-gastos-cobertura/modal-gastos-cobertura.component';
 import { ModalBeneficiarioComponent } from './pages/siniestros/reserva-siniestro/modal-beneficiario/modal-beneficiario.component';
 import { ModalNuevoBeneficiarioComponent } from './pages/siniestros/reserva-siniestro/modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
+import { HttpClientModule } from '@angular/common/http';
+import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -37,9 +39,11 @@ import { ModalNuevoBeneficiarioComponent } from './pages/siniestros/reserva-sini
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbTypeaheadModule
   ],
   providers: [],
   bootstrap: [AppComponent]

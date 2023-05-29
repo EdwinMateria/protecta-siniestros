@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { ModalCoberturaComponent } from './modal-cobertura/modal-cobertura.component';
+import { ReserveService } from 'src/app/core/services/reserve/reserve.service';
+import { ClaimRequest } from 'src/app/core/models/claimRequest';
+import { ClaimResponse } from 'src/app/core/models/claimResponse';
+import { ClaimCaseDataRequest } from 'src/app/core/models/claimCaseDataRequest';
+import { ClaimCoverResponse } from 'src/app/core/models/claimCoverResponse';
 
 export class ReservaCaso{
   poliza :string;
@@ -22,18 +27,19 @@ export class ReservaSiniestroComponent implements OnInit {
   tipoTab = 1;
   registroActive = 'active';
   consultaActive = '';
-  siniestros = [];
-  caso = "";
+  siniestros : ClaimResponse[] = [{CODIGO : 0 , DESCRIPCION : 'SELECCIONE'}];
+  claimRequest = new ClaimRequest();
   siniestro = 0;
+  tiposAtencion = this.reserveService.GetComboTipoAtencion();
 
   //PRUEBA
   arrayChech : boolean[]=[];
 
   //RESULT
-  reservaCaso : ReservaCaso = new ReservaCaso();
+  reservaCaso : ClaimCoverResponse = new ClaimCoverResponse();
   showTable = false;
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, public reserveService: ReserveService) { }
 
   ngOnInit(): void {
   }
@@ -47,7 +53,7 @@ export class ReservaSiniestroComponent implements OnInit {
       this.registroActive = ''
       this.consultaActive = 'active'
     }
-    this.caso = "";
+    this.claimRequest = new ClaimRequest();
     this.siniestro = 0;
     this.showTable = false
 
@@ -56,31 +62,55 @@ export class ReservaSiniestroComponent implements OnInit {
     ]
   }
 
+  resetBuscado(){
+    this.showTable = false;
+    this.siniestros = [];
+    this.reservaCaso = new ClaimCoverResponse();
+    this.siniestro = 0;
+  }
+
   buscadorSiniestro(){
-    if(this.caso == "1"){
-      this.siniestros.push({id: "1", nombre:"456"});
-      this.siniestros.push({id: "2", nombre:"457"});
-    }else{
-      this.siniestros = [];
-      this.siniestro = 0;
-      this.reservaCaso = new ReservaCaso();
-      Swal.fire('Información', 'El caso no tiene siniestros asociados', 'warning');
-      this.showTable = false;
+    this.resetBuscado();
+    if(this.claimRequest == new ClaimRequest() || this.claimRequest.NCASE == null){
+      Swal.fire('Información', 'Debe ingresar un nro. caso válido.', 'warning');
+      this.siniestros.push({CODIGO : 0 , DESCRIPCION : 'SELECCIONE'})
       return;
+    }else{
+      Swal.showLoading();
+      this.reserveService.GetClaim(this.claimRequest).subscribe(
+        res => {
+          Swal.close();
+          this.siniestros = res;
+          if(res.length == 1){
+            Swal.fire('Información','No se encontraron siniestros para el caso ingresado','warning');
+            return;
+          }
+        },
+        err => {
+          Swal.close();
+          console.log(err);
+        }
+      )
     }
-    
   }
 
   buscadorGlobal(){
     if(this.siniestro != 0){
-      this.reservaCaso.poliza = "12548";
-      this.reservaCaso.certificado = "0";
-      this.reservaCaso.afectado = "Luis Escobar Suarez";
-      this.reservaCaso.fechaOcurrencia = "31/12/2023";
-      this.reservaCaso.horaOcurrencia = "17:00:00";
-      this.reservaCaso.tipoAtencion = "1";
-      this.reservaCaso.UIT = "4,950";
-      this.showTable = true;
+      Swal.showLoading()
+      let data = new ClaimCaseDataRequest();
+      data.NCLAIM = this.siniestro;
+      data.NCASE = this.claimRequest.NCASE;
+      this.reserveService.GetClaimCaseData(data).subscribe(
+        res =>{
+          Swal.close()
+          this.showTable = true;
+          this.reservaCaso = res;
+        },
+        err => {
+          Swal.close()
+          console.log(err);
+        }
+      )
     }
   }
 
@@ -94,9 +124,10 @@ export class ReservaSiniestroComponent implements OnInit {
   }
 
   reserva(event:any, origen: number){
-    if(event){
+    if(event.target.checked){
       this.openModalCobertura(origen)
     }
   }
+
 
 }

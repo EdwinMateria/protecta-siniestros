@@ -16,8 +16,7 @@
             <div class="form-inline" *ngIf="data == 1">
                 <label>Casos no ubicados: </label>
                 <select class="form-control ml-3">
-                    <option>SI</option>
-                    <option>NO</option>
+                    <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO" [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
                 </select>
             </div>
         </div>
@@ -33,7 +32,6 @@
             </div>
         </div>
     </div>
-    <!-- style="position: absolute; right: 0px; padding: 10px" -->
     <div class="row mt-1">
         <div class="col-sm-12">
             <div class="d-flex">
@@ -94,15 +92,9 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-sm-3 form-group">
-            <label>Código Diagnostico (CIE10) </label>
-            <select class="form-control">
-                <option>T07</option>
-            </select>
-        </div>
-        <div class="col-sm-5 form-group">
+        <div class="col-sm-8 form-group">
             <label>Diagnóstico (CIE10)</label>
-            <input class="form-control" value="Traumatismo múltiples, no especificados" disabled>
+            <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter" />
         </div>
         <div class="col-sm-2 form-group">
             <label>Especialidad</label>
@@ -110,10 +102,8 @@
         </div>
         <div class="col-sm-2 form-group">
             <label>Complejidad Diagnostico</label>
-            <select class="form-control">
-                <option>Leve</option>
-                <option>Moderado</option>
-                <option>Severo</option>
+            <select class="form-control" [(ngModel)]="codigoComplejidad">
+                <option *ngFor="let combo of comboComplejidadDiagnostico$ | async" [value]="combo.SCODIGO" [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
             </select>
         </div>
     </div>
@@ -243,8 +233,7 @@
             <div class="col-sm-3 form-group">
                 <label>Tipo de comprobante </label>
                 <select class="form-control">
-                    <option>Boleta</option>
-                    <option>Factura</option>
+                    <option *ngFor="let comprobante of tiposComprobantes" [value]="comprobante.SCODIGO" [disabled]="comprobante.SCODIGO == '0'">{{comprobante.SDESCRIPCION}}</option>
                 </select>
             </div>
 
