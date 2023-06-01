@@ -3,6 +3,9 @@ import { Beneficiario } from '../modal-cobertura/modal-cobertura.component';
 import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalNuevoBeneficiarioComponent } from '../modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
+import { ReserveService } from 'src/app/core/services/reserve/reserve.service';
+import { ClaimBenefParamRequest } from 'src/app/core/models/claimBenefParamRequest';
+import { BeneficiariesVM, ClaimBenefParamResponse } from 'src/app/core/models/claimBenefParamResponse';
 
 @Component({
   selector: 'app-modal-beneficiario',
@@ -12,49 +15,44 @@ import { ModalNuevoBeneficiarioComponent } from '../modal-nuevo-beneficiario/mod
 export class ModalBeneficiarioComponent implements OnInit {
 
   @Input() public reference: any;
-  beneficiarios: Beneficiario[] = [];
-  buscador = "";
-  selectBeneficio =  new Beneficiario();
+  beneficiarioResponse = new ClaimBenefParamResponse();
+  buscador = new ClaimBenefParamRequest();
+  pagina = 1;
+  listaBeneficiarios : BeneficiariesVM[]=[];
+  beneficiarioSeleccion = new BeneficiariesVM()
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, public reserveService: ReserveService) { }
 
   ngOnInit(): void {
   }
 
   closeModal(buscador?:any) {
-    this.reference.close(this.selectBeneficio);
-  }
-
-  llenarBeneficiarios(){
-    this.beneficiarios.push({
-      codigoCliente: "123456789", beneficiario: "BENEFICIARIO 1", tipoDocumento: "1", tipoBeneficiario: "2", nroCuenta: "123", cobertura: "", nroDocumento: ""
-    });
-    this.beneficiarios.push({
-      codigoCliente: "123456789", beneficiario: "BENEFICIARIO 2", tipoDocumento: "1", tipoBeneficiario: "2", nroCuenta: "123", cobertura: "", nroDocumento: ""
-    });
-    this.beneficiarios.push({
-      codigoCliente: "123456789", beneficiario: "BENEFICIARIO 3", tipoDocumento: "1", tipoBeneficiario: "2", nroCuenta: "123", cobertura: "", nroDocumento: ""
-    });
-    this.beneficiarios.push({
-      codigoCliente: "123456789", beneficiario: "BENEFICIARIO 4", tipoDocumento: "1", tipoBeneficiario: "2", nroCuenta: "123", cobertura: "", nroDocumento: ""
-    });
-    this.beneficiarios.push({
-      codigoCliente: "123456789", beneficiario: "BENEFICIARIO 5", tipoDocumento: "1", tipoBeneficiario: "2", nroCuenta: "123", cobertura: "", nroDocumento: ""
-    });
+    this.reference.close(this.beneficiarioSeleccion);
   }
 
   buscadorBeneficiario(){
-    if (this.buscador.replace(/ /g, "") == "") {
-      Swal.fire('Información', 'Debe introducir el nro de documento del beneficiario', 'warning');
+    if (this.buscador.SMATERNAL_LASTNAME.replace(/ /g, "") == "" && this.buscador.SPATERNAL_LASTNAME.replace(/ /g, "") == "" && this.buscador.SNAME.replace(/ /g, "") == "" && this.buscador.SNRODOCUMENT.replace(/ /g, "") == "") {
+      Swal.fire('Información', 'Debe llenar al menos un campo.', 'warning');
       return;
     }else{
-      this.llenarBeneficiarios();
+      Swal.showLoading()
+      this.reserveService.BusquedaBeneficiario(this.buscador).subscribe(
+        res =>{
+          Swal.close()
+          this.beneficiarioResponse = res;
+          this.listaBeneficiarios = this.beneficiarioResponse.ListBeneficiaries?.slice(0,9);
+        },
+        err => {
+          Swal.close();
+          console.log(err);
+        }
+      )
     }
   }
 
   limpiarBeneficiario(){
-    this.buscador = "";
-    this.beneficiarios = [];
+    this.buscador = new ClaimBenefParamRequest()
+    this.beneficiarioResponse = new ClaimBenefParamResponse()
   }
 
   openBeneficiario(){
@@ -65,8 +63,24 @@ export class ModalBeneficiarioComponent implements OnInit {
     });
   }
 
-  selectBeneficiario(beneficiario: Beneficiario){
-    this.selectBeneficio = beneficiario;
+  selectBeneficiario(beneficiario: BeneficiariesVM){
+    this.beneficiarioSeleccion = beneficiario;
+  }
+
+  changePagina(event:any){
+    this.pagina = event;
+    let inicio = (this.pagina - 1) * 10;
+    let fin = inicio + 9;
+    this.listaBeneficiarios = this.beneficiarioResponse.ListBeneficiaries?.slice(inicio , fin);
+  }
+
+  agregarBeneficiario(){
+    if(this.beneficiarioSeleccion.SCODE == null || this.beneficiarioSeleccion.SCODE == "" ||  this.beneficiarioSeleccion.SCODE == undefined){
+      Swal.fire('Información', 'Debe seleccionar un beneficiario.','warning');
+      return;
+    }else{
+      this.reference.close(this.beneficiarioSeleccion);
+    }
   }
 
 }

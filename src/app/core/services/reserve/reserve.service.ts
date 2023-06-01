@@ -10,6 +10,9 @@ import { ClaimCodDiagnosticoResponse } from '../../models/claimCodDiagnosticoRes
 import { ClaimBeneficiarioModelRequestBM } from '../../models/claimBeneficiarioModelRequest';
 import { ClaimCaseDataRequest } from '../../models/claimCaseDataRequest';
 import { ClaimCoverResponse } from '../../models/claimCoverResponse';
+import { ClaimBenefParamRequest } from '../../models/claimBenefParamRequest';
+import { ClaimBenefParamResponse } from '../../models/claimBenefParamResponse';
+import { ClaimBeneficiarioRequest } from '../../models/claimBeneficiarioRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -75,6 +78,20 @@ export class ReserveService {
   public GetClaimCaseData(data: ClaimCaseDataRequest): Observable<ClaimCoverResponse> {
     const body = JSON.stringify(data);
     return this.http.post<ClaimCoverResponse>(this.Url + '/Reserve/GetClaimCaseData', body, {
+      headers: this.headers,
+    });
+  }
+
+  public BusquedaBeneficiario(data: ClaimBenefParamRequest): Observable<ClaimBenefParamResponse> {
+    const body = JSON.stringify(data);
+    return this.http.post<ClaimBenefParamResponse>(this.Url + '/Reserve/GetBeneficiariesCover', body, {
+      headers: this.headers,
+    });
+  }
+
+  public GetBeneficiariesAdditionalDataCover(data: ClaimBeneficiarioRequest): Observable<ClaimBenefParamResponse> {
+    const body = JSON.stringify(data);
+    return this.http.post<ClaimBenefParamResponse>(this.Url + '/Reserve/GetBeneficiariesAdditionalDataCover', body, {
       headers: this.headers,
     });
   }

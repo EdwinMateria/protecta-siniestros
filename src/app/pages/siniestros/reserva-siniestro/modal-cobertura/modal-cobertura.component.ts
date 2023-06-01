@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { ModalBeneficiarioComponent } from '../modal-beneficiario/modal-beneficiario.component';
@@ -8,6 +8,8 @@ import { Observable, OperatorFunction, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
 import { ClaimCodDiagnosticoRequest } from 'src/app/core/models/claimCodDiagnosticoRequest';
 import { ClaimCodDiagnosticoResponse } from 'src/app/core/models/claimCodDiagnosticoResponse';
+import { ClaimBeneficiarioRequest } from 'src/app/core/models/claimBeneficiarioRequest';
+import { BeneficiariesVM } from 'src/app/core/models/claimBenefParamResponse';
 
 export class Beneficiario {
   codigoCliente: string;
@@ -18,68 +20,6 @@ export class Beneficiario {
   cobertura: string;
   nroDocumento: string;
 }
-const states = [
-	'Alabama',
-	'Alaska',
-	'American Samoa',
-	'Arizona',
-	'Arkansas',
-	'California',
-	'Colorado',
-	'Connecticut',
-	'Delaware',
-	'District Of Columbia',
-	'Federated States Of Micronesia',
-	'Florida',
-	'Georgia',
-	'Guam',
-	'Hawaii',
-	'Idaho',
-	'Illinois',
-	'Indiana',
-	'Iowa',
-	'Kansas',
-	'Kentucky',
-	'Louisiana',
-	'Maine',
-	'Marshall Islands',
-	'Maryland',
-	'Massachusetts',
-	'Michigan',
-	'Minnesota',
-	'Mississippi',
-	'Missouri',
-	'Montana',
-	'Nebraska',
-	'Nevada',
-	'New Hampshire',
-	'New Jersey',
-	'New Mexico',
-	'New York',
-	'North Carolina',
-	'North Dakota',
-	'Northern Mariana Islands',
-	'Ohio',
-	'Oklahoma',
-	'Oregon',
-	'Palau',
-	'Pennsylvania',
-	'Puerto Rico',
-	'Rhode Island',
-	'South Carolina',
-	'South Dakota',
-	'Tennessee',
-	'Texas',
-	'Utah',
-	'Vermont',
-	'Virgin Islands',
-	'Virginia',
-	'Washington',
-	'West Virginia',
-	'Wisconsin',
-	'Wyoming',
-];
-
 @Component({
   selector: 'app-modal-cobertura',
   templateUrl: './modal-cobertura.component.html',
@@ -90,7 +30,7 @@ export class ModalCoberturaComponent implements OnInit {
   @Input() public reference: any;
   @Input() public data: any;
 
-  beneficiarios: Beneficiario[] = [];
+  beneficiarios: BeneficiariesVM[] = [];
   datosTramitador = "1";
   comboGeneral$ = this.reserveService.GetComboGeneral();
   comboDiagnostico : ClaimComboResponse []=[{SCODIGO:'SELECCIONE',SDESCRIPCION:'Diagnóstico (CIE10)'}];
@@ -100,7 +40,7 @@ export class ModalCoberturaComponent implements OnInit {
   comboComplejidadDiagnostico$ = this.reserveService.GetComboComplejidadDiagnostico();
 
   tiposComprobantes : ClaimComboResponse[]=[];
-
+  @Output() tipoModal : EventEmitter<number>
 
   public model: any;
 
@@ -135,32 +75,32 @@ export class ModalCoberturaComponent implements OnInit {
   }
 
   addRow(index: number) {
-    if (this.beneficiarios[index].nroDocumento.replace(/ /g, "") == "") {
-      Swal.fire('Información', 'Debe introducir el nro de documento del beneficiario', 'warning');
-      return;
-    } else {
-      if(this.beneficiarios.length < 8){
-        this.beneficiarios.push({
-          codigoCliente: "", beneficiario: "", tipoDocumento: "", tipoBeneficiario: "", nroCuenta: "", cobertura: "", nroDocumento: ""
-        })
-      }else{
-        return;
-      }
-    }
+    // if (this.beneficiarios[index].nroDocumento.replace(/ /g, "") == "") {
+    //   Swal.fire('Información', 'Debe introducir el nro de documento del beneficiario', 'warning');
+    //   return;
+    // } else {
+    //   if(this.beneficiarios.length < 8){
+    //     this.beneficiarios.push({
+    //       codigoCliente: "", beneficiario: "", tipoDocumento: "", tipoBeneficiario: "", nroCuenta: "", cobertura: "", nroDocumento: ""
+    //     })
+    //   }else{
+    //     return;
+    //   }
+    // }
   }
 
   completarCampos(index: number) {
-    if (this.beneficiarios[index].nroDocumento.replace(/ /g, "") != "") {
-      this.beneficiarios[index].codigoCliente = "020001545259";
-      this.beneficiarios[index].beneficiario = "Juan Pérez Mujica";
-      this.beneficiarios[index].tipoDocumento = "DNI";
-      this.beneficiarios[index].tipoBeneficiario = "Reclamanate";
-      if(this.data == 1)  this.beneficiarios[index].cobertura = "1- Muerte";
-      if(this.data == 2)  this.beneficiarios[index].cobertura = "2- Incapacidad Temporal";
-      if(this.data == 3)  this.beneficiarios[index].cobertura = "3- Invalidez Permanente";
-      if(this.data == 4)  this.beneficiarios[index].cobertura = "4- Gastos Médicos";
-      if(this.data == 5)  this.beneficiarios[index].cobertura = "5- Gastos de Sepelio";      
-    }
+    // if (this.beneficiarios[index].nroDocumento.replace(/ /g, "") != "") {
+    //   this.beneficiarios[index].codigoCliente = "020001545259";
+    //   this.beneficiarios[index].beneficiario = "Juan Pérez Mujica";
+    //   this.beneficiarios[index].tipoDocumento = "DNI";
+    //   this.beneficiarios[index].tipoBeneficiario = "Reclamanate";
+    //   if(this.data == 1)  this.beneficiarios[index].cobertura = "1- Muerte";
+    //   if(this.data == 2)  this.beneficiarios[index].cobertura = "2- Incapacidad Temporal";
+    //   if(this.data == 3)  this.beneficiarios[index].cobertura = "3- Invalidez Permanente";
+    //   if(this.data == 4)  this.beneficiarios[index].cobertura = "4- Gastos Médicos";
+    //   if(this.data == 5)  this.beneficiarios[index].cobertura = "5- Gastos de Sepelio";      
+    // }
   }
 
 
@@ -168,7 +108,22 @@ export class ModalCoberturaComponent implements OnInit {
     const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
     modalRef.result.then((benef) => {
-      console.log(benef);
+      if(benef.SCODE){
+        Swal.showLoading();
+        let data = new ClaimBeneficiarioRequest();
+        data.SCODCLI = benef.SCODE;
+        this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
+          res =>{
+            Swal.close();
+            console.log(res);
+            this.beneficiarios.push(res.ListBeneficiaries[0])
+          },
+          err => {
+            Swal.close();
+            console.log(err);
+          }
+        )
+      }
     });
   }
 

@@ -18,7 +18,7 @@ import { ModalGastosCoberturaComponent } from './pages/liquidacion/gastos-curaci
 import { ModalBeneficiarioComponent } from './pages/siniestros/reserva-siniestro/modal-beneficiario/modal-beneficiario.component';
 import { ModalNuevoBeneficiarioComponent } from './pages/siniestros/reserva-siniestro/modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
 import { HttpClientModule } from '@angular/common/http';
-import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,8 @@ import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbTypeaheadModule
+    NgbTypeaheadModule,
+    NgbPaginationModule
   ],
   providers: [],
   bootstrap: [AppComponent]

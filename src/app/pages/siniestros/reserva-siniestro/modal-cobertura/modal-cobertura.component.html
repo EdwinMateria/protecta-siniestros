@@ -20,7 +20,7 @@
                 </select>
             </div>
         </div>
-        <div class="col-sm-5">
+        <!-- <div class="col-sm-5">
             <div class="form-inline">
                 <label>Fecha fin de análisis: </label>
                 <div class="input-group">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <div class="row mt-1">
         <div class="col-sm-12">
@@ -59,24 +59,28 @@
                 <tbody>
                     <tr *ngFor="let beneficiario of beneficiarios; let i = index">
                         <td>
-                            {{beneficiarios[i].codigoCliente}}
+                            {{beneficiario.SCODE}}
                         </td>
                         <td>
-                            {{beneficiarios[i].beneficiario}}
+                            {{beneficiario.SNAME}}
                         </td>
                         <td>
-                            {{beneficiarios[i].tipoDocumento}}
+                            {{beneficiario.SDOCUMENTTYPE}}
                         </td>
                         <td>
-                            {{beneficiarios[i].nroDocumento}}
+                            {{beneficiario.SDOCUMENTNUMBER}}
                             <!-- <input type="text" class="form-control" [(ngModel)]="beneficiarios[i].nroDocumento"
                                 (keyup.enter)="completarCampos(i)"> -->
                         </td>
                         <td>
-                            {{beneficiarios[i].tipoBeneficiario}}
+                            {{beneficiario.SBENEFICIARYTYPE}}
                         </td>
                         <td>
-                            {{beneficiarios[i].cobertura}}
+                            <span *ngIf="data == 1">1 - Muerte</span>
+                            <span *ngIf="data == 2">2 - Incapacidad Temporal</span>
+                            <span *ngIf="data == 3">3 - Invalidez Permanente</span>
+                            <span *ngIf="data == 4">4 - Gastos Médicos</span>
+                            <span *ngIf="data == 5">4 - Gastos de Sepelio</span>
                         </td>
                         <td>
                             <select class="form-control">
@@ -96,15 +100,17 @@
             <label>Diagnóstico (CIE10)</label>
             <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" [resultFormatter]="formatter" [inputFormatter]="formatter" />
         </div>
-        <div class="col-sm-2 form-group">
-            <label>Especialidad</label>
-            <input class="form-control">
-        </div>
-        <div class="col-sm-2 form-group">
-            <label>Complejidad Diagnostico</label>
-            <select class="form-control" [(ngModel)]="codigoComplejidad">
-                <option *ngFor="let combo of comboComplejidadDiagnostico$ | async" [value]="combo.SCODIGO" [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
-            </select>
+        <div *ngIf="data != 1">
+            <div class="col-sm-2 form-group">
+                <label>Especialidad</label>
+                <input class="form-control">
+            </div>
+            <div class="col-sm-2 form-group">
+                <label>Complejidad Diagnostico</label>
+                <select class="form-control" [(ngModel)]="codigoComplejidad">
+                    <option *ngFor="let combo of comboComplejidadDiagnostico$ | async" [value]="combo.SCODIGO" [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
+                </select>
+            </div>
         </div>
     </div>
 
@@ -112,8 +118,7 @@
         <div class="col-sm-3 form-group">
             <label>Tramitador </label>
             <select class="form-control" [(ngModel)]="datosTramitador">
-                <option value="1">SI</option>
-                <option value="2">NO</option>
+                <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO" [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
             </select>
         </div>
         <div *ngIf="datosTramitador == '1'" class="col-sm-5 form-group">

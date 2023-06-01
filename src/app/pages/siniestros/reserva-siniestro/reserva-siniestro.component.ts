@@ -84,6 +84,12 @@ export class ReservaSiniestroComponent implements OnInit {
           if(res.length == 1){
             Swal.fire('Información','No se encontraron siniestros para el caso ingresado','warning');
             return;
+          }else{
+            // Si tiene solo un siniestro
+            if(res.length == 2){
+              this.siniestro = this.siniestros.find(x => x.CODIGO != 0).CODIGO;
+              this.buscadorGlobal()
+            }
           }
         },
         err => {
