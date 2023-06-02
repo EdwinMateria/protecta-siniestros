@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClaimBeneficiarioModelRequestBM } from 'src/app/core/models/claimBeneficiarioModelRequest';
 import { ReserveService } from 'src/app/core/services/reserve/reserve.service';
 import { distinctUntilChanged } from "rxjs/operators";
+import { Data } from 'src/app/core/models/data';
+import Swal from 'sweetalert2';
 
 export class TipoDocumento{
   id: number;
@@ -24,41 +26,43 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   showApellidos = true;
   objBeneficiarioModel = new ClaimBeneficiarioModelRequestBM();
 
+  data = new Data();
+
   constructor(public fb: FormBuilder, public reserveService: ReserveService) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      tipoDocumento: [ '', Validators.required],
-      nroDocumento: [ '', Validators.required],
-      apellidoPaterno: [ '', Validators.required],
-      apellidoMaterno: [ '', Validators.required],
-      nombres: [ '', Validators.required],
-      fechaNacimiento: [ '', Validators.required],
-      sexo: [ '', Validators.required],
-      estadoCivil: [ '', Validators.required],
-      nacionalidad: [ '', Validators.required],
-      tipoVia: [ '', Validators.required],
-      direccion: [ '', Validators.required],
-      numero: [ '', Validators.required],
-      prefDepart: [ '' ],
-      interior: [ '' ],
-      manzana: [ '' ],
-      lote: [ '' ],
-      etapa: [ '' ],
-      conjHab: [ '' ],
-      nomConjHab: [ '' ],
-      bloqueChalet: [ '' ],
-      numLet: [ '' ],
-      referencia: [ '' ],
-      departamento: [ '', Validators.required ],
-      provincia: [ '', Validators.required ],
-      distrito: [ '', Validators.required ],
-      codigo: [ '' ],
+      P_NIDDOC_TYPE: [ '', Validators.required],
+      P_SIDDOC: [ '', Validators.required],
+      P_SLASTNAME: [ '', Validators.required],
+      P_SLASTNAME2: [ '', Validators.required],
+      P_SFIRSTNAME: [ '', Validators.required],
+      P_DBIRTHDAT: [ '', Validators.required],
+      P_SSEXCLIEN: [ '', Validators.required],
+      P_NCIVILSTA: [ '', Validators.required],
+      P_NNATIONALITY: [ '', Validators.required],
+      P_STI_DIRE: [ '', Validators.required],
+      P_SNOM_DIRECCION: [ '', Validators.required],
+      P_SNUM_DIRECCION: [ '', Validators.required],
+      P_STI_INTERIOR: [ '' ],
+      P_SNUM_INTERIOR: [ '' ],
+      P_SMANZANA: [ '' ],
+      P_SLOTE: [ '' ],
+      P_SETAPA: [ '' ],
+      P_STI_CJHT: [ '' ],
+      P_SNOM_CJHT: [ '' ],
+      P_STI_BLOCKCHALET: [ '' ],
+      P_SBLOCKCHALET: [ '' ],
+      P_SREFERENCIA: [ '' ],
+      P_NPROVINCE: [ '', Validators.required ],
+      P_NLOCAL: [ '', Validators.required ],
+      P_NMUNICIPALITY: [ '', Validators.required ],
+      P_NAREA_CODE: [ '' ],
       telefDom: [ '' ],
       celular: [ '' ],
       telefOfic: [ '' ],
       anexo: [ '' ],
-      correo: [ '' ],
+      P_SE_MAIL: [ '' ],
       viaPago: [ '' ],
       banco: [ '' ],
       tipoCuenta: [ '' ],
@@ -67,11 +71,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     })
 
     this.obtenerComboBeneficiarios()
-    //Tipos Documentos
-    this.documentos.push({ id : 1, nombre: 'SIN CÓDIGO'})
-    this.documentos.push({ id : 2, nombre: 'DNI'})
-    this.documentos.push({ id : 3, nombre: 'RUC'})
-    this.documentos.push({ id : 4, nombre: 'CARNET EXTRANJERIA'})
   }
   
   closeModal() {
@@ -87,27 +86,86 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   }
 
   tipoDocumentoSeleccion(){
-    let value = this.form.get('tipoDocumento').value;
-    if(value == 3){
+    let value = this.form.get('P_NIDDOC_TYPE').value;
+    if(value == 1){
       this.showApellidos = false;
-      this.form.removeControl('apellidoPaterno');
-      this.form.removeControl('apellidoMaterno');
+      this.form.removeControl('P_SLASTNAME');
+      this.form.removeControl('P_SLASTNAME2');
       this.labelNombres = 'Razón Social'
     }else{
       this.showApellidos = true;
-      this.form.addControl('apellidoPaterno', this.fb.control('', [Validators.required])); 
-      this.form.addControl('apellidoMaterno', this.fb.control('', [Validators.required])); 
+      this.form.addControl('P_SLASTNAME', this.fb.control('', [Validators.required])); 
+      this.form.addControl('P_SLASTNAME2', this.fb.control('', [Validators.required])); 
       this.labelNombres = 'Nombres'
     }
   }
 
   saveBeneficiario(){
-    console.log(this.form);
     if(this.form.invalid){
       this.form.markAllAsTouched();
     }else{
-      console.log('PASO');
-      //this.reference.close();
+      Swal.showLoading();
+      this.data = {
+        ...this.form.getRawValue(),
+        p_CodAplicacion : "SINIESTRO",
+        p_TipOper : "INS",
+        p_NUSERCODE : "JRENIQUE",
+        p_NSPECIALITY : "99",
+        p_NTITLE : "99",
+        p_SISCLIENT_IND : "1",
+        p_SISRENIEC_IND : "2",
+        EListAddresClient : [],
+        EListPhoneClient : [],
+        EListEmailClient : [],
+        EListContactClient: []
+      }
+
+      this.data.EListAddresClient.push({
+        ...this.form.getRawValue()
+      })
+
+      if(this.form.controls['telefDom'].value != ""){
+        this.data.EListPhoneClient.push({
+          P_SPHONE : this.form.controls['telefDom'].value,
+          P_NPHONE_TYPE : '4'
+        })
+      }
+
+      if(this.form.controls['celular'].value != ""){
+        this.data.EListPhoneClient.push({
+          P_SPHONE : this.form.controls['celular'].value,
+          P_NPHONE_TYPE : '2'
+        })
+      }
+
+      if(this.form.controls['telefOfic'].value != ""){
+        this.data.EListPhoneClient.push({
+          P_SPHONE : this.form.controls['telefOfic'].value,
+          P_NPHONE_TYPE : '1',
+          P_NEXTENS1 : this.form.controls['anexo'].value,
+          P_NAREA_CODE : this.form.controls['P_NAREA_CODE'].value,
+        })
+      }
+
+      if(this.form.controls['P_SE_MAIL'].value != ""){
+        this.data.EListEmailClient.push({
+          P_SE_MAIL : this.form.controls['P_SE_MAIL'].value,
+          P_SRECTYPE : '4'
+        })
+      }
+
+      console.log(this.data);
+      
+      this.reserveService.SaveApi(this.data).subscribe(
+        res =>{
+          Swal.close();
+          console.log(res);
+        },
+        err => {
+          Swal.close();
+          console.log(err);
+        }
+      )
     }
   }
 

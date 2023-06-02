@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CasosBM } from 'src/app/core/models/caso';
+import { CasosService } from 'src/app/core/services/casos/casos.service';
 import { ConsultaSiniestroComponent } from 'src/app/pages/siniestros/tratamiento-caso-siniestro/consulta-siniestro/consulta-siniestro.component';
 import Swal from 'sweetalert2';
 
@@ -58,13 +60,9 @@ export class FormCasoComponent implements OnInit {
   tratamientoCaso = new TratamientoCaso();
 
 
-  culpabilidad: Generic[]=[{
-    id: '1', nombre: 'Culpable'
-  }];
-  causaSiniestro: Generic[]=[{
-    id: '1', nombre: 'Exceso de velocidad'
-  }];
-
+  culpabilidades$ = this.casoService.GetCulpabilidadList();
+  causaSiniestro$ = this.casoService.GetCausaSiniestroList();
+  
   departamentos: Generic[]=[{
     id: '1', nombre: 'Lima',
   }];
@@ -77,47 +75,66 @@ export class FormCasoComponent implements OnInit {
 
   
 
-  constructor(private modalService: NgbModal, public fb: FormBuilder) { }
+  constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      poliza: ['', Validators.required],
-      certificado: [{value:'', disabled: true}],
-      nroPlaca: [{value:'', disabled: true}],
-      nroCaso: [{value:'', disabled: true}],
-      fechaOcurrencia: [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
-      horaOcurrencia : [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
-      culpabilidad: [{value:'', disabled: this.tipoForm == true && this.tipoTab != 2 ? false:true}, Validators.required],
-      causaSiniestro: [{value:'', disabled: this.tipoForm == true ? false:true}, Validators.required],
-      inicioVigencia: [{value:'', disabled: true}],
-      finVigencia: [{value:'', disabled: true}],
-      nombreContratante: [{value:'', disabled: true}],
-      documentoContratante: [{value:'', disabled: true}],
-      nombreConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      apellidoPaternoConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      apellidoMaternoConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      tipoDocumentoConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      nroDocumentoConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      fechaNacimientoConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      ubicacion:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
-      referencia: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
-      delegacion:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
-      departamento: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},Validators.required],
-      provincia: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},Validators.required],
-      distrito: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},Validators.required],
-      observacion: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      nPolicy: ['', Validators.required],
+      nCertif: [{value:'', disabled: true}],
+      sNroPlaca: [{value:'', disabled: true}],
+      nCaso: [{value:'', disabled: true}],
+      dFecOcurrencia: [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
+      sHoraOcurrencia : [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
+      nCulpabilidad: [{value:'', disabled: this.tipoForm == true && this.tipoTab != 2 ? false:true}, Validators.required],
+      nCausaSiniestro: [{value:'', disabled: this.tipoForm == true ? false:true}, Validators.required],
+      dIniVigencia: [{value:'', disabled: true}],
+      dFinVigencia: [{value:'', disabled: true}],
+      sNombreContratante: [{value:'', disabled: true}],
+      sDocContratante: [{value:'', disabled: true}],
+      sNombreConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sPaternoConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sMaternoConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      nTipDocConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sDocConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      dFecNacConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sUbicacion:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
+      sDelegacion: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
+      nDelegacion:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
+      nDepartamento: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},Validators.required],
+      nProvincia: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},Validators.required],
+      nDistrito: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},Validators.required],
+      sObservacion: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
     })
   }
 
   buscador(){
     let valorInput = this.referencia.nativeElement.value as string;
-    if(valorInput != ""){
+    if(valorInput != "" && this.form.controls['dFecOcurrencia'].value != ""){
       if (!this.tipoForm) {
         this.tratamientoCaso.nroPlaca = "2676"
         this.showBotones = true
         this.llenarTratamiento();
       } else {
-        this.llenarTratamiento();
+        Swal.showLoading()
+        this.casoService.GetPolicyForCase(Number(valorInput), this.form.controls['dFecOcurrencia'].value).subscribe(
+          res => {
+            let caso = new CasosBM();
+            caso = res.GenericResponse[0];
+            console.log(res);
+            this.form.controls['nCertif'].setValue(caso.nCertif);
+            this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
+            this.form.controls['nCaso'].setValue(caso.nCaso);
+            this.form.controls['dIniVigencia'].setValue(new Date(caso.dIniVigencia).toLocaleDateString('en-GB'));
+            this.form.controls['dFinVigencia'].setValue(new Date(caso.dFinVigencia).toLocaleDateString('en-GB'));
+            this.form.controls['sNombreContratante'].setValue(caso.sNombreContratante);
+            this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
+            Swal.close();
+          },
+          err => {
+            console.log(err);
+          }
+        )
+        // this.llenarTratamiento();
       }
     }
   }
@@ -191,16 +208,16 @@ export class FormCasoComponent implements OnInit {
       this.declararActive = ''
       this.modificarActive = 'active'
       this.tituloTratamiento.emit(false);
-      this.form.controls['poliza'].disable();
-      this.form.controls['ubicacion'].enable();
-      this.form.controls['referencia'].enable();
-      this.form.controls['delegacion'].enable();
-      this.form.controls['departamento'].enable();
-      this.form.controls['provincia'].enable();
-      this.form.controls['distrito'].enable();
-      this.form.controls['observacion'].enable();
-      this.form.controls['culpabilidad'].enable();
-      this.form.controls['causaSiniestro'].enable();
+      this.form.controls['nPolicy'].disable();
+      this.form.controls['sUbicacion'].enable();
+      this.form.controls['sDelegacion'].enable();
+      this.form.controls['nDelegacion'].enable();
+      this.form.controls['nDepartamento'].enable();
+      this.form.controls['nProvincia'].enable();
+      this.form.controls['nDistrito'].enable();
+      this.form.controls['sObservacion'].enable();
+      this.form.controls['nCulpabilidad'].enable();
+      this.form.controls['nCausaSiniestro'].enable();
     }
   }
 
@@ -223,16 +240,16 @@ export class FormCasoComponent implements OnInit {
   }
 
   opcionVolver(){
-    this.form.controls['poliza'].enable();
-    this.form.controls['ubicacion'].disable();
-    this.form.controls['referencia'].disable();
-    this.form.controls['delegacion'].disable();
-    this.form.controls['departamento'].disable();
-    this.form.controls['provincia'].disable();
-    this.form.controls['distrito'].disable();
-    this.form.controls['observacion'].disable();
-    this.form.controls['culpabilidad'].disable();
-    this.form.controls['causaSiniestro'].disable();
+    this.form.controls['nPolicy'].enable();
+    this.form.controls['sUbicacion'].disable();
+    this.form.controls['sDelegacion'].disable();
+    this.form.controls['nDelegacion'].disable();
+    this.form.controls['nDepartamento'].disable();
+    this.form.controls['nProvincia'].disable();
+    this.form.controls['nDistrito'].disable();
+    this.form.controls['sObservacion'].disable();
+    this.form.controls['nCulpabilidad'].disable();
+    this.form.controls['nCausaSiniestro'].disable();
     this.form.reset();
     this.tipoTab = 0;
     this.modificarActive = '';
@@ -253,34 +270,37 @@ export class FormCasoComponent implements OnInit {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       let msj = '';
-      if(this.form.controls['poliza'].invalid){
+      if(this.form.controls['nPolicy'].invalid){
         msj += 'Debe ingresar la póliza.<br/>';
       }
-      if(this.form.controls['fechaOcurrencia'].invalid){
+      if(this.form.controls['dFecOcurrencia'].invalid){
         msj += 'Debe ingresar la fecha de ocurrencia. <br/>';
       }
-      if(this.form.controls['horaOcurrencia'].invalid){
+      if(this.form.controls['sHoraOcurrencia'].invalid){
         msj += 'Debe ingresar la hora de ocurrencia. <br/>';
       }
-      if(this.form.controls['culpabilidad'].invalid){
+      if(this.form.controls['nCulpabilidad'].invalid){
         msj += 'Debe ingresar la culpabilidad. <br/>';
       }
-      if(this.form.controls['causaSiniestro'].invalid){
+      if(this.form.controls['nCausaSiniestro'].invalid){
         msj += 'Debe ingresar la causa del siniestro. <br/>';
       }
-      if(this.form.controls['ubicacion'].invalid){
+      if(this.form.controls['sUbicacion'].invalid){
         msj += 'Debe ingresar la ubicación. <br/>';
       }
-      if(this.form.controls['delegacion'].invalid){
+      if(this.form.controls['sDelegacion'].invalid){
+        msj += 'Debe ingresar la referencia. <br/>';
+      }
+      if(this.form.controls['nDelegacion'].invalid){
         msj += 'Debe ingresar la delegación. <br/>';
       }
-      if(this.form.controls['departamento'].invalid){
+      if(this.form.controls['nDepartamento'].invalid){
         msj += 'Debe ingresar la departamento. <br/>';
       }
-      if(this.form.controls['provincia'].invalid){
+      if(this.form.controls['nProvincia'].invalid){
         msj += 'Debe ingresar la provincia. <br/>';
       }
-      if(this.form.controls['distrito'].invalid){
+      if(this.form.controls['nDistrito'].invalid){
         msj += 'Debe ingresar el distrito.';
       }
 

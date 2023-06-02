@@ -13,6 +13,7 @@ import { ClaimCoverResponse } from '../../models/claimCoverResponse';
 import { ClaimBenefParamRequest } from '../../models/claimBenefParamRequest';
 import { ClaimBenefParamResponse } from '../../models/claimBenefParamResponse';
 import { ClaimBeneficiarioRequest } from '../../models/claimBeneficiarioRequest';
+import { Data } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -92,6 +93,20 @@ export class ReserveService {
   public GetBeneficiariesAdditionalDataCover(data: ClaimBeneficiarioRequest): Observable<ClaimBenefParamResponse> {
     const body = JSON.stringify(data);
     return this.http.post<ClaimBenefParamResponse>(this.Url + '/Reserve/GetBeneficiariesAdditionalDataCover', body, {
+      headers: this.headers,
+    });
+  }
+
+  public GetComboBanco(): Observable<ClaimComboResponse[]> {
+    const body = JSON.stringify({});
+    return this.http.post<ClaimComboResponse[]>(this.Url + '/Reserve/GetComboBanco', body, {
+      headers: this.headers,
+    });
+  }
+
+  public SaveApi(data: Data): Observable<any> {
+    const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/Reserve/SaveApi', body, {
       headers: this.headers,
     });
   }

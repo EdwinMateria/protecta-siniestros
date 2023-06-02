@@ -11,8 +11,8 @@
                 <label class="col-sm-2 col-form-label">Tipo Documento(*)</label>
                 <div class="col-sm-4">
                     <select class="form-control" 
-                        formControlName="tipoDocumento" 
-                        [ngClass]="{'is-invalid': form.get('tipoDocumento').invalid && form.get('tipoDocumento').touched}"
+                        formControlName="P_NIDDOC_TYPE" 
+                        [ngClass]="{'is-invalid': form.get('P_NIDDOC_TYPE').invalid && form.get('P_NIDDOC_TYPE').touched}"
                         (change)="tipoDocumentoSeleccion()">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let documento of objBeneficiarioModel.lstTipoDoc" [value]="documento.Codigo">{{documento.Descripcion}}</option>
@@ -21,33 +21,33 @@
                 </div>
                 <label class="col-sm-2 col-form-label">Nro Documento(*)</label>
                 <div class="col-sm-4">
-                    <input class="form-control" placeholder="Nro Documento" formControlName="nroDocumento" [ngClass]="{'is-invalid': form.get('nroDocumento').invalid && form.get('nroDocumento').touched}">
+                    <input class="form-control" placeholder="Nro Documento" formControlName="P_SIDDOC" [ngClass]="{'is-invalid': form.get('P_SIDDOC').invalid && form.get('P_SIDDOC').touched}">
                 </div>
             </div>
             <div class="form-group row" *ngIf="showApellidos">
                 <label class="col-sm-2 col-form-label">Apellido Paterno(*)</label>
                 <div class="col-sm-4">
-                    <input class="form-control" placeholder="Apellido Paterno" formControlName="apellidoPaterno" [ngClass]="{'is-invalid': form.get('apellidoPaterno').invalid && form.get('apellidoPaterno').touched}">
+                    <input class="form-control" placeholder="Apellido Paterno" formControlName="P_SLASTNAME" [ngClass]="{'is-invalid': form.get('P_SLASTNAME').invalid && form.get('P_SLASTNAME').touched}">
                 </div>
                 <label class="col-sm-2 col-form-label">Apellido Materno(*)</label>
                 <div class="col-sm-4">
-                    <input class="form-control" placeholder="Apellido Materno" formControlName="apellidoMaterno" [ngClass]="{'is-invalid': form.get('apellidoMaterno').invalid && form.get('apellidoMaterno').touched}">
+                    <input class="form-control" placeholder="Apellido Materno" formControlName="P_SLASTNAME2" [ngClass]="{'is-invalid': form.get('P_SLASTNAME2').invalid && form.get('P_SLASTNAME2').touched}">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">{{labelNombres}}(*)</label>
                 <div class="col-sm-10">
-                    <input class="form-control" placeholder="Nombres" formControlName="nombres" [ngClass]="{'is-invalid': form.get('nombres').invalid && form.get('nombres').touched}">
+                    <input class="form-control" placeholder="Nombres" formControlName="P_SFIRSTNAME" [ngClass]="{'is-invalid': form.get('P_SFIRSTNAME').invalid && form.get('P_SFIRSTNAME').touched}">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Fecha Nacimiento(*)</label>
                 <div class="col-sm-4">
-                    <input type="date" class="form-control" formControlName="fechaNacimiento" [ngClass]="{'is-invalid': form.get('fechaNacimiento').invalid && form.get('fechaNacimiento').touched}">
+                    <input type="date" class="form-control" formControlName="P_DBIRTHDAT" [ngClass]="{'is-invalid': form.get('P_DBIRTHDAT').invalid && form.get('P_DBIRTHDAT').touched}">
                 </div>
                 <label class="col-sm-2 col-form-label">Sexo(*)</label>
                 <div class="col-sm-4">
-                    <select class="form-control" formControlName="sexo" [ngClass]="{'is-invalid': form.get('sexo').invalid && form.get('sexo').touched}">
+                    <select class="form-control" formControlName="P_SSEXCLIEN" [ngClass]="{'is-invalid': form.get('P_SSEXCLIEN').invalid && form.get('P_SSEXCLIEN').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let sexo of objBeneficiarioModel.lstSexo" [value]="sexo.Codigo">{{sexo.Descripcion}}</option>
                     </select>
@@ -56,14 +56,14 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Estado Civil(*)</label>
                 <div class="col-sm-4">
-                    <select class="form-control" formControlName="estadoCivil" [ngClass]="{'is-invalid': form.get('estadoCivil').invalid && form.get('estadoCivil').touched}">
+                    <select class="form-control" formControlName="P_NCIVILSTA" [ngClass]="{'is-invalid': form.get('P_NCIVILSTA').invalid && form.get('P_NCIVILSTA').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let estado of objBeneficiarioModel.lstEstadoCivil" [value]="estado.Codigo">{{estado.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Nacionalidad(*)</label>
                 <div class="col-sm-4">
-                    <select class="form-control" formControlName="nacionalidad" [ngClass]="{'is-invalid': form.get('nacionalidad').invalid && form.get('nacionalidad').touched}">
+                    <select class="form-control" formControlName="P_NNATIONALITY" [ngClass]="{'is-invalid': form.get('P_NNATIONALITY').invalid && form.get('P_NNATIONALITY').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let nacionalidad of objBeneficiarioModel.lstNacionalidad" [value]="nacionalidad.Codigo">{{nacionalidad.Descripcion}}</option>
                     </select>
@@ -72,95 +72,95 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Tipo Vía(*)</label>
                 <div class="col-sm-2">
-                    <select class="form-control" formControlName="tipoVia" [ngClass]="{'is-invalid': form.get('tipoVia').invalid && form.get('tipoVia').touched}">
+                    <select class="form-control" formControlName="P_STI_DIRE" [ngClass]="{'is-invalid': form.get('P_STI_DIRE').invalid && form.get('P_STI_DIRE').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let tipoVia of objBeneficiarioModel.lstTipoVia" [value]="tipoVia.Codigo">{{tipoVia.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Dirección(*)</label>
                  <div class="col-sm-6">
-                    <input class="form-control" placeholder="Dirección" formControlName="direccion" [ngClass]="{'is-invalid': form.get('direccion').invalid && form.get('direccion').touched}">
+                    <input class="form-control" placeholder="Dirección" formControlName="P_SNOM_DIRECCION" [ngClass]="{'is-invalid': form.get('P_SNOM_DIRECCION').invalid && form.get('P_SNOM_DIRECCION').touched}">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Número(*)</label>
                  <div class="col-sm-2">
-                    <input class="form-control" placeholder="Nro." formControlName="numero" [ngClass]="{'is-invalid': form.get('numero').invalid && form.get('numero').touched}">
+                    <input class="form-control" placeholder="Nro." formControlName="P_SNUM_DIRECCION" [ngClass]="{'is-invalid': form.get('P_SNUM_DIRECCION').invalid && form.get('P_SNUM_DIRECCION').touched}">
                 </div>
                 <label class="col-sm-2 col-form-label">Pref. Depart.</label>
                 <div class="col-sm-2">
-                    <select class="form-control" formControlName="prefDepart">
+                    <select class="form-control" formControlName="P_STI_INTERIOR">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let interior of objBeneficiarioModel.lstTipoInt" [value]="interior.Codigo">{{interior.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Interior</label>
                  <div class="col-sm-2">
-                    <input class="form-control" placeholder="Int." formControlName="interior">
+                    <input class="form-control" placeholder="Int." formControlName="P_SNUM_INTERIOR">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Manzana</label>
                  <div class="col-sm-2">
-                    <input class="form-control" placeholder="Mz." formControlName="manzana">
+                    <input class="form-control" placeholder="Mz." formControlName="P_SMANZANA">
                 </div>
                 <label class="col-sm-2 col-form-label">Lote</label>
                 <div class="col-sm-2">
-                    <input class="form-control" placeholder="Lt." formControlName="lote">
+                    <input class="form-control" placeholder="Lt." formControlName="P_SLOTE">
                 </div>
                 <label class="col-sm-2 col-form-label">Etapa</label>
                  <div class="col-sm-2">
-                    <input class="form-control" placeholder="Etapa" formControlName="etapa">
+                    <input class="form-control" placeholder="Etapa" formControlName="P_SETAPA">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Conj. Hab. </label>
                 <div class="col-sm-2">
-                    <select class="form-control" formControlName="conjHab">
+                    <select class="form-control" formControlName="P_STI_CJHT">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let conHab of objBeneficiarioModel.lstConHab" [value]="conHab.Codigo">{{conHab.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Nom. Conj. Hab.</label>
                  <div class="col-sm-6">
-                    <input class="form-control" placeholder="Nombre de Conjunto Habitacional" formControlName="nomConjHab">
+                    <input class="form-control" placeholder="Nombre de Conjunto Habitacional" formControlName="P_SNOM_CJHT">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Bloque/ Chalet</label>
                  <div class="col-sm-2">
-                    <select class="form-control" formControlName="bloqueChalet">
+                    <select class="form-control" formControlName="P_STI_BLOCKCHALET">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let bloque of objBeneficiarioModel.lstBloque" [value]="bloque.Codigo">{{bloque.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Num./ Let</label>
                 <div class="col-sm-2">
-                    <input class="form-control" placeholder="Num./ Let" formControlName="numLet">
+                    <input class="form-control" placeholder="Num./ Let" formControlName="P_SBLOCKCHALET">
                 </div>
                 <label class="col-sm-2 col-form-label">Referencia</label>
                  <div class="col-sm-2">
-                    <input class="form-control" placeholder="Referencia" formControlName="referencia">
+                    <input class="form-control" placeholder="Referencia" formControlName="P_SREFERENCIA">
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Departamento(*)</label>
                  <div class="col-sm-2">
-                    <select class="form-control" formControlName="departamento" [ngClass]="{'is-invalid': form.get('departamento').invalid && form.get('departamento').touched}">
+                    <select class="form-control" formControlName="P_NPROVINCE" [ngClass]="{'is-invalid': form.get('P_NPROVINCE').invalid && form.get('P_NPROVINCE').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let departamento of objBeneficiarioModel.lstDepartamento" [value]="departamento.Codigo">{{departamento.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Provincia(*)</label>
                 <div class="col-sm-2">
-                    <select class="form-control" formControlName="provincia" [ngClass]="{'is-invalid': form.get('provincia').invalid && form.get('provincia').touched}">
+                    <select class="form-control" formControlName="P_NLOCAL" [ngClass]="{'is-invalid': form.get('P_NLOCAL').invalid && form.get('P_NLOCAL').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option value="1">P</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Distrito(*)</label>
                  <div class="col-sm-2">
-                    <select class="form-control" formControlName="distrito" [ngClass]="{'is-invalid': form.get('distrito').invalid && form.get('distrito').touched}"> 
+                    <select class="form-control" formControlName="P_NMUNICIPALITY" [ngClass]="{'is-invalid': form.get('P_NMUNICIPALITY').invalid && form.get('P_NMUNICIPALITY').touched}"> 
                         <option value="">(SELECCIONE)</option>
                         <option value="1">DI</option>
                     </select>
@@ -169,7 +169,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Código</label>
                  <div class="col-sm-2">
-                    <select class="form-control" formControlName="codigo">
+                    <select class="form-control" formControlName="P_NAREA_CODE">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let area of objBeneficiarioModel.lstArea" [value]="area.Codigo">{{area.Descripcion}}</option>
                     </select>
@@ -194,7 +194,7 @@
                 </div>
                 <label class="col-sm-2 col-form-label">Correo</label>
                  <div class="col-sm-2 pl-0">
-                    <input class="form-control" placeholder="Correo" formControlName="correo">
+                    <input class="form-control" placeholder="Correo" formControlName="P_SE_MAIL">
                 </div>
             </div>
             <div class="form-group row">

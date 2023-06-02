@@ -19,8 +19,8 @@
                     <label *ngIf="tipoForm">Póliza</label>
                     <label *ngIf="!tipoForm">Nro. de caso</label>
                     <input class="form-control"
-                        [ngClass]="{'is-invalid': form.get('poliza').invalid && form.get('poliza').touched}" 
-                        formControlName="poliza"
+                        [ngClass]="{'is-invalid': form.get('nPolicy').invalid && form.get('nPolicy').touched}" 
+                        formControlName="nPolicy"
                         #referencia
                         [placeholder]="!this.tipoForm ? 'Escribir nro. de caso' : 'Escribir nro. de poliza'" 
                         (keyup.enter)="buscador()">
@@ -29,20 +29,20 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Certificado</label>
-                    <input class="form-control" formControlName="certificado">
+                    <input class="form-control" formControlName="nCertif">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Nro. de placa</label>
-                    <input class="form-control" formControlName="nroPlaca">
+                    <input class="form-control" formControlName="sNroPlaca">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label *ngIf="!tipoForm">Póliza</label>
                     <label *ngIf="tipoForm">Nro. de caso</label>
-                    <input class="form-control" formControlName="nroCaso">
+                    <input class="form-control" formControlName="nCaso">
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
                 <div class="form-group">
                     <label>Fecha de ocurrencia</label>
                     <div class="input-group">
-                        <input type="date" class="form-control"  formControlName="fechaOcurrencia" [ngClass]="{'is-invalid': form.get('fechaOcurrencia').invalid && form.get('fechaOcurrencia').touched}" >
+                        <input type="date" class="form-control"  formControlName="dFecOcurrencia" [ngClass]="{'is-invalid': form.get('dFecOcurrencia').invalid && form.get('dFecOcurrencia').touched}" (change)="buscador()">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
@@ -62,7 +62,7 @@
                 <div class="form-group">
                     <label>Hora de ocurrencia</label>
                     <div class="input-group">
-                        <input type="time" class="form-control"  formControlName="horaOcurrencia" [ngClass]="{'is-invalid': form.get('horaOcurrencia').invalid && form.get('horaOcurrencia').touched}" >
+                        <input type="time" class="form-control"  formControlName="sHoraOcurrencia" [ngClass]="{'is-invalid': form.get('sHoraOcurrencia').invalid && form.get('sHoraOcurrencia').touched}" >
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
                         </div>
@@ -72,18 +72,18 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Culpabilidad</label>
-                    <select class="form-control"  formControlName="culpabilidad" [ngClass]="{'is-invalid': form.get('culpabilidad').invalid && form.get('culpabilidad').touched}" >
+                    <select class="form-control"  formControlName="nCulpabilidad" [ngClass]="{'is-invalid': form.get('nCulpabilidad').invalid && form.get('nCulpabilidad').touched}" >
                         <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let culpable of culpabilidad" [value]="culpable.id">{{culpable.nombre}}</option>
+                        <option *ngFor="let culpable of (culpabilidades$ | async)?.GenericResponse" [value]="culpable.nBlame">{{culpable.sDescript}}</option>
                       </select>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Causa de siniestro</label>
-                    <select class="form-control"  formControlName="causaSiniestro" [ngClass]="{'is-invalid': form.get('causaSiniestro').invalid && form.get('causaSiniestro').touched}" >
+                    <select class="form-control"  formControlName="nCausaSiniestro" [ngClass]="{'is-invalid': form.get('nCausaSiniestro').invalid && form.get('nCausaSiniestro').touched}" >
                         <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let causa of causaSiniestro" [value]="causa.id">{{causa.nombre}}</option>
+                        <option *ngFor="let causa of (causaSiniestro$ | async)?.GenericResponse" [value]="causa.nBlame">{{causa.sDescript}}</option>
                       </select>
                 </div>
             </div>
@@ -92,7 +92,7 @@
             <div class="col-sm-3 form-group">
                 <label>Inicio de vigencia</label>
                 <div class="input-group">
-                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="inicioVigencia">
+                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="dIniVigencia">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
@@ -101,7 +101,7 @@
             <div class="col-sm-3 form-group">
                 <label>Fin de vigencia</label>
                 <div class="input-group">
-                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="finVigencia">
+                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="dFinVigencia">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
@@ -110,13 +110,13 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Nombre del contratante</label>
-                    <input class="form-control" placeholder="Escribir nombre" formControlName="nombreContratante">
+                    <input class="form-control" placeholder="Escribir nombre" formControlName="sNombreContratante">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Tipo documento- documento contratante</label>
-                    <input class="form-control" placeholder="Documento" formControlName="documentoContratante">
+                    <input class="form-control" placeholder="Documento" formControlName="sDocContratante">
                 </div>
             </div>
         </div>
@@ -124,26 +124,26 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Nombre del conductor</label>
-                    <input type="text" class="form-control"  placeholder="Escribir nombre" formControlName="nombreConductor">
+                    <input type="text" class="form-control"  placeholder="Escribir nombre" formControlName="sNombreConductor">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Apellido Paterno del conductor</label>
                     <input type="text" class="form-control"  
-                     placeholder="Escribir apellido paterno" formControlName="apellidoPaternoConductor">
+                     placeholder="Escribir apellido paterno" formControlName="sPaternoConductor">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Apellido Materno del conductor</label>
                     <input type="text" class="form-control"  
-                     placeholder="Escribir apellido materno" formControlName="apellidoMaternoConductor">
+                     placeholder="Escribir apellido materno" formControlName="sMaternoConductor">
                 </div>
             </div>
             <div class="col-sm-3 form-group">
                 <label>Tipo de documento</label>
-                    <select class="form-control"  formControlName="tipoDocumentoConductor">
+                    <select class="form-control"  formControlName="nTipDocConductor">
                         <option value="">(SELECCIONE)</option>
                         <option value="1">DNI</option>
                     </select>
@@ -154,14 +154,14 @@
                 <div class="form-group">
                     <label>Nro. de documento</label>
                     <input type="text" class="form-control" 
-                      placeholder="Escribir número de documento" formControlName="nroDocumentoConductor">
+                      placeholder="Escribir número de documento" formControlName="sDocConductor">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Fecha de nacimiento conductor</label>
                     <div class="input-group">
-                        <input type="date" class="form-control"   placeholder="dd/mm/aaaa" formControlName="fechaNacimientoConductor">
+                        <input type="date" class="form-control"   placeholder="dd/mm/aaaa" formControlName="dFecNacConductor">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
@@ -174,13 +174,13 @@
                 <div class="form-group">
                     <label>Ubicación</label>
                     <input type="text" class="form-control"  
-                     placeholder="Escribir ubicación" formControlName="ubicacion" [ngClass]="{'is-invalid': form.get('ubicacion').invalid && form.get('ubicacion').touched}">
+                     placeholder="Escribir ubicación" formControlName="sUbicacion" [ngClass]="{'is-invalid': form.get('sUbicacion').invalid && form.get('sUbicacion').touched}">
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Referencia</label>
-                    <input type="text" class="form-control"  placeholder="Escribir referencia" formControlName="referencia" [ngClass]="{'is-invalid': form.get('referencia').invalid && form.get('referencia').touched}">
+                    <input type="text" class="form-control"  placeholder="Escribir referencia" formControlName="sDelegacion" [ngClass]="{'is-invalid': form.get('sDelegacion').invalid && form.get('sDelegacion').touched}">
                 </div>
             </div>
         </div>
@@ -188,13 +188,13 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Delegación</label>
-                    <input type="text" class="form-control"  placeholder="Escribir delegación" formControlName="delegacion" [ngClass]="{'is-invalid': form.get('delegacion').invalid && form.get('delegacion').touched}">
+                    <input type="text" class="form-control"  placeholder="Escribir delegación" formControlName="nDelegacion" [ngClass]="{'is-invalid': form.get('nDelegacion').invalid && form.get('nDelegacion').touched}">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Departamento</label>
-                    <select class="form-control"  formControlName="departamento" [ngClass]="{'is-invalid': form.get('departamento').invalid && form.get('departamento').touched}">
+                    <select class="form-control"  formControlName="nDepartamento" [ngClass]="{'is-invalid': form.get('nDepartamento').invalid && form.get('nDepartamento').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let departamento of departamentos" [value]="departamento.id">{{departamento.nombre}}</option>
                       </select>
@@ -203,7 +203,7 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Provincia</label>
-                    <select class="form-control"  formControlName="provincia" [ngClass]="{'is-invalid': form.get('provincia').invalid && form.get('provincia').touched}">
+                    <select class="form-control"  formControlName="nProvincia" [ngClass]="{'is-invalid': form.get('nProvincia').invalid && form.get('nProvincia').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let provincia of provincias" [value]="provincia.id">{{provincia.nombre}}</option>
                       </select>
@@ -212,7 +212,7 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Distrito</label>
-                    <select class="form-control"  formControlName="distrito" [ngClass]="{'is-invalid': form.get('distrito').invalid && form.get('distrito').touched}">
+                    <select class="form-control"  formControlName="nDistrito" [ngClass]="{'is-invalid': form.get('nDistrito').invalid && form.get('nDistrito').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let distrito of distritos" [value]="distrito.id">{{distrito.nombre}}</option>
                       </select>
@@ -223,7 +223,7 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Observación</label>
-                    <input type="text" class="form-control"   placeholder="Escribir observación" formControlName="observacion">
+                    <input type="text" class="form-control"   placeholder="Escribir observación" formControlName="sObservacion">
                 </div>
             </div>
         </div>
