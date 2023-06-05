@@ -51,7 +51,7 @@
                 <div class="form-group">
                     <label>Fecha de ocurrencia</label>
                     <div class="input-group">
-                        <input type="date" class="form-control"  formControlName="dFecOcurrencia" [ngClass]="{'is-invalid': form.get('dFecOcurrencia').invalid && form.get('dFecOcurrencia').touched}" (change)="buscador()">
+                        <input [type]="tipoForm ? 'date' : 'text'" class="form-control"  formControlName="dFecOcurrencia" [ngClass]="{'is-invalid': form.get('dFecOcurrencia').invalid && form.get('dFecOcurrencia').touched}" (change)="buscador()">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
@@ -62,7 +62,7 @@
                 <div class="form-group">
                     <label>Hora de ocurrencia</label>
                     <div class="input-group">
-                        <input type="time" class="form-control"  formControlName="sHoraOcurrencia" [ngClass]="{'is-invalid': form.get('sHoraOcurrencia').invalid && form.get('sHoraOcurrencia').touched}" >
+                        <input [type]="tipoForm ? 'time' : 'text'" class="form-control"  formControlName="sHoraOcurrencia" [ngClass]="{'is-invalid': form.get('sHoraOcurrencia').invalid && form.get('sHoraOcurrencia').touched}" >
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
                         </div>
@@ -73,8 +73,7 @@
                 <div class="form-group">
                     <label>Culpabilidad</label>
                     <select class="form-control"  formControlName="nCulpabilidad" [ngClass]="{'is-invalid': form.get('nCulpabilidad').invalid && form.get('nCulpabilidad').touched}" >
-                        <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let culpable of (culpabilidades$ | async)?.GenericResponse" [value]="culpable.nBlame">{{culpable.sDescript}}</option>
+                        <option *ngFor="let culpable of casoIndex.Lista_Culpabilidad" [value]="culpable.nBlame">{{culpable.sDescript}}</option>
                       </select>
                 </div>
             </div>
@@ -82,8 +81,8 @@
                 <div class="form-group">
                     <label>Causa de siniestro</label>
                     <select class="form-control"  formControlName="nCausaSiniestro" [ngClass]="{'is-invalid': form.get('nCausaSiniestro').invalid && form.get('nCausaSiniestro').touched}" >
-                        <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let causa of (causaSiniestro$ | async)?.GenericResponse" [value]="causa.nBlame">{{causa.sDescript}}</option>
+                        <!-- <option value="">(SELECCIONE)</option> -->
+                        <option *ngFor="let causa of casoIndex.Lista_CausaSiniestro" [value]="causa.nCodCausa">{{causa.sDescript}}</option>
                       </select>
                 </div>
             </div>
@@ -92,7 +91,7 @@
             <div class="col-sm-3 form-group">
                 <label>Inicio de vigencia</label>
                 <div class="input-group">
-                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="dIniVigencia">
+                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="dInicioVigencia">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
@@ -101,7 +100,7 @@
             <div class="col-sm-3 form-group">
                 <label>Fin de vigencia</label>
                 <div class="input-group">
-                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="dFinVigencia">
+                    <input class="form-control" placeholder="dd/mm/aaaa" formControlName="dFinDeVigencia">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
@@ -144,8 +143,7 @@
             <div class="col-sm-3 form-group">
                 <label>Tipo de documento</label>
                     <select class="form-control"  formControlName="nTipDocConductor">
-                        <option value="">(SELECCIONE)</option>
-                        <option value="1">DNI</option>
+                        <option *ngFor="let doc of casoIndex.Lista_TipDocConductor" [value]="doc.codigo">{{doc.descripcion}}</option>
                     </select>
             </div>
         </div>
@@ -180,7 +178,7 @@
             <div class="col-sm-6">
                 <div class="form-group">
                     <label>Referencia</label>
-                    <input type="text" class="form-control"  placeholder="Escribir referencia" formControlName="sDelegacion" [ngClass]="{'is-invalid': form.get('sDelegacion').invalid && form.get('sDelegacion').touched}">
+                    <input type="text" class="form-control"  placeholder="Escribir referencia" formControlName="sReferencia" [ngClass]="{'is-invalid': form.get('sReferencia').invalid && form.get('sReferencia').touched}">
                 </div>
             </div>
         </div>
@@ -188,24 +186,25 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Delegación</label>
-                    <input type="text" class="form-control"  placeholder="Escribir delegación" formControlName="nDelegacion" [ngClass]="{'is-invalid': form.get('nDelegacion').invalid && form.get('nDelegacion').touched}">
+                    <input type="text" class="form-control" maxlength="4"  placeholder="Escribir delegación" formControlName="sDelegacion" [ngClass]="{'is-invalid': form.get('sDelegacion').invalid && form.get('sDelegacion').touched}">
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Departamento</label>
-                    <select class="form-control"  formControlName="nDepartamento" [ngClass]="{'is-invalid': form.get('nDepartamento').invalid && form.get('nDepartamento').touched}">
-                        <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let departamento of departamentos" [value]="departamento.id">{{departamento.nombre}}</option>
+                    <select class="form-control"  formControlName="nDepartamento" [ngClass]="{'is-invalid': form.get('nDepartamento').invalid && form.get('nDepartamento').touched}" (change)="changeDepartamento()">
+                        <option *ngFor="let departamento of casoIndex.Lista_Departamento" [value]="departamento.codigo">{{departamento.descripcion}}</option>
+                        <!-- <option value="">(SELECCIONE)</option>
+                        <option *ngFor="let departamento of departamentos" [value]="departamento.id">{{departamento.nombre}}</option> -->
                       </select>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Provincia</label>
-                    <select class="form-control"  formControlName="nProvincia" [ngClass]="{'is-invalid': form.get('nProvincia').invalid && form.get('nProvincia').touched}">
-                        <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let provincia of provincias" [value]="provincia.id">{{provincia.nombre}}</option>
+                    <select class="form-control"  formControlName="nProvincia" [ngClass]="{'is-invalid': form.get('nProvincia').invalid && form.get('nProvincia').touched}" (change)="changeProvincia()">
+                        <option *ngIf="casoIndex.Lista_Provincia.length == 0" value="0">SELECCIONAR</option>
+                        <option *ngFor="let provincia of casoIndex.Lista_Provincia" [value]="provincia.codigo">{{provincia.descripcion}}</option>
                       </select>
                 </div>
             </div>
@@ -213,8 +212,8 @@
                 <div class="form-group">
                     <label>Distrito</label>
                     <select class="form-control"  formControlName="nDistrito" [ngClass]="{'is-invalid': form.get('nDistrito').invalid && form.get('nDistrito').touched}">
-                        <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let distrito of distritos" [value]="distrito.id">{{distrito.nombre}}</option>
+                        <option *ngIf="casoIndex.Lista_Distrito.length == 0" value="0">SELECCIONAR</option>
+                        <option *ngFor="let distrito of casoIndex.Lista_Distrito" [value]="distrito.codigo">{{distrito.descripcion}}</option>
                       </select>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CasosBM } from 'src/app/core/models/caso';
 import { CasosService } from 'src/app/core/services/casos/casos.service';
@@ -47,8 +47,9 @@ export class FormCasoComponent implements OnInit {
   tipoTab = 0;
   @Output() tituloTratamiento = new EventEmitter<boolean>();
   @Output() formSiniestro = new EventEmitter<number>();
-
-
+  casoIndex = new CasosBM();
+  nBranch = "";
+  nProduct = "";
 
   stateTituloSiniestro = 2;
   form!: FormGroup;
@@ -58,10 +59,6 @@ export class FormCasoComponent implements OnInit {
 
   //RESULTADO
   tratamientoCaso = new TratamientoCaso();
-
-
-  culpabilidades$ = this.casoService.GetCulpabilidadList();
-  causaSiniestro$ = this.casoService.GetCausaSiniestroList();
   
   departamentos: Generic[]=[{
     id: '1', nombre: 'Lima',
@@ -73,7 +70,12 @@ export class FormCasoComponent implements OnInit {
     id: '1', nombre: 'San Isidro',
   }];
 
-  
+  notAllowed(input: RegExp): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const forbidden = input.test(control.value);
+      return forbidden ? {notAllowed: {value: control.value}} : null;
+    };
+  }
 
   constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService) { }
 
@@ -85,55 +87,97 @@ export class FormCasoComponent implements OnInit {
       nCaso: [{value:'', disabled: true}],
       dFecOcurrencia: [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
       sHoraOcurrencia : [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
-      nCulpabilidad: [{value:'', disabled: this.tipoForm == true && this.tipoTab != 2 ? false:true}, Validators.required],
-      nCausaSiniestro: [{value:'', disabled: this.tipoForm == true ? false:true}, Validators.required],
-      dIniVigencia: [{value:'', disabled: true}],
-      dFinVigencia: [{value:'', disabled: true}],
+      nCulpabilidad: [{value:'0', disabled: this.tipoForm == true && this.tipoTab != 2 ? false:true}, [Validators.required, this.notAllowed(/^0/)]],
+      nCausaSiniestro: [{value:'0', disabled: this.tipoForm == true ? false:true}, [Validators.required, this.notAllowed(/^0/)]],
+      dInicioVigencia: [{value:'', disabled: true}],
+      dFinDeVigencia: [{value:'', disabled: true}],
       sNombreContratante: [{value:'', disabled: true}],
       sDocContratante: [{value:'', disabled: true}],
-      sNombreConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      sPaternoConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      sMaternoConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      nTipDocConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      sDocConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sNombreConductor:[{value:'NOMBRE CONDUCTOR', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sPaternoConductor:[{value:'PATERNO CONDUCTOR', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sMaternoConductor:[{value:'MATERNO CODUCTOR', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      nTipDocConductor: [{value:'0', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sDocConductor: [{value:'88888888', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
       dFecNacConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      sUbicacion:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
-      sDelegacion: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
-      nDelegacion:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
-      nDepartamento: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},Validators.required],
-      nProvincia: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},Validators.required],
-      nDistrito: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},Validators.required],
-      sObservacion: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sUbicacion:[{value:'UBICACION', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
+      sReferencia: [{value:'REFERENCIA', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
+      sDelegacion:[{value:'DELEGACION', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
+      nDepartamento: [{value:'0', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},[Validators.required, this.notAllowed(/^0/)]],
+      nProvincia: [{value:'0', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},[Validators.required, this.notAllowed(/^0/)]],
+      nDistrito: [{value:'0', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},[Validators.required, this.notAllowed(/^0/)]],
+      sObservacion: [{value:'OBSERVACION', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      nBranch : [''],
+      nProduct : [''],
     })
+    this.obtenerCasoIndex();
+  }
+
+  obtenerCasoIndex(){
+    Swal.showLoading();
+    this.casoService.Index().subscribe(
+      res =>{
+        Swal.close();
+        this.casoIndex = res;
+      },
+      err =>{
+        Swal.close();
+        console.log(err);
+      }
+    )
   }
 
   buscador(){
     let valorInput = this.referencia.nativeElement.value as string;
-    if(valorInput != "" && this.form.controls['dFecOcurrencia'].value != ""){
+    if(valorInput != ""){
       if (!this.tipoForm) {
-        this.tratamientoCaso.nroPlaca = "2676"
         this.showBotones = true
-        this.llenarTratamiento();
-      } else {
-        Swal.showLoading()
-        this.casoService.GetPolicyForCase(Number(valorInput), this.form.controls['dFecOcurrencia'].value).subscribe(
+        Swal.showLoading();
+        this.casoService.GetSearchCase(Number(valorInput)).subscribe(
           res => {
-            let caso = new CasosBM();
-            caso = res.GenericResponse[0];
-            console.log(res);
-            this.form.controls['nCertif'].setValue(caso.nCertif);
-            this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
-            this.form.controls['nCaso'].setValue(caso.nCaso);
-            this.form.controls['dIniVigencia'].setValue(new Date(caso.dIniVigencia).toLocaleDateString('en-GB'));
-            this.form.controls['dFinVigencia'].setValue(new Date(caso.dFinVigencia).toLocaleDateString('en-GB'));
-            this.form.controls['sNombreContratante'].setValue(caso.sNombreContratante);
-            this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
             Swal.close();
+            let caso = new CasosBM();
+            console.log(res);
+            caso = res.GenericResponse[0];
+            this.form.patchValue({
+              ...caso,
+              dInicioVigencia : new Date(caso.dIniVigencia).toLocaleDateString('en-GB'),
+              dFinDeVigencia : new Date(caso.dFinVigencia).toLocaleDateString('en-GB'),
+              dFecOcurrencia : new Date(caso.dFecOcurrencia).toLocaleDateString('en-GB'),
+              nCaso: caso.nPolicy,
+              nPolicy: valorInput,
+
+            })
           },
           err => {
+            Swal.close();
             console.log(err);
           }
         )
+      } else {
+        if(this.form.controls['dFecOcurrencia'].value != ""){
+          Swal.showLoading()
+          this.casoService.GetPolicyForCase(Number(valorInput), this.form.controls['dFecOcurrencia'].value).subscribe(
+            res => {
+              let caso = new CasosBM();
+              console.log(res);
+              caso = res.GenericResponse[0];
+              this.form.controls['nCertif'].setValue(caso.nCertif);
+              this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
+              this.form.controls['nCaso'].setValue(caso.nCaso);
+              this.form.controls['dInicioVigencia'].setValue(new Date(caso.dIniVigencia).toLocaleDateString('en-GB'));
+              this.form.controls['dFinDeVigencia'].setValue(new Date(caso.dFinVigencia).toLocaleDateString('en-GB'));
+              this.form.controls['sNombreContratante'].setValue(caso.sNombreContratante);
+              this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
+              this.form.controls['nBranch'].setValue(caso.nBranch);
+              this.form.controls['nProduct'].setValue(caso.nProduct);
+              Swal.close();
+            },
+            err => {
+              Swal.close()
+              console.log(err);
+            }
+          )
+        }
         // this.llenarTratamiento();
       }
     }
@@ -308,26 +352,73 @@ export class FormCasoComponent implements OnInit {
       return;
     }
     else {
-      this.tratamientoCaso.nroPlaca = "2676"
-      Swal.fire({
-        title: 'Información',
-        text: "Se declaró el caso correctamente: 2676. ¿Desea declarar los siniestros?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'De acuerdo',
-        cancelButtonText: 'No',
-        reverseButtons: true
-      }).then((result) => {
-
-        if (result.isConfirmed) {
-          this.tipoForm = false;
-          this.showBotones = true
-          this.tabControl(1, 2);
-        }else{
-          this.form.reset()
+      Swal.showLoading();
+      let caso = new CasosBM();
+      caso = this.form.getRawValue();
+      var dateInicio = (this.form.controls['dInicioVigencia'].value).split("/");
+      var dateFin = (this.form.controls['dFinDeVigencia'].value).split("/");
+      
+      caso.dIniVigencia = new Date(+dateInicio[2], dateInicio[1] - 1, +dateInicio[0]);
+      caso.dFinVigencia = new Date(+dateFin[2], dateFin[1] - 1, +dateFin[0]);
+      caso.nCertif = 0;
+      const data: FormData = new FormData();
+      data.append('casosData', JSON.stringify(caso));
+      this.casoService.AddCasos(data).subscribe(
+        res => {
+          Swal.close();
+          console.log(res);
+          Swal.fire({
+            title: 'Información',
+            text: `Se declaró el caso correctamente: ${res.numcase}. ¿Desea declarar los siniestros?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'De acuerdo',
+            cancelButtonText: 'No',
+            reverseButtons: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.tipoForm = false;
+              this.showBotones = true
+              this.tabControl(1, 2);
+            }else{
+              this.form.reset()
+            }
+          })
+        },
+        err => {
+          Swal.close();
+          console.log(err)
         }
-      })
+      )
     }
+  }
+
+  changeDepartamento(){
+    let departamento = this.form.controls['nDepartamento'].value;
+    Swal.showLoading();
+    this.casoService.GetProvincias(departamento).subscribe(
+      res => {
+        Swal.close();
+        this.casoIndex.Lista_Distrito = [];
+        this.casoIndex.Lista_Provincia = [];
+        this.form.controls['nProvincia'].setValue('0');
+        this.form.controls['nDistrito'].setValue('0');
+        this.casoIndex.Lista_Provincia = res
+      }
+    )
+  }
+
+  changeProvincia(){
+    let provincia = this.form.controls['nProvincia'].value;
+    Swal.showLoading();
+    this.casoService.GetDistritos(provincia).subscribe(
+      res => {
+        Swal.close();
+        this.casoIndex.Lista_Distrito = [];
+        this.form.controls['nDistrito'].setValue('0');
+        this.casoIndex.Lista_Distrito = res;
+      }
+    )
   }
 
 }
