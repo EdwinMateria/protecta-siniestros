@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef }
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CasosBM } from 'src/app/core/models/caso';
+import { SiniestroBM } from 'src/app/core/models/siniestroBM';
 import { CasosService } from 'src/app/core/services/casos/casos.service';
 import { ConsultaSiniestroComponent } from 'src/app/pages/siniestros/tratamiento-caso-siniestro/consulta-siniestro/consulta-siniestro.component';
 import Swal from 'sweetalert2';
@@ -53,22 +54,14 @@ export class FormCasoComponent implements OnInit {
 
   stateTituloSiniestro = 2;
   form!: FormGroup;
-
+  @Output() casoEmit = new EventEmitter<CasosBM>();
 
   @Input() tipoTabForm = 0;
+  casoBM = new CasosBM();
 
   //RESULTADO
   tratamientoCaso = new TratamientoCaso();
-  
-  departamentos: Generic[]=[{
-    id: '1', nombre: 'Lima',
-  }];
-  provincias: Generic[]=[{
-    id: '1', nombre: 'Lima',
-  }];
-  distritos: Generic[]=[{
-    id: '1', nombre: 'San Isidro',
-  }];
+  siniestros: SiniestroBM[] = [];
 
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -93,19 +86,19 @@ export class FormCasoComponent implements OnInit {
       dFinDeVigencia: [{value:'', disabled: true}],
       sNombreContratante: [{value:'', disabled: true}],
       sDocContratante: [{value:'', disabled: true}],
-      sNombreConductor:[{value:'NOMBRE CONDUCTOR', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      sPaternoConductor:[{value:'PATERNO CONDUCTOR', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      sMaternoConductor:[{value:'MATERNO CODUCTOR', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sNombreConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sPaternoConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sMaternoConductor:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
       nTipDocConductor: [{value:'0', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      sDocConductor: [{value:'88888888', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sDocConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
       dFecNacConductor: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
-      sUbicacion:[{value:'UBICACION', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
-      sReferencia: [{value:'REFERENCIA', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
-      sDelegacion:[{value:'DELEGACION', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
+      sUbicacion:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
+      sReferencia: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
+      sDelegacion:[{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}, Validators.required],
       nDepartamento: [{value:'0', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},[Validators.required, this.notAllowed(/^0/)]],
       nProvincia: [{value:'0', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},[Validators.required, this.notAllowed(/^0/)]],
       nDistrito: [{value:'0', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false},[Validators.required, this.notAllowed(/^0/)]],
-      sObservacion: [{value:'OBSERVACION', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
+      sObservacion: [{value:'', disabled: !this.tipoForm && this.tipoTab != 2 ? true : false}],
       nBranch : [''],
       nProduct : [''],
     })
@@ -135,18 +128,34 @@ export class FormCasoComponent implements OnInit {
         this.casoService.GetSearchCase(Number(valorInput)).subscribe(
           res => {
             Swal.close();
-            let caso = new CasosBM();
-            console.log(res);
-            caso = res.GenericResponse[0];
+            this.casoBM = res.GenericResponse[0];
             this.form.patchValue({
-              ...caso,
-              dInicioVigencia : new Date(caso.dIniVigencia).toLocaleDateString('en-GB'),
-              dFinDeVigencia : new Date(caso.dFinVigencia).toLocaleDateString('en-GB'),
-              dFecOcurrencia : new Date(caso.dFecOcurrencia).toLocaleDateString('en-GB'),
-              nCaso: caso.nPolicy,
+              ...this.casoBM,
+              dInicioVigencia : new Date(this.casoBM.dIniVigencia).toLocaleDateString('en-GB'),
+              dFinDeVigencia : new Date(this.casoBM.dFinVigencia).toLocaleDateString('en-GB'),
+              dFecOcurrencia : new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB'),
+              dFecNacConductor : new Date(this.casoBM.dFecNacConductor).toLocaleDateString('en-GB'),
+              nCaso: this.casoBM.nPolicy,
               nPolicy: valorInput,
-
-            })
+            });
+            //Provincia
+            this.changeDepartamento(false);
+            this.form.controls['nProvincia'].setValue(this.casoBM.nProvincia);
+            this.changeProvincia(false)
+            console.log(this.casoBM.nDistrito);
+            
+          },
+          err => {
+            Swal.close();
+            console.log(err);
+          }
+        )
+        //Siniestros del Caso
+        Swal.showLoading();
+        this.casoService.GetSearchClaim(Number(valorInput)).subscribe(
+          res => {
+            Swal.close();
+            this.siniestros = res.GenericResponse;
           },
           err => {
             Swal.close();
@@ -247,6 +256,9 @@ export class FormCasoComponent implements OnInit {
       this.modificarActive = ''
       this.tituloTratamiento.emit(true);
       this.formSiniestro.emit(stateTituloSiniestro);
+      this.casoBM.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
+      this.casoBM.nCaso = this.form.controls['nPolicy'].value; // Para la consulta de caso, se mapeo el n caso en formcontrol nPolicy
+      this.casoEmit.emit(this.casoBM);
     }
     if(this.tipoTab == 2){
       this.declararActive = ''
@@ -255,7 +267,7 @@ export class FormCasoComponent implements OnInit {
       this.form.controls['nPolicy'].disable();
       this.form.controls['sUbicacion'].enable();
       this.form.controls['sDelegacion'].enable();
-      this.form.controls['nDelegacion'].enable();
+      this.form.controls['sReferencia'].enable();
       this.form.controls['nDepartamento'].enable();
       this.form.controls['nProvincia'].enable();
       this.form.controls['nDistrito'].enable();
@@ -287,7 +299,7 @@ export class FormCasoComponent implements OnInit {
     this.form.controls['nPolicy'].enable();
     this.form.controls['sUbicacion'].disable();
     this.form.controls['sDelegacion'].disable();
-    this.form.controls['nDelegacion'].disable();
+    this.form.controls['sReferencia'].disable();
     this.form.controls['nDepartamento'].disable();
     this.form.controls['nProvincia'].disable();
     this.form.controls['nDistrito'].disable();
@@ -310,10 +322,8 @@ export class FormCasoComponent implements OnInit {
     }
   }
 
-  saveCaso() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      let msj = '';
+  validacionFormularioCaso(){
+    let msj = '';
       if(this.form.controls['nPolicy'].invalid){
         msj += 'Debe ingresar la póliza.<br/>';
       }
@@ -349,6 +359,13 @@ export class FormCasoComponent implements OnInit {
       }
 
       Swal.fire('Información', msj, 'warning');
+      return;
+  }
+
+  saveCaso() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.validacionFormularioCaso();
       return;
     }
     else {
@@ -393,7 +410,37 @@ export class FormCasoComponent implements OnInit {
     }
   }
 
-  changeDepartamento(){
+  editarCaso(){
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.validacionFormularioCaso();
+      return;
+    }else{
+      let caso = new CasosBM();
+      caso = {
+        ...this.form.getRawValue()
+      };
+      Swal.close();
+      this.casoService.UpdateCase(caso).subscribe(
+        res => {
+          if(res.Message == "Ok"){
+            Swal.close();
+            Swal.fire('Información','Caso actualizado correctamente','success');
+            this.opcionVolver();
+          }else{
+            Swal.close();
+            Swal.fire('Información',res.Message,'warning');
+          } 
+        },
+        err => {
+          Swal.close();
+          console.log(err);
+        }
+      )
+    }
+  }
+
+  changeDepartamento(origen:boolean){
     let departamento = this.form.controls['nDepartamento'].value;
     Swal.showLoading();
     this.casoService.GetProvincias(departamento).subscribe(
@@ -401,22 +448,28 @@ export class FormCasoComponent implements OnInit {
         Swal.close();
         this.casoIndex.Lista_Distrito = [];
         this.casoIndex.Lista_Provincia = [];
-        this.form.controls['nProvincia'].setValue('0');
-        this.form.controls['nDistrito'].setValue('0');
+        if(origen){
+          this.form.controls['nProvincia'].setValue('0');
+          this.form.controls['nDistrito'].setValue('0');
+        }
         this.casoIndex.Lista_Provincia = res
       }
     )
   }
 
-  changeProvincia(){
+  changeProvincia(origen:boolean){
     let provincia = this.form.controls['nProvincia'].value;
     Swal.showLoading();
     this.casoService.GetDistritos(provincia).subscribe(
       res => {
         Swal.close();
         this.casoIndex.Lista_Distrito = [];
-        this.form.controls['nDistrito'].setValue('0');
         this.casoIndex.Lista_Distrito = res;
+        if(origen){
+          this.form.controls['nDistrito'].setValue('0');
+        }else{
+          this.form.controls['nDistrito'].setValue(this.casoBM.nDistrito)
+        }
       }
     )
   }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CasosBM } from 'src/app/core/models/caso';
 
 @Component({
   selector: 'app-tratamiento-caso-siniestro',
@@ -14,6 +15,7 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
   tituloState = false;
 
   formSiniestro = 0;
+  caso = new CasosBM();
 
   constructor() { }
 
@@ -63,6 +65,10 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
     if(estado){
       this.tabControl(2);
     }
+  }
+
+  getCaso(caso:any){
+    this.caso = caso;
   }
 
 }

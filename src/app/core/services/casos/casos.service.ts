@@ -61,9 +61,25 @@ export class CasosService {
     });
   }
 
+  public GetSearchClaim(nnumcase: number): Observable<GenericResponse> {
+    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetSearchClaim?nnumcase='+ nnumcase, {
+      headers: this.headers
+    });
+  }
+
   public AddCasos(data: any): Observable<any> {
     //const body = JSON.stringify(data);
     return this.http.post<any>(this.Url + '/CasosManager/AddCasos', data);
+  }
+
+  public UpdateCase(data: CasosBM): Observable<any> {
+    //const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/CasosManager/UpdateCase', data);
+  }
+
+
+  public AddSiniestros(data: any): Observable<any> {
+    return this.http.post<any>(this.Url + '/CasosManager/AddSiniestros', data);
   }
 
 

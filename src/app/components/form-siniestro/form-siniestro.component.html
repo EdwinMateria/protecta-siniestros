@@ -1,63 +1,61 @@
 <div *ngIf="estadoForm == 3" class="col-sm-12 mb-2">
     <button class="btn btn-danger"><i class="fa fa-close mr-2"></i>Rechazar</button>
 </div>
+<div class="row">
+    <div class="col-sm-3 form-group">
+        <label>Póliza</label>
+        <input type="text" class="form-control" disabled [(ngModel)]="casoBM.nPolicy">
+    </div>
+    <div class="col-sm-3 form-group">
+        <label>Certificado</label>
+        <input type="text" class="form-control" disabled [(ngModel)]="casoBM.nCertif">
+    </div>
+    <div class="col-sm-3 form-group">
+        <label>Nro. de caso</label>
+        <input type="text" class="form-control" disabled [(ngModel)]="casoBM.nCaso">
+    </div>
+    <div class="col-sm-3 form-group">
+        <label>Nro. de siniestro</label>
+        <input type="text" class="form-control" disabled>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3 form-group">
+        <label>Fecha de ocurrencia</label>
+        <div class="input-group">
+            <input type="text" class="form-control" disabled [(ngModel)]="fechaMap">
+            <div class="input-group-append">
+                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 form-group">
+        <label>Hora de ocurrencia</label>
+        <div class="input-group">
+            <input type="text" class="form-control" disabled [(ngModel)]="casoBM.sHoraOcurrencia">
+            <div class="input-group-append">
+                <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 form-group">
+        <label>Causa del siniestro</label>
+        <select class="form-control" disabled [(ngModel)]="casoBM.nCausaSiniestro">
+            <option *ngFor="let causa of casoBM.Lista_CausaSiniestro" [value]="causa.nCodCausa">{{causa.sDescript}}</option>
+        </select>
+    </div>
+    <div class="col-sm-3 form-group">
+        <label>Moneda</label>
+        <input type="text" class="form-control" disabled>
+    </div>
+</div>
 <form [formGroup]="form">
-    <div class="row">
-        <!-- <div *ngIf="!estadoForm" class="col-sm-12 mb-2">
-            <button class="btn btn-danger"><i class="fa fa-close mr-2"></i>Rechazar</button>
-        </div> -->
-        <div class="col-sm-3 form-group">
-            <label>Póliza</label>
-            <input type="text" class="form-control" formControlName="poliza">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Certificado</label>
-            <input type="text" class="form-control" formControlName="certificado">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Nro. de caso</label>
-            <input type="text" class="form-control" formControlName="nroCaso">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Nro. de siniestro</label>
-            <input type="text" class="form-control" formControlName="nroSiniestro">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3 form-group">
-            <label>Fecha de ocurrencia</label>
-            <div class="input-group">
-                <input type="text" class="form-control" formControlName="fechaOcurrencia">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Hora de ocurrencia</label>
-            <div class="input-group">
-                <input type="text" class="form-control" formControlName="horaOcurrencia">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Causa del siniestro</label>
-            <select class="form-control" formControlName="causaSiniestro">
-                <option>1</option>
-              </select>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Moneda</label>
-            <input type="text" class="form-control" formControlName="moneda">
-        </div>
-    </div>
     <div class="row">
         <div class="col-sm-3 form-group">
             <label>Fecha de denuncia</label>
             <div class="input-group">
-                <input type="date" class="form-control" formControlName="fechaDenuncia" [ngClass]="{'is-invalid': form.get('fechaDenuncia').invalid && form.get('fechaDenuncia').touched}" >
+                <input type="date" class="form-control" formControlName="dFecDenuncia"
+                    [ngClass]="{'is-invalid': form.get('dFecDenuncia').invalid && form.get('dFecDenuncia').touched}">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                 </div>
@@ -66,7 +64,8 @@
         <div class="col-sm-3 form-group">
             <label>Hora de recepción</label>
             <div class="input-group">
-                <input type="time" class="form-control" formControlName="horaRecepcion" [ngClass]="{'is-invalid': form.get('horaRecepcion').invalid && form.get('horaRecepcion').touched}">
+                <input type="time" class="form-control" formControlName="horaRecepcion"
+                    [ngClass]="{'is-invalid': form.get('horaRecepcion').invalid && form.get('horaRecepcion').touched}">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
                 </div>
@@ -75,7 +74,8 @@
         <div class="col-sm-3 form-group">
             <label>Fecha de apertura</label>
             <div class="input-group">
-                <input type="date" class="form-control" formControlName="fechaApertura" [ngClass]="{'is-invalid': form.get('fechaApertura').invalid && form.get('fechaApertura').touched}">
+                <input type="date" class="form-control" formControlName="dFecApertura"
+                    [ngClass]="{'is-invalid': form.get('dFecApertura').invalid && form.get('dFecApertura').touched}">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                 </div>
@@ -86,46 +86,42 @@
         <div class="col-sm-6 form-group">
             <label>Afectado (siniestro)</label>
             <div class="input-group">
-                <input type="text" class="form-control" formControlName="afectado" [ngClass]="{'is-invalid': form.get('afectado').invalid && form.get('afectado').touched}">
+                <input type="text" class="form-control" formControlName="afectado" readonly
+                    [ngClass]="{'is-invalid': form.get('afectado').invalid && form.get('afectado').touched}">
                 <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    <button class="btn btn-primary" (click)="openBeneficiario()"><i class="fa fa-search"></i></button>
+                    <!-- <span class="input-group-text"><i class="fa fa-search"></i></span> -->
                 </div>
             </div>
         </div>
         <div class="col-sm-3 form-group">
             <label>Tipo de ocupante</label>
-            <select class="form-control" formControlName="tipoOcupante" [ngClass]="{'is-invalid': form.get('horaRecepcion').invalid && form.get('horaRecepcion').touched}">
-                <option>1</option>
-              </select>
+            <select class="form-control" formControlName="nTipOcupante"
+                [ngClass]="{'is-invalid': form.get('nTipOcupante').invalid && form.get('nTipOcupante').touched}">
+                <option *ngFor="let ocupante of ocupantes" [value]="ocupante.codigo">{{ocupante.descript}}</option>
+            </select>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-3 form-group">
             <label>Tipo de atención</label>
-            <select class="form-control" formControlName="tipoAtencion" [ngClass]="{'is-invalid': form.get('tipoAtencion').invalid && form.get('tipoAtencion').touched}">
-                <option>1</option>
-              </select>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Diagnóstico</label>
-            <select class="form-control" formControlName="diagnostico" [ngClass]="{'is-invalid': form.get('diagnostico').invalid && form.get('diagnostico').touched}">
-                <option>1</option>
-              </select>
+            <select class="form-control" formControlName="sTipAtencion"
+                [ngClass]="{'is-invalid': form.get('sTipAtencion').invalid && form.get('sTipAtencion').touched}">
+                <option *ngFor="let atencion of atenciones" [value]="atencion.codigo">{{atencion.descript}}</option>
+            </select>
         </div>
         <div class="col-sm-3 form-group">
             <label>Fecha de fallecido</label>
             <div class="input-group">
-                <input type="date" class="form-control" formControlName="fechaFallecido" >
+                <input type="date" class="form-control" formControlName="dFecFallecido">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-sm-3 form-group">
             <label>Siniestro equivalente</label>
-            <input type="text" class="form-control"  formControlName="siniestroEquivalente">
+            <input type="text" class="form-control" formControlName="sEquivSiniestro">
         </div>
     </div>
 </form>
@@ -137,17 +133,13 @@
 
 <div class="row" *ngIf="estadoForm == 3">
     <div class="col-sm-3 form-group">
-            <label>Motivo de rechazo</label>
-            <select class="form-control" [(ngModel)]="eliminarSiniestro" [disabled]="eliminado">
-                <option value="">(SELECCIONE)</option>
-                <option value="1">MOTIVO 1</option>
-                <option>OTROS</option>
-              </select>
+        <label>Motivo de rechazo</label>
+        <select class="form-control" [(ngModel)]="eliminarSiniestro" [disabled]="eliminado">
+            <option value="">(SELECCIONE)</option>
+            <option value="1">MOTIVO 1</option>
+            <option>OTROS</option>
+        </select>
     </div>
-    <!-- <div class="col-sm-4 form-group">
-        <label>Detalle de la observación</label>
-        <input type="text" class="form-control">
-    </div> -->
     <div class="col-sm-4 form-group" *ngIf="eliminado">
         <label>Fecha de rechazo</label>
         <div class="input-group">

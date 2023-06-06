@@ -159,7 +159,7 @@
                 <div class="form-group">
                     <label>Fecha de nacimiento conductor</label>
                     <div class="input-group">
-                        <input type="date" class="form-control"   placeholder="dd/mm/aaaa" formControlName="dFecNacConductor">
+                        <input [type]="!tipoForm ? 'text' : 'date'" class="form-control"   placeholder="dd/mm/aaaa" formControlName="dFecNacConductor">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
@@ -192,17 +192,15 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Departamento</label>
-                    <select class="form-control"  formControlName="nDepartamento" [ngClass]="{'is-invalid': form.get('nDepartamento').invalid && form.get('nDepartamento').touched}" (change)="changeDepartamento()">
+                    <select class="form-control"  formControlName="nDepartamento" [ngClass]="{'is-invalid': form.get('nDepartamento').invalid && form.get('nDepartamento').touched}" (change)="changeDepartamento(true)">
                         <option *ngFor="let departamento of casoIndex.Lista_Departamento" [value]="departamento.codigo">{{departamento.descripcion}}</option>
-                        <!-- <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let departamento of departamentos" [value]="departamento.id">{{departamento.nombre}}</option> -->
                       </select>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group">
                     <label>Provincia</label>
-                    <select class="form-control"  formControlName="nProvincia" [ngClass]="{'is-invalid': form.get('nProvincia').invalid && form.get('nProvincia').touched}" (change)="changeProvincia()">
+                    <select class="form-control"  formControlName="nProvincia" [ngClass]="{'is-invalid': form.get('nProvincia').invalid && form.get('nProvincia').touched}" (change)="changeProvincia(true)">
                         <option *ngIf="casoIndex.Lista_Provincia.length == 0" value="0">SELECCIONAR</option>
                         <option *ngFor="let provincia of casoIndex.Lista_Provincia" [value]="provincia.codigo">{{provincia.descripcion}}</option>
                       </select>
@@ -235,7 +233,7 @@
         <div class="row" *ngIf="tipoTab == 2">
             <div class="col-sm-12" align="end">
                 <button class="btn mr-2 mb-3" (click)="opcionVolver()">Volver</button>
-                <button class="btn btn-success mb-3">Guardar</button>
+                <button class="btn btn-success mb-3" (click)="editarCaso()">Guardar</button>
             </div>
         </div>
         <!-- RECHAZAR -->
@@ -257,35 +255,19 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">458788</th>
-                <td>Luis Escobar</td>
-                <td>O - Ocupante</td>
-                <td>02/01/2023</td>
-                <td>25/04/2023</td>
+              <tr *ngFor="let siniestro of siniestros">
+                <th scope="row">{{siniestro.nSiniestro}}</th>
+                <td>{{siniestro.sCliente}}</td>
+                <td>{{siniestro.sTipOcupante}}</td>
+                <td>{{siniestro.dFecApertura | date: 'dd/MM/yyyy'}}</td>
+                <td>{{siniestro.dFecRechazo | date: 'dd/MM/yyyy'}}</td>
                 <td>
                     <button class="btn btn-sm btn-primary mr-3" (click)="consultaSiniestro()"><i class="fa fa-eye"></i></button>
                     <button class="btn btn-sm btn-success mr-3" (click)="tabControl(1, 1)"><i class="fa fa-edit"></i></button>
                     <button class="btn btn-sm btn-danger"  (click)="rechazarSiniestro()"><i class="fa fa-close"></i></button>
                 </td>
               </tr>
-              <tr>
-                <th scope="row">458789</th>
-                <td>Andres Palacios R.</td>
-                <td>T - Tercero</td>
-                <td>02/01/2023</td>
-                <td>-</td>
-                <td>
-                    <button class="btn btn-sm btn-primary mr-3"><i class="fa fa-eye"></i></button>
-                    <button class="btn btn-sm btn-success mr-3"><i class="fa fa-edit"></i></button>
-                    <button class="btn btn-sm btn-danger"><i class="fa fa-close"></i></button>
-                </td>
-              </tr>
             </tbody>
           </table>
     </div>
 </div>
-
-<!-- <div *ngIf="tipoTab == 1">
-    <app-form-siniestro (cancelBool)="siniestroCancel($event)" [estadoForm] = "stateTituloSiniestro" ></app-form-siniestro>
-</div> -->
