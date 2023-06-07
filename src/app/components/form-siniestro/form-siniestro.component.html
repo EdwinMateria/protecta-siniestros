@@ -16,7 +16,7 @@
     </div>
     <div class="col-sm-3 form-group">
         <label>Nro. de siniestro</label>
-        <input type="text" class="form-control" disabled>
+        <input type="text" class="form-control" disabled [(ngModel)]="nSiniestro">
     </div>
 </div>
 <div class="row">
@@ -54,7 +54,7 @@
         <div class="col-sm-3 form-group">
             <label>Fecha de denuncia</label>
             <div class="input-group">
-                <input type="date" class="form-control" formControlName="dFecDenuncia"
+                <input [type]="estadoForm == 2 ? 'date' : 'text'" class="form-control" formControlName="dFecDenuncia"
                     [ngClass]="{'is-invalid': form.get('dFecDenuncia').invalid && form.get('dFecDenuncia').touched}">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -64,7 +64,7 @@
         <div class="col-sm-3 form-group">
             <label>Hora de recepción</label>
             <div class="input-group">
-                <input type="time" class="form-control" formControlName="horaRecepcion"
+                <input [type]="estadoForm == 2 ? 'time' : 'text'" class="form-control" formControlName="horaRecepcion"
                     [ngClass]="{'is-invalid': form.get('horaRecepcion').invalid && form.get('horaRecepcion').touched}">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
@@ -135,9 +135,7 @@
     <div class="col-sm-3 form-group">
         <label>Motivo de rechazo</label>
         <select class="form-control" [(ngModel)]="eliminarSiniestro" [disabled]="eliminado">
-            <option value="">(SELECCIONE)</option>
-            <option value="1">MOTIVO 1</option>
-            <option>OTROS</option>
+            <option *ngFor="let rechazo of casoBM.Lista_Rechazos" [value]="rechazo.nCodRechazo">{{rechazo.sDescript}}</option>
         </select>
     </div>
     <div class="col-sm-4 form-group" *ngIf="eliminado">

@@ -21,7 +21,7 @@ import { Data } from '@angular/router';
 export class ReserveService {
 
    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-   private Url = AppConfig.URL_API_SOAT;
+   private Url = AppConfig.URL_API_SOAT_RESERVA;
 
   constructor(private http: HttpClient) { }
 
@@ -105,8 +105,8 @@ export class ReserveService {
   }
 
   public SaveApi(data: Data): Observable<any> {
-    const body = JSON.stringify(data);
-    return this.http.post<any>(this.Url + '/Reserve/SaveApi', body, {
+    //const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/Reserve/SaveApi', data, {
       headers: this.headers,
     });
   }

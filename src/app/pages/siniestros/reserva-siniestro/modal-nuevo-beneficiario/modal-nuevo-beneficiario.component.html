@@ -146,23 +146,25 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Departamento(*)</label>
                  <div class="col-sm-2">
-                    <select class="form-control" formControlName="P_NPROVINCE" [ngClass]="{'is-invalid': form.get('P_NPROVINCE').invalid && form.get('P_NPROVINCE').touched}">
+                    <select class="form-control" formControlName="P_NPROVINCE" (change)="changeDepartamento()"
+                    [ngClass]="{'is-invalid': form.get('P_NPROVINCE').invalid && form.get('P_NPROVINCE').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let departamento of objBeneficiarioModel.lstDepartamento" [value]="departamento.Codigo">{{departamento.Descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Provincia(*)</label>
                 <div class="col-sm-2">
-                    <select class="form-control" formControlName="P_NLOCAL" [ngClass]="{'is-invalid': form.get('P_NLOCAL').invalid && form.get('P_NLOCAL').touched}">
-                        <option value="">(SELECCIONE)</option>
-                        <option value="1">P</option>
+                    <select class="form-control" formControlName="P_NLOCAL"  (change)="changeProvincia()"
+                    [ngClass]="{'is-invalid': form.get('P_NLOCAL').invalid && form.get('P_NLOCAL').touched}">
+                        <option *ngIf="provincias.length == 0" value="0">SELECCIONAR</option>
+                        <option *ngFor="let provincia of provincias" [value]="provincia.codigo">{{provincia.descripcion}}</option>
                     </select>
                 </div>
                 <label class="col-sm-2 col-form-label">Distrito(*)</label>
                  <div class="col-sm-2">
                     <select class="form-control" formControlName="P_NMUNICIPALITY" [ngClass]="{'is-invalid': form.get('P_NMUNICIPALITY').invalid && form.get('P_NMUNICIPALITY').touched}"> 
-                        <option value="">(SELECCIONE)</option>
-                        <option value="1">DI</option>
+                        <option *ngIf="distritos.length == 0" value="0">SELECCIONAR</option>
+                        <option *ngFor="let distrito of  distritos" [value]="distrito.codigo">{{distrito.descripcion}}</option>
                     </select>
                 </div>
             </div>

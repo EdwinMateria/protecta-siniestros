@@ -262,9 +262,9 @@
                 <td>{{siniestro.dFecApertura | date: 'dd/MM/yyyy'}}</td>
                 <td>{{siniestro.dFecRechazo | date: 'dd/MM/yyyy'}}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary mr-3" (click)="consultaSiniestro()"><i class="fa fa-eye"></i></button>
-                    <button class="btn btn-sm btn-success mr-3" (click)="tabControl(1, 1)"><i class="fa fa-edit"></i></button>
-                    <button class="btn btn-sm btn-danger"  (click)="rechazarSiniestro()"><i class="fa fa-close"></i></button>
+                    <button class="btn btn-sm btn-primary mr-3" (click)="consultaSiniestro(siniestro.nSiniestro)"><i class="fa fa-eye"></i></button>
+                    <button class="btn btn-sm btn-success mr-3" (click)="tabControl(1, 1, siniestro.nSiniestro)"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-sm btn-danger"  (click)="rechazarSiniestro(siniestro.nSiniestro)"><i class="fa fa-close"></i></button>
                 </td>
               </tr>
             </tbody>

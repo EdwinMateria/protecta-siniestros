@@ -1,15 +1,26 @@
+import { CausasVM } from "./caso";
+
 export class SiniestroBM {
-    nCaso           : number;
-    nSiniestro      : number;
-    sCliente        : string;
-    nCodRechazo     : number;
-    dFecRechazo     : string;
-    dFecDenuncia    : string;
-    dFecApertura    : string;
-    nTipOcupante    : number;
-    sTipAtencion    : string;
-    dFecFallecido   : string;
-    sEquivSiniestro : string;
-    nCodUsuario     : number;
-    sMesaje         : string;
+    nPolicy             : string;
+    nCertif             : string;
+    nCaso               : number;
+    nSiniestro          : number;
+    sCliente            : string;
+    nCodRechazo         : number;
+    nCausaSiniestro     : number;
+    lista_CausaSiniestro: CausasVM[];
+    nMoneda             : number;
+    sHoraOcurrencia     : string;
+    dFecOcurrencia      : string;
+    dFecRechazo         : string | null;
+    dFecDenuncia        : string;
+    sHoraRecepcion      : string;
+    dFecApertura        : string;
+    nTipOcupante        : number;
+    sTipOcupante        : string;
+    sTipAtencion        : string;
+    dFecFallecido       : string;
+    sEquivSiniestro     : string;
+    nCodUsuario         : number;
+    sMesaje             : string;
 }

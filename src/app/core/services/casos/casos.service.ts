@@ -5,6 +5,7 @@ import { GenericResponse } from '../../models/genericResponse';
 import { Observable } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { CasosBM, CombosGenericoVM } from '../../models/caso';
+import { SiniestroBM } from '../../models/siniestroBM';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ import { CasosBM, CombosGenericoVM } from '../../models/caso';
 export class CasosService {
 
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-   private Url = AppConfig.URL_API_SOAT;
+   private Url = AppConfig.URL_API_SOAT_APERTURA;
 
   constructor(private http: HttpClient, private datePipe: DatePipe) { }
 
@@ -61,8 +62,14 @@ export class CasosService {
     });
   }
 
-  public GetSearchClaim(nnumcase: number): Observable<GenericResponse> {
-    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetSearchClaim?nnumcase='+ nnumcase, {
+  public GetClaimForCase(nnumcase: number): Observable<GenericResponse> {
+    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetClaimForCase?nnumcase='+ nnumcase, {
+      headers: this.headers
+    });
+  }
+
+  public GetSearchClaim(Siniestro: number): Observable<GenericResponse> {
+    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetSearchClaim?Siniestro='+ Siniestro, {
       headers: this.headers
     });
   }
@@ -77,11 +84,18 @@ export class CasosService {
     return this.http.post<any>(this.Url + '/CasosManager/UpdateCase', data);
   }
 
-
+  
   public AddSiniestros(data: any): Observable<any> {
     return this.http.post<any>(this.Url + '/CasosManager/AddSiniestros', data);
   }
-
+  
+  public UpdateClaim(data: SiniestroBM): Observable<any> {
+    return this.http.post<any>(this.Url + '/CasosManager/UpdateClaim', data);
+  }
+  
+  public AddRechazo(data: SiniestroBM): Observable<any> {
+    return this.http.post<any>(this.Url + '/CasosManager/AddRechazo', data);
+  }
 
   transformDate(date) {
     let a = this.datePipe.transform(date, 'dd/MM/yyyy'); //whatever format you need. 

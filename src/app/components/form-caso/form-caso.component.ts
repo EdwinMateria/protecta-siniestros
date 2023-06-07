@@ -152,7 +152,7 @@ export class FormCasoComponent implements OnInit {
         )
         //Siniestros del Caso
         Swal.showLoading();
-        this.casoService.GetSearchClaim(Number(valorInput)).subscribe(
+        this.casoService.GetClaimForCase(Number(valorInput)).subscribe(
           res => {
             Swal.close();
             this.siniestros = res.GenericResponse;
@@ -192,34 +192,16 @@ export class FormCasoComponent implements OnInit {
     }
   }
 
-  llenarTratamiento(){
-    this.tratamientoCaso.certificado = "0";
-    this.tratamientoCaso.nroPlaca = "WR4-567";
-    this.tratamientoCaso.inicioVigencia = "25/04/2022";
-    this.tratamientoCaso.finVigencia = "25/04/2023";
-    //this.tratamientoCaso.contratante = "0200018143 - Escajadillo Chamorro Miguel Angel";
-    this.tratamientoCaso.documentoContratante = "DNI - 45348029";
-    this.tratamientoCaso.nombreConductor = "Pedro Suarez M";
-    this.tratamientoCaso.nroDocumentoConductor = "44047021";
-    this.tratamientoCaso.ubicacion = "Calle Chinchón 508 - San Isidro";
-    this.tratamientoCaso.referencia = "Cruce con Petit Thouars";
-    this.tratamientoCaso.delegacion = "Comisaría Santa Rosa";
-    this.tratamientoCaso.observacion = "El siniestro tiene que ser evaluado";
-
-    this.form.patchValue({
-      ...this.tratamientoCaso
-    })
-  }
-
-  consultaSiniestro() {
+  consultaSiniestro(codSiniestro:number) {
     const modalRef = this.modalService.open(ConsultaSiniestroComponent,  { windowClass : "my-class"});
     modalRef.componentInstance.reference = modalRef;
-    //modalRef.componentInstance.data = data;
+    modalRef.componentInstance.data = codSiniestro;
+    modalRef.componentInstance.causasSiniestro = this.casoIndex.Lista_CausaSiniestro;
     modalRef.result.then((Interval) => {
     });
   }
 
-  rechazarSiniestro(){
+  rechazarSiniestro(numSiniestro:number){
     Swal.fire({
       title: 'Información',
       text: "¿Deseas rechazar el caso del siniestro?",
@@ -235,13 +217,20 @@ export class FormCasoComponent implements OnInit {
         this.modificarActive = ''
         this.tituloTratamiento.emit(true);
         this.formSiniestro.emit(3);
+
+        let cs = new CasosBM();
+        cs = this.casoBM;
+        cs.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
+        cs.Lista_Rechazos = this.casoIndex.Lista_Rechazos;
+        cs.nSiniestro = numSiniestro;
+        this.casoEmit.emit(cs)
         this.stateTituloSiniestro = 3
         this.tipoTab = 1;
       }
     })
   }
 
-  tabControl(index:number, stateTituloSiniestro?:number){
+  tabControl(index:number, stateTituloSiniestro?:number, nSiniestro?:number){
     this.tipoTab = index;
     // 1: Declarar siniestro;
     // Tab = 1 ,  
@@ -257,6 +246,7 @@ export class FormCasoComponent implements OnInit {
       this.tituloTratamiento.emit(true);
       this.formSiniestro.emit(stateTituloSiniestro);
       this.casoBM.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
+      this.casoBM.nSiniestro = nSiniestro;
       this.casoBM.nCaso = this.form.controls['nPolicy'].value; // Para la consulta de caso, se mapeo el n caso en formcontrol nPolicy
       this.casoEmit.emit(this.casoBM);
     }
@@ -275,24 +265,6 @@ export class FormCasoComponent implements OnInit {
       this.form.controls['nCulpabilidad'].enable();
       this.form.controls['nCausaSiniestro'].enable();
     }
-  }
-
-  rechazarCaso(){
-    Swal.fire({
-      title: 'Información',
-      text: "¿Deseas rechazar el siniestro?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'De acuerdo',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then((result) => {
-      
-      if(result.isConfirmed){
-        this.tipoTab = 3;
-        this.tituloTratamiento.emit(false);
-      }
-    })
   }
 
   opcionVolver(){
@@ -314,12 +286,6 @@ export class FormCasoComponent implements OnInit {
     this.tituloTratamiento.emit(false);
     this.tratamientoCaso = new TratamientoCaso();
     this.showBotones = false;
-  }
-
-  siniestroCancel(cancel:boolean){
-    if(cancel){
-      this.opcionVolver();
-    }
   }
 
   validacionFormularioCaso(){

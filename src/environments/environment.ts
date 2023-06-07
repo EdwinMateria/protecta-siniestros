@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  kunturapi: 'http://localhost:30897/Api',
+  aperturaApi: 'http://localhost:30897/Api',
+  reservaApi: 'http://localhost:30896/Api',
 };
 
 /*

@@ -30,12 +30,16 @@ export class CasosBM {
     sTipoOcupante           : string;
     sTipoAtencion           : string;
     sObservacion            : string;
+    //Opcional
+    nSiniestro              ?:number;
+
     Lista_Culpabilidad      : CulpabilidadVM[];
     Lista_CausaSiniestro    : CausasVM[];
     Lista_TipDocConductor   : CombosGenericoVM[];
     Lista_Departamento      : CombosGenericoVM[];
     Lista_Provincia         : CombosGenericoVM[];
     Lista_Distrito          : CombosGenericoVM[];
+    Lista_Rechazos          : RechazoVM[];
 
     constructor(){
         this.Lista_CausaSiniestro = [];
@@ -60,4 +64,14 @@ export class CausasVM {
 export class CombosGenericoVM {
     codigo                  : number;
     descripcion             : string;
+}
+
+export class RechazoVM {
+    nCodRechazo             : string;
+    sDescript               : string;
+}
+
+export class AutocompleteBE{
+    label                   : string;
+    value                   : string;
 }
