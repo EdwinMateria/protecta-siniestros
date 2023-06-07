@@ -1,10 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ClaimBeneficiarioModelRequestBM } from 'src/app/core/models/claimBeneficiarioModelRequest';
 import { ReserveService } from 'src/app/core/services/reserve/reserve.service';
 import { distinctUntilChanged } from "rxjs/operators";
 import { Data } from 'src/app/core/models/data';
 import Swal from 'sweetalert2';
+import { CasosService } from 'src/app/core/services/casos/casos.service';
+import { CombosGenericoVM } from 'src/app/core/models/caso';
 
 export class TipoDocumento{
   id: number;
@@ -27,8 +29,17 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   objBeneficiarioModel = new ClaimBeneficiarioModelRequestBM();
 
   data = new Data();
+  provincias : CombosGenericoVM[]=[];
+  distritos: CombosGenericoVM[]=[]
 
-  constructor(public fb: FormBuilder, public reserveService: ReserveService) { }
+  notAllowed(input: RegExp): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const forbidden = input.test(control.value);
+      return forbidden ? {notAllowed: {value: control.value}} : null;
+    };
+  }
+
+  constructor(public fb: FormBuilder, public reserveService: ReserveService, public casoService: CasosService) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -42,8 +53,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       P_NCIVILSTA: [ '', Validators.required],
       P_NNATIONALITY: [ '', Validators.required],
       P_STI_DIRE: [ '', Validators.required],
-      P_SNOM_DIRECCION: [ '', Validators.required],
-      P_SNUM_DIRECCION: [ '', Validators.required],
+      P_SNOM_DIRECCION: [ ''],
+      P_SNUM_DIRECCION: [ ''],
       P_STI_INTERIOR: [ '' ],
       P_SNUM_INTERIOR: [ '' ],
       P_SMANZANA: [ '' ],
@@ -54,9 +65,9 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       P_STI_BLOCKCHALET: [ '' ],
       P_SBLOCKCHALET: [ '' ],
       P_SREFERENCIA: [ '' ],
-      P_NPROVINCE: [ '', Validators.required ],
-      P_NLOCAL: [ '', Validators.required ],
-      P_NMUNICIPALITY: [ '', Validators.required ],
+      P_NPROVINCE: [ '' ],
+      P_NLOCAL: [ '0' ],
+      P_NMUNICIPALITY: [ '0' ],
       P_NAREA_CODE: [ '' ],
       telefDom: [ '' ],
       celular: [ '' ],
@@ -107,6 +118,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       Swal.showLoading();
       this.data = {
         ...this.form.getRawValue(),
+        P_DBIRTHDAT : new Date(this.form.controls['P_DBIRTHDAT'].value).toLocaleDateString('en-GB'),
         p_CodAplicacion : "SINIESTRO",
         p_TipOper : "INS",
         p_NUSERCODE : "JRENIQUE",
@@ -114,6 +126,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         p_NTITLE : "99",
         p_SISCLIENT_IND : "1",
         p_SISRENIEC_IND : "2",
+        P_SLEGALNAME : "NOMBRE LEGAL",
         EListAddresClient : [],
         EListPhoneClient : [],
         EListEmailClient : [],
@@ -159,7 +172,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       this.reserveService.SaveApi(this.data).subscribe(
         res =>{
           Swal.close();
-          console.log(res);
+          if(res.P_NCODE == 1){
+            Swal.fire('Información', res.P_SMESSAGE ,'error')
+          }else{
+            console.log(res);
+          }
         },
         err => {
           Swal.close();
@@ -167,6 +184,35 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         }
       )
     }
+  }
+
+
+  changeDepartamento(){
+    let departamento = this.form.controls['P_NPROVINCE'].value;
+    Swal.showLoading();
+    this.casoService.GetProvincias(departamento).subscribe(
+      res => {
+        Swal.close();
+        this.provincias = [];
+        this.distritos = [];
+        this.form.controls['P_NLOCAL'].setValue('0');
+        this.form.controls['P_NMUNICIPALITY'].setValue('0');
+        this.provincias = res
+      }
+    )
+  }
+
+  changeProvincia(){
+    let provincia = this.form.controls['P_NLOCAL'].value;
+    Swal.showLoading();
+    this.casoService.GetDistritos(provincia).subscribe(
+      res => {
+        Swal.close();
+        this.distritos = [];
+        this.distritos = res;
+        this.form.controls['P_NMUNICIPALITY'].setValue('0');
+      }
+    )
   }
 
 }
