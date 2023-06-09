@@ -80,14 +80,13 @@ export class ModalCoberturaComponent implements OnInit {
     const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
     modalRef.result.then((benef) => {
-      if(benef.SCODE){
+      if(benef != undefined && benef.SCODE){
         Swal.showLoading();
         let data = new ClaimBeneficiarioRequest();
-        data.SCODCLI = benef.SCODE;
+        data.SCODCLI = benef.SCODE.trim();
         this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
           res =>{
             Swal.close();
-            console.log(res);
             this.beneficiarios.push(res.ListBeneficiaries[0])
             if(this.beneficiarios.length == 1){
               this.reserveService.GetComboBanco().subscribe(

@@ -53,8 +53,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       P_NCIVILSTA: [ '', Validators.required],
       P_NNATIONALITY: [ '', Validators.required],
       P_STI_DIRE: [ '', Validators.required],
-      P_SNOM_DIRECCION: [ ''],
-      P_SNUM_DIRECCION: [ ''],
+      P_SNOM_DIRECCION: [ '', Validators.required],
+      P_SNUM_DIRECCION: [ '', Validators.required],
       P_STI_INTERIOR: [ '' ],
       P_SNUM_INTERIOR: [ '' ],
       P_SMANZANA: [ '' ],
@@ -65,9 +65,9 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       P_STI_BLOCKCHALET: [ '' ],
       P_SBLOCKCHALET: [ '' ],
       P_SREFERENCIA: [ '' ],
-      P_NPROVINCE: [ '' ],
-      P_NLOCAL: [ '0' ],
-      P_NMUNICIPALITY: [ '0' ],
+      P_NPROVINCE: [ '' , [Validators.required]],
+      P_NLOCAL: [ '0' , [Validators.required , this.notAllowed(/^0/)]],
+      P_NMUNICIPALITY: [ '0', [Validators.required , this.notAllowed(/^0/)] ],
       P_NAREA_CODE: [ '' ],
       telefDom: [ '' ],
       celular: [ '' ],
@@ -134,7 +134,9 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       }
 
       this.data.EListAddresClient.push({
-        ...this.form.getRawValue()
+        ...this.form.getRawValue(),
+        P_SRECTYPE : "2",
+        P_NCOUNTRY : "1",
       })
 
       if(this.form.controls['telefDom'].value != ""){
@@ -172,10 +174,14 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       this.reserveService.SaveApi(this.data).subscribe(
         res =>{
           Swal.close();
-          if(res.P_NCODE == 1){
-            Swal.fire('Información', res.P_SMESSAGE ,'error')
+          let jsonResponse = JSON.parse(res);
+          if(jsonResponse.P_NCODE == 1){
+            Swal.fire('Información', jsonResponse.P_SMESSAGE ,'error')
           }else{
-            console.log(res);
+            Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
+            jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT
+            console.log(jsonResponse);
+            this.reference.close(jsonResponse);
           }
         },
         err => {

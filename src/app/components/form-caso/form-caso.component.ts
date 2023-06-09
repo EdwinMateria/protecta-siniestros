@@ -1,11 +1,13 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CasosBM } from 'src/app/core/models/caso';
+import { AutocompleteBE, CasosBM } from 'src/app/core/models/caso';
 import { SiniestroBM } from 'src/app/core/models/siniestroBM';
 import { CasosService } from 'src/app/core/services/casos/casos.service';
 import { ConsultaSiniestroComponent } from 'src/app/pages/siniestros/tratamiento-caso-siniestro/consulta-siniestro/consulta-siniestro.component';
 import Swal from 'sweetalert2';
+import { Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 export class Generic{
   id:string;
@@ -142,7 +144,8 @@ export class FormCasoComponent implements OnInit {
             this.changeDepartamento(false);
             this.form.controls['nProvincia'].setValue(this.casoBM.nProvincia);
             this.changeProvincia(false)
-            console.log(this.casoBM.nDistrito);
+            this.casoBM.nCaso = Number(valorInput)
+            console.log(this.casoBM);
             
           },
           err => {
@@ -168,18 +171,22 @@ export class FormCasoComponent implements OnInit {
           this.casoService.GetPolicyForCase(Number(valorInput), this.form.controls['dFecOcurrencia'].value).subscribe(
             res => {
               let caso = new CasosBM();
-              console.log(res);
-              caso = res.GenericResponse[0];
-              this.form.controls['nCertif'].setValue(caso.nCertif);
-              this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
-              this.form.controls['nCaso'].setValue(caso.nCaso);
-              this.form.controls['dInicioVigencia'].setValue(new Date(caso.dIniVigencia).toLocaleDateString('en-GB'));
-              this.form.controls['dFinDeVigencia'].setValue(new Date(caso.dFinVigencia).toLocaleDateString('en-GB'));
-              this.form.controls['sNombreContratante'].setValue(caso.sNombreContratante);
-              this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
-              this.form.controls['nBranch'].setValue(caso.nBranch);
-              this.form.controls['nProduct'].setValue(caso.nProduct);
               Swal.close();
+              caso = res.GenericResponse[0];
+              if(caso.sMensaje == 'Ok'){
+                this.form.controls['nCertif'].setValue(caso.nCertif);
+                this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
+                this.form.controls['nCaso'].setValue(caso.nCaso);
+                this.form.controls['dInicioVigencia'].setValue(new Date(caso.dIniVigencia).toLocaleDateString('en-GB'));
+                this.form.controls['dFinDeVigencia'].setValue(new Date(caso.dFinVigencia).toLocaleDateString('en-GB'));
+                this.form.controls['sNombreContratante'].setValue(caso.sNombreContratante);
+                this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
+                this.form.controls['nBranch'].setValue(caso.nBranch);
+                this.form.controls['nProduct'].setValue(caso.nProduct);
+              }else{
+                Swal.fire('Información',caso.sMensaje,'error');
+                return;
+              }
             },
             err => {
               Swal.close()
@@ -187,7 +194,6 @@ export class FormCasoComponent implements OnInit {
             }
           )
         }
-        // this.llenarTratamiento();
       }
     }
   }
@@ -248,6 +254,7 @@ export class FormCasoComponent implements OnInit {
       this.casoBM.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
       this.casoBM.nSiniestro = nSiniestro;
       this.casoBM.nCaso = this.form.controls['nPolicy'].value; // Para la consulta de caso, se mapeo el n caso en formcontrol nPolicy
+      
       this.casoEmit.emit(this.casoBM);
     }
     if(this.tipoTab == 2){
@@ -308,10 +315,10 @@ export class FormCasoComponent implements OnInit {
       if(this.form.controls['sUbicacion'].invalid){
         msj += 'Debe ingresar la ubicación. <br/>';
       }
-      if(this.form.controls['sDelegacion'].invalid){
+      if(this.form.controls['sReferencia'].invalid){
         msj += 'Debe ingresar la referencia. <br/>';
       }
-      if(this.form.controls['nDelegacion'].invalid){
+      if(this.form.controls['sDelegacion'].invalid){
         msj += 'Debe ingresar la delegación. <br/>';
       }
       if(this.form.controls['nDepartamento'].invalid){
@@ -360,9 +367,21 @@ export class FormCasoComponent implements OnInit {
             reverseButtons: true
           }).then((result) => {
             if (result.isConfirmed) {
-              this.tipoForm = false;
-              this.showBotones = true
-              this.tabControl(1, 2);
+              // this.tipoForm = false;
+              // this.showBotones = true
+              this.casoBM.nCaso = res.numcase;
+              this.casoBM.nPolicy = this.form.controls['nPolicy'].value;
+              this.casoBM.nCertif = 0;
+              this.casoBM.sHoraOcurrencia = this.form.controls['sHoraOcurrencia'].value;
+              this.casoBM.nCausaSiniestro = this.form.controls['nCausaSiniestro'].value;
+              this.casoBM.dFecOcurrencia = this.form.controls['dFecOcurrencia'].value;
+              this.declararActive = 'active'
+              this.modificarActive = ''
+              this.tituloTratamiento.emit(true);
+              this.stateTituloSiniestro = 2
+              this.formSiniestro.emit(this.stateTituloSiniestro);
+              this.casoBM.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
+              this.casoEmit.emit(this.casoBM);
             }else{
               this.form.reset()
             }

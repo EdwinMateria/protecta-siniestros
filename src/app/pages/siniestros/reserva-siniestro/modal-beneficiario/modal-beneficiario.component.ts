@@ -26,8 +26,8 @@ export class ModalBeneficiarioComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  closeModal(buscador?:any) {
-    this.reference.close(this.beneficiarioSeleccion);
+  closeModal(json?:any) {
+    this.reference.close(json);
   }
 
   buscadorBeneficiario(){
@@ -58,8 +58,8 @@ export class ModalBeneficiarioComponent implements OnInit {
   openBeneficiario(){
     const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
-    modalRef.result.then((Interval) => {
-      this.closeModal('a');
+    modalRef.result.then((json) => {
+      this.closeModal(json);
     });
   }
 

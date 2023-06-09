@@ -29,7 +29,6 @@ export class FormSiniestroComponent implements OnInit {
   fechaMap = "";
   nSiniestro = "";
   sCliente = "";
-
   //Tipos Ocupantes:
   ocupantes : SiniestroSelect[] = [
     {codigo: "", descript: "SELECCIONAR"},
@@ -52,7 +51,7 @@ export class FormSiniestroComponent implements OnInit {
     this.fechaMap = new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB')
     this.form = this.fb.group({
       dFecDenuncia : [{value:'', disabled: false}, Validators.required],
-      horaRecepcion: [{value:'', disabled: false}, Validators.required],
+      sHoraRecepcion: [{value:'', disabled: false}, Validators.required],
       dFecApertura: [{value:'', disabled: false}, Validators.required],
       afectado: [{value:'', disabled: false}, Validators.required],
       nTipOcupante : [{value:'', disabled: false}, Validators.required],
@@ -81,6 +80,8 @@ export class FormSiniestroComponent implements OnInit {
           this.form.controls['afectado'].setValue(siniestro.sCliente);
           this.form.controls['dFecApertura'].setValue(this.datePipe.transform(siniestro.dFecApertura, 'yyyy-MM-dd'))
           this.form.controls['dFecFallecido'].setValue(this.datePipe.transform(siniestro.dFecFallecido, 'yyyy-MM-dd'))
+          this.sCliente = siniestro.sCodClie;
+          this.form.controls['nTipOcupante'].setValue(siniestro.sTipOcupante);
         },
         err => {
           Swal.close();
@@ -96,24 +97,29 @@ export class FormSiniestroComponent implements OnInit {
 
   rechazoSiniestro(){
     if(this.eliminarSiniestro != '0'){
+      Swal.showLoading();
       let siniestro = new SiniestroBM();
       siniestro.nCaso = this.casoBM.nCaso;
-      //cliente
+      siniestro.sCliente = this.sCliente;
       siniestro.nCodRechazo = Number(this.eliminarSiniestro);
+      siniestro.nSiniestro = Number(this.nSiniestro);
       siniestro.dFecApertura = this.form.controls['dFecApertura'].value;
-      this.casoService.AddRechazo(siniestro).subscribe(
+      const data: FormData = new FormData();
+      data.append('siniestrosData', JSON.stringify(siniestro));
+      this.casoService.AddRechazo(data).subscribe(
         res => {
+          Swal.close()
           if(res.Message.length > 0){
-            Swal.fire('Información', 'Siniestro rechazado correctamente', 'success');
-            this.eliminado = true
+            Swal.fire('Información',res.Message,'error');
             return;
           }else{
-            Swal.fire('Información',res.Message,'error');
+            Swal.fire('Información', 'Siniestro rechazado correctamente', 'success');
+            this.eliminado = true
             return;
           }
         },
         err => {
-
+          Swal.close()
         }
       )
     }else{
@@ -175,6 +181,7 @@ export class FormSiniestroComponent implements OnInit {
           nCertif : this.casoBM.nCertif,
           nCaso : this.casoBM.nCaso,
           nSiniestro : this.nSiniestro,
+          sCliente : this.sCliente,
         }
         Swal.showLoading();
         this.casoService.UpdateClaim(siniestroBM).subscribe(
@@ -184,8 +191,18 @@ export class FormSiniestroComponent implements OnInit {
               Swal.fire('Información','No se pudo actualizar el siniestro','warning');
               return;
             }else{
-              this.cancelBool.emit(true)
-              Swal.fire('Información','Siniestro actualizado correctamente','success');
+              Swal.fire({
+                title: 'Información',
+                text: 'Siniestro actualizado correctamente',
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'OK',
+                reverseButtons: true
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.cancelBool.emit(true)
+                }
+              })
               return;
             }
           },
@@ -201,7 +218,7 @@ export class FormSiniestroComponent implements OnInit {
   disabledForm(){
     if(this.estadoForm == 3){
       this.form.controls['dFecDenuncia'].disable();
-      this.form.controls['horaRecepcion'].disable();
+      this.form.controls['sHoraRecepcion'].disable();
       this.form.controls['dFecApertura'].disable();
       this.form.controls['afectado'].disable();
       this.form.controls['nTipOcupante'].disable();
@@ -212,7 +229,7 @@ export class FormSiniestroComponent implements OnInit {
 
     if(this.estadoForm == 1){
       this.form.controls['dFecDenuncia'].disable();
-      this.form.controls['horaRecepcion'].disable();
+      this.form.controls['sHoraRecepcion'].disable();
     }
   }
 
@@ -220,7 +237,8 @@ export class FormSiniestroComponent implements OnInit {
     const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
     modalRef.result.then((benef) => {
-      if(benef){
+      console.log(benef);
+      if(benef != undefined){
         this.form.controls['afectado'].setValue(benef.SNAME);
         this.sCliente = benef.SCODE;
       }

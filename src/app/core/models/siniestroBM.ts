@@ -23,4 +23,5 @@ export class SiniestroBM {
     sEquivSiniestro     : string;
     nCodUsuario         : number;
     sMesaje             : string;
+    sCodClie            : string;
 }

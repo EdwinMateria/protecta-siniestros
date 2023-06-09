@@ -4,7 +4,7 @@ import { AppConfig } from 'src/app/app.config';
 import { GenericResponse } from '../../models/genericResponse';
 import { Observable } from 'rxjs';
 import { DatePipe } from '@angular/common';
-import { CasosBM, CombosGenericoVM } from '../../models/caso';
+import { AutocompleteBE, CasosBM, CombosGenericoVM } from '../../models/caso';
 import { SiniestroBM } from '../../models/siniestroBM';
 
 @Injectable({
@@ -93,8 +93,14 @@ export class CasosService {
     return this.http.post<any>(this.Url + '/CasosManager/UpdateClaim', data);
   }
   
-  public AddRechazo(data: SiniestroBM): Observable<any> {
+  public AddRechazo(data: any): Observable<any> {
     return this.http.post<any>(this.Url + '/CasosManager/AddRechazo', data);
+  }
+
+  public Delegaciones(delegacion: string): Observable<AutocompleteBE[]> {
+    return this.http.get<AutocompleteBE[]>(this.Url + '/CasosManager/Delegaciones?sDeleg='+ delegacion, {
+      headers: this.headers
+    });
   }
 
   transformDate(date) {

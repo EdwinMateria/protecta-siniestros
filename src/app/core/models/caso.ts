@@ -30,6 +30,7 @@ export class CasosBM {
     sTipoOcupante           : string;
     sTipoAtencion           : string;
     sObservacion            : string;
+    sMensaje                : string;
     //Opcional
     nSiniestro              ?:number;
 
