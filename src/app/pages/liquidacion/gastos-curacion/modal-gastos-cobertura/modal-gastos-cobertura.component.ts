@@ -144,7 +144,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     this.datosSiniestro.PNCASE = "15"; //this.caso;
     this.datosSiniestro.PNCLAIM = "377193"; //this.siniestro;
     this.datosSiniestro.PNCOVER = 2; //this.tipoCobertura;
-    this.tipoCobertura = 4;
+    this.tipoCobertura = 4;  //cobertura de prueba, borrar esta linea despues de probar
     this.titulo = "GASTOS DE CURACION";
 
     this.buscarDatosPago(this.datosSiniestro);
@@ -378,9 +378,48 @@ export class ModalGastosCoberturaComponent implements OnInit {
         }
       }
     }
+  }
 
-
-
+  procesarPagoMuerte(){
+    const selectElementTipoPago = document.getElementById("formaPago") as HTMLSelectElement;
+    const selectedValueTipoPago = selectElementTipoPago.value;
+    const selectElementMontoPago = document.getElementById("totalPago") as HTMLSelectElement;
+    const selectedValueMontoPago = selectElementMontoPago.value;
+    const selectElementTotalBenef = document.getElementById("totalPago") as HTMLSelectElement;
+    const selectedValueTotalBenef = selectElementTotalBenef.value;
+    console.log(selectedValueTipoPago);
+    console.log(selectedValueMontoPago);
+    console.log(this.baseImponible);
+    if(selectedValueTipoPago == "10" && Number(selectedValueMontoPago) > this.baseImponible){
+      Swal.fire('Error','El monto a pagar no puede ser mayor al pendiente por pagar.', 'error');
+      return;
+    }
+    if(selectedValueTipoPago == "10" && Number(selectedValueMontoPago) < this.baseImponible){
+      Swal.fire({
+        title: 'Información',
+        text: 'El monto de la factura es menor a la base imponible, ¿Desea Continuar?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí',
+        cancelButtonText: 'No'
+      }).then((result) => {
+      if(result.value){
+        console.log('Proceso el pago.'); //aqui se invoca el proceso de pago    ///se debe realizar el calculo del total a pagar por beneficiario
+      }else{
+        console.log('Nos quedamos.');
+      }
+    });
+    }else{
+      if(selectedValueTipoPago == "11" && Number(selectedValueMontoPago) < this.baseImponible){
+        Swal.fire('Error','No se puede hacer pago total porque tiene reserva por pagar.', 'error');
+        return;
+      }else{
+        if(selectedValueTipoPago == "11" && Number(selectElementTotalBenef) == 1 && Number(selectedValueMontoPago) < this.baseImponible){ //devolver el numero total de beneficiarios modificar el valor de selected
+          Swal.fire('Error','No se puede hacer pago total porque el monto a pagar es menor al monto de base imponible.', 'error');
+          return;
+        }
+      }
+    }
   }
 
 }

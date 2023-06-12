@@ -273,10 +273,9 @@
         <div class="col-sm-12" align="end">
             <!-- <button *ngIf="tipoCobertura == 1 || tipoCobertura == 2" class="btn btn-success mb-3">Guardar</button> -->
             <!-- <button *ngIf="tipoCobertura != 1 && tipoCobertura != 2" class="btn btn-success mb-3">Pagar</button> -->
-            <button class="btn btn-success mb-3" (click)="procesarPago()">Pagar</button>
-            <button class="btn btn-busqueda" (click)="procesarPago()">
-                <i class="fa fa-search mr-1"></i> Pagar
-            </button>
+            <button *ngIf="tipoCobertura == 1" class="btn btn-success mb-3" (click)="procesarPagoMuerte()">Pagar</button>
+            <button *ngIf="tipoCobertura != 1" class="btn btn-success mb-3" (click)="procesarPago()">Pagar</button>
+            
         </div>
     </div>
 </div>
