@@ -10,11 +10,11 @@
     <div class="row" style="border-bottom: 1px solid #ccc!important;">
         <div class="col-sm-3 form-group">
             <label>Caso</label>
-            <input class="form-control" [(ngModel)]="caso">
+            <input class="form-control" [(ngModel)]="caso" type="number">
         </div>
         <div class="col-sm-3 form-group">
             <label>Nro. de siniestro</label>
-            <input class="form-control" [(ngModel)]="siniestro">
+            <input class="form-control" [(ngModel)]="siniestro" type="number">
         </div>
         <div class="col-sm-3" align="end">
             <p class="pb-0 mb-0">&nbsp;</p>
@@ -26,12 +26,12 @@
     <div class="row mt-3">
         <div class="col-sm-3 form-group">
             <label>Póliza</label>
-            <input class="form-control" [(ngModel)]="detalle.poliza" disabled>
+            <input class="form-control" [(ngModel)]="detalle.NPOLICY" disabled>
         </div>
         <div class="col-sm-3 form-group">
             <label>Fecha de ocurrencia</label>
             <div class="input-group">
-                <input type="text" class="form-control" [(ngModel)]="detalle.fechaOcurrencia" disabled>
+                <input type="text" class="form-control" [(ngModel)]="detalle.DOCCURDAT" disabled>
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                 </div>
@@ -40,7 +40,7 @@
         <div class="col-sm-3 form-group">
             <label>Hora de ocurrencia</label>
             <div class="input-group">
-                <input type="text" class="form-control" [(ngModel)]="detalle.horaOcurrencia" disabled>
+                <input type="text" class="form-control" [(ngModel)]="detalle.HORAOCURRENCIA" disabled>
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
                 </div>
@@ -50,7 +50,7 @@
     <div class="row">
         <div class="col-sm-6 form-group">
             <label>Siniestrado</label>
-            <input class="form-control" [(ngModel)]="detalle.siniestrado" disabled>
+            <input class="form-control" [(ngModel)]="detalle.SCLIENAME" disabled>
         </div>
         <div class="col-sm-3 form-group">
             <label>UIT</label>
@@ -61,32 +61,30 @@
     <table  class="table table-striped w-100 mt-2">
         <thead>
             <tr>
-              <th scope="col"></th>
-              <th scope="col">Nro. Mov</th>
-              <th scope="col">Fecha movimiento</th>
-              <th scope="col">Nro. de siniestro</th>
-              <th scope="col">Beneficiario</th>
-              <th scope="col">Cobertura</th>
-              <th scope="col">Tipo movimiento</th>
-              <th scope="col">Importe</th>
-              <th scope="col">Dato adicional</th>
+              <th scope="col" ></th>
+              <th scope="col" style="text-align: center;">Nro. Siniestro</th>
+              <th scope="col" style="text-align: center;">Nro. Cobertura</th>
+              <th scope="col" style="text-align: center;">Cobertura</th>
+              <th scope="col" style="text-align: center;">Importe</th>
+              <th scope="col" style="text-align: center;">Cant. Beneficiarios</th>
+              <th scope="col" style="text-align: center;">Dato Adicional</th>
             </tr>
           </thead>
           <tbody *ngIf="mostrarTable">
             <tr *ngFor="let movimiento of movimientos; let i = index">
-                <td>
+                <td style="text-align: center;">
                     <div class="form-check">
-                        <input [(ngModel)]="movimientos[i].seleccion" class="form-check-input position-static" type="checkbox" (change)="seleccionChechbox(movimiento)" >
+                        <input [(ngModel)]="movimiento.SELECCION" class="form-check-input position-static" type="checkbox" (change)="seleccionChechbox(movimiento)" >
                     </div>
                 </td>
-                <td>{{i+1}}</td>
-                <td></td>
-                <td>{{movimiento.nroSiniestro}}</td>
-                <td>{{movimiento.beneficiario}}</td>
-                <td>{{movimiento.cobertura}}</td>
-                <td>{{movimiento.tipoMovimiento}}</td>
-                <td>{{movimiento.importe}}</td>
-                <td>{{movimiento.datoAdicional}}</td>
+                <!--<td>{{i+1}}</td>-->
+                <!--<td></td>-->
+                <td style="text-align: center;">{{movimiento.NCLAIM}}</td>
+                <td style="text-align: center;">{{movimiento.NCOVER}}</td>
+                <td style="text-align: center;">{{movimiento.DESC_COBERTURA}}</td>
+                <td style="text-align: right;">{{movimiento.PENDIENTES | number:'1.2-2'}}</td>
+                <td style="text-align: center;">{{movimiento.NROBENEF}}</td>
+                <td style="text-align: right;">{{movimiento.DATO_ADICIONAL}}</td>
             </tr>
           </tbody>
     </table>

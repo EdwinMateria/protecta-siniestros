@@ -4,4 +4,5 @@ export class AppConfig{
     public static get URL_API_SOAT(): string {
         return environment.kunturapi;
     }
+    public readonly apiUrl = 'http://localhost:30897/Api';
 }

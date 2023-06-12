@@ -2,25 +2,39 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { ModalGastosCoberturaComponent } from './modal-gastos-cobertura/modal-gastos-cobertura.component';
+import { DatosCasoSiniestro } from '../models/Liquidacion.model';
+import { LiquidacionService } from 'src/app/services/LiquidacionService';
+//import * as internal from 'stream';
 
 export class Movimiento{
-  nroSiniestro:string;
-  beneficiario:string;
-  cobertura:string;
-  tipoMovimiento:string;
-  importe:number;
-  datoAdicional:string;
-  tipoCobertura:number;
-  seleccion:boolean;
-  id: number
+  NCLAIM : string;
+  NCOVER : number;
+  DESC_COBERTURA : string;
+  PENDIENTES : number;
+  DATO_ADICIONAL : string;
+  SELECCION : boolean;
+  ID: number;
+  NCASENUM: string;
+  DOCCURDAT: string;
+  NROBENEF: number;
 }
 
 export class Detalle{
-  poliza : string;
-  fechaOcurrencia: string;
-  horaOcurrencia:string;
-  siniestrado:string;
+  NCODERROR : string;
+  SMESSAGEERROR : string;
+  SSTACLAIM : string;
+  ESTADO_SINIESTRO : string;
+  NPOLICY : string;
+  DOCCURDAT: string;
+  HORAOCURRENCIA:string;
+  SCLIENAME:string;
   UIT: string;
+  NLOC_RESERV: number;
+
+}
+
+export class PendientePago{
+  NCLAIM : string;
 }
 
 @Component({
@@ -32,86 +46,163 @@ export class GastosCuracionComponent implements OnInit {
 
   caso = "";
   siniestro = "";
+  cantBenef = 0;
 
   movimientos: Movimiento[]=[];
   detalle: Detalle = new Detalle;
   mostrarTable= false;
 
+  dataSourceLiquidacion = new Detalle();
+
   movimientosPago: Movimiento[]=[];
 
-  constructor(private modalService: NgbModal) { }
+  pendientePagoInput = new PendientePago();
+
+  constructor(private modalService: NgbModal,
+              private service: LiquidacionService) { }
+    
 
   ngOnInit(): void {
+    //this.config.data = { Titulo: 'Generación de Factura de Abonos' };
     //GASTOS DE CURACION
-    this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Inicio reserva", importe: 548, datoAdicional: "3735195", tipoCobertura : 1, seleccion : false, id:1
-    });
-    this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: 1000, datoAdicional: "3735195", tipoCobertura : 1, seleccion : false, id:2
-    })
-    this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Clinica Internacional", cobertura: "Gastos de curación", tipoMovimiento: "Ajuste", importe: -300, datoAdicional: "Ajuste 105", tipoCobertura : 1, seleccion : false, id:3
-    })
-    //GASTOS DE SEPELIO
-    this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Funeraria Jardines", cobertura: "Gastos de sepelio", tipoMovimiento: "Ajuste", importe: 2000, datoAdicional: "", tipoCobertura : 2, seleccion : false, id:4
-    })
-    //INVALIDEZ PERMANENTE
-    this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Leva Palomino", cobertura: "Invalidez permanente", tipoMovimiento: "Inicio reserva", importe: 18000, datoAdicional: "", tipoCobertura : 3, seleccion : false, id:5
-    })
-    this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Alva Palomino", cobertura: "Invalidez permanente", tipoMovimiento: "Inicio reserva", importe: 10000, datoAdicional: "", tipoCobertura : 3, seleccion : false, id:6
-    })
-    //INVALIDEZ TEMPORAL
-    this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Jose Palomino", cobertura: "Invalidez temporal", tipoMovimiento: "Inicio reserva", importe: 500, datoAdicional: "", tipoCobertura : 4, seleccion : false, id:7
-    })
-    this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Andrea Palomino", cobertura: "Invalidez temporal", tipoMovimiento: "Inicio reserva", importe: 300, datoAdicional: "", tipoCobertura : 4, seleccion : false, id:8
-    })
-    //MUERTE
-    this.movimientos.push({
-      nroSiniestro: "44573", beneficiario: "Varios", cobertura: "Muerte", tipoMovimiento: "Inicio reserva", importe: 198000, datoAdicional: "", tipoCobertura : 5, seleccion : false, id:9
-    })
+    // this.movimientos.push({
+    //   NCLAIM: "44573", DESC_COBERTURA: "Gastos de curación", PENDIENTES: 548.00, DATO_ADICIONAL: "3735195", NCOVER : 1, seleccion : false, id:1
+    // });
+    // this.movimientos.push({
+    //   NCLAIM: "44573", DESC_COBERTURA: "Gastos de curación", PENDIENTES: 1000.85, DATO_ADICIONAL: "3735195", NCOVER : 1, seleccion : false, id:2
+    // })
+    // this.movimientos.push({
+    //   NCLAIM: "44573", DESC_COBERTURA: "Gastos de curación", PENDIENTES: -300.48, DATO_ADICIONAL: "Ajuste 105", NCOVER : 1, seleccion : false, id:3
+    // })
+    // //GASTOS DE SEPELIO
+    // this.movimientos.push({
+    //   NCLAIM: "44573", DESC_COBERTURA: "Gastos de sepelio", PENDIENTES: 2000.05, DATO_ADICIONAL: "", NCOVER : 2, seleccion : false, id:4
+    // })
+    // //INVALIDEZ PERMANENTE
+    // this.movimientos.push({
+    //   NCLAIM: "44573", DESC_COBERTURA: "Invalidez permanente", PENDIENTES: 18000, DATO_ADICIONAL: "", NCOVER : 3, seleccion : false, id:5
+    // })
+    // this.movimientos.push({
+    //   NCLAIM: "44573", DESC_COBERTURA: "Invalidez permanente", PENDIENTES: 10000.95, DATO_ADICIONAL: "", NCOVER : 3, seleccion : false, id:6
+    // })
+    // //INVALIDEZ TEMPORAL
+    // this.movimientos.push({
+    //   NCLAIM: "44573", DESC_COBERTURA: "Invalidez temporal", PENDIENTES: 500, DATO_ADICIONAL: "", NCOVER : 4, seleccion : false, id:7
+    // })
+    // this.movimientos.push({
+    //   NCLAIM: "44573", DESC_COBERTURA: "Invalidez temporal", PENDIENTES: 300, DATO_ADICIONAL: "", NCOVER : 4, seleccion : false, id:8
+    // })
+    // //MUERTE
+    // this.movimientos.push({
+    //   NCLAIM: "44573", DESC_COBERTURA: "Muerte", PENDIENTES: 198000, DATO_ADICIONAL: "", NCOVER : 5, seleccion : false, id:9
+    // })
   }
 
 
   buscadorMovimientos(){
-    if(this.caso.replace(/ /g, "") == "" || this.siniestro.replace(/ /g, "") == ""){
+    //if(this.caso.replace(/ /g, "") == "" || this.siniestro.replace(/ /g, "") == ""){
+    if(this.caso == "" || this.siniestro == ""){
       Swal.fire('Información', 'Coloque el caso y el nro. de siniestro', 'warning');
       this.mostrarTable = false;
       this.detalle = new Detalle();
       return;
     }else{
-      this.mostrarTable = true;
-      this.detalle.poliza = "7003774321";
-      this.detalle.fechaOcurrencia = "22/02/2023";
-      this.detalle.horaOcurrencia = "11:00:00";
-      this.detalle.siniestrado = "Leva Palomino Camila";
-      this.detalle.UIT = "4.950"
+      
+      const datosCasoSiniestro = new DatosCasoSiniestro();
+      datosCasoSiniestro.ncase = this.caso;
+      datosCasoSiniestro.nclaim = this.siniestro;
+
+      this.service.RetornarDatosCasoSiniestro(datosCasoSiniestro).subscribe(
+        s => {
+          console.log(s);
+          this.dataSourceLiquidacion = s;
+
+          if (this.dataSourceLiquidacion.NCODERROR == "1"){
+            Swal.fire(this.dataSourceLiquidacion.SMESSAGEERROR);
+            this.mostrarTable = false;
+            return;
+          }else{
+            if (this.dataSourceLiquidacion.SSTACLAIM == "1" || this.dataSourceLiquidacion.SSTACLAIM == "5" || this.dataSourceLiquidacion.SSTACLAIM == "7"){ 
+               Swal.fire('No se puede pagar este Siniestro. Estado del siniestro: ' + this.dataSourceLiquidacion.ESTADO_SINIESTRO);
+               this.mostrarTable = false;
+               this.detalle = new Detalle();
+               return;
+             }else{
+                if (this.dataSourceLiquidacion.NLOC_RESERV <= 0){ 
+                  Swal.fire('El siniestro no tiene reserva');
+                  this.mostrarTable = false;
+                  this.detalle = new Detalle();
+                  return;
+                }else{
+                  this.detalle.NCODERROR = this.dataSourceLiquidacion.NCODERROR;
+                  this.detalle.SMESSAGEERROR = this.dataSourceLiquidacion.SMESSAGEERROR;
+                  this.detalle.SSTACLAIM = this.dataSourceLiquidacion.SSTACLAIM;
+                  this.detalle.ESTADO_SINIESTRO = this.dataSourceLiquidacion.ESTADO_SINIESTRO;
+                  this.detalle.NPOLICY = this.dataSourceLiquidacion.NPOLICY;
+                  this.detalle.DOCCURDAT = this.dataSourceLiquidacion.DOCCURDAT;
+                  this.detalle.HORAOCURRENCIA = this.dataSourceLiquidacion.HORAOCURRENCIA;
+                  this.detalle.SCLIENAME = this.dataSourceLiquidacion.SCLIENAME;
+                  this.detalle.UIT = this.dataSourceLiquidacion.UIT;
+    
+                  //buscamos los movimientos
+                  this.pendientePagoInput.NCLAIM = "34203"
+                  this.buscarCoberturasPendientePago(this.pendientePagoInput);  //datosCasoSiniestro.nclaim
+                  //this.mostrarTable = true;
+                }
+              }            
+          }  
+          //dialogRefLoad.close();
+        },
+        e => {
+          console.log(e);
+          //dialogRefLoad.close();
+        });
     }
   }
 
+  buscarCoberturasPendientePago(pendientePagoInput : PendientePago){
+
+    this.service.RetornarListaSiniPendPago(pendientePagoInput).subscribe(
+      s => {
+        
+        this.movimientos = s;
+        console.log(this.movimientos);
+        if (this.movimientos.length > 0){
+            this.mostrarTable = true;
+        }else{
+          Swal.fire('Este siniestro no tiene pagos pendientes');
+          this.mostrarTable = false;
+          return;
+        }
+      },
+      e => {
+        console.log(e);
+        //dialogRefLoad.close();
+      });
+
+  }
 
   seleccionChechbox(movimiento: Movimiento){
     let movTemp : Movimiento[]=[];
 
-    if(movimiento.seleccion == true){
+    if(movimiento.SELECCION == true){
 
       this.movimientos.forEach(x => {
-        if(x.tipoCobertura == movimiento.tipoCobertura){
-          x.seleccion = true;
+        if(x.NCOVER == movimiento.NCOVER){
+          x.SELECCION = true;
+          x.NCASENUM = this.caso;
           this.movimientosPago.push(x);
+          console.log(this.movimientosPago);
         }else{
-          x.seleccion = false
-          this.movimientosPago = this.movimientosPago.filter(m => m.id != x.id)
+          x.SELECCION = false
+          this.movimientosPago = this.movimientosPago.filter(m => m.NCOVER != x.NCOVER);
+          console.log(this.movimientosPago);
         }
       })
     }else{
       //this.movimientosPago = this.movimientosPago.filter(x => x.id != movimiento.id)
       this.movimientosPago.forEach(x => {
-        x.seleccion = false
+        x.SELECCION = false
       });
       this.movimientosPago = [];
     }
@@ -120,14 +211,19 @@ export class GastosCuracionComponent implements OnInit {
 
   procesoPago(){
     if(this.movimientosPago.length == 0){
-      Swal.fire('Información','Debe seleccionar movimientos', 'warning');
+      Swal.fire('Información','Debe seleccionar un movimiento', 'warning');
       return;
     }else{
-      const modalRef = this.modalService.open(ModalGastosCoberturaComponent,  { windowClass : "my-class"});
-      modalRef.componentInstance.reference = modalRef;
-      modalRef.componentInstance.data = this.movimientosPago;
-      modalRef.result.then((Interval) => {
+      if(this.movimientosPago[0].NROBENEF == 0){
+        Swal.fire('Información','La cobertura seleccionada no tiene beneficiarios', 'warning');
+        return;
+      }else{
+        const modalRef = this.modalService.open(ModalGastosCoberturaComponent,  { windowClass : "my-class"});
+        modalRef.componentInstance.reference = modalRef;
+        modalRef.componentInstance.data = this.movimientosPago;
+        modalRef.result.then((Interval) => {
       });
+      }
     }
   }
 
