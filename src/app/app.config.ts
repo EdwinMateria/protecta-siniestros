@@ -8,4 +8,5 @@ export class AppConfig{
     public static get URL_API_SOAT_APERTURA(): string {
         return environment.aperturaApi;
     }
+    public readonly apiUrl = 'http://localhost:30897/Api';
 }
