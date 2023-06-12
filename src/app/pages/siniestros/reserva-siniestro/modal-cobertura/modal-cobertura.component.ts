@@ -10,6 +10,12 @@ import { ClaimCodDiagnosticoRequest } from 'src/app/core/models/claimCodDiagnost
 import { ClaimCodDiagnosticoResponse } from 'src/app/core/models/claimCodDiagnosticoResponse';
 import { ClaimBeneficiarioRequest } from 'src/app/core/models/claimBeneficiarioRequest';
 import { BeneficiariesVM } from 'src/app/core/models/claimBenefParamResponse';
+import { Cobertura } from 'src/app/core/enums/cobertura.enum';
+import { ClaimsCoversReserveRequest } from 'src/app/core/models/claimsCoversReserveRequest';
+import { ClaimsCoversReserveResponse } from 'src/app/core/models/claimsCoversReserveResponse';
+import { ClaimCoverTmpRequestBM, ClaimsBenefCoverVM } from 'src/app/core/models/claimCoverTmpRequest';
+import { ClaimCoverResponse } from 'src/app/core/models/claimCoverResponse';
+import { DatePipe } from '@angular/common';
 
 export class Beneficiario {
   codigoCliente: string;
@@ -29,6 +35,7 @@ export class ModalCoberturaComponent implements OnInit {
 
   @Input() public reference: any;
   @Input() public data: any;
+  @Input() public reservaCaso: ClaimCoverResponse;
 
   beneficiarios: BeneficiariesVM[] = [];
   datosTramitador = "1";
@@ -41,13 +48,21 @@ export class ModalCoberturaComponent implements OnInit {
   bancos : ClaimComboResponse[] = [];
 
   tiposComprobantes : ClaimComboResponse[]=[];
-  @Output() tipoModal : EventEmitter<number>
+  @Output() tipoModal : EventEmitter<number>;
 
+  claimCoverReserveResponse = new ClaimsCoversReserveResponse();
+  
   public model: any;
+  dataReserva = new ClaimCoverTmpRequestBM();
+
+  inicioDescanso = new Date();
+  finDescanso= new Date();
+  fechaDerivacion = new Date();
+  fechaRespuesta = new Date();
 
 	search = (text$: Observable<string>) =>
 		text$.pipe(
-			debounceTime(1000),
+			debounceTime(800),
 			distinctUntilChanged(),
 			switchMap((term) => term.length < 4 ? of([]) : 
         this.reserveService.GetComboCodDiagnostico(term)
@@ -57,14 +72,41 @@ export class ModalCoberturaComponent implements OnInit {
   formatter = (result: ClaimCodDiagnosticoResponse) => result.CDESCRIPT;
 
 
-  constructor(private modalService: NgbModal, public reserveService: ReserveService) { }
+  constructor(private modalService: NgbModal, public reserveService: ReserveService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
-    if(this.data == 4 || this.data == 5) this.obtenerTiposComprobantes();
+    if(this.data == Cobertura.Gastos_Medicos || this.data == Cobertura.Gastos_Sepelio) this.obtenerTiposComprobantes();
+    console.log(this.reservaCaso);
+    
+    //Get Temp
+    this.getCobertura();
+    this.dataReserva.SPROCESSOR = '1';
+    this.dataReserva.SLOCATED = '0';
+    this.dataReserva.SINR_REFERRAL = '0';
+    this.dataReserva.NTYPERECEIPT = 0;
+    
   }
 
   closeModal() {
     this.reference.close();
+  }
+
+  getCobertura(){
+    let data = new ClaimsCoversReserveRequest();
+    data.SKEY = this.reservaCaso.SKEY;
+    data.NCOVER = this.data;
+    Swal.showLoading();
+    this.reserveService.GetDatCoversTmp(data).subscribe(
+      res => {
+        this.claimCoverReserveResponse = res;
+        console.log(res);
+        Swal.close()
+      },
+      err => {
+        Swal.close();
+        console.log(err);
+      }
+    )
   }
 
   obtenerTiposComprobantes(){
@@ -87,6 +129,8 @@ export class ModalCoberturaComponent implements OnInit {
         this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
           res =>{
             Swal.close();
+            console.log(res);
+            
             this.beneficiarios.push(res.ListBeneficiaries[0])
             if(this.beneficiarios.length == 1){
               this.reserveService.GetComboBanco().subscribe(
@@ -103,6 +147,50 @@ export class ModalCoberturaComponent implements OnInit {
         )
       }
     });
+  }
+
+  borrarBeneficiario(i:number){
+    this.beneficiarios.splice(i,1);
+  }
+
+  guardarTablaTemporal(){
+    let data = new ClaimCoverTmpRequestBM();
+    this.beneficiarios.forEach(benef => {
+      this.dataReserva.LIST_BENEF_COVERS.push({
+        SCODCLI : benef.SCODE,
+        SBENEFICIARY : benef.SNAME,
+        SDOCUMENTTYPE : benef.SCODDOCUMENTTYPE,
+        SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
+        SBENEFICIARYTYPE : benef.SCODBENEFICIARYTYPE,
+        SCOVER_DESC : this.data,
+        SBANK : benef.SBANK,
+        SACCOUNTNUMBER :  benef.SACCOUNTNUMBER
+      })
+    })
+
+    this.dataReserva.SKEY = this.reservaCaso.SKEY;
+    this.dataReserva.NCASE = Number(this.reservaCaso.NCASE_NUM);
+    this.dataReserva.NCLAIM = Number(this.reservaCaso.NCLAIM);
+    this.dataReserva.NCOVER = this.data;
+    //Suma Asegurada -->
+    //Fecha Fin Analisis
+    this.dataReserva.SDIAGNOSTICCODE = this.model.CCODCIE10;
+    this.dataReserva.SDIAGNOSTIC = this.model.CDESCRIPT;
+    this.dataReserva.STYPEATTENTION = this.reservaCaso.STIPOATENCION;
+
+    if(this.data == Cobertura.Incapacidad_Temporal){
+      this.dataReserva.DRESTSTART =  this.datePipe.transform(this.inicioDescanso, 'dd/MM/yyyy')
+      this.dataReserva.DRESTEND = this.datePipe.transform(this.finDescanso, 'dd/MM/yyyy')
+    }
+
+    if(this.data == Cobertura.Incapacidad_Temporal || this.data == Cobertura.Invalidez_Permanente){
+      this.dataReserva.DINR_REFERRALDATE =  this.datePipe.transform(this.fechaDerivacion, 'dd/MM/yyyy')
+      this.dataReserva.DINR_RESPONSEDATE = this.datePipe.transform(this.fechaRespuesta, 'dd/MM/yyyy')
+    }
+
+    console.log(this.dataReserva);
+    
+
   }
 
 

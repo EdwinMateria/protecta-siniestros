@@ -16,4 +16,6 @@ export class BeneficiariesVM {
     SCOVER_DESC         : string;
     SBANK               : string;
     SACCOUNTNUMBER      : string;
+    SCODDOCUMENTTYPE    : string;
+    SCODBENEFICIARYTYPE : string;
 }

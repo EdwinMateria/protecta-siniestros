@@ -403,7 +403,8 @@ export class FormCasoComponent implements OnInit {
     }else{
       let caso = new CasosBM();
       caso = {
-        ...this.form.getRawValue()
+        ...this.form.getRawValue(),
+        nCaso : this.form.controls['nPolicy'].value
       };
       Swal.close();
       this.casoService.UpdateCase(caso).subscribe(

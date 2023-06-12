@@ -14,6 +14,9 @@ import { ClaimBenefParamRequest } from '../../models/claimBenefParamRequest';
 import { ClaimBenefParamResponse } from '../../models/claimBenefParamResponse';
 import { ClaimBeneficiarioRequest } from '../../models/claimBeneficiarioRequest';
 import { Data } from '@angular/router';
+import { ClaimCoverTmpRequestBM } from '../../models/claimCoverTmpRequest';
+import { ClaimsCoversReserveRequest } from '../../models/claimsCoversReserveRequest';
+import { ClaimsCoversReserveResponse } from '../../models/claimsCoversReserveResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -107,6 +110,13 @@ export class ReserveService {
   public SaveApi(data: Data): Observable<any> {
     //const body = JSON.stringify(data);
     return this.http.post<any>(this.Url + '/Reserve/SaveApi', data, {
+      headers: this.headers,
+    });
+  }
+
+  public GetDatCoversTmp(data: ClaimsCoversReserveRequest): Observable<ClaimsCoversReserveResponse> {
+    const body = JSON.stringify(data);
+    return this.http.post<ClaimsCoversReserveResponse>(this.Url + '/Reserve/GetDatCoversTmp', body, {
       headers: this.headers,
     });
   }

@@ -124,6 +124,7 @@ export class ReservaSiniestroComponent implements OnInit {
     const modalRef = this.modalService.open(ModalCoberturaComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;
     modalRef.componentInstance.data = origen;
+    modalRef.componentInstance.reservaCaso = this.reservaCaso;
     modalRef.result.then((Interval) => {
       
     });

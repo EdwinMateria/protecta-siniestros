@@ -19,5 +19,14 @@ export class ClaimCoverResponse{
     HORAOCURRENCIA  :   string;
     UIT             :   number;
     STIPOATENCION   :   string;
+    SCERTYPE        :   string;
+    NBRANCH         :   string;
+    NPRODUCT        :   string;
+    SBRANCHT        :   string;
+    NCLAIM          :   string;
+    NCASE_NUM       :   string;
+    NDEMAN_TYPE     :   string;
+    NOPT_CLAITYP    :   string;
+    SKEY            :   string;
     LISTA_COVERCLAIM:   ClaimDataCoverVM[]   
 }
