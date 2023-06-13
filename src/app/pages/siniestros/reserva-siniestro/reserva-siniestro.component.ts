@@ -126,7 +126,7 @@ export class ReservaSiniestroComponent implements OnInit {
     modalRef.componentInstance.data = origen;
     modalRef.componentInstance.reservaCaso = this.reservaCaso;
     modalRef.result.then((Interval) => {
-      
+      console.log(Interval);
     });
   }
 

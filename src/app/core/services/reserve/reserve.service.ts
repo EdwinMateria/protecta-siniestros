@@ -17,6 +17,9 @@ import { Data } from '@angular/router';
 import { ClaimCoverTmpRequestBM } from '../../models/claimCoverTmpRequest';
 import { ClaimsCoversReserveRequest } from '../../models/claimsCoversReserveRequest';
 import { ClaimsCoversReserveResponse } from '../../models/claimsCoversReserveResponse';
+import { ClaimRmvResponse } from '../../models/claimRmvResponse';
+import { ClaimRmvRequest } from '../../models/claimRmvRequest';
+import { ClaimCoverTmpResponseBM } from '../../models/claimCoverTmpResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -117,6 +120,20 @@ export class ReserveService {
   public GetDatCoversTmp(data: ClaimsCoversReserveRequest): Observable<ClaimsCoversReserveResponse> {
     const body = JSON.stringify(data);
     return this.http.post<ClaimsCoversReserveResponse>(this.Url + '/Reserve/GetDatCoversTmp', body, {
+      headers: this.headers,
+    });
+  }
+
+  public GetRmv(data: ClaimRmvRequest): Observable<ClaimRmvResponse[]> {
+    const body = JSON.stringify(data);
+    return this.http.post<ClaimRmvResponse[]>(this.Url + '/Reserve/GetRmv', body, {
+      headers: this.headers,
+    });
+  }
+
+  public InsertDatCoversTmp(data: ClaimCoverTmpRequestBM): Observable<ClaimCoverTmpResponseBM> {
+    const body = JSON.stringify(data);
+    return this.http.post<ClaimCoverTmpResponseBM>(this.Url + '/Reserve/InsertDatCoversTmp', body, {
       headers: this.headers,
     });
   }

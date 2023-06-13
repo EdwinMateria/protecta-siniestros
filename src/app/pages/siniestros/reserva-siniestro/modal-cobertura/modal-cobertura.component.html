@@ -153,11 +153,16 @@
         <div class="row" *ngIf="data == 3">
             <div class="col-sm-3 form-group">
                 <label>Menoscabo: </label>
-                <input type="number" class="form-control" [(ngModel)]="dataReserva.NIMPAIRMENT">
+                <div class="input-group">
+                    <input type="number" class="form-control" [(ngModel)]="modelCabo" [formControl]="menoscabo" [ngClass]="{'is-invalid': menoscabo.invalid && menoscabo.touched}" (ngModelChange)="changeMenoscabo()">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-percent"></i></span>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-2 form-group">
                 <label>Monto reserva</label>
-                <input type="number" class="form-control" disabled>
+                <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NRESERVEAMOUNT">
             </div>
         </div>
 
@@ -166,7 +171,8 @@
                 <div class="col-sm-3 form-group">
                     <label>Inicio de descanso: </label>
                     <div class="input-group">
-                        <input type="date" class="form-control" [(ngModel)]="inicioDescanso">
+                        <input type="date" class="form-control" [formControl]="inicioDescanso" (change)="changeFechasDescanso()"
+                        [ngClass]="{'is-invalid': inicioDescanso.invalid && inicioDescanso.touched}">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
@@ -175,7 +181,8 @@
                 <div class="col-sm-3 form-group">
                     <label>Fin de descanso: </label>
                     <div class="input-group">
-                        <input type="date" class="form-control" [(ngModel)]="finDescanso">
+                        <input type="date" class="form-control" [formControl]="finDescanso" (change)="changeFechasDescanso()"
+                        [ngClass]="{'is-invalid': finDescanso.invalid && finDescanso.touched}">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
@@ -183,18 +190,18 @@
                 </div>
                 <div class="col-sm-2 form-group">
                     <label>RMV: </label>
-                    <input type="text" class="form-control" disabled>
+                    <input type="text" class="form-control" disabled [(ngModel)]="dataReserva.NMINIMUNREMUNERATION">
                 </div>
 
                 <div class="col-sm-3 form-group">
                     <label>Monto reserva: </label>
-                    <input type="text" class="form-control" disabled>
+                    <input type="text" class="form-control" disabled [(ngModel)]="dataReserva.NRESERVEAMOUNT">
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-3 form-group">
                     <label>Días de descanso: </label>
-                    <input type="text" class="form-control" disabled>
+                    <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NDAYSOFF">
                 </div>
             </div>
         </div>
@@ -235,6 +242,20 @@
         </div>
     </div>
 
+    <div class="row" *ngIf="data == 4">
+        <div class="col-sm-3 form-group">
+            <label>Reembolso </label>
+            <select class="form-control" [(ngModel)]="dataReserva.SREFUND">
+                <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
+                    [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
+            </select>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label>Nro. de Carta </label>
+            <input type="text" class="form-control" [(ngModel)]="dataReserva.SNROLETTER">
+        </div>
+    </div>
+
     <div *ngIf="data == 4 || data == 5" class="mt-1">
         <div class="row">
             <div class="col-sm-12" style="border-bottom: 1px solid #ccc!important; width: 100% !important;">
@@ -258,7 +279,7 @@
             <div class="col-sm-3 form-group">
                 <label>Fecha emisión </label>
                 <div class="input-group">
-                    <input type="date" class="form-control">
+                    <input type="date" class="form-control" [(ngModel)]="fechaEmision">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
@@ -267,7 +288,7 @@
             <div class="col-sm-3 form-group">
                 <label>Fecha recepción </label>
                 <div class="input-group">
-                    <input type="date" class="form-control">
+                    <input type="date" class="form-control" [(ngModel)]="fechaRecepcion">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>
@@ -277,34 +298,38 @@
         <div class="row">
             <div class="col-sm-5 form-group">
                 <label>Nombre Referencial / IPRESS </label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" [(ngModel)]="dataReserva.SREFERENTIALNAMEIPRESS">
+            </div>
+            <div class="col-sm-3 form-group">
+                <label>Red de IPRESS </label>
+                <input type="text" class="form-control" [(ngModel)]="dataReserva.SRED_IPRESS">
             </div>
             <div class="col-sm-3 form-group">
                 <label>Ruc: </label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" [(ngModel)]="dataReserva.SRUC">
             </div>
         </div>
         <div class="row">
             <div class="col-sm-3 form-group">
                 <label>Base Imponible</label>
-                <input type="text" class="form-control">
+                <input type="number" class="form-control" [(ngModel)]="dataReserva.NAMOUNTBASE">
             </div>
             <div class="col-sm-2 form-group">
                 <label>IGV</label>
-                <input type="text" class="form-control" disabled>
+                <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NIGV">
             </div>
             <div class="col-sm-3 form-group">
                 <label>Total comprobante: </label>
-                <input type="text" class="form-control" disabled>
+                <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NAMOUNTTOTAL">
             </div>
         </div>
-        <div class="row mt-2" *ngIf="data == 4">
+        <div class="row mt-2">
             <div class="col-sm-3">
                 <div class="form-inline">
                     <label>Afecta al IGV: </label>
-                    <select class="form-control ml-3">
-                        <option>Si</option>
-                        <option>No</option>
+                    <select class="form-control ml-3" [(ngModel)]="dataReserva.SAFFECTIGV">
+                        <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
+                            [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
                     </select>
                 </div>
             </div>

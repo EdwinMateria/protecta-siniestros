@@ -180,7 +180,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
           }else{
             Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
             jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT
-            console.log(jsonResponse);
             this.reference.close(jsonResponse);
           }
         },
