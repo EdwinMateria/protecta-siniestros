@@ -20,15 +20,6 @@ import { FormControl, Validators } from '@angular/forms';
 import { ClaimRmvRequest } from 'src/app/core/models/claimRmvRequest';
 import { ClaimRmvResponse } from 'src/app/core/models/claimRmvResponse';
 
-export class Beneficiario {
-  codigoCliente: string;
-  beneficiario: string;
-  tipoDocumento: string;
-  tipoBeneficiario: string;
-  nroCuenta: string;
-  cobertura: string;
-  nroDocumento: string;
-}
 @Component({
   selector: 'app-modal-cobertura',
   templateUrl: './modal-cobertura.component.html',
@@ -55,7 +46,7 @@ export class ModalCoberturaComponent implements OnInit {
 
   claimCoverReserveResponse = new ClaimsCoversReserveResponse();
   
-  public model: any;
+  public model = new ClaimCodDiagnosticoResponse()
   dataReserva = new ClaimCoverTmpRequestBM();
 
   inicioDescanso = new FormControl('', Validators.required)
@@ -69,6 +60,8 @@ export class ModalCoberturaComponent implements OnInit {
 
   rmvResponse = new ClaimRmvResponse();
   modelCabo : any;
+
+  diagnosticoValue = "";
 
 	search = (text$: Observable<string>) =>
 		text$.pipe(
@@ -85,21 +78,31 @@ export class ModalCoberturaComponent implements OnInit {
   constructor(private modalService: NgbModal, public reserveService: ReserveService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
-    if(this.data == Cobertura.Gastos_Medicos || this.data == Cobertura.Gastos_Sepelio) this.obtenerTiposComprobantes();
-    if(this.data == Cobertura.Incapacidad_Temporal) this.obtenerRMV();
-    console.log(this.reservaCaso);
     
-    //Get Temp
+    this.validacionPorCobertura();
     this.getCobertura();
+  }
+
+  validacionPorCobertura(){
+    if(this.data == Cobertura.Gastos_Medicos || this.data == Cobertura.Gastos_Sepelio) {
+      this.obtenerTiposComprobantes(); 
+      this.dataReserva.NTYPERECEIPT = 0;
+      this.dataReserva.SAFFECTIGV = "1";
+      if(this.data == Cobertura.Gastos_Medicos)  this.dataReserva.SREFUND = '0';
+    }
+
+    if(this.data == Cobertura.Incapacidad_Temporal) this.obtenerRMV();
+
+    if(this.data == Cobertura.Incapacidad_Temporal || this.data == Cobertura.Invalidez_Permanente) {
+      this.dataReserva.SINR_REFERRAL = '0';
+    }
+
     this.dataReserva.SPROCESSOR = '1';
     this.dataReserva.SLOCATED = '0';
-    this.dataReserva.SINR_REFERRAL = '0';
-    this.dataReserva.NTYPERECEIPT = 0;
-    this.dataReserva.SAFFECTIGV = '0';
-    this.dataReserva.SREFUND = '0';
     this.dataReserva.SPROCESSORNAME = "";
     this.dataReserva.SPROCESSORZONE = "";
-    this.dataReserva.SAFFECTIGV = "1";
+    
+    if(this.data != Cobertura.Muerte) this.dataReserva.SDIAGNOSTICCOMPLEXITY = "0";
   }
 
   closeModal() {
@@ -113,7 +116,38 @@ export class ModalCoberturaComponent implements OnInit {
     Swal.showLoading();
     this.reserveService.GetDatCoversTmp(data).subscribe(
       res => {
-        this.claimCoverReserveResponse = res;
+        if(res.SKEY != null){
+          this.claimCoverReserveResponse = res;
+          //Mapeo
+          this.dataReserva.LIST_BENEF_COVERS = res.LIST_BENEF_COVERS;
+          this.model.CCODCIE10 = res.SDIAGNOSTICCODE;
+          this.model.CDESCRIPT = res.SDIAGNOSTIC;
+          this.diagnosticoValue = res.SDIAGNOSTIC;
+          this.dataReserva.SPROCESSOR = res.SPROCESSOR;
+          this.dataReserva.SPROCESSORNAME = res.SPROCESSORNAME;
+          this.dataReserva.SPROCESSORZONE = res.SPROCESSORZONE;
+          this.dataReserva.SLOCATED = res.SLOCATED;
+
+          if(this.data == Cobertura.Incapacidad_Temporal ){
+            this.dataReserva.SSPECIALTY = res.SSPECIALTY;
+            this.dataReserva.SDIAGNOSTICCOMPLEXITY = res.SDIAGNOSTICCOMPLEXITY;
+            this.dataReserva.SATTENDINGMEDIC = res.SATTENDINGMEDIC;
+            this.dataReserva.SATENTIONIPRESS = res.SATENTIONIPRESS;
+            this.dataReserva.NMINIMUNREMUNERATION = res.NMINIMUNREMUNERATION;
+            this.dataReserva.NDAYSOFF = res.NDAYSOFF;
+            this.dataReserva.NRESERVEAMOUNT = res.NRESERVEAMOUNT;
+            let anio = new Date(res.DRESTSTART).getFullYear()
+            let mes = new Date(res.DRESTSTART).getFullYear()
+            console.log(mes, anio);
+            
+            this.inicioDescanso.setValue(this.datePipe.transform(res.DRESTSTART, 'yyyy-MM-dd'));
+            this.finDescanso.setValue(this.datePipe.transform(res.DRESTEND, 'yyyy-MM-dd'));
+            this.dataReserva.SINR_REFERRAL = res.SINR_REFERRAL;
+            this.dataReserva.SINR_FILENUMBER = res.SINR_FILENUMBER;
+            this.fechaDerivacion = new Date(this.datePipe.transform(res.DINR_REFERRALDATE, 'yyyy-MM-dd'))
+            this.fechaRecepcion = new Date(this.datePipe.transform(res.DINR_RESPONSEDATE, 'yyyy-MM-dd'));
+          }
+        }
         Swal.close()
       },
       err => {
@@ -211,7 +245,6 @@ export class ModalCoberturaComponent implements OnInit {
   }
 
   guardarTablaTemporal(){
-    let data = new ClaimCoverTmpRequestBM();
     if(this.beneficiarios.length > 0){
       this.beneficiarios.forEach(benef => {
         this.dataReserva.LIST_BENEF_COVERS.push({
@@ -238,9 +271,6 @@ export class ModalCoberturaComponent implements OnInit {
     this.dataReserva.NCASE = Number(this.reservaCaso.NCASE_NUM);
     this.dataReserva.NCLAIM = Number(this.reservaCaso.NCLAIM);
     this.dataReserva.NCOVER = this.data;
-    //Suma Asegurada -->
-    //Fecha Fin Analisis
-    
     if(this.model){
       this.dataReserva.SDIAGNOSTICCODE = this.model.CCODCIE10;
       this.dataReserva.SDIAGNOSTIC = this.model.CDESCRIPT;
