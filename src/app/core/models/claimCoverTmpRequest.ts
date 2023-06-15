@@ -42,6 +42,8 @@ export class ClaimCoverTmpRequestBM {
     NUITQUANTITY            : number;
     NUITAMOUNT              : number;
     SREFUND                 : string;
+    DOCCURDAT               : string;
+    SMOVETYPE               : string;
 }
 
 export class ClaimsBenefCoverVM {

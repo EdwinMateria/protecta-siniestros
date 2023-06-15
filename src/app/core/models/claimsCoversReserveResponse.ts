@@ -47,6 +47,7 @@ export class ClaimsCoversReserveResponse {
 	SCOVER_DESC             : string;
 	SBANK                   : string;
 	SACCOUNTNUMBER          : string;
+	SREFUND					: string;
 }
 
 export class ClaimsBenefTmpVM {

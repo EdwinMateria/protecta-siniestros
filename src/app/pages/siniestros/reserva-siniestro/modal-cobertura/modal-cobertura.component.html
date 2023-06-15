@@ -20,18 +20,13 @@
                         [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
                 </select>
             </div>
-        </div>
-        <!-- <div class="col-sm-5">
-            <div class="form-inline">
-                <label>Fecha fin de análisis: </label>
-                <div class="input-group">
-                    <input type="date" class="form-control ml-3">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
+            <div class="form-inline" *ngIf="data == 4">
+                <label>Tipo de atención: </label>
+                <select class="form-control ml-3" [formControl]="tipoAtencion" [ngClass]="{'is-invalid': tipoAtencion.invalid && tipoAtencion.touched}">
+                    <option *ngFor="let atencion of tiposAtencion" [value]="atencion.SCODIGO">{{atencion.SDESCRIPCION}}</option>
+                </select>
             </div>
-        </div> -->
+        </div>
     </div>
     <div class="row mt-1">
         <div class="col-sm-12">
@@ -300,7 +295,7 @@
                 <label>Nombre Referencial / IPRESS </label>
                 <input type="text" class="form-control" [(ngModel)]="dataReserva.SREFERENTIALNAMEIPRESS">
             </div>
-            <div class="col-sm-3 form-group">
+            <div *ngIf="data == 4" class="col-sm-3 form-group">
                 <label>Red de IPRESS </label>
                 <input type="text" class="form-control" [(ngModel)]="dataReserva.SRED_IPRESS">
             </div>
@@ -312,7 +307,7 @@
         <div class="row">
             <div class="col-sm-3 form-group">
                 <label>Base Imponible</label>
-                <input type="number" class="form-control" [(ngModel)]="dataReserva.NAMOUNTBASE">
+                <input type="number" class="form-control" [formControl]="baseImponible" [(ngModel)]="modelBase" [ngClass]="{'is-invalid': baseImponible.invalid && baseImponible.touched}" (ngModelChange)="changeBaseImponible()">
             </div>
             <div class="col-sm-2 form-group">
                 <label>IGV</label>
@@ -327,7 +322,7 @@
             <div class="col-sm-3">
                 <div class="form-inline">
                     <label>Afecta al IGV: </label>
-                    <select class="form-control ml-3" [(ngModel)]="dataReserva.SAFFECTIGV">
+                    <select class="form-control ml-3" [(ngModel)]="dataReserva.SAFFECTIGV" (change)="changeBaseImponible()">
                         <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
                             [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
                     </select>

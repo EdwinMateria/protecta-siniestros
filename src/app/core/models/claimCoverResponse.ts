@@ -8,7 +8,8 @@ export class ClaimDataCoverVM{
     NSUMINSURED     :   number;
     NACCUMRESERVE   :   number;
     NMODULEC        :   number;
-    NCURRENCY       :   number
+    NCURRENCY       :   number;
+    NRESERVEAMOUNT  :   number;
 }
 
 export class ClaimCoverResponse{
@@ -28,5 +29,6 @@ export class ClaimCoverResponse{
     NDEMAN_TYPE     :   string;
     NOPT_CLAITYP    :   string;
     SKEY            :   string;
+    SMOVETYPE       :   string;
     LISTA_COVERCLAIM:   ClaimDataCoverVM[]   
 }
