@@ -49,6 +49,8 @@ export class DatosPago{
   SACCOUNT: string;
   DESC_COBERTURA: string;
   IGV: string;
+  SREGIST: string;
+  NAMOUNT: number;
 }
 
 export class SalidaBeneficiarios{
@@ -63,6 +65,9 @@ export class SalidaBeneficiarios{
   NBANKEXT: string;
   NOMBRE_BANCO: string;
   SACCOUNT: string;
+  MONTO_PAGO: number;
+  NAMOUNT: number;
+  NBILL: string;
 }
 
 @Component({
@@ -99,6 +104,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   igv = "";
   totalComprobante = "";
   totalPagarMuerte = 0;
+  pendientePago = 0;
 
   constructor(private service: LiquidacionService,
               private modalService: NgbModal) { }
@@ -133,19 +139,15 @@ export class ModalGastosCoberturaComponent implements OnInit {
     this.tipoCobertura = this.data[0].NCOVER;
     console.log(this.tipoCobertura);
     this.titulo = this.data[0].DESC_COBERTURA;
-    // if(this.tipoCobertura == 2) this.titulo = "Gastos de sepelio";
-    // if(this.tipoCobertura == 3) this.titulo = "Invalidez permanente";
-    // if(this.tipoCobertura == 4) this.titulo = "Invalidez temporal";
-    // if(this.tipoCobertura == 5) this.titulo = "Muerte";
 
     this.siniestro = this.data[0].NCLAIM;
     this.caso = this.data[0].NCASENUM;
 
-    this.datosSiniestro.PNCASE = "15"; //this.caso;
-    this.datosSiniestro.PNCLAIM = "377193"; //this.siniestro;
-    this.datosSiniestro.PNCOVER = 2; //this.tipoCobertura;
-    this.tipoCobertura = 4;  //cobertura de prueba, borrar esta linea despues de probar
-    this.titulo = "GASTOS DE CURACION";
+    this.datosSiniestro.PNCASE = this.caso;
+    this.datosSiniestro.PNCLAIM = this.siniestro;
+    this.datosSiniestro.PNCOVER = this.tipoCobertura;
+    //this.tipoCobertura = 4;  //cobertura de prueba, borrar esta linea despues de probar
+    //this.titulo = "GASTOS DE CURACION";
 
     this.buscarDatosPago(this.datosSiniestro);
     //this.baseImponible = this.redondearDecimales(this.data[0].PENDIENTES,2);
@@ -155,14 +157,15 @@ export class ModalGastosCoberturaComponent implements OnInit {
       //Obtenemos los beneficiarios
       const denuncia = "11/05/2023";
       const fechaOcurre = new Date(denuncia);
-      this.datosBeneficiarios.PNCLAIM = "4064"; //this.siniestro;
-      this.datosBeneficiarios.PNCOVER = 4; //this.tipoCobertura;
-      this.datosBeneficiarios.PCASENUM = "1"; this.caso;    
+      this.datosBeneficiarios.PNCLAIM = this.siniestro;
+      this.datosBeneficiarios.PNCOVER = this.tipoCobertura;
+      this.datosBeneficiarios.PCASENUM = this.caso;    
       this.datosBeneficiarios.PDOCCURDATE = fechaOcurre;
-      this.datosBeneficiarios.PPOLICY = "7000009280"; //this.poliza;
+      this.datosBeneficiarios.PPOLICY = this.poliza;
       this.ObtenerBeneficiarios(this.datosBeneficiarios);  
       //this.baseImponible = this.data.reduce(function (acc, obj) { return acc + obj.PENDIENTES; }, 0);
-      this.baseImponible = this.redondearDecimales(this.data[0].PENDIENTES,2);
+      //this.baseImponible = this.redondearDecimales(this.data[0].PENDIENTES,2);
+      this.pendientePago = this.redondearDecimales(this.data[0].PENDIENTES,2);
       this.igv = (this.baseImponible * 0.18 ).toFixed(2);
       this.totalComprobante = (this.baseImponible + Number(this.igv)).toFixed(2);
       this.totalFactura = this.baseImponible;
@@ -171,28 +174,29 @@ export class ModalGastosCoberturaComponent implements OnInit {
     if(this.tipoCobertura == 2 || this.tipoCobertura == 3){
       //Obtenemos los beneficiarios
       const denuncia = "11/05/2023";
-      const fechaOcurre = new Date(denuncia);
-      this.datosBeneficiarios.PNCLAIM = "4064"; //this.siniestro;
-      this.datosBeneficiarios.PNCOVER = 4; //this.tipoCobertura;
-      this.datosBeneficiarios.PCASENUM = "1"; this.caso;    
+      const fechaOcurre = new Date(this.fechaDenuncia);
+      this.datosBeneficiarios.PNCLAIM = this.siniestro;
+      this.datosBeneficiarios.PNCOVER = this.tipoCobertura;
+      this.datosBeneficiarios.PCASENUM = this.caso;    
       this.datosBeneficiarios.PDOCCURDATE = fechaOcurre;
-      this.datosBeneficiarios.PPOLICY = "7000009280"; //this.poliza;
+      this.datosBeneficiarios.PPOLICY = this.poliza;
       this.ObtenerBeneficiarios(this.datosBeneficiarios);
-      this.baseImponible = this.redondearDecimales(this.data[0].PENDIENTES,2);
+      this.pendientePago = this.redondearDecimales(this.data[0].PENDIENTES,2);
+      //this.baseImponible = this.redondearDecimales(0,2);
       this.totalFactura = this.baseImponible;
     }
 
     if(this.tipoCobertura ==  1){
       //Obtenemos los beneficiarios
       const denuncia = "11/05/2023";
-      const fechaOcurre = new Date(denuncia);
-      this.datosBeneficiarios.PNCLAIM = "37466"; //this.siniestro;
-      this.datosBeneficiarios.PNCOVER = 4; //this.tipoCobertura;
-      this.datosBeneficiarios.PCASENUM = "1"; this.caso;    
+      const fechaOcurre = new Date(this.fechaDenuncia);
+      this.datosBeneficiarios.PNCLAIM = this.siniestro;
+      this.datosBeneficiarios.PNCOVER = this.tipoCobertura;
+      this.datosBeneficiarios.PCASENUM = this.caso;    
       this.datosBeneficiarios.PDOCCURDATE = fechaOcurre;
-      this.datosBeneficiarios.PPOLICY = "7590"; //this.poliza;
+      this.datosBeneficiarios.PPOLICY = this.poliza;
       this.ObtenerBeneficiariosMuerte(this.datosBeneficiarios);
-      this.baseImponible = this.redondearDecimales(this.data.reduce(function (acc, obj) { return acc + obj.PENDIENTES; }, 0),2);
+      this.pendientePago = this.redondearDecimales(this.data.reduce(function (acc, obj) { return acc + obj.PENDIENTES; }, 0),2);
     }
 
   }
@@ -213,30 +217,32 @@ export class ModalGastosCoberturaComponent implements OnInit {
         console.log(s);
         this.datosPago = s;
         this.poliza = this.datosPago.NPOLICY;
-        this.placa = "ABC 123";
+        //this.placa = "ABC 123";
         this.docSiniestrado = this.datosPago.SCLIENT;
         this.siniestrado = this.datosPago.SCLIENAME;
         this.fechaDenuncia = this.datosPago.FECHADECLARACION;
         this.fechaApertura = this.datosPago.FECHAAPERTURA;
         this.codDiagnostico = this.datosPago.SCODIGODIAGNOSTICO;
         this.especialidad = this.datosPago.SESPECIALIDAD;
-        this.banco = this.datosPago.NOMBRE_BANCO;
-        this.nroCuenta = this.datosPago.SACCOUNT;
+        this.placa = this.datosPago.SREGIST;
+        //this.banco = this.datosPago.NOMBRE_BANCO;
+        //this.nroCuenta = this.datosPago.SACCOUNT;
         this.nroFactura = this.datosPago.NBILL;
         this.fechaEmisionFac = this.datosPago.FECHAEMISIONFACTURA;
         this.fechaRecibeFac = this.datosPago.FECHARECEPCIONFACTURA;
+        //this.baseImponible = this.datosPago.NAMOUNT;
         
-        if(this.banco == "" && this.nroCuenta == ""){
-          Swal.fire('Información','No esta registrado el Banco y el Nro. de Cuenta', 'warning');
-        }else{
-          if(this.banco == "" && this.nroCuenta != ""){
-            Swal.fire('Información','No esta registrado el Banco.', 'warning');
-          }else{
-            if(this.banco != "" && this.nroCuenta == ""){
-              Swal.fire('Información','No esta registrado el Nro. de Cuenta.', 'warning');
-            }
-          }
-        }
+        // if(this.banco == "" && this.nroCuenta == ""){
+        //   Swal.fire('Información','No esta registrado el Banco y el Nro. de Cuenta', 'warning');
+        // }else{
+        //   if(this.banco == "" && this.nroCuenta != ""){
+        //     Swal.fire('Información','No esta registrado el Banco.', 'warning');
+        //   }else{
+        //     if(this.banco != "" && this.nroCuenta == ""){
+        //       Swal.fire('Información','No esta registrado el Nro. de Cuenta.', 'warning');
+        //     }
+        //   }
+        // }
 
         
       },
@@ -283,6 +289,11 @@ export class ModalGastosCoberturaComponent implements OnInit {
           if (this.salidaBeneficiarios.length >0){
             this.tipoDocumento = this.salidaBeneficiarios[0].SSHORT_DES;
             this.nroDocumento = this.salidaBeneficiarios[0].SCLIENT;
+            this.banco = this.salidaBeneficiarios[0].NOMBRE_BANCO;
+            this.nroCuenta = this.salidaBeneficiarios[0].SACCOUNT;
+            this.totalFactura = this.salidaBeneficiarios[0].MONTO_PAGO;
+            this.baseImponible = this.salidaBeneficiarios[0].NAMOUNT;
+            this.nroFactura = this.salidaBeneficiarios[0].NBILL;
             this.objBeneficiario = this.salidaBeneficiarios[0];
           }
         //}        
@@ -320,8 +331,25 @@ export class ModalGastosCoberturaComponent implements OnInit {
     console.log(selectedValue);
     const tipoDoc = selectedValue.split("|")[0];
     const numDoc = selectedValue.split("|")[1];
+    const nomBanco = selectedValue.split("|")[2];
+    const numCuenta = selectedValue.split("|")[3];
+    const montoPago = selectedValue.split("|")[4];
+    //const baseImponible = selectedValue.split("|")[5];
+    const nMontoFactura = selectedValue.split("|")[5];
+    const nroFactura = selectedValue.split("|")[6];  
+    console.log(montoPago);
     this.tipoDocumento = tipoDoc;
     this.nroDocumento = numDoc;
+    this.banco = nomBanco;
+    this.nroCuenta = numCuenta;
+    this.nroFactura = nroFactura;
+    //this.baseImponible = this.redondearDecimales(parseFloat(baseImponible),2);
+    this.baseImponible = this.redondearDecimales(parseFloat(nMontoFactura),2);
+    this.igv = (this.baseImponible * 0.18 ).toFixed(2);
+    this.totalComprobante = (this.baseImponible + Number(this.igv)).toFixed(2);
+
+    this.totalFactura = this.redondearDecimales(parseFloat(montoPago),2); 
+    //this.totalFactura = this.montoPago;
 
   }
 
@@ -375,6 +403,8 @@ export class ModalGastosCoberturaComponent implements OnInit {
         if(selectedValueTipoPago == "11" && Number(selectElementTotalBenef) == 1 && Number(selectedValueMontoPago) < this.baseImponible){ //devolver el numero total de beneficiarios modificar el valor de selected
           Swal.fire('Error','No se puede hacer pago total porque el monto a pagar es menor al monto de base imponible.', 'error');
           return;
+        }else{
+          console.log('Proceso el pago.'); //aqui va la invocacion del proceso de muerte
         }
       }
     }

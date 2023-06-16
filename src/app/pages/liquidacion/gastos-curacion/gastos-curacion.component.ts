@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { ModalGastosCoberturaComponent } from './modal-gastos-cobertura/modal-gastos-cobertura.component';
 import { DatosCasoSiniestro } from '../models/Liquidacion.model';
 import { LiquidacionService } from 'src/app/services/LiquidacionService';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 //import * as internal from 'stream';
 
 export class Movimiento{
@@ -35,6 +36,7 @@ export class Detalle{
 
 export class PendientePago{
   NCLAIM : string;
+  NCASE: string;
 }
 
 @Component({
@@ -118,7 +120,7 @@ export class GastosCuracionComponent implements OnInit {
           this.dataSourceLiquidacion = s;
 
           if (this.dataSourceLiquidacion.NCODERROR == "1"){
-            Swal.fire(this.dataSourceLiquidacion.SMESSAGEERROR);
+            Swal.fire('Error', this.dataSourceLiquidacion.SMESSAGEERROR, 'error');
             this.mostrarTable = false;
             return;
           }else{
@@ -129,7 +131,7 @@ export class GastosCuracionComponent implements OnInit {
                return;
              }else{
                 if (this.dataSourceLiquidacion.NLOC_RESERV <= 0){ 
-                  Swal.fire('El siniestro no tiene reserva');
+                  Swal.fire('Información','El siniestro no tiene reserva','error');
                   this.mostrarTable = false;
                   this.detalle = new Detalle();
                   return;
@@ -145,7 +147,9 @@ export class GastosCuracionComponent implements OnInit {
                   this.detalle.UIT = this.dataSourceLiquidacion.UIT;
     
                   //buscamos los movimientos
-                  this.pendientePagoInput.NCLAIM = "34203"
+                  // this.pendientePagoInput.NCLAIM = "34203"
+                  this.pendientePagoInput.NCLAIM = this.siniestro;
+                  this.pendientePagoInput.NCASE = this.caso;
                   this.buscarCoberturasPendientePago(this.pendientePagoInput);  //datosCasoSiniestro.nclaim
                   //this.mostrarTable = true;
                 }
@@ -170,7 +174,7 @@ export class GastosCuracionComponent implements OnInit {
         if (this.movimientos.length > 0){
             this.mostrarTable = true;
         }else{
-          Swal.fire('Este siniestro no tiene pagos pendientes');
+          Swal.fire('Información','Este siniestro no tiene pagos pendientes', 'error');
           this.mostrarTable = false;
           return;
         }
@@ -211,7 +215,7 @@ export class GastosCuracionComponent implements OnInit {
 
   procesoPago(){
     if(this.movimientosPago.length == 0){
-      Swal.fire('Información','Debe seleccionar un movimiento', 'warning');
+      Swal.fire('Información','Debe seleccionar una cobertura', 'warning');
       return;
     }else{
       if(this.movimientosPago[0].NROBENEF == 0){
