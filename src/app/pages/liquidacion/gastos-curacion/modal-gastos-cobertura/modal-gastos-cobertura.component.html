@@ -24,7 +24,7 @@
         </div>
         <div class="col-sm-3 form-group">
             <label>Pendiente por pagar</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="baseImponible">
+            <input type="text" class="form-control" disabled [(ngModel)]="pendientePago">
         </div>
     </div>
     <div class="row">
@@ -55,7 +55,7 @@
         <div class="col-sm-5 form-group">
             <label>Beneficiario</label>
             <select class="form-control" (change)="cambioBeneficiario()" id="nomBeneficiarios">
-                <option *ngFor="let benef of salidaBeneficiarios" [value]="benef.SSHORT_DES + '|' + benef.SCLIENT">
+                <option *ngFor="let benef of salidaBeneficiarios" [value]="benef.SSHORT_DES + '|' + benef.SCLIENT + '|' + benef.NOMBRE_BANCO + '|' + benef.SACCOUNT + '|' + benef.MONTO_PAGO + '|' + benef.NAMOUNT + '|' + benef.NBILL">
                     {{ benef.SCLIENAME }}
                 </option>
             </select>
@@ -91,8 +91,8 @@
             <h3>Datos del comprobante</h3>
         </div>
     </div>
-    <div *ngIf="tipoCobertura == 2 || tipoCobertura == 3 || tipoCobertura == 4 || tipoCobertura == 5">
-        <div class="row" *ngIf="tipoCobertura == 4 || tipoCobertura == 5">
+    <div *ngIf="tipoCobertura == 2 || tipoCobertura == 3 || tipoCobertura == 4 || tipoCobertura == 5"> 
+        <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && tipoDocumento == 'RUC'">
             <div class="col-sm-3 form-group">
                 <label>Nro. de factura</label>
                 <input type="text" class="form-control" disabled [(ngModel)]="nroFactura">
@@ -115,15 +115,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3 form-group">
-                <label>Fecha fin de análisis</label>
-                <div class="input-group">
-                    <input type="date" class="form-control">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="row" *ngIf="tipoCobertura == 4 || tipoCobertura == 5">
             <div class="col-sm-3 form-group">
@@ -137,6 +128,15 @@
             <div class="col-sm-3 form-group">
                 <label>Total de comprobante</label>
                 <input class="form-control" [(ngModel)]="totalComprobante" disabled>
+            </div>        
+            <div class="col-sm-3 form-group">
+                <label>Fecha fin de análisis</label>
+                <div class="input-group">
+                    <input type="date" class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -172,7 +172,7 @@
             </div>
             <div class="col-sm-3 form-group">
                 <label>Total a pagar</label>
-                <input type="number" [value]="totalFactura" class="form-control" id="totalPago" >
+                <input type="number" [value]="totalFactura" class="form-control" id="totalPago" style="text-align: right;">
             </div>
         </div>
     </div>
