@@ -31,7 +31,16 @@ export class Detalle{
   SCLIENAME:string;
   UIT: string;
   NLOC_RESERV: number;
-
+  NCERTIF : number;
+  SCERTYPE : number;
+  NBRANCH : number;
+  NPRODUCT : number;
+  SBRANCHT : string;
+  NCLAIM : number;
+  NCASE_NUM : number;
+  NDEMAN_TYPE : number;
+  NOPT_CLAITYP : number;
+  SKEY : string;
 }
 
 export class PendientePago{
@@ -225,6 +234,7 @@ export class GastosCuracionComponent implements OnInit {
         const modalRef = this.modalService.open(ModalGastosCoberturaComponent,  { windowClass : "my-class"});
         modalRef.componentInstance.reference = modalRef;
         modalRef.componentInstance.data = this.movimientosPago;
+        modalRef.componentInstance.dataSourceLiquidacion = this.dataSourceLiquidacion
         modalRef.result.then((Interval) => {
       });
       }

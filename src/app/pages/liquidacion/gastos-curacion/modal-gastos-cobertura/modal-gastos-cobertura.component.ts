@@ -1,9 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Movimiento } from '../gastos-curacion.component';
+import { Detalle, Movimiento } from '../gastos-curacion.component';
 import { LiquidacionService } from 'src/app/services/LiquidacionService';
 import { HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ListarLiquidacionSoatFilter } from '../../models/liquidacionSoatFilter';
+import { Cobertura } from 'src/app/core/enums/cobertura.enum';
 
 export class DatosSiniestro{
   PNCLAIM : string;
@@ -98,6 +100,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   @Input() public reference: any;
   @Input() public data: Movimiento[];
   @Input() public beneficiario: SalidaBeneficiarios[];
+  @Input() public dataSourceLiquidacion : Detalle;
   titulo = "";
   baseImponible = 0;
   totalFactura = 0;
@@ -153,7 +156,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     //this.baseImponible = this.redondearDecimales(this.data[0].PENDIENTES,2);
     
     //SUMA TOTAL
-    if(this.tipoCobertura == 4 || this.tipoCobertura == 5){
+    if(this.tipoCobertura == Cobertura.Gastos_Medicos || this.tipoCobertura == Cobertura.Gastos_Sepelio){
       //Obtenemos los beneficiarios
       const denuncia = "11/05/2023";
       const fechaOcurre = new Date(denuncia);
@@ -171,7 +174,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.totalFactura = this.baseImponible;
     }
 
-    if(this.tipoCobertura == 2 || this.tipoCobertura == 3){
+    if(this.tipoCobertura == Cobertura.Incapacidad_Temporal || this.tipoCobertura == Cobertura.Invalidez_Permanente){
       //Obtenemos los beneficiarios
       const denuncia = "11/05/2023";
       const fechaOcurre = new Date(this.fechaDenuncia);
@@ -186,7 +189,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.totalFactura = this.baseImponible;
     }
 
-    if(this.tipoCobertura ==  1){
+    if(this.tipoCobertura ==  Cobertura.Muerte){
       //Obtenemos los beneficiarios
       const denuncia = "11/05/2023";
       const fechaOcurre = new Date(this.fechaDenuncia);
@@ -450,6 +453,34 @@ export class ModalGastosCoberturaComponent implements OnInit {
         }
       }
     }
+  }
+
+  insertProcesoPago(){
+    let liquidacion : ListarLiquidacionSoatFilter[] = [];
+    let pago = new ListarLiquidacionSoatFilter();
+    pago.nNCLAIM = this.dataSourceLiquidacion.NCLAIM;
+    pago.vNCOVER = this.tipoCobertura;
+    pago.vNMODULEC = 1;
+    pago.vNCURRENCY = 1;
+    // COD CLIENTE
+    //MONTO PAGO pago.vNMONLIQ = 
+    //CODIGO USUARIO
+    pago.vNPRODUCT = 1;
+    pago.vNEXCHANGE = 1;
+    pago.vDOPERDATE = new Date().toLocaleDateString('en-GB');
+    const selectElement = document.getElementById("formaPago") as HTMLSelectElement;
+    pago.sREQUEST_TY = selectElement.value;
+    pago.sSDESCRIPT = this.titulo;
+    pago.vNBRANCH = 66;
+    pago.vNPOLICY = Number(this.dataSourceLiquidacion.NPOLICY);
+    //CLIENTE ASEGURADO
+    const tipoPagoElement = document.getElementById("tipoPago") as HTMLSelectElement;
+    pago.vNOPER_TYPE = Number(tipoPagoElement.value);
+    pago.vNUMFACT = Number(this.nroFactura);
+    pago.vNCASE = this.dataSourceLiquidacion.NCASE_NUM;
+    pago.vSDIAG = this.codDiagnostico;
+    //pago.vNESPECIALIDAD = this.especialidad;
+    //pago.vDFINANALISIS = 
   }
 
 }

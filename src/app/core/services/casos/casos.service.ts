@@ -13,7 +13,7 @@ import { SiniestroBM } from '../../models/siniestroBM';
 export class CasosService {
 
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-   private Url = AppConfig.URL_API_SOAT_APERTURA;
+   private Url = AppConfig.URL_API_SINIESTROS;
 
   constructor(private http: HttpClient, private datePipe: DatePipe) { }
 

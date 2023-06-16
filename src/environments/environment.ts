@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  aperturaApi: 'http://localhost:30897/Api',
+  siniestroAPI: 'http://localhost:30897/Api',
   reservaApi: 'http://localhost:30896/Api',
 };
 

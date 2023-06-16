@@ -6,7 +6,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppConfig } from '../app.config';
-import { DatosCasoSiniestro } from '../pages/liquidacion/models/Liquidacion.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
 
@@ -17,7 +16,7 @@ import { map } from 'rxjs/operators';
 export class LiquidacionService {
 
     private headers = new HttpHeaders({ "Content-Type": "application/json" });
-    private Url = "";
+    private Url = AppConfig.URL_API_SINIESTROS;;
 
     constructor(private http: HttpClient) { }
 
