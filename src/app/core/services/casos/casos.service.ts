@@ -50,8 +50,8 @@ export class CasosService {
     });
   }
 
-  public GetPolicyForCase(npolicy: number, docurdate: Date): Observable<GenericResponse> {
-    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetPolicyForCase?npolicy='+ npolicy + '&docurdate='+ this.transformDate(docurdate), {
+  public GetPolicyForCase(npolicy: number, docurdate: any): Observable<GenericResponse> {
+    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetPolicyForCase?npolicy='+ npolicy + '&docurdate='+ docurdate, {
       headers: this.headers
     });
   }

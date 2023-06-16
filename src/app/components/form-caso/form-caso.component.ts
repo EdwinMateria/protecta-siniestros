@@ -80,7 +80,7 @@ export class FormCasoComponent implements OnInit {
       nCertif: [{value:'', disabled: true}],
       sNroPlaca: [{value:'', disabled: true}],
       nCaso: [{value:'', disabled: true}],
-      dFecOcurrencia: [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
+      dFecOcurrencia: [{value:null, disabled: this.tipoForm == true ? false : true}, Validators.required],
       sHoraOcurrencia : [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
       nCulpabilidad: [{value:'0', disabled: this.tipoForm == true && this.tipoTab != 2 ? false:true}, [Validators.required, this.notAllowed(/^0/)]],
       nCausaSiniestro: [{value:'0', disabled: this.tipoForm == true ? false:true}, [Validators.required, this.notAllowed(/^0/)]],
@@ -168,7 +168,14 @@ export class FormCasoComponent implements OnInit {
       } else {
         if(this.form.controls['dFecOcurrencia'].value != ""){
           Swal.showLoading()
-          this.casoService.GetPolicyForCase(Number(valorInput), this.form.controls['dFecOcurrencia'].value).subscribe(
+
+          let docur = new Date(this.form.controls['dFecOcurrencia'].value)
+          let date = new Date(docur.setDate(docur.getDate() + 1)).toLocaleDateString('en-GB');
+          //let date = new Date(this.form.controls['dFecOcurrencia'].value).toLocaleDateString('en-GB');
+          console.log(date);
+          console.log(this.form.controls['dFecOcurrencia'].value);
+          
+          this.casoService.GetPolicyForCase(Number(valorInput), date).subscribe(
             res => {
               let caso = new CasosBM();
               Swal.close();
@@ -357,35 +364,40 @@ export class FormCasoComponent implements OnInit {
         res => {
           Swal.close();
           console.log(res);
-          Swal.fire({
-            title: 'Información',
-            text: `Se declaró el caso correctamente: ${res.numcase}. ¿Desea declarar los siniestros?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'De acuerdo',
-            cancelButtonText: 'No',
-            reverseButtons: true
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // this.tipoForm = false;
-              // this.showBotones = true
-              this.casoBM.nCaso = res.numcase;
-              this.casoBM.nPolicy = this.form.controls['nPolicy'].value;
-              this.casoBM.nCertif = 0;
-              this.casoBM.sHoraOcurrencia = this.form.controls['sHoraOcurrencia'].value;
-              this.casoBM.nCausaSiniestro = this.form.controls['nCausaSiniestro'].value;
-              this.casoBM.dFecOcurrencia = this.form.controls['dFecOcurrencia'].value;
-              this.declararActive = 'active'
-              this.modificarActive = ''
-              this.tituloTratamiento.emit(true);
-              this.stateTituloSiniestro = 2
-              this.formSiniestro.emit(this.stateTituloSiniestro);
-              this.casoBM.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
-              this.casoEmit.emit(this.casoBM);
-            }else{
-              this.form.reset()
-            }
-          })
+          if(res.numcase != 0){
+            Swal.fire({
+              title: 'Información',
+              text: `Se declaró el caso correctamente: ${res.numcase}. ¿Desea declarar los siniestros?`,
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'De acuerdo',
+              cancelButtonText: 'No',
+              reverseButtons: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // this.tipoForm = false;
+                // this.showBotones = true
+                this.casoBM.nCaso = res.numcase;
+                this.casoBM.nPolicy = this.form.controls['nPolicy'].value;
+                this.casoBM.nCertif = 0;
+                this.casoBM.sHoraOcurrencia = this.form.controls['sHoraOcurrencia'].value;
+                this.casoBM.nCausaSiniestro = this.form.controls['nCausaSiniestro'].value;
+                this.casoBM.dFecOcurrencia = this.form.controls['dFecOcurrencia'].value;
+                this.declararActive = 'active'
+                this.modificarActive = ''
+                this.tituloTratamiento.emit(true);
+                this.stateTituloSiniestro = 2
+                this.formSiniestro.emit(this.stateTituloSiniestro);
+                this.casoBM.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
+                this.casoEmit.emit(this.casoBM);
+              }else{
+                this.form.reset()
+              }
+            })
+          }else{
+            Swal.fire('Información','No se pudo aperturar el caso.','error');
+            return;
+          }
         },
         err => {
           Swal.close();

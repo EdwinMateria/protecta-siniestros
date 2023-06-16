@@ -10,6 +10,7 @@ export class ClaimDataCoverVM{
     NMODULEC        :   number;
     NCURRENCY       :   number;
     NRESERVEAMOUNT  :   number;
+    SNROLETTER      :   string;
 }
 
 export class ClaimCoverResponse{

@@ -122,6 +122,7 @@ export class ReservaSiniestroComponent implements OnInit {
     modalRef.result.then((res) => {
       if(res != undefined){
         this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NRESERVEAMOUNT = res.NMONTO;
+        if(origen == 4) this.reservaCaso.LISTA_COVERCLAIM[this.posicion].SNROLETTER = res.SNROLETTER;
         this.disabledCobertura = true;
       }
     });
