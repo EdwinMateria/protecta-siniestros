@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Beneficiario } from '../modal-cobertura/modal-cobertura.component';
 import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalNuevoBeneficiarioComponent } from '../modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';

@@ -8,15 +8,6 @@ import { ClaimResponse } from 'src/app/core/models/claimResponse';
 import { ClaimCaseDataRequest } from 'src/app/core/models/claimCaseDataRequest';
 import { ClaimCoverResponse } from 'src/app/core/models/claimCoverResponse';
 
-export class ReservaCaso{
-  poliza :string;
-  certificado :string;
-  afectado :string;
-  fechaOcurrencia: string;
-  horaOcurrencia:string;
-  tipoAtencion:string;
-  UIT: string;
-}
 @Component({
   selector: 'app-reserva-siniestro',
   templateUrl: './reserva-siniestro.component.html',
@@ -31,6 +22,8 @@ export class ReservaSiniestroComponent implements OnInit {
   claimRequest = new ClaimRequest();
   siniestro = 0;
   tiposAtencion = this.reserveService.GetComboTipoAtencion();
+  tipoMovimiento = [];
+  posicion = 0;
 
   //PRUEBA
   arrayChech : boolean[]=[];
@@ -38,6 +31,7 @@ export class ReservaSiniestroComponent implements OnInit {
   //RESULT
   reservaCaso : ClaimCoverResponse = new ClaimCoverResponse();
   showTable = false;
+  disabledCobertura = false;
 
   constructor(private modalService: NgbModal, public reserveService: ReserveService) { }
 
@@ -124,14 +118,35 @@ export class ReservaSiniestroComponent implements OnInit {
     const modalRef = this.modalService.open(ModalCoberturaComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;
     modalRef.componentInstance.data = origen;
-    modalRef.result.then((Interval) => {
-      
+    modalRef.componentInstance.reservaCaso = this.reservaCaso;
+    modalRef.result.then((res) => {
+      if(res != undefined){
+        this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NRESERVEAMOUNT = res.NMONTO;
+        if(origen == 4) this.reservaCaso.LISTA_COVERCLAIM[this.posicion].SNROLETTER = res.SNROLETTER;
+        this.disabledCobertura = true;
+      }
     });
   }
 
-  reserva(event:any, origen: number){
+  reserva(event:any, origen: number, i: number){
     if(event.target.checked){
-      this.openModalCobertura(origen)
+
+      if(this.disabledCobertura){
+        Swal.fire('Información','Ya tiene datos para una cobertura','warning');
+        event.target.checked = false;
+        return;
+      }else{
+        this.posicion = i;
+        if(this.tipoMovimiento[i] == null || this.tipoMovimiento[i] == undefined){
+          event.target.checked = false;
+          Swal.fire('Información','Debe elegir el tipo de movimiento','warning');
+          return;
+        }else{
+          this.reservaCaso.SMOVETYPE = this.tipoMovimiento[i];
+          this.openModalCobertura(origen)
+        }
+      }
+
     }
   }
 

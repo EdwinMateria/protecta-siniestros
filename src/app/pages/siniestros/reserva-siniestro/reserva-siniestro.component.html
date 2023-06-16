@@ -89,7 +89,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let claim of reservaCaso.LISTA_COVERCLAIM">
+            <tr *ngFor="let claim of reservaCaso.LISTA_COVERCLAIM; let i = index">
                 <td>{{claim.SCLIENT}} - {{claim.SCLIENAME}}</td>
                 <td>{{claim.SCURRDES}}</td>
                 <td>{{claim.NCOVER}} - {{claim.SDESCOVER}}</td>
@@ -97,26 +97,30 @@
                 <td>{{claim.NSUMINSURED}}</td>
                 <td>
                     <div class="form-group">
-                        <div class="col-sm-offset-3">
+                        <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento[i]" ngDefaultControl>
                             <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" name="myField" value="normal" /> <i class="fa fa-arrow-up"></i>
+                                <input type="radio" [name]="i" [id]="i" value="A" [disabled]="disabledCobertura && posicion == i"/> <i class="fa fa-arrow-up"></i>
                             </label>
-                            
                             <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" name="myField" value="high" /> <i class="fa fa-arrow-down"></i>
+                                <input type="radio" [name]="i" [id]="i" value="D" [disabled]="disabledCobertura  && posicion == i" /> <i class="fa fa-arrow-down"></i>
                             </label>
                         </div>
                     </div>
                 </td>
-                <td></td>
-                <td></td>
+                <td>
+                    {{claim.NRESERVEAMOUNT}}
+                </td>
+                <td>
+                    {{claim.SNROLETTER}}
+                </td>
                 <td></td>
                 <td>
                     <div class="form-check" *ngIf="tipoTab == 1">
-                        <input class="form-check-input position-static" type="checkbox" (change)="reserva($event, claim.NCOVER)">
+                        <input class="form-check-input position-static" type="checkbox" (change)="reserva($event, claim.NCOVER, i)" [disabled]="disabledCobertura  && posicion == i">
                     </div>
                 </td>
                 <td>
+                    <button *ngIf="tipoTab == 1 && disabledCobertura && posicion == i" class="btn btn-busqueda mr-3"><i class="fa fa-trash"></i></button>
                     <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(1)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>

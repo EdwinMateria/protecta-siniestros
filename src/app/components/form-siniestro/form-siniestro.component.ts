@@ -151,7 +151,7 @@ export class FormSiniestroComponent implements OnInit {
           }else{
             Swal.fire({
               title: 'Información',
-              text: `Se declaró el siniestro correctamente. ¿Desea declarar otro siniestro?`,
+              text: `Se declaró el siniestro ${res.numclaim} correctamente. ¿Desea declarar otro siniestro?`,
               icon: 'warning',
               showCancelButton: true,
               confirmButtonText: 'De acuerdo',
@@ -187,8 +187,8 @@ export class FormSiniestroComponent implements OnInit {
         this.casoService.UpdateClaim(siniestroBM).subscribe(
           res => {
             Swal.close();
-            if(res.Message =="0"){
-              Swal.fire('Información','No se pudo actualizar el siniestro','warning');
+            if(res.Message !="Ok"){
+              Swal.fire('Información', res.Message,'warning');
               return;
             }else{
               Swal.fire({
