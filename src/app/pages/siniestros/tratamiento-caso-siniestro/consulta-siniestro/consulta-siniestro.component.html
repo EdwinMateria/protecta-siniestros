@@ -106,12 +106,6 @@
                 <option *ngFor="let atencion of atenciones" [value]="atencion.codigo">{{atencion.descript}}</option>
               </select>
         </div>
-        <!-- <div class="col-sm-3 form-group">
-            <label>Diagnóstico</label>
-            <select class="form-control" disabled>
-                <option>1</option>
-              </select>
-        </div> -->
         <div class="col-sm-3 form-group">
             <label>Fecha de fallecido</label>
             <div class="input-group">
@@ -147,17 +141,17 @@
             <input type="text" class="form-control" disabled>
         </div>
     </div> -->
-    <div *ngIf="siniestro.dFecRechazo != null" class="row" style="padding-top: 10px !important; border-top: 1px solid #ccc!important;">
+    <div *ngIf="siniestro.nCodRechazo != 0" class="row" style="padding-top: 10px !important; border-top: 1px solid #ccc!important;">
         <div class="col-sm-3 form-group">
             <label>Motivo de rechazo</label>
-            <select class="form-control" disabled>
-                <option>1</option>
+            <select class="form-control" disabled [(ngModel)]="siniestro.nCodRechazo">
+                <option *ngFor="let rechazo of listaRechazo"></option>
               </select>
         </div>
         <div class="col-sm-3 form-group">
             <label>Fecha de rechazo</label>
             <div class="input-group">
-                <input type="text" class="form-control" disabled>
+                <input type="text" class="form-control" disabled [(ngModel)]="fechaRechazo">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                 </div>

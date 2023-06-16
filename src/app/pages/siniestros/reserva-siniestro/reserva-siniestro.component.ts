@@ -24,10 +24,6 @@ export class ReservaSiniestroComponent implements OnInit {
   tiposAtencion = this.reserveService.GetComboTipoAtencion();
   tipoMovimiento = [];
   posicion = 0;
-
-  //PRUEBA
-  arrayChech : boolean[]=[];
-
   //RESULT
   reservaCaso : ClaimCoverResponse = new ClaimCoverResponse();
   showTable = false;
@@ -50,10 +46,6 @@ export class ReservaSiniestroComponent implements OnInit {
     this.claimRequest = new ClaimRequest();
     this.siniestro = 0;
     this.showTable = false
-
-    this.arrayChech = [
-      false, false, false, false, false
-    ]
   }
 
   resetBuscado(){

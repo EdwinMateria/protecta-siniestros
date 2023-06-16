@@ -29,6 +29,7 @@ export class FormSiniestroComponent implements OnInit {
   fechaMap = "";
   nSiniestro = "";
   sCliente = "";
+  fechaRechazo : any;
   //Tipos Ocupantes:
   ocupantes : SiniestroSelect[] = [
     {codigo: "", descript: "SELECCIONAR"},
@@ -82,6 +83,12 @@ export class FormSiniestroComponent implements OnInit {
           this.form.controls['dFecFallecido'].setValue(this.datePipe.transform(siniestro.dFecFallecido, 'yyyy-MM-dd'))
           this.sCliente = siniestro.sCodClie;
           this.form.controls['nTipOcupante'].setValue(siniestro.sTipOcupante);
+
+          if(siniestro.nCodRechazo != 0 && this.estadoForm == 3){
+            this.eliminado = true;
+            this.fechaRechazo = this.datePipe.transform(siniestro.dFecRechazo, 'yyyy-MM-dd');
+            this.eliminarSiniestro = siniestro.nCodRechazo.toString();
+          }
         },
         err => {
           Swal.close();

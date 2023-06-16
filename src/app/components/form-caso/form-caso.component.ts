@@ -210,6 +210,7 @@ export class FormCasoComponent implements OnInit {
     modalRef.componentInstance.reference = modalRef;
     modalRef.componentInstance.data = codSiniestro;
     modalRef.componentInstance.causasSiniestro = this.casoIndex.Lista_CausaSiniestro;
+    modalRef.componentInstance.listaRechazo = this.casoIndex.Lista_Rechazos;
     modalRef.result.then((Interval) => {
     });
   }
