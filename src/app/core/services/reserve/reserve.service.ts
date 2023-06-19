@@ -9,7 +9,7 @@ import { ClaimCodDiagnosticoRequest } from '../../models/claimCodDiagnosticoRequ
 import { ClaimCodDiagnosticoResponse } from '../../models/claimCodDiagnosticoResponse';
 import { ClaimBeneficiarioModelRequestBM } from '../../models/claimBeneficiarioModelRequest';
 import { ClaimCaseDataRequest } from '../../models/claimCaseDataRequest';
-import { ClaimCoverResponse } from '../../models/claimCoverResponse';
+import { ClaimCoverResponse, ClaimDataCoverVM } from '../../models/claimCoverResponse';
 import { ClaimBenefParamRequest } from '../../models/claimBenefParamRequest';
 import { ClaimBenefParamResponse } from '../../models/claimBenefParamResponse';
 import { ClaimBeneficiarioRequest } from '../../models/claimBeneficiarioRequest';
@@ -134,6 +134,13 @@ export class ReserveService {
   public InsertDatCoversTmp(data: ClaimCoverTmpRequestBM): Observable<ClaimCoverTmpResponseBM> {
     const body = JSON.stringify(data);
     return this.http.post<ClaimCoverTmpResponseBM>(this.Url + '/Reserve/InsertDatCoversTmp', body, {
+      headers: this.headers,
+    });
+  }
+
+  public DeleteCoverTmp(data: ClaimCoverTmpRequestBM): Observable<string> {
+    const body = JSON.stringify(data);
+    return this.http.post<string>(this.Url + '/Reserve/DeleteCoverTmp', body, {
       headers: this.headers,
     });
   }
