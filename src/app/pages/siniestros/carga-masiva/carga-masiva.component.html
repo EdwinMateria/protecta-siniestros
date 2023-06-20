@@ -1,0 +1,241 @@
+<!--**********************************************************************************************/
+/*  NOMBRE              :   SINIESTROS.COMPONENT.HTML                                            */
+/*  DESCRIPCIÓN         :   BROKER COMPONENTS                                                    */
+/*  AUTOR               :   MATERIA GRIS - DIEGO ARMANDO GONZALES CHOCANO                        */
+/*  FECHA               :   04-05-2023                                                           */
+/*  VERSIÓN             :   1.0 - CARGAS MASIVAS SINIESTROS                                      */
+/************************************************************************************************-->
+
+<title></title>
+<link href="http://cdn-na.infragistics.com/igniteui/2021.2/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
+<link href="http://cdn-na.infragistics.com/igniteui/2021.2/latest/css/structure/infragistics.css" rel="stylesheet" />
+<script src="http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.8.3.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script src="http://cdn-na.infragistics.com/igniteui/2021.2/latest/js/infragistics.core.js"></script>
+<script src="http://cdn-na.infragistics.com/igniteui/2021.2/latest/js/infragistics.lob.js"></script>
+<script type="text/javascript">function metchec(nom) { alert(nom); nom.checked = checked; }</script>
+
+<app-navbar></app-navbar>
+<div class="row">
+    <!-- 
+    <div class="col-lg-3">
+        <app-nav-menuprod></app-nav-menuprod>
+    </div>
+    <div class="col-lg-9"></div>
+    -->
+    <div class="col-lg-12">
+        <div class="header-content">
+            <div class="containt-item">
+                <div class="header-item">
+                    <span class="title">CARGAS MASIVAS SINIESTROS - SOAT</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row ml-4 mt-4 mb-4">
+                        <div>
+                            <label class="control-label">TIPO DE CARGA:</label>
+                            &nbsp;
+                            <select [(ngModel)]="carga">
+                                <option value="1">NUEVO</option>
+                                <option value="2">ANTIGUO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row ml-4 mt-4 mb-4">
+                        <div>
+                            <label class="control-label">TIPO DE TRAMA:</label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" [(ngModel)]="apertura" (change)="onApertura($event.target.checked)" />
+                            &nbsp;
+                            <label class="control-label">APERTURA</label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" [(ngModel)]="reserva" (change)="onReserva($event.target.checked)" />
+                            &nbsp;
+                            <label class="control-label">RESERVAS</label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" [(ngModel)]="liquidacion" (change)="onLiquidacion($event.target.checked)" />
+                            &nbsp;
+                            <label class="control-label">LIQUIDACIONES</label>
+                        </div>
+                    </div>
+
+                    <div class="row ml-3 mt-3 mb-3">
+                        <button type="button" (click)="fileInput.click()">
+                            <span>CARGAR ARCHIVO</span>
+                            <img class="icon-btn" src="./assets/icons/upload.png" />
+                        </button>
+                        <input hidden #fileInput type="file" (change)="onFileChange($event)" accept=".xlsx">
+                        <input [(ngModel)]="archivoNombre" disabled class="ml-3" style="width: 600px">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="row mt-3 mb-3">
+                        <button type="button" (click)="onReportePreliminar()" [disabled]="reporte_prel" [ngClass]="reporte_prel ? 'disabled' : 'full-colorN'">
+                            <span>REPORTE PRELIMINAR</span>
+                            <img class="icon-btn" src="./assets/icons/download2.png" />
+                        </button>
+                        <button type="button" (click)="onLimpiar()" class="ml-3 full-colorN">
+                            <span>LIMPIAR</span>
+                        </button>
+                    </div>
+                    <div class="row mt-3 mb-3">
+                        <button type="button" (click)="onPreliminar()" class="full-color">
+                            <span>PRELIMINAR</span>
+                        </button>
+                        <button type="button" (click)="onDefinitivo()" class="ml-3" [disabled]="definitivo" [ngClass]="definitivo ? 'disabled' : 'full-color'">
+                            <span>DEFINITIVO</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="row m-2">
+                <div class="col-sm-12">
+                    <span class="titleN">Preliminar</span>
+                </div>
+                <div class="grid form-group">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="grid-title">
+                                    <td class="grid-title-item text-center">Nro Sin. Prov.</td>
+                                    <td class="grid-title-item text-center">Caso</td>
+                                    <td class="grid-title-item text-center">Póliza</td>
+                                    <td class="grid-title-item text-center">Nro Certificado</td>
+                                    <td class="grid-title-item text-center">Fecha Siniestro</td>
+                                    <td class="grid-title-item text-center">Observaciones</td>
+                                    <td class="grid-title-item text-center">
+                                        <!-- <input type="checkbox" [(ngModel)]="booleanSelect" (change)="checkAll()" [disabled]="booleanDisabled" /> -->
+                                        <input type="checkbox" [(ngModel)]="booleanSelect" (change)="checkAll()" />
+                                    </td>
+                                </tr>
+                            </thead>
+                            <ng-container *ngIf="listToShow == null || listToShow.length == 0; then hideGrid1 else showGrid"></ng-container>
+                        </table>
+                        <ng-template #hideGrid1>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center" colspan="7">No se encontraron registros.</td>
+                                </tr>
+                            </tbody>
+                        </ng-template>
+                        <ng-template #showGrid>
+                            <tbody *ngFor="let item of listToShow" style="cursor: pointer;">
+                                <tr>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SNRO_SINIESTRO }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SPRODUCTO }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SNRO_POLIZA }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SCERTIFICADO }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SFECHA_SINIESTRO }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center onHover" (click)="mostrarModalErrores(contentError, item);">
+                                        {{ item.SDET_ERROR }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        <!-- <input type="checkbox" [(ngModel)]="item.IS_SELECTED" (change)="checkItem()" [disabled]="item.SDET_ERROR ? true : false" /> -->
+                                        <input type="checkbox" [(ngModel)]="item.IS_SELECTED" (change)="checkItem()" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </ng-template>
+                    </div>
+                </div>
+                <div [hidden]="!isLoading" class="loadingScreen">
+                    <div style="display: flex; height: 100%; width: 100%">
+                        <i style="margin: auto; font-size: 50px" class="fa fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+                <div *ngIf="listToShow != null && listToShow.length > 0" class="row" style="display: flex">
+                    <div class="col-sm-12">
+                        <ngb-pagination [(page)]="currentPage" [pageSize]="itemsPerPage" [collectionSize]="totalItems" [maxSize]="maxSize" (pageChange)="pageChanged(currentPage)">
+                            <ng-template ngbPaginationPrevious>ANTERIOR</ng-template>
+                            <ng-template ngbPaginationNext>SIGUIENTE</ng-template>
+                        </ngb-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #contentError let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+            ERRORES
+        </h4>
+    </div>
+
+    <div class="modal-body">
+        
+        <div class="card">
+            <div class="row m-2">
+                <div class="col-sm-12">
+                    <span class="titleM">Nro. Siniestro Prov: {{ numero_siniestro }}</span>
+                </div>
+                <div class="grid form-group">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="grid-title">
+                                    <td class="grid-title-item text-center">LÍNEA DE REGISTRO</td>
+                                    <td class="grid-title-item text-center">ERROR</td>
+                                </tr>
+                            </thead>
+                            <ng-container *ngIf="listToShowError == null || listToShowError.length == 0; then hideGrid else showGrid"></ng-container>
+                        </table>
+                        <ng-template #hideGrid>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center" colspan="2">No se encontraron errores.</td>
+                                </tr>
+                            </tbody>
+                        </ng-template>
+                        <ng-template #showGrid>
+                            <tbody *ngFor="let item of listToShowError" style="cursor: pointer;">
+                                <tr>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SLINE_REGISTRO }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SMESSAGE_ERROR }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </ng-template>
+                    </div>
+                </div>
+                <div *ngIf="listToShowError != null && listToShowError.length > 0" class="row" style="display: flex">
+                    <div class="col-sm-12">
+                        <ngb-pagination [(page)]="currentPageError" [pageSize]="itemsPerPageError" [collectionSize]="totalItemsError" [maxSize]="maxSizeError" (pageChange)="pageChangedError(currentPageError)">
+                            <ng-template ngbPaginationPrevious>ANTERIOR</ng-template>
+                            <ng-template ngbPaginationNext>SIGUIENTE</ng-template>
+                        </ngb-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary buttonN" (click)="modal.dismiss('Cross click')">
+            OK
+        </button>
+    </div>
+</ng-template>
