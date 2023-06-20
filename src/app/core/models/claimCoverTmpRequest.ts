@@ -44,6 +44,10 @@ export class ClaimCoverTmpRequestBM {
     SREFUND                 : string;
     DOCCURDAT               : string;
     SMOVETYPE               : string;
+
+    constructor(){
+        this.LIST_BENEF_COVERS = [];
+    }
 }
 
 export class ClaimsBenefCoverVM {

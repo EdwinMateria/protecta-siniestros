@@ -5,6 +5,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { TratamientoCasoSiniestroComponent } from './pages/siniestros/tratamiento-caso-siniestro/tratamiento-caso-siniestro.component';
 import { ReservaSiniestroComponent } from './pages/siniestros/reserva-siniestro/reserva-siniestro.component';
 import { GastosCuracionComponent } from './pages/liquidacion/gastos-curacion/gastos-curacion.component';
+import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-siniestro/reapertura-siniestro.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,9 @@ const routes: Routes = [
   },
   {
     path: 'liquidacion-siniestro', component: GastosCuracionComponent
+  },
+  {
+    path: 'reapertura-siniestro', component: ReaperturaSiniestroComponent
   }
 ];
 

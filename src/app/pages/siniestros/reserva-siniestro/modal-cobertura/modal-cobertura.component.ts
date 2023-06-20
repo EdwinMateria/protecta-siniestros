@@ -241,6 +241,8 @@ export class ModalCoberturaComponent implements OnInit {
         this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
           res =>{
             Swal.close();
+            if(res.ListBeneficiaries[0].SBANK == "") res.ListBeneficiaries[0].SBANK = "0";
+            
             this.beneficiarios.push(res.ListBeneficiaries[0])
             if(this.beneficiarios.length == 1){
               this.reserveService.GetComboBanco().subscribe(

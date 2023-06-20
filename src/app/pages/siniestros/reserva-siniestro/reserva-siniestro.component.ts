@@ -8,6 +8,7 @@ import { ClaimResponse } from 'src/app/core/models/claimResponse';
 import { ClaimCaseDataRequest } from 'src/app/core/models/claimCaseDataRequest';
 import { ClaimCoverResponse, ClaimDataCoverVM } from 'src/app/core/models/claimCoverResponse';
 import { ClaimCoverTmpRequestBM } from 'src/app/core/models/claimCoverTmpRequest';
+import { ClaimValRegisterRequestBM } from 'src/app/core/models/claimValRegisterRequest';
 
 @Component({
   selector: 'app-reserva-siniestro',
@@ -19,7 +20,7 @@ export class ReservaSiniestroComponent implements OnInit {
   tipoTab = 1;
   registroActive = 'active';
   consultaActive = '';
-  siniestros : ClaimResponse[] = [{CODIGO : 0 , DESCRIPCION : 'SELECCIONE'}];
+  siniestros : ClaimResponse[] = [{CODIGO : 0 , DESCRIPCION : 'SELECCIONE', ESTADO : '0'}];
   claimRequest = new ClaimRequest();
   siniestro = 0;
   tiposAtencion = this.reserveService.GetComboTipoAtencion();
@@ -30,6 +31,7 @@ export class ReservaSiniestroComponent implements OnInit {
   reservaCaso : ClaimCoverResponse = new ClaimCoverResponse();
   showTable = false;
   disabledCobertura = false;
+  disabledTodo = false;
 
   constructor(private modalService: NgbModal, public reserveService: ReserveService) { }
 
@@ -61,7 +63,7 @@ export class ReservaSiniestroComponent implements OnInit {
     this.resetBuscado();
     if(this.claimRequest == new ClaimRequest() || this.claimRequest.NCASE == null){
       Swal.fire('Información', 'Debe ingresar un nro. caso válido.', 'warning');
-      this.siniestros.push({CODIGO : 0 , DESCRIPCION : 'SELECCIONE'})
+      this.siniestros.push({CODIGO : 0 , DESCRIPCION : 'SELECCIONE', ESTADO : '0'})
       return;
     }else{
       Swal.showLoading();
@@ -99,12 +101,21 @@ export class ReservaSiniestroComponent implements OnInit {
           Swal.close()
           this.showTable = true;
           this.reservaCaso = res;
+          let siniestroEstado = this.siniestros.find(x => x.CODIGO == this.siniestro).ESTADO;
+          if (siniestroEstado == '1' || siniestroEstado == '5' || siniestroEstado == '7') {
+            Swal.fire('Información', 'No se puede generar reserva para este siniestro', 'warning');
+            this.disabledTodo = true;
+            return;
+          }else{
+            this.disabledTodo = false;
+          }
         },
         err => {
           Swal.close()
           console.log(err);
         }
       )
+
     }
   }
 
@@ -187,6 +198,10 @@ export class ReservaSiniestroComponent implements OnInit {
 
       if(this.disabledCobertura){
         Swal.fire('Información','Ya tiene datos para una cobertura','warning');
+        const adElement = document.getElementById(`a${i}`) as HTMLInputElement; 
+        adElement.checked = false;
+        const ddElement = document.getElementById(`d${i}`) as HTMLInputElement; 
+        ddElement.checked = false;
         event.target.checked = false;
         return;
       }else{
@@ -202,6 +217,56 @@ export class ReservaSiniestroComponent implements OnInit {
       }
 
     }
+  }
+
+
+  guardarTablasDefinitivas(){
+    let reserva = new ClaimValRegisterRequestBM();
+
+    if(this.disabledCobertura){
+      let cover = this.reservaCaso.LISTA_COVERCLAIM[this.posicion];
+      reserva.LIST_PARAM_RESERVE.push({
+        SKEY : this.reservaCaso.SKEY,
+        SMOVETYPE : this.tipoMovimiento[this.posicion],
+        NCLAIM : Number(this.reservaCaso.NCLAIM),
+        NCOVER : cover.NCOVER,
+        NRESERVEAMOUNT: cover.NRESERVEAMOUNT,
+        NSUMASSURED : cover.NSUMINSURED,
+        NPOLICY : this.reservaCaso.NPOLICY,
+        NCERTIF : this.reservaCaso.NCERTIF,
+        NMODULEC: cover.NMODULEC,
+        NCURRENCY: cover.NCURRENCY,
+        NUSERCODE: 13,
+        DOCCURDAT : this.reservaCaso.DOCCURDAT,
+        SCLIENT: cover.SCLIENT,
+        NCASE_NUM : Number(this.reservaCaso.NCASE_NUM)
+      })
+      
+      Swal.showLoading();
+      this.reserveService.ValidRegisterCoverData(reserva).subscribe(
+        res => {
+          Swal.close();
+          if(res.SREGISTER_RESULT != "OK"){
+            Swal.fire('Información',res.SMESSAGE_RESULT,'error');
+            return;
+          }else{
+            Swal.fire('Información','Reserva creada correctamente.','success');
+            this.claimRequest = new ClaimRequest();
+            this.siniestro = 0;
+            this.showTable = false;
+            this.reservaCaso = new ClaimCoverResponse();
+          }
+        },
+        error => {
+          Swal.close();
+          Swal.fire('Error',error,'error')
+        }
+      )
+    }else{
+      Swal.fire('Información','Debe seleccionar una cobertura','warning');
+      return;
+    }
+    
   }
 
 

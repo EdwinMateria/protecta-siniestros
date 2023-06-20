@@ -91,7 +91,8 @@ export class NavbarComponent implements OnInit {
     this.optionList.push({nTieneHijo :1 , sName : 'SINIESTROS SOAT', subgruposnuevos :[
       {sName : 'TRATAMIENTO DE CASO / SINIESTRO', sRouterLink : 'tratamiento-caso-siniestro'},
       {sName : 'RESERVA DE SINIESTRO', sRouterLink: 'reserva-siniestro'},
-      {sName : 'LIQUIDACION DE SINIESTRO', sRouterLink: 'liquidacion-siniestro'}
+      {sName : 'LIQUIDACION DE SINIESTRO', sRouterLink: 'liquidacion-siniestro'},
+      {sName : 'REAPERTURA DE SINIESTRO', sRouterLink: 'reapertura-siniestro'}
     ]})
   }
 

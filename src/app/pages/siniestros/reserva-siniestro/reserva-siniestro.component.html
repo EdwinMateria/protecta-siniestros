@@ -99,10 +99,10 @@
                     <div class="form-group">
                         <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento[i]" ngDefaultControl>
                             <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" [name]="i" [id]="'a'+i" value="A" [disabled]="disabledCobertura && posicion == i"/> <i class="fa fa-arrow-up"></i>
+                                <input type="radio" [name]="i" [id]="'a'+i" value="A" [disabled]="(disabledCobertura && posicion == i) || disabledTodo"/> <i class="fa fa-arrow-up"></i>
                             </label>
                             <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" [name]="i" [id]="'d'+i" value="D" [disabled]="disabledCobertura  && posicion == i" /> <i class="fa fa-arrow-down"></i>
+                                <input type="radio" [name]="i" [id]="'d'+i" value="D" [disabled]="(disabledCobertura  && posicion == i) || disabledTodo" /> <i class="fa fa-arrow-down"></i>
                             </label>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                 <td></td>
                 <td>
                     <div class="form-check" *ngIf="tipoTab == 1">
-                        <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]" type="checkbox" (change)="reserva($event, claim.NCOVER, i)" [disabled]="disabledCobertura  && posicion == i">
+                        <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]" type="checkbox" (change)="reserva($event, claim.NCOVER, i)" [disabled]="(disabledCobertura  && posicion == i) || disabledTodo">
                         <!-- <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]" type="checkbox" (change)="deselect(i)" [disabled]="disabledCobertura  && posicion == i"> -->
                     </div>
                 </td>
@@ -129,7 +129,7 @@
     </table>
     <div class="row pb-4">
         <div class="col-sm-12" align="end">
-            <button class="btn btn-success">Guardar</button>
+            <button class="btn btn-success" [disabled]="disabledTodo" (click)="guardarTablasDefinitivas()">Guardar</button>
         </div>
     </div>
 </div>

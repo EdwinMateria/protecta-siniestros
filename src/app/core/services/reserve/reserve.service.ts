@@ -20,6 +20,8 @@ import { ClaimsCoversReserveResponse } from '../../models/claimsCoversReserveRes
 import { ClaimRmvResponse } from '../../models/claimRmvResponse';
 import { ClaimRmvRequest } from '../../models/claimRmvRequest';
 import { ClaimCoverTmpResponseBM } from '../../models/claimCoverTmpResponse';
+import { ClaimValRegisterRequestBM } from '../../models/claimValRegisterRequest';
+import { ClaimValRegisterResponseVM } from '../../models/claimValRegisterResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -141,6 +143,13 @@ export class ReserveService {
   public DeleteCoverTmp(data: ClaimCoverTmpRequestBM): Observable<string> {
     const body = JSON.stringify(data);
     return this.http.post<string>(this.Url + '/Reserve/DeleteCoverTmp', body, {
+      headers: this.headers,
+    });
+  }
+
+  public ValidRegisterCoverData(data: ClaimValRegisterRequestBM): Observable<ClaimValRegisterResponseVM> {
+    const body = JSON.stringify(data);
+    return this.http.post<ClaimValRegisterResponseVM>(this.Url + '/Reserve/ValidRegisterCoverData', body, {
       headers: this.headers,
     });
   }

@@ -78,11 +78,11 @@
                             <span *ngIf="data == 2">2 - Incapacidad Temporal</span>
                             <span *ngIf="data == 3">3 - Invalidez Permanente</span>
                             <span *ngIf="data == 4">4 - Gastos Médicos</span>
-                            <span *ngIf="data == 5">4 - Gastos de Sepelio</span>
+                            <span *ngIf="data == 5">5 - Gastos de Sepelio</span>
                         </td>
                         <td>
                             <select class="form-control" [(ngModel)]="beneficiario.SBANK">
-                                <option *ngFor="let banco of bancos" [value]="banco.SCODE">{{banco.SDESCRIPCION}}
+                                <option *ngFor="let banco of bancos" [value]="banco.SCODIGO">{{banco.SDESCRIPCION}}
                                 </option>
                             </select>
                         </td>

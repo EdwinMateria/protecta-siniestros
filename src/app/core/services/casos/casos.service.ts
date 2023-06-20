@@ -88,6 +88,10 @@ export class CasosService {
   public AddSiniestros(data: any): Observable<any> {
     return this.http.post<any>(this.Url + '/CasosManager/AddSiniestros', data);
   }
+
+  public AddReopening(data: any): Observable<any> {
+    return this.http.post<any>(this.Url + '/CasosManager/AddReopening', data);
+  }
   
   public UpdateClaim(data: SiniestroBM): Observable<any> {
     return this.http.post<any>(this.Url + '/CasosManager/UpdateClaim', data);

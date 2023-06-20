@@ -20,6 +20,7 @@ import { ModalNuevoBeneficiarioComponent } from './pages/siniestros/reserva-sini
 import { HttpClientModule } from '@angular/common/http';
 import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
+import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-siniestro/reapertura-siniestro.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { DatePipe } from '@angular/common';
     GastosCuracionComponent,
     ModalGastosCoberturaComponent,
     ModalBeneficiarioComponent,
-    ModalNuevoBeneficiarioComponent
+    ModalNuevoBeneficiarioComponent,
+    ReaperturaSiniestroComponent
   ],
   imports: [
     BrowserModule,
