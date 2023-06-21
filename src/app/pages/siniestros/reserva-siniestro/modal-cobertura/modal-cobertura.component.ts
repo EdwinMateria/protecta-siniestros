@@ -292,7 +292,7 @@ export class ModalCoberturaComponent implements OnInit {
     }else{
       let cover = this.reservaCaso.LISTA_COVERCLAIM.find(x => x.NCOVER == this.data).NDAMAGES;
       this.dataReserva.NIMPAIRMENT = menoscabo;
-      this.dataReserva.NRESERVEAMOUNT = this.reservaCaso.UIT * cover * (this.dataReserva.NIMPAIRMENT / 100)
+      this.dataReserva.NRESERVEAMOUNT = Number((this.reservaCaso.UIT * cover * (this.dataReserva.NIMPAIRMENT / 100)).toFixed(2))
     }
   }
 

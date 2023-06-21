@@ -67,8 +67,6 @@
                         </td>
                         <td>
                             {{beneficiario.SDOCUMENTNUMBER}}
-                            <!-- <input type="text" class="form-control" [(ngModel)]="beneficiarios[i].nroDocumento"
-                                (keyup.enter)="completarCampos(i)"> -->
                         </td>
                         <td>
                             {{beneficiario.SBENEFICIARYTYPE}}
@@ -149,7 +147,7 @@
             <div class="col-sm-3 form-group">
                 <label>Menoscabo: </label>
                 <div class="input-group">
-                    <input type="number" class="form-control" [(ngModel)]="modelCabo" [formControl]="menoscabo" [ngClass]="{'is-invalid': menoscabo.invalid && menoscabo.touched}" (ngModelChange)="changeMenoscabo()">
+                    <input type="textbox" class="form-control" [(ngModel)]="modelCabo" [formControl]="menoscabo" [ngClass]="{'is-invalid': menoscabo.invalid && menoscabo.touched}" (ngModelChange)="changeMenoscabo()" appDecimales>
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-percent"></i></span>
                     </div>

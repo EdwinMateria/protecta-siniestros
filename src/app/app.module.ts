@@ -21,6 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
 import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-siniestro/reapertura-siniestro.component';
+import { DecimalesDirective } from './core/directive/decimales.directive';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-sini
     ModalGastosCoberturaComponent,
     ModalBeneficiarioComponent,
     ModalNuevoBeneficiarioComponent,
-    ReaperturaSiniestroComponent
+    ReaperturaSiniestroComponent,
+    DecimalesDirective
   ],
   imports: [
     BrowserModule,
