@@ -35,7 +35,7 @@ export interface ReportePreliminar {
 @Component({
   selector: 'app-carga-masiva',
   templateUrl: './carga-masiva.component.html',
-  styleUrls: ['./carga-masiva.component.css']
+  styleUrls: ['./carga-masiva.component.scss']
 })
 
 export class CargaMasivaComponent implements OnInit {
