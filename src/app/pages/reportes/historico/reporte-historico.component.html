@@ -1,0 +1,49 @@
+<app-navbar></app-navbar>
+<div class="container mt-3">
+    <div class="row border_head">
+        <div class="col-sm-12">
+            <h3>Reporte Histórico SOAT</h3>
+        </div>
+    </div>
+</div>
+<div class="body-gastos mt-3">
+    <div class="row" style="border-bottom: 1px solid #ccc!important;">
+        <div class="col-sm-3 form-group">
+            <label>Fecha de Inicio</label>
+            <div class="input-group">
+                <input type="date" class="form-control" [(ngModel)]="fechaInicio">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label>Fecha de Fin</label>
+            <div class="input-group">
+                <input type="date" class="form-control" [(ngModel)]="fechaFin">
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 form-group">
+            <label>Tipo de pago</label>
+            <select class="form-control" [(ngModel)]="tipoReporte">
+                <option [value]="0" selected>Todos</option>
+                <option [value]="1">Siniestros</option>
+                <option [value]="2">Reservas</option>
+                <option [value]="3">Liquidaciones</option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <p class="pb-0 mb-0">&nbsp;</p>
+            <button class="btn" (click)="limpiarDatos()">
+                Limpiar
+            </button>   
+            &nbsp;&nbsp; 
+            <button class="btn btn-busqueda" (click)="generarReporte()">
+                <i class="fa fa-search mr-1"></i> Exportar
+            </button>        
+        </div>
+    </div>
+</div>

@@ -19,6 +19,7 @@ import { ModalBeneficiarioComponent } from './pages/siniestros/reserva-siniestro
 import { ModalNuevoBeneficiarioComponent } from './pages/siniestros/reserva-siniestro/modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReporteHistoricoComponent } from './pages/reportes/historico/reporte-historico.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootst
     GastosCuracionComponent,
     ModalGastosCoberturaComponent,
     ModalBeneficiarioComponent,
-    ModalNuevoBeneficiarioComponent
+    ModalNuevoBeneficiarioComponent,
+    ReporteHistoricoComponent
   ],
   imports: [
     BrowserModule,

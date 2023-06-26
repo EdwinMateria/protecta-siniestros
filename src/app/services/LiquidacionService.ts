@@ -4,7 +4,7 @@
 // import { DatosCasoSiniestro } from "../pages/liquidacion/models/Liquidacion.model";
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AppConfig } from '../app.config';
 import { DatosCasoSiniestro } from '../pages/liquidacion/models/Liquidacion.model';
 import { Observable } from 'rxjs/internal/Observable';
@@ -100,5 +100,97 @@ export class LiquidacionService {
         const data = JSON.stringify(idata);
         return this.http.post(this.Url + '/LiquidacionManager/InsertarLiquidacionSoat', data, { headers: this.headers });
     }
+
+    //Inicio Reporte Historico
+    //Retorna reporte de siniestros historicos
+    public ReporteHistoricoSoatSiniestro(idata: any): Observable<any> {
+      const data = JSON.stringify(idata);
+      return this.http.post(this.Url + '/LiquidacionManager/ReporteHistoricoSiniestros', data, { headers: this.headers });
+    }
+    //Retorna reporte de reserva historicos
+    public ReporteHistoricoSoatReserva(idata: any): Observable<any> {
+      const data = JSON.stringify(idata);
+      return this.http.post(this.Url + '/LiquidacionManager/ReporteHistoricoReservas', data, { headers: this.headers });
+    }
+    //Retorna reporte de liquidaciones historicos
+    public ReporteHistoricoSoatLiquidaciones(idata: any): Observable<any> {
+      const data = JSON.stringify(idata);
+      return this.http.post(this.Url + '/LiquidacionManager/ReporteHistoricoLiquidaciones', data, { headers: this.headers });
+    }
+    //prueba
+    // public GenerarExcelSiniestros(idata: any): Observable<any>{
+    //   //const Json = { "idReport": idReport };
+    //   const data = JSON.stringify(idata);
+    //   return this.http.post(this.Url + '/LiquidacionManager/GenerarExcelSiniestros', data,{ headers: this.headers });
+    // }
+
+    public GenerarExcelSiniestros(idata: any, nomSiniestros: string) {
+      const parametros = new HttpParams()
+            .set('P_DFECINI', idata.P_DFECINI)
+            .set('P_DFECFIN', idata.P_DFECFIN)
+      this.http.get(this.Url + '/LiquidacionManager/GenerarExcelSiniestros', { params: parametros, responseType: 'blob' })
+        .subscribe(response => {
+          const url = window.URL.createObjectURL(response);
+          const a = document.createElement('a');
+          document.body.appendChild(a);
+          a.href = url;
+          a.download = nomSiniestros + '.xlsx'; //'ReporteHistoricoSOAT_Siniestro.xlsx';
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        });
+    }
+
+    public GenerarExcelReservas(idata: any, nomSiniestros: string) {
+      const parametros = new HttpParams()
+            .set('P_DFECINI', idata.P_DFECINI)
+            .set('P_DFECFIN', idata.P_DFECFIN)
+      this.http.get(this.Url + '/LiquidacionManager/GenerarExcelReservas', { params: parametros, responseType: 'blob' })
+        .subscribe(response => {
+          const url = window.URL.createObjectURL(response);
+          const a = document.createElement('a');
+          document.body.appendChild(a);
+          a.href = url;
+          a.download = nomSiniestros + '.xlsx'; //'ReporteHistoricoSOAT_Reservas.xlsx';
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        });
+    }
+
+    public GenerarExcelLiquidaciones(idata: any, nomSiniestros: string) {
+      const parametros = new HttpParams()
+            .set('P_DFECINI', idata.P_DFECINI)
+            .set('P_DFECFIN', idata.P_DFECFIN)
+      this.http.get(this.Url + '/LiquidacionManager/GenerarExcelLiquidaciones', { params: parametros, responseType: 'blob' })
+        .subscribe(response => {
+          const url = window.URL.createObjectURL(response);
+          const a = document.createElement('a');
+          document.body.appendChild(a);
+          a.href = url;
+          a.download = nomSiniestros + '.xlsx'; //'ReporteHistoricoSOAT_Liquidaciones.xlsx';
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        });
+    }
+
+    public GenerarExcelHistoricoTodo(idata: any, nomSiniestros: string) {
+      const parametros = new HttpParams()
+            .set('P_DFECINI', idata.P_DFECINI)
+            .set('P_DFECFIN', idata.P_DFECFIN)
+      this.http.get(this.Url + '/LiquidacionManager/GenerarExcelHistoricoTodo', { params: parametros, responseType: 'blob' })
+        .subscribe(response => {
+          const url = window.URL.createObjectURL(response);
+          const a = document.createElement('a');
+          document.body.appendChild(a);
+          a.href = url;
+          a.download = nomSiniestros + '.xlsx'; //'ReporteHistoricoSOAT_Liquidaciones.xlsx';
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        });
+    }
+    //Fin Reporte Historico
 
 }

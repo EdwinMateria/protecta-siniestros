@@ -1,0 +1,19 @@
+.border_head{
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid #ccc!important;
+}
+
+.body-gastos{
+    margin-left: 15% !important;
+    margin-right: 15% !important;
+}
+
+.btn-busqueda{
+    background-color: rgb(235, 156, 9);
+    color: white
+}
+
+::ng-deep .my-class .modal-dialog { 
+    max-width: 70%;
+}
