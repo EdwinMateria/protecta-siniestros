@@ -9,6 +9,8 @@ import { ClaimCaseDataRequest } from 'src/app/core/models/claimCaseDataRequest';
 import { ClaimCoverResponse, ClaimDataCoverVM } from 'src/app/core/models/claimCoverResponse';
 import { ClaimCoverTmpRequestBM } from 'src/app/core/models/claimCoverTmpRequest';
 import { ClaimValRegisterRequestBM } from 'src/app/core/models/claimValRegisterRequest';
+import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
+import { ClaimComboResponse } from 'src/app/core/models/claimComboResponse';
 
 @Component({
   selector: 'app-reserva-siniestro',
@@ -23,7 +25,7 @@ export class ReservaSiniestroComponent implements OnInit {
   siniestros : ClaimResponse[] = [{CODIGO : 0 , DESCRIPCION : 'SELECCIONE', ESTADO : '0'}];
   claimRequest = new ClaimRequest();
   siniestro = 0;
-  tiposAtencion = this.reserveService.GetComboTipoAtencion();
+  tiposAtencion : ClaimComboResponse[] = [];
   tipoMovimiento = [];
   datosAdicionales = []
   posicion = 0;
@@ -33,13 +35,22 @@ export class ReservaSiniestroComponent implements OnInit {
   disabledCobertura = false;
   disabledTodo = false;
 
-  constructor(private modalService: NgbModal, public reserveService: ReserveService) { }
+  constructor(private modalService: NgbModal, public reserveService: ReserveService, public authProtectaService: AuthProtectaService) { }
 
   ngOnInit(): void {
   }
 
+  obtenerTipoAtencion(){
+    this.reserveService.GetComboTipoAtencion().subscribe(
+      res => {
+        this.tiposAtencion = res;
+      }
+    )
+  }
+
   tabControl(index:number){
     this.tipoTab = index
+    this.reservaCaso = new ClaimCoverResponse();
     if(this.tipoTab == 1){
       this.registroActive = 'active'
       this.consultaActive = ''
@@ -84,7 +95,7 @@ export class ReservaSiniestroComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err);
+          Swal.fire('Error',err,'error')
         }
       )
     }
@@ -93,6 +104,8 @@ export class ReservaSiniestroComponent implements OnInit {
   buscadorGlobal(){
     if(this.siniestro != 0){
       Swal.showLoading()
+      this.disabledCobertura = false;
+      this.datosAdicionales = [];
       let data = new ClaimCaseDataRequest();
       data.NCLAIM = this.siniestro;
       data.NCASE = this.claimRequest.NCASE;
@@ -101,6 +114,7 @@ export class ReservaSiniestroComponent implements OnInit {
           Swal.close()
           this.showTable = true;
           this.reservaCaso = res;
+          this.obtenerTipoAtencion();
           let siniestroEstado = this.siniestros.find(x => x.CODIGO == this.siniestro).ESTADO;
           if (siniestroEstado == '1' || siniestroEstado == '5' || siniestroEstado == '7') {
             Swal.fire('Información', 'No se puede generar reserva para este siniestro', 'warning');
@@ -112,7 +126,7 @@ export class ReservaSiniestroComponent implements OnInit {
         },
         err => {
           Swal.close()
-          console.log(err);
+          Swal.fire('Error',err,'error')
         }
       )
 
@@ -186,7 +200,7 @@ export class ReservaSiniestroComponent implements OnInit {
           },
           err => {
             Swal.close();
-            console.log(err);
+            Swal.fire('Error',err,'error')
           }
         )
       }
@@ -223,6 +237,9 @@ export class ReservaSiniestroComponent implements OnInit {
   guardarTablasDefinitivas(){
     let reserva = new ClaimValRegisterRequestBM();
 
+    let cookie = this.authProtectaService.getCookie('AppSiniestro');
+    let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
+
     if(this.disabledCobertura){
       let cover = this.reservaCaso.LISTA_COVERCLAIM[this.posicion];
       reserva.LIST_PARAM_RESERVE.push({
@@ -236,7 +253,7 @@ export class ReservaSiniestroComponent implements OnInit {
         NCERTIF : this.reservaCaso.NCERTIF,
         NMODULEC: cover.NMODULEC,
         NCURRENCY: cover.NCURRENCY,
-        NUSERCODE: 13,
+        NUSERCODE: Number(atob(codUsuario)),
         DOCCURDAT : this.reservaCaso.DOCCURDAT,
         SCLIENT: cover.SCLIENT,
         NCASE_NUM : Number(this.reservaCaso.NCASE_NUM)
@@ -250,11 +267,14 @@ export class ReservaSiniestroComponent implements OnInit {
             Swal.fire('Información',res.SMESSAGE_RESULT,'error');
             return;
           }else{
+            //evento eliminar temporal
             Swal.fire('Información','Reserva creada correctamente.','success');
             this.claimRequest = new ClaimRequest();
             this.siniestro = 0;
             this.showTable = false;
             this.reservaCaso = new ClaimCoverResponse();
+            this.disabledCobertura = false;
+            this.datosAdicionales = [];
           }
         },
         error => {

@@ -116,7 +116,7 @@ export class FormCasoComponent implements OnInit {
       },
       err =>{
         Swal.close();
-        console.log(err);
+        Swal.fire('Error',err,'error')
       }
     )
   }
@@ -145,12 +145,10 @@ export class FormCasoComponent implements OnInit {
             this.form.controls['nProvincia'].setValue(this.casoBM.nProvincia);
             this.changeProvincia(false)
             this.casoBM.nCaso = Number(valorInput)
-            console.log(this.casoBM);
-            
           },
           err => {
             Swal.close();
-            console.log(err);
+            Swal.fire('Error',err,'error')
           }
         )
         //Siniestros del Caso
@@ -162,7 +160,7 @@ export class FormCasoComponent implements OnInit {
           },
           err => {
             Swal.close();
-            console.log(err);
+            Swal.fire('Error',err,'error')
           }
         )
       } else {
@@ -197,7 +195,7 @@ export class FormCasoComponent implements OnInit {
             },
             err => {
               Swal.close()
-              console.log(err);
+              Swal.fire('Error',err,'error')
             }
           )
         }
@@ -402,7 +400,7 @@ export class FormCasoComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err)
+          Swal.fire('Error',err,'error')
         }
       )
     }
@@ -433,7 +431,7 @@ export class FormCasoComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err);
+          Swal.fire('Error',err,'error')
         }
       )
     }

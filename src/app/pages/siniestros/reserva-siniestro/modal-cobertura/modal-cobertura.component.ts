@@ -88,7 +88,6 @@ export class ModalCoberturaComponent implements OnInit {
   constructor(private modalService: NgbModal, public reserveService: ReserveService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
-    
     this.validacionPorCobertura();
     this.getCobertura();
   }
@@ -106,7 +105,7 @@ export class ModalCoberturaComponent implements OnInit {
             this.tiposAtencion = res;
           },
           err => {
-            console.log(err);
+            Swal.fire('Información',err,'error');
           }
         );
       } 
@@ -137,6 +136,7 @@ export class ModalCoberturaComponent implements OnInit {
     Swal.showLoading();
     this.reserveService.GetDatCoversTmp(data).subscribe(
       res => {
+        console.log(res);
         if(res.SKEY != null){
           this.claimCoverReserveResponse = res;
           //Mapeo
@@ -202,7 +202,7 @@ export class ModalCoberturaComponent implements OnInit {
       },
       err => {
         Swal.close();
-        console.log(err);
+        Swal.fire('Información',err,'error');
       }
     )
   }
@@ -216,7 +216,7 @@ export class ModalCoberturaComponent implements OnInit {
         this.dataReserva.NMINIMUNREMUNERATION = res[0].N_RMV;
       },
       err => {
-        console.log(err);
+        Swal.fire('Información',err,'error');
       }
     )
   }
@@ -254,7 +254,7 @@ export class ModalCoberturaComponent implements OnInit {
           },
           err => {
             Swal.close();
-            console.log(err);
+            Swal.fire('Información',err,'error');
           }
         )
       }
@@ -277,7 +277,7 @@ export class ModalCoberturaComponent implements OnInit {
         return;
       }else{
         this.dataReserva.NDAYSOFF = ((fin.getTime() - inicio.getTime())/(1000*60*60*24)) + 1;
-        this.dataReserva.NRESERVEAMOUNT = Number((this.rmvResponse.N_RMV / (30 * this.dataReserva.NDAYSOFF)).toFixed(2))
+        this.dataReserva.NRESERVEAMOUNT = Number(((this.rmvResponse.N_RMV / 30) * this.dataReserva.NDAYSOFF).toFixed(2))
       }
     }
   }
@@ -331,7 +331,7 @@ export class ModalCoberturaComponent implements OnInit {
     this.dataReserva.NUITAMOUNT = this.reservaCaso.UIT;
     this.dataReserva.NAMOUNT = claimData.NSUMINSURED;
     this.dataReserva.SMOVETYPE = this.reservaCaso.SMOVETYPE;
-
+    if(this.data == Cobertura.Muerte) this.dataReserva.NRESERVEAMOUNT = claimData.NSUMINSURED;
     this.dataReserva.SKEY = this.reservaCaso.SKEY;
     this.dataReserva.NCASE = Number(this.reservaCaso.NCASE_NUM);
     this.dataReserva.NCLAIM = Number(this.reservaCaso.NCLAIM);
@@ -425,13 +425,15 @@ export class ModalCoberturaComponent implements OnInit {
           this.reference.close(res);
           Swal.fire('Información', 'Datos de la cobertura ingresados correctamente.','success')
         }else{
+          this.dataReserva.LIST_BENEF_COVERS = [];
           Swal.fire('Información',res.SRESULT,'error');
           return;
         }
       },
       err => {
+        this.dataReserva.LIST_BENEF_COVERS = [];
         Swal.close();
-        console.log(err);        
+        Swal.fire('Información',err,'error');
       }
     )
     

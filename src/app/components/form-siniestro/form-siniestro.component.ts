@@ -92,7 +92,7 @@ export class FormSiniestroComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err);
+          Swal.fire('Error',err,'error')
         }
       )
     }
@@ -127,6 +127,7 @@ export class FormSiniestroComponent implements OnInit {
         },
         err => {
           Swal.close()
+          Swal.fire('Error',err,'error')
         }
       )
     }else{
@@ -175,7 +176,7 @@ export class FormSiniestroComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err)
+          Swal.fire('Error',err,'error')
         }
       )
       }
@@ -215,7 +216,7 @@ export class FormSiniestroComponent implements OnInit {
           },
           err => {
             Swal.close();
-            console.log(err)
+            Swal.fire('Error',err,'error')
           }
         )
       }

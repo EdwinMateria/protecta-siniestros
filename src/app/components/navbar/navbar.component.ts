@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import * as $ from 'jQuery';
+import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 
 @Component({
   selector: 'app-navbar',
@@ -30,9 +31,20 @@ export class NavbarComponent implements OnInit {
   FECHAINICIO: Date = null;
   FECHAFIN: Date = null;
 
-  constructor(private renderer: Renderer2, public router: Router) { }
+  usuario = "";
+
+  constructor(private renderer: Renderer2, public router: Router, public authProtectaService: AuthProtectaService) { }
 
   ngOnInit(): void {
+
+    let auth = this.authProtectaService.getCookie('AppSiniestro');
+
+    let ApePUsu = this.authProtectaService.getValueCookie('ApePUsu',auth);
+    let NomUsu = this.authProtectaService.getValueCookie('NomUsu',auth);
+
+    this.usuario = `${atob(NomUsu)} ${atob(ApePUsu)}`
+
+
     $("#menu-toggle").click(function(e) {
       e.preventDefault();
       $("#wrapper").toggleClass("toggled");
@@ -94,6 +106,11 @@ export class NavbarComponent implements OnInit {
       {sName : 'LIQUIDACION DE SINIESTRO', sRouterLink: 'liquidacion-siniestro'},
       {sName : 'REAPERTURA DE SINIESTRO', sRouterLink: 'reapertura-siniestro'}
     ]})
+  }
+
+  logOut(){
+    window.location.href = 'http://localhost:55556';
+    document.cookie = "AppSiniestro=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   }
 
 }

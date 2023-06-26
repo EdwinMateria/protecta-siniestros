@@ -6,26 +6,27 @@ import { TratamientoCasoSiniestroComponent } from './pages/siniestros/tratamient
 import { ReservaSiniestroComponent } from './pages/siniestros/reserva-siniestro/reserva-siniestro.component';
 import { GastosCuracionComponent } from './pages/liquidacion/gastos-curacion/gastos-curacion.component';
 import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-siniestro/reapertura-siniestro.component';
+import { SiniestroGuard } from './core/guard/siniestro.guard';
 
 
 const routes: Routes = [
   {
-     path: '', component: LoginComponent, pathMatch: 'full'
+     path: '', component: HomeComponent, pathMatch: 'full'
   },
   { 
-    path: 'home', component: HomeComponent, 
+    path: 'home', component: HomeComponent
   },
   {
-    path: 'tratamiento-caso-siniestro', component: TratamientoCasoSiniestroComponent
+    path: 'tratamiento-caso-siniestro', component: TratamientoCasoSiniestroComponent,  canActivate: [SiniestroGuard]
   },
   {
-    path: 'reserva-siniestro', component: ReservaSiniestroComponent
+    path: 'reserva-siniestro', component: ReservaSiniestroComponent,  canActivate: [SiniestroGuard]
   },
   {
-    path: 'liquidacion-siniestro', component: GastosCuracionComponent
+    path: 'liquidacion-siniestro', component: GastosCuracionComponent,  canActivate: [SiniestroGuard]
   },
   {
-    path: 'reapertura-siniestro', component: ReaperturaSiniestroComponent
+    path: 'reapertura-siniestro', component: ReaperturaSiniestroComponent,  canActivate: [SiniestroGuard]
   }
 ];
 

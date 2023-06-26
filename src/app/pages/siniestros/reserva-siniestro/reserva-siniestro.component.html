@@ -62,7 +62,7 @@
         <div class="col-sm-3 form-group">
             <label>Tipo de atención</label>
             <select class="form-control" disabled [(ngModel)]="reservaCaso.STIPOATENCION">
-                <option *ngFor="let atencion of (tiposAtencion) | async" [value]="atencion.SCODIGO">{{atencion.SCODIGO}} - {{atencion.SDESCRIPCION}}</option>
+                <option *ngFor="let atencion of tiposAtencion" [value]="atencion.SCODIGO">{{atencion.SCODIGO}} - {{atencion.SDESCRIPCION}}</option>
             </select>
         </div>
         <div class="col-sm-3 form-group">
@@ -113,7 +113,9 @@
                 <td>
                     {{claim.SNROLETTER}}
                 </td>
-                <td></td>
+                <td>
+                    <span *ngIf="claim.NACCUMRESERVE > 0">{{claim.NACCUMRESERVE}}</span>
+                </td>
                 <td>
                     <div class="form-check" *ngIf="tipoTab == 1">
                         <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]" type="checkbox" (change)="reserva($event, claim.NCOVER, i)" [disabled]="(disabledCobertura  && posicion == i) || disabledTodo">

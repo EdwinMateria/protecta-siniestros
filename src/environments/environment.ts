@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   siniestroAPI: 'http://localhost:30897/Api',
   reservaApi: 'http://localhost:30897/Api',
 };
