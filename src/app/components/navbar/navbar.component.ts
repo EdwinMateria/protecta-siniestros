@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import * as $ from 'jQuery';
+import { AppConfig } from 'src/app/app.config';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 
 @Component({
@@ -109,7 +110,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logOut(){
-    window.location.href = 'http://localhost:55556';
+    window.location.href = AppConfig.URL_SINIESTROS_WEB;
     document.cookie = "AppSiniestro=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   }
 

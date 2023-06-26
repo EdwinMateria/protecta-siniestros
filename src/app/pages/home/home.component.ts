@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AppConfig } from 'src/app/app.config';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 
 @Component({
@@ -24,7 +25,7 @@ export class HomeComponent implements OnInit {
         this.router.navigateByUrl('/home')
       }else{
         if (this.authProtectaService.getCookie('AppSiniestro') == "") {
-          window.location.href = 'http://190.216.170.173/siniestrodes';
+          window.location.href = AppConfig.URL_SINIESTROS_WEB;
         }
       }
   });

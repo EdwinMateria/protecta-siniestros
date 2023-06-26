@@ -7,6 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthProtectaService } from '../auth-protecta/auth-protecta.service';
+import { AppConfig } from 'src/app/app.config';
 
 @Injectable()
 export class SiniestroIntercepInterceptor implements HttpInterceptor {
@@ -17,7 +18,7 @@ export class SiniestroIntercepInterceptor implements HttpInterceptor {
 
     let cookie = this.authProtectaService.getCookie('AppSiniestro');
     if(cookie == ''){
-      window.location.href = 'http://localhost:55556'
+      window.location.href = AppConfig.URL_SINIESTROS_WEB
     }
 
     return next.handle(request);
