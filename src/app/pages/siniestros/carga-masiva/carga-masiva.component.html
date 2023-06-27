@@ -6,16 +6,6 @@
 /*  VERSIÓN             :   1.0 - CARGAS MASIVAS SINIESTROS                                      */
 /************************************************************************************************-->
 
-<!-- <title></title>
-<link href="http://cdn-na.infragistics.com/igniteui/2021.2/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
-<link href="http://cdn-na.infragistics.com/igniteui/2021.2/latest/css/structure/infragistics.css" rel="stylesheet" />
-<script src="http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.8.3.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
-<script src="http://cdn-na.infragistics.com/igniteui/2021.2/latest/js/infragistics.core.js"></script>
-<script src="http://cdn-na.infragistics.com/igniteui/2021.2/latest/js/infragistics.lob.js"></script>
-<script type="text/javascript">function metchec(nom) { alert(nom); nom.checked = checked; }</script> -->
-
 <app-navbar></app-navbar>
 <!-- TÍTULO -->
 <div class="container mt-3">
@@ -36,7 +26,7 @@
 
                 <div class="row ml-4 mt-4 mb-4">
                     <div class="col-md-3">
-                        <label class="control-label">Tipo de Carga:</label>
+                        <label>Tipo de Carga:</label>
                     </div>
                     <div class="col-md-2">
                         <select class="form-control" [(ngModel)]="carga">
@@ -49,22 +39,22 @@
 
                 <div class="row ml-4 mt-4 mb-4">
                     <div class="col-md-3">
-                        <label class="control-label">Tipo de Trama:</label>
+                        <label>Tipo de Trama:</label>
                     </div>
                     <div class="col-md-2">
                         <input type="checkbox" [(ngModel)]="apertura" (change)="onApertura($event.target.checked)" />
                         &nbsp;
-                        <label class="control-label">Apertura</label>
+                        <label>Apertura</label>
                     </div>
                     <div class="col-md-2">
                         <input type="checkbox" [(ngModel)]="reserva" (change)="onReserva($event.target.checked)" />
                         &nbsp;
-                        <label class="control-label">Reserva</label>
+                        <label>Reserva</label>
                     </div>
                     <div class="col-md-2">
                         <input type="checkbox" [(ngModel)]="liquidacion" (change)="onLiquidacion($event.target.checked)" />
                         &nbsp;
-                        <label class="control-label">Liquidación</label>
+                        <label>Liquidación</label>
                     </div>
                     <div class="col-md-3"></div>
                 </div>

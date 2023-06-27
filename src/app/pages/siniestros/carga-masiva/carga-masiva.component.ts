@@ -228,7 +228,6 @@ export class CargaMasivaComponent implements OnInit {
     } else {
       this.definitivo = true;
     }
-    console.log(this.itemChecksSend);
   }
 
   onLimpiar = () => {
