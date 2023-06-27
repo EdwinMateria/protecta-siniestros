@@ -11,6 +11,7 @@ import { ClaimCoverTmpRequestBM } from 'src/app/core/models/claimCoverTmpRequest
 import { ClaimValRegisterRequestBM } from 'src/app/core/models/claimValRegisterRequest';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 import { ClaimComboResponse } from 'src/app/core/models/claimComboResponse';
+import { ClaimValCoverRequest } from 'src/app/core/models/claimValCoverRequest';
 
 @Component({
   selector: 'app-reserva-siniestro',
@@ -113,8 +114,8 @@ export class ReservaSiniestroComponent implements OnInit {
         res =>{
           Swal.close()
           this.showTable = true;
-          this.reservaCaso = res;
           this.obtenerTipoAtencion();
+          this.reservaCaso = res;
           let siniestroEstado = this.siniestros.find(x => x.CODIGO == this.siniestro).ESTADO;
           if (siniestroEstado == '1' || siniestroEstado == '5' || siniestroEstado == '7') {
             Swal.fire('Información', 'No se puede generar reserva para este siniestro', 'warning');
@@ -133,25 +134,54 @@ export class ReservaSiniestroComponent implements OnInit {
     }
   }
 
-  openModalCobertura(origen:number){
-    const modalRef = this.modalService.open(ModalCoberturaComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
+  modalCobverturaAction(origen:number){
+    const modalRef = this.modalService.open(ModalCoberturaComponent, { windowClass: "my-class", backdrop: 'static', keyboard: false });
     modalRef.componentInstance.reference = modalRef;
     modalRef.componentInstance.data = origen;
     modalRef.componentInstance.reservaCaso = this.reservaCaso;
+    modalRef.componentInstance.tab = this.tipoTab;
     modalRef.result.then((res) => {
-      if(res != undefined){
+      if (res != undefined) {
         this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NRESERVEAMOUNT = res.NMONTO;
-        if(origen == 4) this.reservaCaso.LISTA_COVERCLAIM[this.posicion].SNROLETTER = res.SNROLETTER;
+        if (origen == 4) this.reservaCaso.LISTA_COVERCLAIM[this.posicion].SNROLETTER = res.SNROLETTER;
         this.disabledCobertura = true;
-      }else{
-        const adElement = document.getElementById(`a${this.posicion}`) as HTMLInputElement; 
+      } else {
+        const adElement = document.getElementById(`a${this.posicion}`) as HTMLInputElement;
         adElement.checked = false;
-        const ddElement = document.getElementById(`d${this.posicion}`) as HTMLInputElement; 
+        const ddElement = document.getElementById(`d${this.posicion}`) as HTMLInputElement;
         ddElement.checked = false;
         this.tipoMovimiento[this.posicion] = null;
         this.datosAdicionales[this.posicion] = null;
       }
     });
+  }
+
+  openModalCobertura(origen:number){
+    if(this.tipoTab == 2){
+      let request = new ClaimValCoverRequest();
+      request.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
+      request.NCLAIM = Number(this.reservaCaso.NCLAIM);
+      request.NCOVER = origen;
+      Swal.showLoading();
+      this.reserveService.ValidCoverReserve(request).subscribe(
+        res =>{
+          Swal.close();
+          if(res.SRESULT == 'OK'){
+            this.modalCobverturaAction(origen)
+          }else{
+            Swal.fire('Información',res.SRESULT, 'warning');
+            return;
+          }
+        },
+        err => {
+          Swal.close();
+          Swal.fire('Error', err , 'error');
+        }
+      )
+      
+    }else{
+      this.modalCobverturaAction(origen)
+    }
   }
 
   // deselect(i:number){
@@ -239,9 +269,9 @@ export class ReservaSiniestroComponent implements OnInit {
 
     let cookie = this.authProtectaService.getCookie('AppSiniestro');
     let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
+    let cover = this.reservaCaso.LISTA_COVERCLAIM[this.posicion];
 
     if(this.disabledCobertura){
-      let cover = this.reservaCaso.LISTA_COVERCLAIM[this.posicion];
       reserva.LIST_PARAM_RESERVE.push({
         SKEY : this.reservaCaso.SKEY,
         SMOVETYPE : this.tipoMovimiento[this.posicion],
@@ -267,14 +297,37 @@ export class ReservaSiniestroComponent implements OnInit {
             Swal.fire('Información',res.SMESSAGE_RESULT,'error');
             return;
           }else{
+            Swal.showLoading();
             //evento eliminar temporal
-            Swal.fire('Información','Reserva creada correctamente.','success');
-            this.claimRequest = new ClaimRequest();
-            this.siniestro = 0;
-            this.showTable = false;
-            this.reservaCaso = new ClaimCoverResponse();
-            this.disabledCobertura = false;
-            this.datosAdicionales = [];
+            let request = new ClaimCoverTmpRequestBM();
+            request.SKEY = this.reservaCaso.SKEY;
+            request.NCOVER = cover.NCOVER;
+            this.reserveService.DeleteCoverTmp(request).subscribe(
+              res => {
+                Swal.close();
+                if(res == 'OK'){
+                  Swal.fire('Información','Reserva creada correctamente.','success');
+                  this.claimRequest = new ClaimRequest();
+                  this.siniestro = 0;
+                  this.showTable = false;
+                  this.reservaCaso = new ClaimCoverResponse();
+                  this.disabledCobertura = false;
+                  this.datosAdicionales = [];
+                }else{
+                  Swal.fire('Información','Reserva creada. Informacion aun en temporal');
+                  this.claimRequest = new ClaimRequest();
+                  this.siniestro = 0;
+                  this.showTable = false;
+                  this.reservaCaso = new ClaimCoverResponse();
+                  this.disabledCobertura = false;
+                  this.datosAdicionales = [];
+                }
+              },
+              err => {
+                Swal.close();
+                Swal.fire('Error',err,'error');
+              }
+            )
           }
         },
         error => {

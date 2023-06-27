@@ -5,11 +5,11 @@ export class ClaimBenefParamResponse {
 export class BeneficiariesVM {
     SNAME               : string;
     SCODE               : string;
-    SCODEATTORNEY       : string;
-    NTYPE               : number;
-    NRELATIONSHIP       : number;
-    NAGE                : number;
-    NVALID              : number;
+    SCODEATTORNEY       ?: string;
+    NTYPE               ?: number;
+    NRELATIONSHIP       ?: number;
+    NAGE                ?: number;
+    NVALID              ?: number;
     SDOCUMENTTYPE       : string;
     SDOCUMENTNUMBER     : string;
     SBENEFICIARYTYPE    : string;

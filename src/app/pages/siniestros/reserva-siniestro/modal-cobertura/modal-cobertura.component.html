@@ -4,7 +4,7 @@
         <span *ngIf="data == 2">2 - Incapacidad Temporal</span>
         <span *ngIf="data == 3">3 - Invalidez Permanente</span>
         <span *ngIf="data == 4">4 - Gastos Médicos</span>
-        <span *ngIf="data == 5">4 - Gastos de Sepelio</span>
+        <span *ngIf="data == 5">5 - Gastos de Sepelio</span>
     </h4>
     <button type="button" aria-label="Close" (click)="closeModal()" style="cursor: pointer;">
         <i class="fa fa-close"></i>
@@ -88,7 +88,7 @@
                             <input type="text" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER">
                         </td>
                         <td>
-                            <button class="btn btn-danger btn-sm" (click)="borrarBeneficiario(i)"><i class="fa fa-trash"></i></button>
+                            <button class="btn btn-danger btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -164,7 +164,7 @@
                 <div class="col-sm-3 form-group">
                     <label>Inicio de descanso: </label>
                     <div class="input-group">
-                        <input type="date" class="form-control" [formControl]="inicioDescanso" (change)="changeFechasDescanso()"
+                        <input [type]="tab == 1 ? 'date': 'text'" class="form-control" [formControl]="inicioDescanso" (change)="changeFechasDescanso()"
                         [ngClass]="{'is-invalid': inicioDescanso.invalid && inicioDescanso.touched}">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -174,7 +174,7 @@
                 <div class="col-sm-3 form-group">
                     <label>Fin de descanso: </label>
                     <div class="input-group">
-                        <input type="date" class="form-control" [formControl]="finDescanso" (change)="changeFechasDescanso()"
+                        <input [type]="tab == 1 ? 'date': 'text'" class="form-control" [formControl]="finDescanso" (change)="changeFechasDescanso()"
                         [ngClass]="{'is-invalid': finDescanso.invalid && finDescanso.touched}">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -320,7 +320,7 @@
             <div class="col-sm-3">
                 <div class="form-inline">
                     <label>Afecta al IGV: </label>
-                    <select class="form-control ml-3" [(ngModel)]="dataReserva.SAFFECTIGV" (change)="changeBaseImponible()">
+                    <select class="form-control ml-3" [(ngModel)]="dataReserva.SAFFECTIGV" (change)="changeBaseImponible()" [disabled]="tab == 2">
                         <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
                             [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
                     </select>

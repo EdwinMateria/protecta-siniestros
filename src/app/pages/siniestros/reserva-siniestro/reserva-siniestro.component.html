@@ -99,10 +99,10 @@
                     <div class="form-group">
                         <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento[i]" ngDefaultControl>
                             <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" [name]="i" [id]="'a'+i" value="A" [disabled]="(disabledCobertura && posicion == i) || disabledTodo"/> <i class="fa fa-arrow-up"></i>
+                                <input type="radio" name="radio" [id]="'a'+i" value="A" [disabled]="(disabledCobertura && posicion == i) || disabledTodo || (tipoTab == 2)"/> <i class="fa fa-arrow-up"></i>
                             </label>
                             <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" [name]="i" [id]="'d'+i" value="D" [disabled]="(disabledCobertura  && posicion == i) || disabledTodo" /> <i class="fa fa-arrow-down"></i>
+                                <input type="radio" name="radio" [id]="'d'+i" value="D" [disabled]="(disabledCobertura  && posicion == i) || disabledTodo || (tipoTab == 2)" /> <i class="fa fa-arrow-down"></i>
                             </label>
                         </div>
                     </div>
@@ -124,13 +124,13 @@
                 </td>
                 <td>
                     <button *ngIf="tipoTab == 1 && disabledCobertura && posicion == i" class="btn btn-busqueda mr-3" (click)="eliminarTablaTemporal(claim, i)"><i class="fa fa-trash"></i></button>
-                    <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(1)"><i class="fa fa-edit"></i></button>
+                    <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(claim.NCOVER)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>
         </tbody>
     </table>
     <div class="row pb-4">
-        <div class="col-sm-12" align="end">
+        <div class="col-sm-12" align="end" *ngIf="tipoTab == 1">
             <button class="btn btn-success" [disabled]="disabledTodo" (click)="guardarTablasDefinitivas()">Guardar</button>
         </div>
     </div>
