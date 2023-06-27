@@ -117,11 +117,11 @@ export class ModalCoberturaComponent implements OnInit {
               SDOCUMENTTYPE : benef.SDESCRIPTYPCLIENTDOC,
               SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
               SBENEFICIARYTYPE : benef.SBENEFICIARYTYPE,
-              SCODBENEFICIARYTYPE : benef.NCODBENEFICIARYTYPE.toString(),
+              NCODBENEFICIARYTYPE : benef.NCODBENEFICIARYTYPE.toString(),
               SCOVER_DESC : this.data,
               SBANK : benef.NBANK_CODE.toString(),
               SACCOUNTNUMBER :  benef.SACCOUNT,
-              SCODDOCUMENTTYPE : benef.NTYPCLIENTDOC.toString()
+              NCODDOCUMENTTYPE : benef.NTYPCLIENTDOC.toString()
             })
           })
         }
@@ -399,6 +399,8 @@ export class ModalCoberturaComponent implements OnInit {
         this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
           res =>{
             Swal.close();
+            console.log(res.ListBeneficiaries[0]);
+            
             if(res.ListBeneficiaries[0].SBANK == "") res.ListBeneficiaries[0].SBANK = "0";
             
             this.beneficiarios.push(res.ListBeneficiaries[0])
@@ -504,9 +506,9 @@ export class ModalCoberturaComponent implements OnInit {
         this.dataReserva.LIST_BENEF_COVERS.push({
           SCODCLI : benef.SCODE,
           SBENEFICIARY : benef.SNAME,
-          SDOCUMENTTYPE : benef.SCODDOCUMENTTYPE,
+          SDOCUMENTTYPE : benef.NCODDOCUMENTTYPE,
           SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
-          SBENEFICIARYTYPE : benef.SCODBENEFICIARYTYPE,
+          SBENEFICIARYTYPE : benef.NCODBENEFICIARYTYPE,
           SCOVER_DESC : this.data,
           SBANK : benef.SBANK,
           SACCOUNTNUMBER :  benef.SACCOUNTNUMBER
@@ -534,12 +536,14 @@ export class ModalCoberturaComponent implements OnInit {
     if(this.data == Cobertura.Gastos_Medicos){
         if(this.modelBase < 0){
           Swal.fire('Información', 'Base imponible inválida.','error');
+          this.dataReserva.LIST_BENEF_COVERS = [];
           return;
         }
 
         if(this.tipoAtencion.invalid || this.baseImponible.invalid){
           this.tipoAtencion.markAllAsTouched();
           this.baseImponible.markAllAsTouched();
+          this.dataReserva.LIST_BENEF_COVERS = [];
           return;
         }else{
           this.dataReserva.STYPEATTENTION = this.tipoAtencion.value;
@@ -550,10 +554,12 @@ export class ModalCoberturaComponent implements OnInit {
     if(this.data == Cobertura.Gastos_Sepelio){
       if(this.modelBase < 0){
         Swal.fire('Información', 'Base imponible inválida.','error');
+        this.dataReserva.LIST_BENEF_COVERS = [];
         return;
       }
       if(this.baseImponible.invalid){
         this.tipoAtencion.markAllAsTouched();
+        this.dataReserva.LIST_BENEF_COVERS = [];
         return;
       }else{
         this.dataReserva.STYPEATTENTION = this.tipoAtencion.value;
@@ -567,6 +573,7 @@ export class ModalCoberturaComponent implements OnInit {
       if(this.inicioDescanso.invalid || this.finDescanso.invalid){
         this.inicioDescanso.markAllAsTouched();
         this.finDescanso.markAllAsTouched();
+        this.dataReserva.LIST_BENEF_COVERS = [];
         return;
       }else{
         this.changeFechasDescanso() //Validacion de fechas;
@@ -579,6 +586,7 @@ export class ModalCoberturaComponent implements OnInit {
     if(this.data == Cobertura.Invalidez_Permanente){
       if(this.menoscabo.invalid){
         this.menoscabo.markAllAsTouched();
+        this.dataReserva.LIST_BENEF_COVERS = [];
         return;
       }else{
         this.changeMenoscabo()
@@ -593,6 +601,7 @@ export class ModalCoberturaComponent implements OnInit {
     if(this.dataReserva.SPROCESSOR == "1"){
       if (this.dataReserva.SPROCESSORNAME.replace(/ /g, "") == "" || this.dataReserva.SPROCESSORZONE.replace(/ /g, "") == ""){
         Swal.fire('Información','Debe completar los campos de tramitador.', 'warning');
+        this.dataReserva.LIST_BENEF_COVERS = [];
         return;
       }
     }else{
