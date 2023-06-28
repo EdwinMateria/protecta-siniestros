@@ -85,7 +85,7 @@
                             </select>
                         </td>
                         <td>
-                            <input type="text" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER">
+                            <input type="text" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER" maxlength="15">
                         </td>
                         <td>
                             <button class="btn btn-danger btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>

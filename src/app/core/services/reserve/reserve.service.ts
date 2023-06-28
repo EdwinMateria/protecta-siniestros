@@ -186,4 +186,11 @@ export class ReserveService {
     });
   }
 
+  public UPD_BANK(data: ClaimBeneficiarioModelRequestBM): Observable<any> {
+    const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/Reserve/UPD_BANK', body, {
+      headers: this.headers,
+    });
+  }
+
 }

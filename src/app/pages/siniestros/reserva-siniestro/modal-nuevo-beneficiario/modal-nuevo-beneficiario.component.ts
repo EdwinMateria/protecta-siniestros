@@ -7,6 +7,7 @@ import { Data } from 'src/app/core/models/data';
 import Swal from 'sweetalert2';
 import { CasosService } from 'src/app/core/services/casos/casos.service';
 import { CombosGenericoVM } from 'src/app/core/models/caso';
+import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 
 export class TipoDocumento{
   id: number;
@@ -39,7 +40,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     };
   }
 
-  constructor(public fb: FormBuilder, public reserveService: ReserveService, public casoService: CasosService) { }
+  constructor(public fb: FormBuilder, public reserveService: ReserveService, public casoService: CasosService, public authProtectaService: AuthProtectaService) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -178,8 +179,52 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
           if(jsonResponse.P_NCODE == 1){
             Swal.fire('Información', jsonResponse.P_SMESSAGE ,'error')
           }else{
-            Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
-            jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT
+            //UPD_BANK
+            let request = new ClaimBeneficiarioModelRequestBM();
+
+            request.SCLIENT_ANT = "";
+            request.Accion = "ING";
+            request.SCLIENT = jsonResponse.P_SCOD_CLIENT;
+            request.Sexo = this.data.P_SSEXCLIEN;
+            //Apartamento
+            request.Apartamento = null;
+            request.ApellidoPaterno = this.data.P_SLASTNAME;
+            request.ApellidoMaterno = this.data.P_SLASTNAME2;
+            request.Celular = this.form.controls['celular'].value;
+            request.CodBanco = this.form.controls['banco'].value;
+            request.CodigoUsuario = "0";
+            request.CodTipoCuenta = this.form.controls['tipoCuenta'].value;
+            request.CodViaPago = this.form.controls['viaPago'].value;
+            request.Departamento = this.data.EListAddresClient[0].P_NPROVINCE;
+            request.Provincia = this.data.EListAddresClient[0].P_NLOCAL;
+            request.Distrito = this.data.EListAddresClient[0].P_NMUNICIPALITY;
+            request.EstadoCivil = this.data.P_NCIVILSTA;
+            request.FechaNacimiento = this.form.controls['P_DBIRTHDAT'].value;
+            request.Lote = this.form.controls['P_SLOTE'].value;
+            request.Nacionalidad = this.data.P_NNATIONALITY;
+            request.Nombres = this.data.P_SFIRSTNAME;
+            request.NroCuenta = this.form.controls['nroCuenta'].value;
+            request.NroCuentaCCI = this.form.controls['nroCuentaCCI'].value;
+            request.NroDocumento = this.data.P_SIDDOC;
+            //Piso
+            request.Piso = null;
+            request.RazonSocial = this.data.P_SFIRSTNAME;
+            request.TeleDom = this.form.controls['telefDom'].value;
+            request.TeleOfi = this.form.controls['telefOfic'].value;
+            request.TipoDocumento = this.data.P_NIDDOC_TYPE;
+            request.Ubicacion = this.form.controls['P_SNOM_DIRECCION'].value;
+            request.Via = this.form.controls['P_STI_DIRE'].value
+            request.FechaFinPagoPension = null;
+            request.FechaFallecimientoPensionista = null;
+            request.CondicionEstudiante = null;
+
+            this.reserveService.UPD_BANK(request).subscribe(res => {
+              Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
+              jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT
+            },err => {
+              jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT
+            });
+            
             this.reference.close(jsonResponse);
           }
         },

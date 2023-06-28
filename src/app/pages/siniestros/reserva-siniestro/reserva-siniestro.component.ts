@@ -288,8 +288,19 @@ export class ReservaSiniestroComponent implements OnInit {
         SCLIENT: cover.SCLIENT,
         NCASE_NUM : Number(this.reservaCaso.NCASE_NUM)
       })
-      
-      Swal.showLoading();
+
+
+      Swal.fire({
+        title: 'Información',
+        text: `¿Está seguro de registrar una reserva para la cobertura ${cover.SDESCOVER}?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'De acuerdo',
+        cancelButtonText: 'No',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.showLoading();
       this.reserveService.ValidRegisterCoverData(reserva).subscribe(
         res => {
           Swal.close();
@@ -335,6 +346,9 @@ export class ReservaSiniestroComponent implements OnInit {
           Swal.fire('Error',error,'error')
         }
       )
+        }
+      })
+      
     }else{
       Swal.fire('Información','Debe seleccionar una cobertura','warning');
       return;
