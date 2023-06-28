@@ -34,6 +34,7 @@ export class ClaimGetDatAddResponseVM {
 	SAFFECTS_IGV                : string;
 	SIPRESS_AT                  : string;
 	SREFUND                     : string;
+	DESC_CODIGODIAGNOSTICO      : string;
 }   
 
 export class BeneficiaresUltimatesVM {

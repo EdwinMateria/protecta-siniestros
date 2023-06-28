@@ -94,7 +94,7 @@ export class ModalCoberturaComponent implements OnInit {
 
   ngOnInit(): void {
     this.validacionPorCobertura();
-    this.getCobertura();
+    //this.getCobertura();
 
     if(this.tab == 2) this.obtenerReservaDefinitiva();
   }
@@ -136,6 +136,9 @@ export class ModalCoberturaComponent implements OnInit {
         this.dataReserva.SPROCESSORNAME = res.SPROCESSOR_NAME;
         this.dataReserva.SPROCESSORZONE = res.SPROCESSOR_AREA;
         this.model.CCODCIE10 = res.SCODIGODIAGNOSTICO;
+        this.model.CDESCRIPT = res.DESC_CODIGODIAGNOSTICO;
+        this.diagnosticoValue = res.DESC_CODIGODIAGNOSTICO ;
+        
         this.dataReserva.NTRANSAC = res.NTRANSAC;
         //this.model.CDESCRIPT = res.SDIAGNOSTIC;
 
@@ -645,6 +648,14 @@ export class ModalCoberturaComponent implements OnInit {
 
   editarTablaTemporal(){
     let reservaUpdate = new ClaimUpdateDatAddRequestBM();
+
+    if(this.data == Cobertura.Gastos_Medicos){
+      if(this.tipoAtencion.invalid){
+        this.tipoAtencion.markAllAsTouched();
+        return;
+      }
+    }
+
 
     let cookie = this.authProtectaService.getCookie('AppSiniestro');
     let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
