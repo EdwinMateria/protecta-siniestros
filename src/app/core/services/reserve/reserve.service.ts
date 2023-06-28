@@ -25,6 +25,7 @@ import { ClaimValRegisterResponseVM } from '../../models/claimValRegisterRespons
 import { ClaimValCoverRequest, ClaimValCoverResponse } from '../../models/claimValCoverRequest';
 import { ClaimGetDatAddResponseVM } from '../../models/claimGetDatAddResponse';
 import { ClaimDeleteBenefRequest } from '../../models/claimDeleteBenefReques';
+import { ClaimUpdateDatAddRequestBM } from '../../models/claimUpdateDatAddRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -174,6 +175,13 @@ export class ReserveService {
   public DeleteBenefCover(data: ClaimDeleteBenefRequest): Observable<string> {
     const body = JSON.stringify(data);
     return this.http.post<string>(this.Url + '/Reserve/DeleteBenefCover', body, {
+      headers: this.headers,
+    });
+  }
+
+  public UpdateDataAddBenefCover(data: ClaimUpdateDatAddRequestBM): Observable<any> {
+    const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/Reserve/UpdateDataAddBenefCover', body, {
       headers: this.headers,
     });
   }

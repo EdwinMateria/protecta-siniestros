@@ -258,7 +258,7 @@
         <div class="row mt-3">
             <div class="col-sm-3 form-group">
                 <label>Tipo de comprobante </label>
-                <select class="form-control" [(ngModel)]="dataReserva.NTYPERECEIPT">
+                <select class="form-control" [(ngModel)]="dataReserva.NTYPERECEIPT" [disabled]="tab == 2">
                     <option *ngFor="let comprobante of tiposComprobantes" [value]="comprobante.SCODIGO"
                         [disabled]="comprobante.SCODIGO == '0'">{{comprobante.SDESCRIPCION}}</option>
                 </select>
@@ -266,7 +266,7 @@
 
             <div class="col-sm-2 form-group">
                 <label>Nro. Comprobante </label>
-                <input type="text" class="form-control" [(ngModel)]="dataReserva.SVOUCHERNUMBER">
+                <input type="text" class="form-control" [(ngModel)]="dataReserva.SVOUCHERNUMBER" [disabled]="tab == 2">
             </div>
 
             <div class="col-sm-3 form-group">
@@ -295,7 +295,7 @@
             </div>
             <div *ngIf="data == 4" class="col-sm-3 form-group">
                 <label>Red de IPRESS </label>
-                <input type="text" class="form-control" [(ngModel)]="dataReserva.SRED_IPRESS">
+                <input type="text" class="form-control" [(ngModel)]="dataReserva.SRED_IPRESS" maxlength="3">
             </div>
             <div class="col-sm-3 form-group">
                 <label>Ruc: </label>
@@ -331,7 +331,8 @@
 
     <div class="row mt-3">
         <div class="col-sm-12" align="end">
-            <button class="btn btn-success mb-2" (click)="guardarTablaTemporal()">Guardar</button>
+            <button *ngIf="tab == 1" class="btn btn-success mb-2" (click)="guardarTablaTemporal()">Guardar</button>
+            <button *ngIf="tab == 2" class="btn btn-success mb-2" (click)="editarTablaTemporal()">Guardar</button>
         </div>
     </div>
 </div>

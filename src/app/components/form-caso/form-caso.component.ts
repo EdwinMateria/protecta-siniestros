@@ -125,38 +125,48 @@ export class FormCasoComponent implements OnInit {
     let valorInput = this.referencia.nativeElement.value as string;
     if(valorInput != ""){
       if (!this.tipoForm) {
-        this.showBotones = true
         Swal.showLoading();
         this.casoService.GetSearchCase(Number(valorInput)).subscribe(
           res => {
             Swal.close();
-            this.casoBM = res.GenericResponse[0];
-            this.form.patchValue({
-              ...this.casoBM,
-              dInicioVigencia : new Date(this.casoBM.dIniVigencia).toLocaleDateString('en-GB'),
-              dFinDeVigencia : new Date(this.casoBM.dFinVigencia).toLocaleDateString('en-GB'),
-              dFecOcurrencia : new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB'),
-              dFecNacConductor : new Date(this.casoBM.dFecNacConductor).toLocaleDateString('en-GB'),
-              nCaso: this.casoBM.nPolicy,
-              nPolicy: valorInput,
-            });
-            //Provincia
-            this.changeDepartamento(false);
-            this.form.controls['nProvincia'].setValue(this.casoBM.nProvincia);
-            this.changeProvincia(false)
-            this.casoBM.nCaso = Number(valorInput)
-          },
-          err => {
-            Swal.close();
-            Swal.fire('Error',err,'error')
-          }
-        )
-        //Siniestros del Caso
-        Swal.showLoading();
-        this.casoService.GetClaimForCase(Number(valorInput)).subscribe(
-          res => {
-            Swal.close();
-            this.siniestros = res.GenericResponse;
+            if(res.GenericResponse.length == 0){
+              Swal.fire('Información',`No se encontro el caso N° ${valorInput}`, 'warning');
+              this.showBotones = false;
+              this.casoBM = new CasosBM();
+              this.form.reset();
+              this.siniestros = [];
+              return;
+            }else{
+              this.showBotones = true
+              this.casoBM = res.GenericResponse[0];
+              this.form.patchValue({
+                ...this.casoBM,
+                dInicioVigencia : new Date(this.casoBM.dIniVigencia).toLocaleDateString('en-GB'),
+                dFinDeVigencia : new Date(this.casoBM.dFinVigencia).toLocaleDateString('en-GB'),
+                dFecOcurrencia : new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB'),
+                dFecNacConductor : new Date(this.casoBM.dFecNacConductor).toLocaleDateString('en-GB'),
+                nCaso: this.casoBM.nPolicy,
+                nPolicy: valorInput,
+              });
+              //Provincia
+              this.changeDepartamento(false);
+              this.form.controls['nProvincia'].setValue(this.casoBM.nProvincia);
+              this.changeProvincia(false)
+              this.casoBM.nCaso = Number(valorInput)
+
+              //Siniestros del Caso
+              Swal.showLoading();
+              this.casoService.GetClaimForCase(Number(valorInput)).subscribe(
+                res => {
+                  Swal.close();
+                  this.siniestros = res.GenericResponse;
+                },
+                err => {
+                  Swal.close();
+                  Swal.fire('Error',err,'error')
+                }
+              )
+            }
           },
           err => {
             Swal.close();
