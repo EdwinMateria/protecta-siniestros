@@ -179,9 +179,6 @@ export class FormCasoComponent implements OnInit {
 
           let docur = new Date(this.form.controls['dFecOcurrencia'].value)
           let date = new Date(docur.setDate(docur.getDate() + 1)).toLocaleDateString('en-GB');
-          //let date = new Date(this.form.controls['dFecOcurrencia'].value).toLocaleDateString('en-GB');
-          console.log(date);
-          console.log(this.form.controls['dFecOcurrencia'].value);
           
           this.casoService.GetPolicyForCase(Number(valorInput), date).subscribe(
             res => {
@@ -231,7 +228,8 @@ export class FormCasoComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'De acuerdo',
       cancelButtonText: 'No',
-      reverseButtons: true
+      reverseButtons: true,
+      showCloseButton: true
     }).then((result) => {
       
       if(result.isConfirmed){
@@ -372,7 +370,6 @@ export class FormCasoComponent implements OnInit {
       this.casoService.AddCasos(data).subscribe(
         res => {
           Swal.close();
-          console.log(res);
           if(res.numcase != 0){
             Swal.fire({
               title: 'Información',
@@ -381,7 +378,8 @@ export class FormCasoComponent implements OnInit {
               showCancelButton: true,
               confirmButtonText: 'De acuerdo',
               cancelButtonText: 'No',
-              reverseButtons: true
+              reverseButtons: true,
+              showCloseButton: true
             }).then((result) => {
               if (result.isConfirmed) {
                 // this.tipoForm = false;

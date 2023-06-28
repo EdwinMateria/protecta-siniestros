@@ -283,7 +283,20 @@ export class ModalCoberturaComponent implements OnInit {
   }
 
   closeModal() {
-    this.reference.close();
+    Swal.fire({
+      title: 'Información',
+      text: 'Desea salir de la operación',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+      reverseButtons: true,
+      showCloseButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reference.close();
+      }
+    })
   }
 
   getCobertura(){
@@ -623,26 +636,40 @@ export class ModalCoberturaComponent implements OnInit {
 
 
     console.log(this.dataReserva);
-    Swal.showLoading();
-    this.reserveService.InsertDatCoversTmp(this.dataReserva).subscribe(
-      res => {
-        Swal.close();
-        if(res.SRESULT == "OK"){
-          this.reference.close(res);
-          Swal.fire('Información', 'Datos de la cobertura ingresados correctamente.','success')
-        }else{
-          this.dataReserva.LIST_BENEF_COVERS = [];
-          Swal.fire('Información',res.SRESULT,'error');
-          return;
-        }
-      },
-      err => {
-        this.dataReserva.LIST_BENEF_COVERS = [];
-        Swal.close();
-        Swal.fire('Información',err,'error');
+
+
+    Swal.fire({
+      title: 'Información',
+      text: 'Se procederá a grabar la información. ¿Desea continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+      reverseButtons: true,
+      showCloseButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.showLoading();
+        this.reserveService.InsertDatCoversTmp(this.dataReserva).subscribe(
+          res => {
+            Swal.close();
+            if (res.SRESULT == "OK") {
+              this.reference.close(res);
+              Swal.fire('Información', 'Datos de la cobertura ingresados correctamente.', 'success')
+            } else {
+              this.dataReserva.LIST_BENEF_COVERS = [];
+              Swal.fire('Información', res.SRESULT, 'error');
+              return;
+            }
+          },
+          err => {
+            this.dataReserva.LIST_BENEF_COVERS = [];
+            Swal.close();
+            Swal.fire('Información', err, 'error');
+          }
+        )
       }
-    )
-    
+    })
 
   }
 
@@ -734,23 +761,37 @@ export class ModalCoberturaComponent implements OnInit {
     reservaUpdate.NUSERCODE = Number(atob(codUsuario));
 
     console.log(reservaUpdate);
-    Swal.showLoading();
-    this.reserveService.UpdateDataAddBenefCover(reservaUpdate).subscribe(
-      res => {
-        Swal.close();
-        if(res.SRESULT == "OK"){
-          this.reference.close();
-          Swal.fire('Información', 'Datos de la cobertura actualizados correctamente.','success')
-        }else{
-          Swal.fire('Información',res.SRESULT,'error');
-          return;
-        }
-      },
-      err => {
-        Swal.close();
-        Swal.fire('Información',err,'error');
+
+    Swal.fire({
+      title: 'Información',
+      text: 'Se procederá a actualizar la información. ¿Desea continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+      reverseButtons: true,
+      showCloseButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.showLoading();
+        this.reserveService.UpdateDataAddBenefCover(reservaUpdate).subscribe(
+          res => {
+            Swal.close();
+            if (res.SRESULT == "OK") {
+              this.reference.close();
+              Swal.fire('Información', 'Datos de la cobertura actualizados correctamente.', 'success')
+            } else {
+              Swal.fire('Información', res.SRESULT, 'error');
+              return;
+            }
+          },
+          err => {
+            Swal.close();
+            Swal.fire('Información', err, 'error');
+          }
+        )
       }
-    )
+    })
 
   }
 

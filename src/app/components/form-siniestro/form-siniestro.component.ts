@@ -164,7 +164,8 @@ export class FormSiniestroComponent implements OnInit {
               showCancelButton: true,
               confirmButtonText: 'De acuerdo',
               cancelButtonText: 'No',
-              reverseButtons: true
+              reverseButtons: true,
+              showCloseButton: true
             }).then((result) => {
               if (result.isConfirmed) {
                 this.form.reset()
@@ -245,7 +246,6 @@ export class FormSiniestroComponent implements OnInit {
     const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
     modalRef.result.then((benef) => {
-      console.log(benef);
       if(benef != undefined){
         this.form.controls['afectado'].setValue(benef.SNAME);
         this.sCliente = benef.SCODE;
