@@ -136,8 +136,8 @@ export class ModalCoberturaComponent implements OnInit {
         this.dataReserva.SPROCESSORNAME = res.SPROCESSOR_NAME;
         this.dataReserva.SPROCESSORZONE = res.SPROCESSOR_AREA;
         this.model.CCODCIE10 = res.SCODIGODIAGNOSTICO;
-        this.model.CDESCRIPT = res.DESC_CODIGODIAGNOSTICO;
-        this.diagnosticoValue = res.DESC_CODIGODIAGNOSTICO ;
+        this.model.CDESCRIPT = res.CDESCRIPT;
+        this.diagnosticoValue = res.CDESCRIPT ;
         
         this.dataReserva.NTRANSAC = res.NTRANSAC;
         //this.model.CDESCRIPT = res.SDIAGNOSTIC;
