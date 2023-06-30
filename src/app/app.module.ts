@@ -20,7 +20,6 @@ import { ModalNuevoBeneficiarioComponent } from './pages/siniestros/reserva-sini
 import { HttpClientModule } from '@angular/common/http';
 import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
-import { ExcelService } from './core/services/excel/excel.service';
 import { CargaMasivaComponent } from './pages/siniestros/carga-masiva/carga-masiva.component';
 
 @NgModule({
@@ -51,8 +50,7 @@ import { CargaMasivaComponent } from './pages/siniestros/carga-masiva/carga-masi
     NgbPaginationModule
   ],
   providers: [
-    DatePipe,
-    ExcelService
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
