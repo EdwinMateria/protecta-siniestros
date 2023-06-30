@@ -9,7 +9,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CargaMasivaService } from 'src/app/core/services/carga-masiva/carga-masiva.service';
-import { ExcelService } from 'src/app/core/services/excel/excel.service';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
@@ -90,7 +89,6 @@ export class CargaMasivaComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    private ExcelService: ExcelService,
     private CargaMasivaService: CargaMasivaService
   ) { }
 
