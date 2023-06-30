@@ -12,6 +12,7 @@ import { CargaMasivaService } from 'src/app/core/services/carga-masiva/carga-mas
 import { ExcelService } from 'src/app/core/services/excel/excel.service';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 export interface ListApertura {
   LIST?: any;
@@ -51,6 +52,7 @@ export class CargaMasivaComponent implements OnInit {
   liquidacion: boolean = false;
   reporte_prel: boolean = true;
   definitivo: boolean = true;
+  preliminar: boolean = true;
 
   carga: number = 1;
   codigo: number = 1;
@@ -104,6 +106,7 @@ export class CargaMasivaComponent implements OnInit {
 
   onFileChange = (evt: any) => {
     this.archivoNombre = null;
+    this.preliminar = true;
     if (this.apertura == true || this.reserva == true || this.liquidacion == true) {
       const target: DataTransfer = <DataTransfer>(evt.target);
       var name = target.files[0].name;
@@ -126,6 +129,7 @@ export class CargaMasivaComponent implements OnInit {
           (res) => {
             if (res.value) {
               this.archivoNombre = target.files[0].name;
+              this.preliminar = false;
               const reader: FileReader = new FileReader();
               reader.onload = (e: any) => {
                 const bstr: string = e.target.result;
@@ -139,12 +143,14 @@ export class CargaMasivaComponent implements OnInit {
             }
             else if (res.dismiss === Swal.DismissReason.cancel) {
               this.archivoNombre = null;
+              this.preliminar = true;
               return;
             }
           }
         )
       } else {
         this.archivoNombre = target.files[0].name;
+        this.preliminar = false;
         const reader: FileReader = new FileReader();
         reader.onload = (e: any) => {
           const bstr: string = e.target.result;
@@ -158,6 +164,7 @@ export class CargaMasivaComponent implements OnInit {
       }
     } else {
       this.archivoNombre = null;
+      this.preliminar = true;
       Swal.fire('Información', 'Seleccione el tipo de trama.', 'error');
     }
   }
@@ -238,149 +245,155 @@ export class CargaMasivaComponent implements OnInit {
     this.carga = 1;
     this.reporte_prel = true;
     this.definitivo = true;
+    this.preliminar = true;
   }
 
   onDefinitivo = () => {
     Swal.fire('Información', 'Ola q ase.', 'info');
   }
 
-  onReportePreliminar = () => {
+  descargarReportePreliminar = () => {
     this.ReportePreliminar = {};
     this.ReportePreliminar.P_CAUX_SOAT_OPE = this.caux_soat_ope;
-    this.CargaMasivaService.GenerarReportePreliminar(this.ReportePreliminar).subscribe(
+    this.CargaMasivaService.ProcessReportePreliminarSiniestrosSOAT(this.ReportePreliminar).subscribe(
       res => {
-        this.correctos = res.Result.P_TABLE1;
-        this.errores = res.Result.P_TABLE2;
-        this.ExcelService.exportPreliminarSinestrosSOAT(this.correctos, this.errores, 'Reporte_Preliminar_Siniestros_SOAT_' + this.ReportePreliminar.P_CAUX_SOAT_OPE);
-      },
-      err => {
-        Swal.fire('Información', 'Ha ocurrido un error al obtener el reporte preliminar.', 'error')
+        let _data = res;
+        if (_data.response == 0) {
+          if (_data.Data != null) {
+            const file = new File([this.obtenerBlobFromBase64(_data.Data, '')], 'Reporte_Preliminar_Siniestros_SOAT_' + this.ReportePreliminar.P_CAUX_SOAT_OPE + '.xlsx', { type: 'text/xls' });
+            FileSaver.saveAs(file);
+          }
+        }
+        else {
+          Swal.fire({
+            title: 'Información',
+            text: _data.Data,
+            icon: 'info',
+            confirmButtonText: 'Continuar',
+            allowOutsideClick: false
+          })
+        }
       }
     )
   }
 
   onPreliminar = () => {
-    if (this.archivoNombre !== null) {
-      this.isLoading = true;
-      this.ListCabecera = {};
-      this.ListCabecera.P_NREPORTE = this.codigo;
-      if (this.codigo == 1) {
-        this.CargaMasivaService.ListarCabeceraData(this.ListCabecera).subscribe(
-          res => {
-            this.cabeceraData = res.Result.P_TABLE;
-            this.ListApertura = {};
-            this.ListApertura.LIST = [];
-            this.ListApertura.P_CTIPMOV_SOAT = this.trama;
-            this.ListApertura.P_TYPE_LOAD = this.carga;
-            this.cabeceraDataName = [];
-            for (var i = 0; i < this.cabeceraData.length; i++) {
-              this.cabeceraDataName.push(this.cabeceraData[i].SFIELDNAME);
-            }
-            this.primeraColumna = this.dataSet[0];
-            if (this.cabeceraDataName.length != this.primeraColumna.length) {
-              Swal.fire('Información', 'El número de columnas no coincide.', 'warning');
-              this.isLoading = false;
-              return;
-            } else {
-              for (var i = 0; i < this.cabeceraDataName.length; i++) {
-                if (this.cabeceraDataName[i].trim() != this.primeraColumna[i].trim()) {
-                  Swal.fire('Información', 'Los nombres de la cabecera no coinciden.', 'warning');
-                  this.isLoading = false;
-                  return;
-                }
-              }
-              if (this.dataSet.length > 1) {
-                for (var i = 1; i < this.dataSet.length; i++) {
-                  var item: any = {};
-                  item.NUMERO_FILA = i + 1;
-                  item.FECHA_SINIESTRO = this.dataSet[i][0]?.trim();
-                  item.HORA_SINIESTRO = this.dataSet[i][1]?.trim();
-                  item.RAMO = this.dataSet[i][2]?.trim();
-                  item.NRO_SINIESTRO = this.dataSet[i][3]?.trim();
-                  item.NRO_POLIZA = this.dataSet[i][4]?.trim();
-                  item.PLACA = this.dataSet[i][5]?.trim();
-                  item.NRO_CASO = this.dataSet[i][6]?.trim();
-                  item.NRO_AUDITORIA = this.dataSet[i][7]?.trim();
-                  item.NOMBRES = this.dataSet[i][8]?.trim();
-                  item.APELLIDO_PATERNO = this.dataSet[i][9]?.trim();
-                  item.APELLIDO_MATERNO = this.dataSet[i][10]?.trim();
-
-                  item.TIPO_DOCUMENTO = this.dataSet[i][11]?.trim();
-                  item.NRO_DOCUMENTO = this.dataSet[i][12]?.trim();
-                  // NUEVOS CAMPOS
-                  item.IPRESS_AQ_EMITECG = this.dataSet[i][13]?.trim();
-                  item.IPRESS_RUC = this.dataSet[i][14]?.trim();
-                  item.CAUSA_SINIESTRO = this.dataSet[i][15]?.trim();
-                  // item.CENTRO_MEDICO = this.dataSet[i][13]?.trim();
-                  // item.TIPO_SINIESTRO = this.dataSet[i][14]?.trim();
-                  item.FECHA_DENUNCIO = this.dataSet[i][16]?.trim();
-                  item.HORA_RECEPCION = this.dataSet[i][17]?.trim();
-                  item.OCUPANTE = this.dataSet[i][18]?.trim();
-                  item.FALLECIDO = this.dataSet[i][19]?.trim();
-                  item.FECHA_FALLECIDO = this.dataSet[i][20]?.trim();
-
-                  item.UBIGEO = this.dataSet[i][21]?.trim();
-                  item.ESTADO_SINIESTRO = this.dataSet[i][22]?.trim();
-                  item.CODIGO_COMISARIA = this.dataSet[i][23]?.trim();
-                  item.PATERNO_CONDUCTOR = this.dataSet[i][24]?.trim();
-                  item.MATERNO_CONDUCTOR = this.dataSet[i][25]?.trim();
-                  item.NOMBRES_CONDUCTOR = this.dataSet[i][26]?.trim();
-                  item.MOTIVO_RECHAZO = this.dataSet[i][27]?.trim();
-                  item.TIPO_ATENCION = this.dataSet[i][28]?.trim();
-                  item.FECHA_APERTURA = this.dataSet[i][29]?.trim();
-                  item.LUGAR_OCURRENCIA = this.dataSet[i][30]?.trim();
-                  item.FECHA_NACIMIENTO = this.dataSet[i][31]?.trim();
-                  this.ListApertura.LIST.push(item);
-                }
-                this.CargaMasivaService.RecorrerListaApertura(this.ListApertura).subscribe(
-                  res => {
-                    Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
-                    this.currentPage = 1;
-                    this.listResults = res.Result.P_TABLE;
-                    this.totalItems = this.listResults.length;
-                    this.listToShow = this.listResults.slice(
-                      (this.currentPage - 1) * this.itemsPerPage,
-                      this.currentPage * this.itemsPerPage
-                    );
-                    this.caux_soat_ope = this.listResults[0].CAUX_SOAT_OPE;
-                    this.isLoading = false;
-                    this.reporte_prel = false;
-                    for (var i = 0; i < this.listResults.length; i++) {
-                      if (!this.listResults[i].SDET_ERROR) {
-                        this.booleanDisabled = false;
-                      } else {
-                        this.booleanDisabled = true;
-                      }
-                    }
-                  },
-                  err => {
-                    Swal.fire('Información', 'Ha ocurrido un error al procesar los datos.', 'error');
-                    this.isLoading = false;
-                  }
-                )
-              } else {
-                Swal.fire('Información', 'No existen datos.', 'warning');
-                this.isLoading = false;
-              }
-            }
-          },
-          err => {
-            this.isLoading = false;
-            Swal.fire('Información', 'Ha ocurrido un error al obtener la cabecera de los datos.', 'error');
+    this.isLoading = true;
+    this.ListCabecera = {};
+    this.ListCabecera.P_NREPORTE = this.codigo;
+    if (this.codigo == 1) {
+      this.CargaMasivaService.ListarCabeceraData(this.ListCabecera).subscribe(
+        res => {
+          this.cabeceraData = res.Result.P_TABLE;
+          this.ListApertura = {};
+          this.ListApertura.LIST = [];
+          this.ListApertura.P_CTIPMOV_SOAT = this.trama;
+          this.ListApertura.P_TYPE_LOAD = this.carga;
+          this.cabeceraDataName = [];
+          for (var i = 0; i < this.cabeceraData.length; i++) {
+            this.cabeceraDataName.push(this.cabeceraData[i].SFIELDNAME);
           }
-        )
-      } else if (this.codigo == 2) {
-        Swal.fire('Información', 'Martha está desarrollando.', 'warning');
-        this.isLoading = false;
-      } else if (this.codigo == 3) {
-        Swal.fire('Información', 'Martha está desarrollando.', 'warning');
-        this.isLoading = false;
-      } else {
-        Swal.fire('Información', 'Seleccione el tipo de trama.', 'warning');
-        this.isLoading = false;
-      }
+          this.primeraColumna = this.dataSet[0];
+          if (this.cabeceraDataName.length != this.primeraColumna.length) {
+            Swal.fire('Información', 'El número de columnas no coincide.', 'warning');
+            this.isLoading = false;
+            return;
+          } else {
+            for (var i = 0; i < this.cabeceraDataName.length; i++) {
+              if (this.cabeceraDataName[i].trim() != this.primeraColumna[i].trim()) {
+                Swal.fire('Información', 'Los nombres de la cabecera no coinciden.', 'warning');
+                this.isLoading = false;
+                return;
+              }
+            }
+            if (this.dataSet.length > 1) {
+              for (var i = 1; i < this.dataSet.length; i++) {
+                var item: any = {};
+                item.NUMERO_FILA = i + 1;
+                item.FECHA_SINIESTRO = this.dataSet[i][0]?.trim();
+                item.HORA_SINIESTRO = this.dataSet[i][1]?.trim();
+                item.RAMO = this.dataSet[i][2]?.trim();
+                item.NRO_SINIESTRO = this.dataSet[i][3]?.trim();
+                item.NRO_POLIZA = this.dataSet[i][4]?.trim();
+                item.PLACA = this.dataSet[i][5]?.trim();
+                item.NRO_CASO = this.dataSet[i][6]?.trim();
+                item.NRO_AUDITORIA = this.dataSet[i][7]?.trim();
+                item.NOMBRES = this.dataSet[i][8]?.trim();
+                item.APELLIDO_PATERNO = this.dataSet[i][9]?.trim();
+                item.APELLIDO_MATERNO = this.dataSet[i][10]?.trim();
+
+                item.TIPO_DOCUMENTO = this.dataSet[i][11]?.trim();
+                item.NRO_DOCUMENTO = this.dataSet[i][12]?.trim();
+                // NUEVOS CAMPOS
+                item.IPRESS_AQ_EMITECG = this.dataSet[i][13]?.trim();
+                item.IPRESS_RUC = this.dataSet[i][14]?.trim();
+                item.CAUSA_SINIESTRO = this.dataSet[i][15]?.trim();
+                // item.CENTRO_MEDICO = this.dataSet[i][13]?.trim();
+                // item.TIPO_SINIESTRO = this.dataSet[i][14]?.trim();
+                item.FECHA_DENUNCIO = this.dataSet[i][16]?.trim();
+                item.HORA_RECEPCION = this.dataSet[i][17]?.trim();
+                item.OCUPANTE = this.dataSet[i][18]?.trim();
+                item.FALLECIDO = this.dataSet[i][19]?.trim();
+                item.FECHA_FALLECIDO = this.dataSet[i][20]?.trim();
+
+                item.UBIGEO = this.dataSet[i][21]?.trim();
+                item.ESTADO_SINIESTRO = this.dataSet[i][22]?.trim();
+                item.CODIGO_COMISARIA = this.dataSet[i][23]?.trim();
+                item.PATERNO_CONDUCTOR = this.dataSet[i][24]?.trim();
+                item.MATERNO_CONDUCTOR = this.dataSet[i][25]?.trim();
+                item.NOMBRES_CONDUCTOR = this.dataSet[i][26]?.trim();
+                item.MOTIVO_RECHAZO = this.dataSet[i][27]?.trim();
+                item.TIPO_ATENCION = this.dataSet[i][28]?.trim();
+                item.FECHA_APERTURA = this.dataSet[i][29]?.trim();
+                item.LUGAR_OCURRENCIA = this.dataSet[i][30]?.trim();
+                item.FECHA_NACIMIENTO = this.dataSet[i][31]?.trim();
+                this.ListApertura.LIST.push(item);
+              }
+              this.CargaMasivaService.RecorrerListaApertura(this.ListApertura).subscribe(
+                res => {
+                  Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
+                  this.currentPage = 1;
+                  this.listResults = res.Result.P_TABLE;
+                  this.totalItems = this.listResults.length;
+                  this.listToShow = this.listResults.slice(
+                    (this.currentPage - 1) * this.itemsPerPage,
+                    this.currentPage * this.itemsPerPage
+                  );
+                  this.caux_soat_ope = this.listResults[0].CAUX_SOAT_OPE;
+                  this.isLoading = false;
+                  this.reporte_prel = false;
+                  for (var i = 0; i < this.listResults.length; i++) {
+                    if (!this.listResults[i].SDET_ERROR) {
+                      this.booleanDisabled = false;
+                    } else {
+                      this.booleanDisabled = true;
+                    }
+                  }
+                },
+                err => {
+                  Swal.fire('Información', 'Ha ocurrido un error al procesar los datos.', 'error');
+                  this.isLoading = false;
+                }
+              )
+            } else {
+              Swal.fire('Información', 'No existen datos.', 'warning');
+              this.isLoading = false;
+            }
+          }
+        },
+        err => {
+          this.isLoading = false;
+          Swal.fire('Información', 'Ha ocurrido un error al obtener la cabecera de los datos.', 'error');
+        }
+      )
+    } else if (this.codigo == 2) {
+      Swal.fire('Información', 'Martha está desarrollando.', 'warning');
+      this.isLoading = false;
+    } else if (this.codigo == 3) {
+      Swal.fire('Información', 'Martha está desarrollando.', 'warning');
+      this.isLoading = false;
     } else {
-      Swal.fire('Información', 'Seleccione un archivo.', 'warning');
+      Swal.fire('Información', 'Seleccione el tipo de trama.', 'warning');
       this.isLoading = false;
     }
   }
@@ -419,6 +432,22 @@ export class CargaMasivaComponent implements OnInit {
       this.trama = null;
       this.codigo = null;
     }
+  }
+
+  obtenerBlobFromBase64 = (b64Data: string, contentType: string) => {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+    const blob = new Blob(byteArrays, { type: contentType });
+    return blob;
   }
 
 }

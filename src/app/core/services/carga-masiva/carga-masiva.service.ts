@@ -12,9 +12,9 @@ export class CargaMasivaService {
 
     constructor(private http: HttpClient) { }
 
-    public RecorrerListaApertura(idata: any): Observable<any> {
+    public ListarCabeceraData(idata: any): Observable<any> {
         const data = JSON.stringify(idata);
-        return this.http.post<any[]>(this.Url + '/Siniestros/RecorrerListaApertura', data, { headers: this.headers });
+        return this.http.post<any[]>(this.Url + '/Siniestros/ListarCabeceraData', data, { headers: this.headers });
     };
 
     public ListarErroresApertura(idata: any): Observable<any> {
@@ -22,13 +22,13 @@ export class CargaMasivaService {
         return this.http.post<any[]>(this.Url + '/Siniestros/ListarErroresApertura', data, { headers: this.headers });
     };
 
-    public GenerarReportePreliminar(idata: any): Observable<any> {
+    public RecorrerListaApertura(idata: any): Observable<any> {
         const data = JSON.stringify(idata);
-        return this.http.post<any[]>(this.Url + '/Siniestros/GenerarReportePreliminar', data, { headers: this.headers });
+        return this.http.post<any[]>(this.Url + '/Siniestros/RecorrerListaApertura', data, { headers: this.headers });
     };
 
-    public ListarCabeceraData(idata: any): Observable<any> {
+    public ProcessReportePreliminarSiniestrosSOAT(idata: any): Observable<any> {
         const data = JSON.stringify(idata);
-        return this.http.post<any[]>(this.Url + '/Siniestros/ListarCabeceraData', data, { headers: this.headers });
+        return this.http.post<any[]>(this.Url + '/Siniestros/ProcessReportePreliminarSiniestrosSOAT', data, { headers: this.headers });
     };
 }

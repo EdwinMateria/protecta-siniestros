@@ -78,7 +78,7 @@
 
                 <div class="row mr-4 mt-4 mb-4">
                     <div class="col-md-6">
-                        <button type="button" (click)="onReportePreliminar()" [disabled]="reporte_prel" [ngClass]="reporte_prel ? 'disabled' : 'full-colorN'">
+                        <button type="button" (click)="descargarReportePreliminar()" [disabled]="reporte_prel" [ngClass]="reporte_prel ? 'disabled' : 'full-colorN'">
                             <span>Reporte preliminar</span>
                             <img class="icon-btn" src="assets/img/download.png" />
                         </button>
@@ -92,7 +92,7 @@
 
                 <div class="row mr-4 mt-4 mb-4">
                     <div class="col-md-6">
-                        <button type="button" (click)="onPreliminar()" class="full-color">
+                        <button type="button" (click)="onPreliminar()" [disabled]="preliminar" [ngClass]="preliminar ? 'disabled' : 'full-color'">
                             <span>Preliminar</span>
                         </button>
                     </div>
