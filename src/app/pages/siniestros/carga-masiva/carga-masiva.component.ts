@@ -203,9 +203,9 @@ export class CargaMasivaComponent implements OnInit {
 
   checkAll = () => {
     for (var i = 0; i < this.listResults.length; i++) {
-      //if (!this.listResults[i].SDET_ERROR) {
+      if (!this.listResults[i].SDET_ERROR) {
         this.listResults[i].IS_SELECTED = this.booleanSelect;
-      //}
+      }
     }
     this.getCheckedList();
   }
@@ -247,7 +247,7 @@ export class CargaMasivaComponent implements OnInit {
   }
 
   onDefinitivo = () => {
-    Swal.fire('Información', 'Ola q ase.', 'info');
+    Swal.fire('Información', 'Martha está desarrollando.', 'info');
   }
 
   descargarReportePreliminar = () => {
@@ -310,41 +310,41 @@ export class CargaMasivaComponent implements OnInit {
                 item.NUMERO_FILA = i + 1;
                 item.FECHA_SINIESTRO = this.dataSet[i][0]?.trim();
                 item.HORA_SINIESTRO = this.dataSet[i][1]?.trim();
-                item.RAMO = this.dataSet[i][2]?.trim();
-                item.NRO_SINIESTRO = this.dataSet[i][3]?.trim();
-                item.NRO_POLIZA = this.dataSet[i][4]?.trim();
-                item.PLACA = this.dataSet[i][5]?.trim();
-                item.NRO_CASO = this.dataSet[i][6]?.trim();
-                item.NRO_AUDITORIA = this.dataSet[i][7]?.trim();
-                item.NOMBRES = this.dataSet[i][8]?.trim();
-                item.APELLIDO_PATERNO = this.dataSet[i][9]?.trim();
-                item.APELLIDO_MATERNO = this.dataSet[i][10]?.trim();
+                //item.RAMO = this.dataSet[i][2]?.trim();
+                item.NRO_SINIESTRO = this.dataSet[i][2]?.trim();
+                item.NRO_POLIZA = this.dataSet[i][3]?.trim();
+                item.PLACA = this.dataSet[i][4]?.trim();
+                item.NRO_CASO = this.dataSet[i][5]?.trim();
+                item.NRO_AUDITORIA = this.dataSet[i][6]?.trim();
+                item.NOMBRES = this.dataSet[i][7]?.trim();
+                item.APELLIDO_PATERNO = this.dataSet[i][8]?.trim();
+                item.APELLIDO_MATERNO = this.dataSet[i][9]?.trim();
 
-                item.TIPO_DOCUMENTO = this.dataSet[i][11]?.trim();
-                item.NRO_DOCUMENTO = this.dataSet[i][12]?.trim();
+                item.TIPO_DOCUMENTO = this.dataSet[i][10]?.trim();
+                item.NRO_DOCUMENTO = this.dataSet[i][11]?.trim();
                 // NUEVOS CAMPOS
-                item.IPRESS_AQ_EMITECG = this.dataSet[i][13]?.trim();
-                item.IPRESS_RUC = this.dataSet[i][14]?.trim();
-                item.CAUSA_SINIESTRO = this.dataSet[i][15]?.trim();
+                item.IPRESS_AQ_EMITECG = this.dataSet[i][12]?.trim();
+                item.IPRESS_RUC = this.dataSet[i][13]?.trim();
+                item.CAUSA_SINIESTRO = this.dataSet[i][14]?.trim();
                 // item.CENTRO_MEDICO = this.dataSet[i][13]?.trim();
                 // item.TIPO_SINIESTRO = this.dataSet[i][14]?.trim();
-                item.FECHA_DENUNCIO = this.dataSet[i][16]?.trim();
-                item.HORA_RECEPCION = this.dataSet[i][17]?.trim();
-                item.OCUPANTE = this.dataSet[i][18]?.trim();
-                item.FALLECIDO = this.dataSet[i][19]?.trim();
-                item.FECHA_FALLECIDO = this.dataSet[i][20]?.trim();
+                item.FECHA_DENUNCIO = this.dataSet[i][15]?.trim();
+                item.HORA_RECEPCION = this.dataSet[i][16]?.trim();
+                item.OCUPANTE = this.dataSet[i][17]?.trim();
+                item.FALLECIDO = this.dataSet[i][18]?.trim();
+                item.FECHA_FALLECIDO = this.dataSet[i][19]?.trim();
 
-                item.UBIGEO = this.dataSet[i][21]?.trim();
-                item.ESTADO_SINIESTRO = this.dataSet[i][22]?.trim();
-                item.CODIGO_COMISARIA = this.dataSet[i][23]?.trim();
-                item.PATERNO_CONDUCTOR = this.dataSet[i][24]?.trim();
-                item.MATERNO_CONDUCTOR = this.dataSet[i][25]?.trim();
-                item.NOMBRES_CONDUCTOR = this.dataSet[i][26]?.trim();
-                item.MOTIVO_RECHAZO = this.dataSet[i][27]?.trim();
-                item.TIPO_ATENCION = this.dataSet[i][28]?.trim();
-                item.FECHA_APERTURA = this.dataSet[i][29]?.trim();
-                item.LUGAR_OCURRENCIA = this.dataSet[i][30]?.trim();
-                item.FECHA_NACIMIENTO = this.dataSet[i][31]?.trim();
+                item.UBIGEO = this.dataSet[i][20]?.trim();
+                item.ESTADO_SINIESTRO = this.dataSet[i][21]?.trim();
+                item.CODIGO_COMISARIA = this.dataSet[i][22]?.trim();
+                item.PATERNO_CONDUCTOR = this.dataSet[i][23]?.trim();
+                item.MATERNO_CONDUCTOR = this.dataSet[i][24]?.trim();
+                item.NOMBRES_CONDUCTOR = this.dataSet[i][25]?.trim();
+                item.MOTIVO_RECHAZO = this.dataSet[i][26]?.trim();
+                item.TIPO_ATENCION = this.dataSet[i][27]?.trim();
+                item.FECHA_APERTURA = this.dataSet[i][28]?.trim();
+                item.LUGAR_OCURRENCIA = this.dataSet[i][29]?.trim();
+                item.FECHA_NACIMIENTO = this.dataSet[i][30]?.trim();
                 this.ListApertura.LIST.push(item);
               }
               this.CargaMasivaService.RecorrerListaApertura(this.ListApertura).subscribe(
@@ -361,10 +361,11 @@ export class CargaMasivaComponent implements OnInit {
                   this.isLoading = false;
                   this.reporte_prel = false;
                   for (var i = 0; i < this.listResults.length; i++) {
-                    if (!this.listResults[i].SDET_ERROR) {
-                      this.booleanDisabled = false;
-                    } else {
+                    if (this.listResults[i].SDET_ERROR.length > 0) {
                       this.booleanDisabled = true;
+                    } else {
+                      this.booleanDisabled = false;
+                      return;
                     }
                   }
                 },
@@ -385,10 +386,10 @@ export class CargaMasivaComponent implements OnInit {
         }
       )
     } else if (this.codigo == 2) {
-      Swal.fire('Información', 'Martha está desarrollando.', 'warning');
+      Swal.fire('Información', 'Martha está desarrollando.', 'info');
       this.isLoading = false;
     } else if (this.codigo == 3) {
-      Swal.fire('Información', 'Martha está desarrollando.', 'warning');
+      Swal.fire('Información', 'Martha está desarrollando.', 'info');
       this.isLoading = false;
     } else {
       Swal.fire('Información', 'Seleccione el tipo de trama.', 'warning');
