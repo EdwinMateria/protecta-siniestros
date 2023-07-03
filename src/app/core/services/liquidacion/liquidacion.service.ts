@@ -5,7 +5,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AppConfig } from '../app.config';
+import { AppConfig } from '../../../app.config';
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
 
@@ -16,7 +16,7 @@ import { map } from 'rxjs/operators';
 export class LiquidacionService {
 
     private headers = new HttpHeaders({ "Content-Type": "application/json" });
-    private Url = AppConfig.URL_API_SINIESTROS;;
+    private Url = AppConfig.URL_API_SOAT;
 
     constructor(private http: HttpClient) { }
 
@@ -83,15 +83,31 @@ export class LiquidacionService {
     }
 
     //Retorna los datos de los gastos de las coberturas
-    public ObtenerDatosGastosSepMed(idata: any): Observable<any> {
+    public  ObtenerDatosGastosSepMed(idata: any): Observable<any> {
         const data = JSON.stringify(idata);
-        return this.http.post(this.Url + '/LiquidacionManager/ObtenerDatosGastosSepMed', data, { headers: this.headers });
+        return  this.http.post(this.Url + '/LiquidacionManager/ObtenerDatosGastosSepMed', data, { headers: this.headers });
     }
 
     //Retorna la lista con los beneficiarios por cobertura
-    public ObtenerBeneficiariosMuerte(idata: any): Observable<any> {
+    public ObtenerBeneficiarios(idata: any): Observable<any> {
         const data = JSON.stringify(idata);
-        return this.http.post(this.Url + '/LiquidacionManager/ObtenerBeneficiariosMuerte', data, { headers: this.headers });
+        return this.http.post(this.Url + '/LiquidacionManager/ObtenerBeneficiarios', data, { headers: this.headers });
+    }
+
+     //Retorna la lista con los beneficiarios por cobertura
+     public ObtenerBeneficiariosMuerte(idata: any): Observable<any> {
+      const data = JSON.stringify(idata);
+      return this.http.post(this.Url + '/LiquidacionManager/ObtenerBeneficiariosMuerte', data, { headers: this.headers });
+    }
+
+    public ObtenerListarFacturas(idata: any): Observable<any> {
+        const data = JSON.stringify(idata);
+        return this.http.post(this.Url + '/LiquidacionManager/ObtenerListarFacturas', data, { headers: this.headers });
+    }
+    //public Validaciones_Coberturas(idata: any): Observable<any> {
+    Validaciones_Coberturas(idata: any) {
+        const data = JSON.stringify(idata);
+        return this.http.post(this.Url + '/LiquidacionManager/Validaciones_Coberturas', data, { headers: this.headers }).toPromise();
     }
 
     //Procesa el pago de la liquidacion

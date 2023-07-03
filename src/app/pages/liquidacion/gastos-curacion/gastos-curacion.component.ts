@@ -3,8 +3,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { ModalGastosCoberturaComponent } from './modal-gastos-cobertura/modal-gastos-cobertura.component';
 import { DatosCasoSiniestro } from '../models/Liquidacion.model';
-import { LiquidacionService } from 'src/app/services/LiquidacionService';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { LiquidacionService } from 'src/app/core/services/liquidacion/liquidacion.service';
 //import * as internal from 'stream';
 
 export class Movimiento{
@@ -12,6 +12,7 @@ export class Movimiento{
   NCOVER : number;
   DESC_COBERTURA : string;
   PENDIENTES : number;
+  PAGOS_PEND_BENEF : number;
   DATO_ADICIONAL : string;
   SELECCION : boolean;
   ID: number;
@@ -31,16 +32,7 @@ export class Detalle{
   SCLIENAME:string;
   UIT: string;
   NLOC_RESERV: number;
-  NCERTIF : number;
-  SCERTYPE : number;
-  NBRANCH : number;
-  NPRODUCT : number;
-  SBRANCHT : string;
-  NCLAIM : number;
-  NCASE_NUM : number;
-  NDEMAN_TYPE : number;
-  NOPT_CLAITYP : number;
-  SKEY : string;
+
 }
 
 export class PendientePago{
@@ -133,18 +125,30 @@ export class GastosCuracionComponent implements OnInit {
             this.mostrarTable = false;
             return;
           }else{
+            this.detalle = new Detalle();
+            this.detalle.NCODERROR = this.dataSourceLiquidacion.NCODERROR;
+            this.detalle.SMESSAGEERROR = this.dataSourceLiquidacion.SMESSAGEERROR;
+            this.detalle.SSTACLAIM = this.dataSourceLiquidacion.SSTACLAIM;
+            this.detalle.ESTADO_SINIESTRO = this.dataSourceLiquidacion.ESTADO_SINIESTRO;
+            this.detalle.NPOLICY = this.dataSourceLiquidacion.NPOLICY;
+            this.detalle.DOCCURDAT = this.dataSourceLiquidacion.DOCCURDAT;
+            this.detalle.HORAOCURRENCIA = this.dataSourceLiquidacion.HORAOCURRENCIA;
+            this.detalle.SCLIENAME = this.dataSourceLiquidacion.SCLIENAME;
+            this.detalle.UIT = this.dataSourceLiquidacion.UIT;
+            
             if (this.dataSourceLiquidacion.SSTACLAIM == "1" || this.dataSourceLiquidacion.SSTACLAIM == "5" || this.dataSourceLiquidacion.SSTACLAIM == "7"){ 
-               Swal.fire('No se puede pagar este Siniestro. Estado del siniestro: ' + this.dataSourceLiquidacion.ESTADO_SINIESTRO);
+               Swal.fire('No hay reserva pendiente por liquidar. Estado del siniestro: ' + this.dataSourceLiquidacion.ESTADO_SINIESTRO);
                this.mostrarTable = false;
-               this.detalle = new Detalle();
+               //this.detalle = new Detalle();
                return;
              }else{
                 if (this.dataSourceLiquidacion.NLOC_RESERV <= 0){ 
                   Swal.fire('Información','El siniestro no tiene reserva','error');
                   this.mostrarTable = false;
-                  this.detalle = new Detalle();
+                  //this.detalle = new Detalle();
                   return;
                 }else{
+                  /*
                   this.detalle.NCODERROR = this.dataSourceLiquidacion.NCODERROR;
                   this.detalle.SMESSAGEERROR = this.dataSourceLiquidacion.SMESSAGEERROR;
                   this.detalle.SSTACLAIM = this.dataSourceLiquidacion.SSTACLAIM;
@@ -154,7 +158,8 @@ export class GastosCuracionComponent implements OnInit {
                   this.detalle.HORAOCURRENCIA = this.dataSourceLiquidacion.HORAOCURRENCIA;
                   this.detalle.SCLIENAME = this.dataSourceLiquidacion.SCLIENAME;
                   this.detalle.UIT = this.dataSourceLiquidacion.UIT;
-    
+                  */
+
                   //buscamos los movimientos
                   // this.pendientePagoInput.NCLAIM = "34203"
                   this.pendientePagoInput.NCLAIM = this.siniestro;
@@ -162,7 +167,9 @@ export class GastosCuracionComponent implements OnInit {
                   this.buscarCoberturasPendientePago(this.pendientePagoInput);  //datosCasoSiniestro.nclaim
                   //this.mostrarTable = true;
                 }
-              }            
+              } 
+              
+              
           }  
           //dialogRefLoad.close();
         },
@@ -196,19 +203,20 @@ export class GastosCuracionComponent implements OnInit {
   }
 
   seleccionChechbox(movimiento: Movimiento){
+    this.movimientosPago = [];
     let movTemp : Movimiento[]=[];
 
     if(movimiento.SELECCION == true){
 
       this.movimientos.forEach(x => {
-        if(x.NCOVER == movimiento.NCOVER){
+        if(x.NCOVER == movimiento.NCOVER && x.NROBENEF == movimiento.NROBENEF){
           x.SELECCION = true;
           x.NCASENUM = this.caso;
           this.movimientosPago.push(x);
           console.log(this.movimientosPago);
         }else{
           x.SELECCION = false
-          this.movimientosPago = this.movimientosPago.filter(m => m.NCOVER != x.NCOVER);
+          //this.movimientosPago = this.movimientosPago.filter(m => m.NCOVER != x.NCOVER);
           console.log(this.movimientosPago);
         }
       })
@@ -234,8 +242,11 @@ export class GastosCuracionComponent implements OnInit {
         const modalRef = this.modalService.open(ModalGastosCoberturaComponent,  { windowClass : "my-class"});
         modalRef.componentInstance.reference = modalRef;
         modalRef.componentInstance.data = this.movimientosPago;
-        modalRef.componentInstance.dataSourceLiquidacion = this.dataSourceLiquidacion
-        modalRef.result.then((Interval) => {
+        modalRef.result.then((res) => {
+
+          if(res== true ){ 
+            this.buscadorMovimientos()
+          }
       });
       }
     }

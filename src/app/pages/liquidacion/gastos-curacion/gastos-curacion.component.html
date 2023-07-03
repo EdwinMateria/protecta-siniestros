@@ -58,7 +58,7 @@
         </div>
     </div>
     
-    <table  class="table table-striped w-100 mt-2">
+    <table  class="table w-100 mt-2"><!--table-striped-->
         <thead>
             <tr>
               <th scope="col" ></th>
@@ -66,12 +66,13 @@
               <th scope="col" style="text-align: center;">Nro. Cobertura</th>
               <th scope="col" style="text-align: center;">Cobertura</th>
               <th scope="col" style="text-align: center;">Importe</th>
+              <!--<th scope="col" style="text-align: center;">Importe Cobertura</th>-->
               <th scope="col" style="text-align: center;">Cant. Beneficiarios</th>
               <th scope="col" style="text-align: center;">Dato Adicional</th>
             </tr>
           </thead>
           <tbody *ngIf="mostrarTable">
-            <tr *ngFor="let movimiento of movimientos; let i = index">
+            <tr *ngFor="let movimiento of movimientos; let i = index"  [ngClass]="{'color_fila': movimientos[i].NROBENEF == 0 }">
                 <td style="text-align: center;">
                     <div class="form-check">
                         <input [(ngModel)]="movimiento.SELECCION" class="form-check-input position-static" type="checkbox" (change)="seleccionChechbox(movimiento)" >
@@ -82,7 +83,8 @@
                 <td style="text-align: center;">{{movimiento.NCLAIM}}</td>
                 <td style="text-align: center;">{{movimiento.NCOVER}}</td>
                 <td style="text-align: center;">{{movimiento.DESC_COBERTURA}}</td>
-                <td style="text-align: right;">{{movimiento.PENDIENTES | number:'1.2-2'}}</td>
+                <td style="text-align: right;">{{movimiento.PAGOS_PEND_BENEF | number:'1.2-2'}}</td>
+                <!--<td style="text-align: right;">{{movimiento.PENDIENTES | number:'1.2-2'}}</td>-->
                 <td style="text-align: center;">{{movimiento.NROBENEF}}</td>
                 <td style="text-align: right;">{{movimiento.DATO_ADICIONAL}}</td>
             </tr>

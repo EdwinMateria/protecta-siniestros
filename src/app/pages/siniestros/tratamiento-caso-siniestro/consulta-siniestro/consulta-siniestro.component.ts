@@ -3,6 +3,7 @@ import { CausasVM, RechazoVM } from 'src/app/core/models/caso';
 import { SiniestroBM } from 'src/app/core/models/siniestroBM';
 import { CasosService } from 'src/app/core/services/casos/casos.service';
 import Swal from 'sweetalert2';
+import { SwalCarga } from "src/app/core/swal-loading";
 
 export class SiniestroSelect{
   codigo    : string;
@@ -54,7 +55,7 @@ export class ConsultaSiniestroComponent implements OnInit {
   }
 
   getSiniestro(){
-    Swal.showLoading()
+    SwalCarga()
     this.casoService.GetSearchClaim(this.data).subscribe(
       res => {
         Swal.close();

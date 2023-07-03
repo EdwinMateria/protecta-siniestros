@@ -23,6 +23,7 @@ import { ClaimValCoverRequest } from 'src/app/core/models/claimValCoverRequest';
 import { ClaimDeleteBenefRequest } from 'src/app/core/models/claimDeleteBenefReques';
 import { ClaimUpdateDatAddRequestBM } from 'src/app/core/models/claimUpdateDatAddRequest';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
+import { SwalCarga } from "src/app/core/swal-loading";
 
 @Component({
   selector: 'app-modal-cobertura',
@@ -106,7 +107,7 @@ export class ModalCoberturaComponent implements OnInit {
     request.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
     request.NCLAIM =  Number(this.reservaCaso.NCLAIM);
     request.NCOVER = this.data;
-    Swal.showLoading();
+    SwalCarga();
     this.reserveService.GetDataAddBenefCover(request).subscribe(
       res => {
         Swal.close();
@@ -306,7 +307,7 @@ export class ModalCoberturaComponent implements OnInit {
     let data = new ClaimsCoversReserveRequest();
     data.SKEY = this.reservaCaso.SKEY;
     data.NCOVER = this.data;
-    Swal.showLoading();
+    SwalCarga();
     this.reserveService.GetDatCoversTmp(data).subscribe(
       res => {
         if(res.SKEY != null){
@@ -415,7 +416,7 @@ export class ModalCoberturaComponent implements OnInit {
     modalRef.componentInstance.beneficiarios = this.beneficiarios;
     modalRef.result.then((benef) => {
       if(benef != undefined && benef.SCODE){
-        Swal.showLoading();
+        SwalCarga();
         let data = new ClaimBeneficiarioRequest();
         data.SCODCLI = benef.SCODE.trim();
         this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
@@ -462,7 +463,7 @@ export class ModalCoberturaComponent implements OnInit {
             request.NCLAIM = this.reservaCaso.NCLAIM;
             request.NCOVER = this.data;
             request.SCLIENT = sclient;
-            Swal.showLoading();
+            SwalCarga();
             this.reserveService.DeleteBenefCover(request).subscribe(
               res => {
                 Swal.close()
@@ -656,7 +657,7 @@ export class ModalCoberturaComponent implements OnInit {
       showCloseButton: true
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.showLoading();
+        SwalCarga();
         this.reserveService.InsertDatCoversTmp(this.dataReserva).subscribe(
           res => {
             Swal.close();
@@ -780,7 +781,7 @@ export class ModalCoberturaComponent implements OnInit {
       showCloseButton: true
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.showLoading();
+        SwalCarga();
         this.reserveService.UpdateDataAddBenefCover(reservaUpdate).subscribe(
           res => {
             Swal.close();

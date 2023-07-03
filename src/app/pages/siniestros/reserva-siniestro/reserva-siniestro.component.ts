@@ -12,6 +12,7 @@ import { ClaimValRegisterRequestBM } from 'src/app/core/models/claimValRegisterR
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 import { ClaimComboResponse } from 'src/app/core/models/claimComboResponse';
 import { ClaimValCoverRequest } from 'src/app/core/models/claimValCoverRequest';
+import { SwalCarga } from "src/app/core/swal-loading";
 
 @Component({
   selector: 'app-reserva-siniestro',
@@ -78,14 +79,7 @@ export class ReservaSiniestroComponent implements OnInit {
       this.siniestros.push({ CODIGO: 0, DESCRIPCION: 'SELECCIONE', ESTADO: '0' })
       return;
     } else {
-      Swal.fire({
-        allowEscapeKey: false,
-        allowOutsideClick: false,
-        onOpen: () => {
-          Swal.showLoading();
-        }
-      });
-
+      SwalCarga();
       this.reserveService.GetClaim(this.claimRequest).subscribe(
         res => {
           Swal.close();
@@ -111,13 +105,7 @@ export class ReservaSiniestroComponent implements OnInit {
 
   buscadorGlobal() {
     if (this.siniestro != 0) {
-      Swal.fire({
-        allowEscapeKey: false,
-        allowOutsideClick: false,
-        onOpen: () => {
-          Swal.showLoading();
-        }
-      });
+      SwalCarga();
       this.disabledCobertura = false;
       this.datosAdicionales = [];
       let data = new ClaimCaseDataRequest();
@@ -175,13 +163,7 @@ export class ReservaSiniestroComponent implements OnInit {
       request.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
       request.NCLAIM = Number(this.reservaCaso.NCLAIM);
       request.NCOVER = origen;
-      Swal.fire({
-        allowEscapeKey: false,
-        allowOutsideClick: false,
-        onOpen: () => {
-          Swal.showLoading();
-        }
-      });
+      SwalCarga();
       this.reserveService.ValidCoverReserve(request).subscribe(
         res => {
           Swal.close();
@@ -217,13 +199,7 @@ export class ReservaSiniestroComponent implements OnInit {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          allowEscapeKey: false,
-          allowOutsideClick: false,
-          onOpen: () => {
-            Swal.showLoading();
-          }
-        });
+        SwalCarga();
         this.reserveService.DeleteCoverTmp(obj).subscribe(
           res => {
             Swal.close();
@@ -318,13 +294,7 @@ export class ReservaSiniestroComponent implements OnInit {
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire({
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-            onOpen: () => {
-              Swal.showLoading();
-            }
-          });
+          SwalCarga();
           this.reserveService.ValidRegisterCoverData(reserva).subscribe(
             res => {
               Swal.close();
@@ -332,13 +302,7 @@ export class ReservaSiniestroComponent implements OnInit {
                 Swal.fire('Información', res.SMESSAGE_RESULT, 'error');
                 return;
               } else {
-                Swal.fire({
-                  allowEscapeKey: false,
-                  allowOutsideClick: false,
-                  onOpen: () => {
-                    Swal.showLoading();
-                  }
-                });
+                SwalCarga();
                 //evento eliminar temporal
                 let request = new ClaimCoverTmpRequestBM();
                 request.SKEY = this.reservaCaso.SKEY;

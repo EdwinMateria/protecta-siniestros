@@ -5,6 +5,7 @@ import { ModalNuevoBeneficiarioComponent } from '../modal-nuevo-beneficiario/mod
 import { ReserveService } from 'src/app/core/services/reserve/reserve.service';
 import { ClaimBenefParamRequest } from 'src/app/core/models/claimBenefParamRequest';
 import { BeneficiariesVM, ClaimBenefParamResponse } from 'src/app/core/models/claimBenefParamResponse';
+import { SwalCarga } from "src/app/core/swal-loading";
 
 @Component({
   selector: 'app-modal-beneficiario',
@@ -35,7 +36,7 @@ export class ModalBeneficiarioComponent implements OnInit {
       Swal.fire('Información', 'Debe llenar al menos un campo.', 'warning');
       return;
     }else{
-      Swal.showLoading()
+      SwalCarga()
       this.reserveService.BusquedaBeneficiario(this.buscador).subscribe(
         res =>{
           Swal.close()

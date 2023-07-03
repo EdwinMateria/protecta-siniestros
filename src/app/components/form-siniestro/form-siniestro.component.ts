@@ -7,6 +7,8 @@ import { SiniestroBM } from 'src/app/core/models/siniestroBM';
 import { CasosService } from 'src/app/core/services/casos/casos.service';
 import { ModalBeneficiarioComponent } from 'src/app/pages/siniestros/reserva-siniestro/modal-beneficiario/modal-beneficiario.component';
 import Swal from 'sweetalert2';
+import { SwalCarga } from "src/app/core/swal-loading";
+
 
 export class SiniestroSelect{
   codigo    : string;
@@ -67,7 +69,7 @@ export class FormSiniestroComponent implements OnInit {
     }
     if(this.estadoForm != 2 ){
       //Edicion y rechazo siniestro 
-      Swal.showLoading();
+      SwalCarga();
       this.casoService.GetSearchClaim(this.casoBM.nSiniestro).subscribe(
         res => {
           Swal.close()
@@ -104,7 +106,7 @@ export class FormSiniestroComponent implements OnInit {
 
   rechazoSiniestro(){
     if(this.eliminarSiniestro != '0'){
-      Swal.showLoading();
+      SwalCarga();
       let siniestro = new SiniestroBM();
       siniestro.nCaso = this.casoBM.nCaso;
       siniestro.sCliente = this.sCliente;
@@ -149,7 +151,7 @@ export class FormSiniestroComponent implements OnInit {
       }
       const data: FormData = new FormData();
       data.append('siniestrosData', JSON.stringify(siniestroBM));
-      Swal.showLoading();
+      SwalCarga();
       this.casoService.AddSiniestros(data).subscribe(
         res => {
           Swal.close();
@@ -192,7 +194,7 @@ export class FormSiniestroComponent implements OnInit {
           nSiniestro : this.nSiniestro,
           sCliente : this.sCliente,
         }
-        Swal.showLoading();
+        SwalCarga();
         this.casoService.UpdateClaim(siniestroBM).subscribe(
           res => {
             Swal.close();

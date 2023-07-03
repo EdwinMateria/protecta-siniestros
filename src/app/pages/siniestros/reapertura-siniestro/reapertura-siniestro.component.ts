@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { SiniestroBM } from 'src/app/core/models/siniestroBM';
 import { CasosService } from 'src/app/core/services/casos/casos.service';
 import Swal from 'sweetalert2';
+import { SwalCarga } from "src/app/core/swal-loading";
 
 @Component({
   selector: 'app-reapertura-siniestro',
@@ -42,7 +43,7 @@ export class ReaperturaSiniestroComponent implements OnInit {
           siniestroBM.nSiniestro = this.nroSiniestro.value;
           const data: FormData = new FormData();
           data.append('siniestrosData', JSON.stringify(siniestroBM));
-          Swal.showLoading();
+          SwalCarga();
           this.casoService.AddReopening(data).subscribe(
             res => {
               Swal.close();

@@ -8,6 +8,7 @@ import { ConsultaSiniestroComponent } from 'src/app/pages/siniestros/tratamiento
 import Swal from 'sweetalert2';
 import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { SwalCarga } from "src/app/core/swal-loading";
 
 export class Generic{
   id:string;
@@ -108,7 +109,7 @@ export class FormCasoComponent implements OnInit {
   }
 
   obtenerCasoIndex(){
-    Swal.showLoading();
+    SwalCarga();;
     this.casoService.Index().subscribe(
       res =>{
         Swal.close();
@@ -125,7 +126,7 @@ export class FormCasoComponent implements OnInit {
     let valorInput = this.referencia.nativeElement.value as string;
     if(valorInput != ""){
       if (!this.tipoForm) {
-        Swal.showLoading();
+        SwalCarga();;
         this.casoService.GetSearchCase(Number(valorInput)).subscribe(
           res => {
             Swal.close();
@@ -155,7 +156,7 @@ export class FormCasoComponent implements OnInit {
               this.casoBM.nCaso = Number(valorInput)
 
               //Siniestros del Caso
-              Swal.showLoading();
+              SwalCarga();;
               this.casoService.GetClaimForCase(Number(valorInput)).subscribe(
                 res => {
                   Swal.close();
@@ -175,7 +176,7 @@ export class FormCasoComponent implements OnInit {
         )
       } else {
         if(this.form.controls['dFecOcurrencia'].value != ""){
-          Swal.showLoading()
+          SwalCarga();
 
           let docur = new Date(this.form.controls['dFecOcurrencia'].value)
           let date = new Date(docur.setDate(docur.getDate() + 1)).toLocaleDateString('en-GB');
@@ -356,7 +357,7 @@ export class FormCasoComponent implements OnInit {
       return;
     }
     else {
-      Swal.showLoading();
+      SwalCarga();;
       let caso = new CasosBM();
       caso = this.form.getRawValue();
       var dateInicio = (this.form.controls['dInicioVigencia'].value).split("/");
@@ -447,7 +448,7 @@ export class FormCasoComponent implements OnInit {
 
   changeDepartamento(origen:boolean){
     let departamento = this.form.controls['nDepartamento'].value;
-    Swal.showLoading();
+    SwalCarga();;
     this.casoService.GetProvincias(departamento).subscribe(
       res => {
         Swal.close();
@@ -464,7 +465,7 @@ export class FormCasoComponent implements OnInit {
 
   changeProvincia(origen:boolean){
     let provincia = this.form.controls['nProvincia'].value;
-    Swal.showLoading();
+    SwalCarga();;
     this.casoService.GetDistritos(provincia).subscribe(
       res => {
         Swal.close();

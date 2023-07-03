@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { CasosService } from 'src/app/core/services/casos/casos.service';
 import { CombosGenericoVM } from 'src/app/core/models/caso';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
+import { SwalCarga } from "src/app/core/swal-loading";
 
 export class TipoDocumento{
   id: number;
@@ -116,7 +117,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     if(this.form.invalid){
       this.form.markAllAsTouched();
     }else{
-      Swal.showLoading();
+      SwalCarga();
       this.data = {
         ...this.form.getRawValue(),
         P_DBIRTHDAT : new Date(this.form.controls['P_DBIRTHDAT'].value).toLocaleDateString('en-GB'),
@@ -237,7 +238,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
   changeDepartamento(){
     let departamento = this.form.controls['P_NPROVINCE'].value;
-    Swal.showLoading();
+    SwalCarga();
     this.casoService.GetProvincias(departamento).subscribe(
       res => {
         Swal.close();
@@ -252,7 +253,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
   changeProvincia(){
     let provincia = this.form.controls['P_NLOCAL'].value;
-    Swal.showLoading();
+    SwalCarga();
     this.casoService.GetDistritos(provincia).subscribe(
       res => {
         Swal.close();
