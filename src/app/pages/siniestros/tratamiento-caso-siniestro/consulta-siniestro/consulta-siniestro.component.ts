@@ -70,7 +70,7 @@ export class ConsultaSiniestroComponent implements OnInit {
       },
       err => {
         Swal.close();
-        console.log(err);
+        Swal.fire('Error',err,'error')
       }
     )
   }

@@ -37,6 +37,8 @@ export class ModalCoberturaComponent implements OnInit {
   @Input() public tab : number;
 
   beneficiarios: BeneficiariesVM[] = [];
+  listCodeBeneficiarios : string[] = [];
+
   datosTramitador = "1";
   comboGeneral$ = this.reserveService.GetComboGeneral();
   comboDiagnostico : ClaimComboResponse []=[{SCODIGO:'SELECCIONE',SDESCRIPCION:'Diagnóstico (CIE10)'}];
@@ -125,6 +127,7 @@ export class ModalCoberturaComponent implements OnInit {
               SACCOUNTNUMBER :  benef.SACCOUNT,
               NCODDOCUMENTTYPE : benef.NTYPCLIENTDOC.toString()
             })
+            this.listCodeBeneficiarios.push(benef.SCLIENT);
           })
         }
 
@@ -306,7 +309,6 @@ export class ModalCoberturaComponent implements OnInit {
     Swal.showLoading();
     this.reserveService.GetDatCoversTmp(data).subscribe(
       res => {
-        console.log(res);
         if(res.SKEY != null){
           this.claimCoverReserveResponse = res;
           //Mapeo
@@ -410,6 +412,7 @@ export class ModalCoberturaComponent implements OnInit {
   openBeneficiario(){
     const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
+    modalRef.componentInstance.beneficiarios = this.beneficiarios;
     modalRef.result.then((benef) => {
       if(benef != undefined && benef.SCODE){
         Swal.showLoading();
@@ -440,47 +443,51 @@ export class ModalCoberturaComponent implements OnInit {
     if(this.tab == 1){
       this.beneficiarios.splice(i,1);
     }else{
-      Swal.fire({
-        title: 'Información',
-        text: "¿Está seguro de eliminar al beneficiario?",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'De acuerdo',
-        cancelButtonText: 'No',
-        reverseButtons: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          let request = new ClaimDeleteBenefRequest();
-          request.NCASE_NUM = this.reservaCaso.NCASE_NUM;
-          request.NCLAIM = this.reservaCaso.NCLAIM;
-          request.NCOVER = this.data;
-          request.SCLIENT = sclient;
-          Swal.showLoading();
-          this.reserveService.DeleteBenefCover(request).subscribe(
-            res => {
-              Swal.close()
-              if (res == 'OK') {
-                this.beneficiarios.splice(i, 1);
-                Swal.fire('Información', 'Beneficiario eliminado correctamente', 'success');
-              } else {
-                Swal.fire('Información', res, 'warning');
-                return;
+      let clientDelete = this.listCodeBeneficiarios.find(x => x == sclient);
+      if(!clientDelete){
+        this.beneficiarios.splice(i,1);
+      }else{
+        Swal.fire({
+          title: 'Información',
+          text: "¿Está seguro de eliminar al beneficiario?",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'De acuerdo',
+          cancelButtonText: 'No',
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            let request = new ClaimDeleteBenefRequest();
+            request.NCASE_NUM = this.reservaCaso.NCASE_NUM;
+            request.NCLAIM = this.reservaCaso.NCLAIM;
+            request.NCOVER = this.data;
+            request.SCLIENT = sclient;
+            Swal.showLoading();
+            this.reserveService.DeleteBenefCover(request).subscribe(
+              res => {
+                Swal.close()
+                if (res == 'OK') {
+                  this.beneficiarios.splice(i, 1);
+                  Swal.fire('Información', 'Beneficiario eliminado correctamente', 'success');
+                } else {
+                  Swal.fire('Información', res, 'warning');
+                  return;
+                }
+              },
+              err => {
+                Swal.close()
+                Swal.fire('Error', err, 'error');
               }
-            },
-            err => {
-              Swal.close()
-              Swal.fire('Error', err, 'error');
-            }
-          )
-        }
-      })
+            )
+          }
+        })
+      }
     }
   }
 
   changeFechasDescanso(){
     let inicio = new Date(this.inicioDescanso.value);
     let fin = new Date(this.finDescanso.value);
-    debugger;
     if(this.inicioDescanso.value != "" && this.finDescanso.value != ""){
       if(inicio > fin){
         Swal.fire('Información','La fecha de inicio de descanso no debe ser mayor a la fecha fin de descanso', 'warning');
@@ -697,7 +704,7 @@ export class ModalCoberturaComponent implements OnInit {
           SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
           NCODBENEFICIARYTYPE : Number(benef.NCODBENEFICIARYTYPE),
           SBENEFICIARYTYPE : benef.SBENEFICIARYTYPE,
-          NBANK_CODE : Number(benef.SBANK),
+          NBANK_CODE : benef.SBANK,
           SACCOUNT :  benef.SACCOUNTNUMBER,
           NCLAIM : Number(this.reservaCaso.NCLAIM),
           NCASE_NUM : Number(this.reservaCaso.NCASE_NUM),

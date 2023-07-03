@@ -169,8 +169,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
           P_SRECTYPE : '4'
         })
       }
-
-      console.log(this.data);
       
       this.reserveService.SaveApi(this.data).subscribe(
         res =>{
@@ -230,7 +228,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err);
+          Swal.fire('Error',err,'error')
         }
       )
     }

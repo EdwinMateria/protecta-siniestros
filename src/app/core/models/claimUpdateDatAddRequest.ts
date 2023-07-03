@@ -50,7 +50,7 @@ export class BeneficiaresModVM {
 	SDOCUMENTNUMBER         : string;
 	NCODBENEFICIARYTYPE     : number;
 	SBENEFICIARYTYPE        : string;
-	NBANK_CODE              : number;
+	NBANK_CODE              : string;
 	SACCOUNT                : string;
 	NUSERCODE               : number;
 	NCLAIM                  : number;

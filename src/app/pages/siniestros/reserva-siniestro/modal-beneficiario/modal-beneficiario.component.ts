@@ -19,6 +19,7 @@ export class ModalBeneficiarioComponent implements OnInit {
   pagina = 1;
   listaBeneficiarios : BeneficiariesVM[]=[];
   beneficiarioSeleccion = new BeneficiariesVM()
+  @Input() public beneficiarios: BeneficiariesVM[] = [];
 
   constructor(private modalService: NgbModal, public reserveService: ReserveService) { }
 
@@ -43,7 +44,7 @@ export class ModalBeneficiarioComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err);
+          Swal.fire('Error',err,'error')
         }
       )
     }
@@ -78,7 +79,14 @@ export class ModalBeneficiarioComponent implements OnInit {
       Swal.fire('Información', 'Debe seleccionar un beneficiario.','warning');
       return;
     }else{
-      this.reference.close(this.beneficiarioSeleccion);
+      let benefExiste = this.beneficiarios.find(x => x.SCODE == this.beneficiarioSeleccion.SCODE);
+      if(benefExiste){
+        Swal.fire('Información','El beneficiario ya fue insertado', 'warning');
+        return;
+      }else{
+        this.reference.close(this.beneficiarioSeleccion);
+      }
+
     }
   }
 
