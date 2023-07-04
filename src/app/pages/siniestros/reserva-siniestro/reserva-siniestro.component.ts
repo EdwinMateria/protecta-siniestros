@@ -119,7 +119,9 @@ export class ReservaSiniestroComponent implements OnInit {
           this.reservaCaso = res;
           let siniestroEstado = this.siniestros.find(x => x.CODIGO == this.siniestro).ESTADO;
           if (siniestroEstado == '1' || siniestroEstado == '5' || siniestroEstado == '7') {
-            Swal.fire('Información', 'No se puede generar reserva para este siniestro', 'warning');
+            if(siniestroEstado == '1') Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Anulado.', 'warning');
+            if(siniestroEstado == '5') Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Pagado Total.', 'warning');
+            if(siniestroEstado == '7') Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Rechazado.', 'warning');
             this.disabledTodo = true;
             return;
           } else {
@@ -141,6 +143,7 @@ export class ReservaSiniestroComponent implements OnInit {
     modalRef.componentInstance.data = origen;
     modalRef.componentInstance.reservaCaso = this.reservaCaso;
     modalRef.componentInstance.tab = this.tipoTab;
+    modalRef.componentInstance.disabledBotones = this.disabledTodo;
     modalRef.result.then((res) => {
       if (res != undefined) {
         this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NRESERVEAMOUNT = res.NMONTO;
@@ -348,6 +351,11 @@ export class ReservaSiniestroComponent implements OnInit {
       return;
     }
 
+  }
+
+  changeRadio(i:number){
+    console.log(i);
+    console.log(this.tipoMovimiento)
   }
 
 

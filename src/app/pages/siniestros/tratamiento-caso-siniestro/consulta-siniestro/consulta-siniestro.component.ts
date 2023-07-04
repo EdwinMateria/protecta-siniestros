@@ -31,8 +31,8 @@ export class ConsultaSiniestroComponent implements OnInit {
   //Tipos Ocupantes:
   ocupantes : SiniestroSelect[] = [
     {codigo: "", descript: "SELECCIONAR"},
-    {codigo : "1", descript : "Ocupante"},
-    {codigo : "2", descript : "Tercero"}
+    {codigo : "1", descript : "Si"},
+    {codigo : "2", descript : "No"}
   ]
   
   // Tipos Atencion:

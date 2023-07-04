@@ -93,7 +93,7 @@
             </div>
         </div>
         <div class="col-sm-3 form-group">
-            <label>Tipo de ocupante</label>
+            <label>Ocupante</label>
             <select class="form-control" disabled [(ngModel)]="siniestro.sTipOcupante">
                 <option *ngFor="let ocupante of ocupantes" [value]="ocupante.codigo">{{ocupante.descript}}</option>
               </select>

@@ -36,6 +36,7 @@ export class ModalCoberturaComponent implements OnInit {
   @Input() public data: any;
   @Input() public reservaCaso: ClaimCoverResponse;
   @Input() public tab : number;
+  @Input() public disabledBotones : boolean;
 
   beneficiarios: BeneficiariesVM[] = [];
   listCodeBeneficiarios : string[] = [];
@@ -111,8 +112,6 @@ export class ModalCoberturaComponent implements OnInit {
     this.reserveService.GetDataAddBenefCover(request).subscribe(
       res => {
         Swal.close();
-        console.log(res);
-
         if(res.ListBeneficiariesUltimates != null){
           this.obtenerBancos()
           res.ListBeneficiariesUltimates.forEach(benef => {
@@ -415,15 +414,15 @@ export class ModalCoberturaComponent implements OnInit {
     modalRef.componentInstance.reference = modalRef;  
     modalRef.componentInstance.beneficiarios = this.beneficiarios;
     modalRef.result.then((benef) => {
-      if(benef != undefined && benef.SCODE){
+      if((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)){
         SwalCarga();
         let data = new ClaimBeneficiarioRequest();
-        data.SCODCLI = benef.SCODE.trim();
+        if(benef.SCODE) data.SCODCLI = benef.SCODE.trim();
+        if(benef.P_SCOD_CLIENT) data.SCODCLI = benef.P_SCOD_CLIENT.trim();
+
         this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
           res =>{
             Swal.close();
-            console.log(res.ListBeneficiaries[0]);
-            
             if(res.ListBeneficiaries[0].SBANK == "") res.ListBeneficiaries[0].SBANK = "0";
             
             this.beneficiarios.push(res.ListBeneficiaries[0])
@@ -529,23 +528,6 @@ export class ModalCoberturaComponent implements OnInit {
   }
 
   guardarTablaTemporal(){
-    if(this.beneficiarios.length > 0){
-      this.beneficiarios.forEach(benef => {
-        this.dataReserva.LIST_BENEF_COVERS.push({
-          SCODCLI : benef.SCODE,
-          SBENEFICIARY : benef.SNAME,
-          SDOCUMENTTYPE : benef.SDOCUMENTTYPE,
-          SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
-          SBENEFICIARYTYPE : benef.NCODBENEFICIARYTYPE,
-          SCOVER_DESC : this.data,
-          SBANK : benef.SBANK,
-          SACCOUNTNUMBER :  benef.SACCOUNTNUMBER
-        })
-      })
-    }else{
-      this.dataReserva.LIST_BENEF_COVERS = [];
-    }
-
     let claimData = this.reservaCaso.LISTA_COVERCLAIM.find(x => x.NCOVER == this.data);
     this.dataReserva.NUITQUANTITY = claimData.NDAMAGES;
     this.dataReserva.NUITAMOUNT = this.reservaCaso.UIT;
@@ -642,6 +624,25 @@ export class ModalCoberturaComponent implements OnInit {
       this.dataReserva.DDATERECEPTION = this.datePipe.transform(this.fechaRecepcion, 'dd/MM/yyyy');
     }
 
+    if(this.beneficiarios.length > 0){
+      this.beneficiarios.forEach(benef => {
+        this.dataReserva.LIST_BENEF_COVERS.push({
+          SCODCLI : benef.SCODE,
+          SBENEFICIARY : benef.SNAME,
+          SDOCUMENTTYPE : benef.SDOCUMENTTYPE,
+          SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
+          SBENEFICIARYTYPE : benef.NCODBENEFICIARYTYPE,
+          SCOVER_DESC : this.data,
+          SBANK : benef.SBANK,
+          SACCOUNTNUMBER :  benef.SACCOUNTNUMBER
+        })
+      })
+    }else{
+      this.dataReserva.LIST_BENEF_COVERS = [];
+      Swal.fire('Información', 'Debe ingresar al menos un beneficiario', 'warning');
+      return;
+    }
+
 
     console.log(this.dataReserva);
 
@@ -695,26 +696,6 @@ export class ModalCoberturaComponent implements OnInit {
     let cookie = this.authProtectaService.getCookie('AppSiniestro');
     let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
 
-    if(this.beneficiarios.length > 0){
-      this.beneficiarios.forEach(benef => {
-        reservaUpdate.ListBeneficiariesMod.push({
-          SCLIENT : benef.SCODE,
-          SCLIENTNAME : benef.SNAME,
-          NTYPCLIENTDOC : Number(benef.NCODDOCUMENTTYPE),
-          SDESCRIPTYPCLIENTDOC : benef.SDOCUMENTTYPE,
-          SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
-          NCODBENEFICIARYTYPE : Number(benef.NCODBENEFICIARYTYPE),
-          SBENEFICIARYTYPE : benef.SBENEFICIARYTYPE,
-          NBANK_CODE : benef.SBANK,
-          SACCOUNT :  benef.SACCOUNTNUMBER,
-          NCLAIM : Number(this.reservaCaso.NCLAIM),
-          NCASE_NUM : Number(this.reservaCaso.NCASE_NUM),
-          NCOVER : this.data,
-          NUSERCODE: Number(atob(codUsuario)),
-        })
-      })
-    }
-
     reservaUpdate.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
     reservaUpdate.NCLAIM = Number(this.reservaCaso.NCLAIM);
     reservaUpdate.NCOVER = this.data;
@@ -767,6 +748,29 @@ export class ModalCoberturaComponent implements OnInit {
     }
 
     reservaUpdate.NUSERCODE = Number(atob(codUsuario));
+
+    if(this.beneficiarios.length > 0){
+      this.beneficiarios.forEach(benef => {
+        reservaUpdate.ListBeneficiariesMod.push({
+          SCLIENT : benef.SCODE,
+          SCLIENTNAME : benef.SNAME,
+          NTYPCLIENTDOC : Number(benef.NCODDOCUMENTTYPE),
+          SDESCRIPTYPCLIENTDOC : benef.SDOCUMENTTYPE,
+          SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
+          NCODBENEFICIARYTYPE : Number(benef.NCODBENEFICIARYTYPE),
+          SBENEFICIARYTYPE : benef.SBENEFICIARYTYPE,
+          NBANK_CODE : benef.SBANK,
+          SACCOUNT :  benef.SACCOUNTNUMBER,
+          NCLAIM : Number(this.reservaCaso.NCLAIM),
+          NCASE_NUM : Number(this.reservaCaso.NCASE_NUM),
+          NCOVER : this.data,
+          NUSERCODE: Number(atob(codUsuario)),
+        })
+      })
+    }else{
+      Swal.fire('Información', 'Debe ingresar al menos un beneficiario','warning');
+      return;
+    }
 
     console.log(reservaUpdate);
 

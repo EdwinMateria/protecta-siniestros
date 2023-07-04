@@ -5,40 +5,8 @@ import { ModalGastosCoberturaComponent } from './modal-gastos-cobertura/modal-ga
 import { DatosCasoSiniestro } from '../models/Liquidacion.model';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { LiquidacionService } from 'src/app/core/services/liquidacion/liquidacion.service';
+import { Detalle, Movimiento, PendientePago } from '../models/GastoCuracionModel';
 //import * as internal from 'stream';
-
-export class Movimiento{
-  NCLAIM : string;
-  NCOVER : number;
-  DESC_COBERTURA : string;
-  PENDIENTES : number;
-  PAGOS_PEND_BENEF : number;
-  DATO_ADICIONAL : string;
-  SELECCION : boolean;
-  ID: number;
-  NCASENUM: string;
-  DOCCURDAT: string;
-  NROBENEF: number;
-}
-
-export class Detalle{
-  NCODERROR : string;
-  SMESSAGEERROR : string;
-  SSTACLAIM : string;
-  ESTADO_SINIESTRO : string;
-  NPOLICY : string;
-  DOCCURDAT: string;
-  HORAOCURRENCIA:string;
-  SCLIENAME:string;
-  UIT: string;
-  NLOC_RESERV: number;
-
-}
-
-export class PendientePago{
-  NCLAIM : string;
-  NCASE: string;
-}
 
 @Component({
   selector: 'app-gastos-curacion',

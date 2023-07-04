@@ -8,6 +8,7 @@ import { CasosService } from 'src/app/core/services/casos/casos.service';
 import { ModalBeneficiarioComponent } from 'src/app/pages/siniestros/reserva-siniestro/modal-beneficiario/modal-beneficiario.component';
 import Swal from 'sweetalert2';
 import { SwalCarga } from "src/app/core/swal-loading";
+import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 
 
 export class SiniestroSelect{
@@ -35,8 +36,8 @@ export class FormSiniestroComponent implements OnInit {
   //Tipos Ocupantes:
   ocupantes : SiniestroSelect[] = [
     {codigo: "", descript: "SELECCIONAR"},
-    {codigo : "1", descript : "Ocupante"},
-    {codigo : "2", descript : "Tercero"}
+    {codigo : "1", descript : "Si"},
+    {codigo : "2", descript : "No"}
   ]
   
   // Tipos Atencion:
@@ -47,7 +48,7 @@ export class FormSiniestroComponent implements OnInit {
     {codigo: "E", descript: "Emergencia"}
   ]
 
-  constructor(public fb: FormBuilder, private modalService: NgbModal, public casoService: CasosService, private datePipe: DatePipe) {
+  constructor(public fb: FormBuilder, private modalService: NgbModal, public casoService: CasosService, private datePipe: DatePipe, public authProtectaService: AuthProtectaService) {
   }
 
   ngOnInit(): void {
@@ -113,6 +114,10 @@ export class FormSiniestroComponent implements OnInit {
       siniestro.nCodRechazo = Number(this.eliminarSiniestro);
       siniestro.nSiniestro = Number(this.nSiniestro);
       siniestro.dFecApertura = this.form.controls['dFecApertura'].value;
+
+      let cookie = this.authProtectaService.getCookie('AppSiniestro');
+      let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
+      siniestro.nCodUsuario = Number(atob(codUsuario));
       const data: FormData = new FormData();
       data.append('siniestrosData', JSON.stringify(siniestro));
       this.casoService.AddRechazo(data).subscribe(
@@ -144,10 +149,13 @@ export class FormSiniestroComponent implements OnInit {
       if(this.estadoForm == 2){
         //Creacion siniestro
         let siniestroBM = new SiniestroBM();
+        let cookie = this.authProtectaService.getCookie('AppSiniestro');
+      let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
       siniestroBM = {
         ...this.form.getRawValue(),
         nCaso : this.casoBM.nCaso,
-        sCliente : this.sCliente
+        sCliente : this.sCliente,
+        nCodUsuario : Number(atob(codUsuario))
       }
       const data: FormData = new FormData();
       data.append('siniestrosData', JSON.stringify(siniestroBM));
@@ -186,6 +194,8 @@ export class FormSiniestroComponent implements OnInit {
       if(this.estadoForm == 1){
         //Editar siniestro
         let siniestroBM = new SiniestroBM();
+        let cookie = this.authProtectaService.getCookie('AppSiniestro');
+        let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
         siniestroBM = {
           ...this.form.getRawValue(),
           nPolicy : this.casoBM.nPolicy,
@@ -193,6 +203,7 @@ export class FormSiniestroComponent implements OnInit {
           nCaso : this.casoBM.nCaso,
           nSiniestro : this.nSiniestro,
           sCliente : this.sCliente,
+          nCodUsuario : Number(atob(codUsuario))
         }
         SwalCarga();
         this.casoService.UpdateClaim(siniestroBM).subscribe(

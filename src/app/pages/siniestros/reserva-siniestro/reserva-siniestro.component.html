@@ -97,7 +97,7 @@
                 <td>{{claim.NSUMINSURED}}</td>
                 <td>
                     <div class="form-group">
-                        <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento[i]" ngDefaultControl>
+                        <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento[i]" ngDefaultControl (click)="changeRadio(i)">
                             <label class="radio-inline" style="vertical-align:middle;">
                                 <input type="radio" name="radio" [id]="'a'+i" value="A" [disabled]="(disabledCobertura && posicion == i) || disabledTodo || (tipoTab == 2)"/> <i class="fa fa-arrow-up"></i>
                             </label>

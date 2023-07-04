@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SwalCarga } from "src/app/core/swal-loading";
+import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
+import { DatePipe } from '@angular/common';
 
 export class Generic{
   id:string;
@@ -61,10 +63,12 @@ export class FormCasoComponent implements OnInit {
 
   @Input() tipoTabForm = 0;
   casoBM = new CasosBM();
+  //tipoInputDate = true;
 
   //RESULTADO
   tratamientoCaso = new TratamientoCaso();
   siniestros: SiniestroBM[] = [];
+  fechaNacimiento : any;
 
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -73,7 +77,7 @@ export class FormCasoComponent implements OnInit {
     };
   }
 
-  constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService) { }
+  constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService, public authProtectaService: AuthProtectaService, public datePipe : DatePipe) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -122,6 +126,10 @@ export class FormCasoComponent implements OnInit {
     )
   }
 
+  change(event:any){
+    console.log(event);
+  }
+
   buscador(){
     let valorInput = this.referencia.nativeElement.value as string;
     if(valorInput != ""){
@@ -140,15 +148,24 @@ export class FormCasoComponent implements OnInit {
             }else{
               this.showBotones = true
               this.casoBM = res.GenericResponse[0];
+              let d = this.casoBM.dFecNacConductor .split("-");
+              console.log(this.casoBM.dFecNacConductor);
+              console.log(d[0])
+              console.log(d[1])
+              console.log(d[2].substring(0,2))
+
               this.form.patchValue({
                 ...this.casoBM,
                 dInicioVigencia : new Date(this.casoBM.dIniVigencia).toLocaleDateString('en-GB'),
                 dFinDeVigencia : new Date(this.casoBM.dFinVigencia).toLocaleDateString('en-GB'),
                 dFecOcurrencia : new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB'),
-                dFecNacConductor : new Date(this.casoBM.dFecNacConductor).toLocaleDateString('en-GB'),
+                dFecNacConductor : new Date( d[0] + '-' + d[1] + '-'  + d[2].substring(0,2)),
                 nCaso: this.casoBM.nPolicy,
                 nPolicy: valorInput,
               });
+              let fechaEmi = new Date(d[1] + '/' + d[2].substring(0,2) + '/' + d[0]);
+              this.fechaNacimiento = this.datePipe.transform(fechaEmi, 'yyyy-MM-dd');
+
               //Provincia
               this.changeDepartamento(false);
               this.form.controls['nProvincia'].setValue(this.casoBM.nProvincia);
@@ -286,6 +303,10 @@ export class FormCasoComponent implements OnInit {
       this.form.controls['sObservacion'].enable();
       this.form.controls['nCulpabilidad'].enable();
       this.form.controls['nCausaSiniestro'].enable();
+      this.form.controls['nTipDocConductor'].enable();
+      this.form.controls['dFecNacConductor'].enable();
+      this.form.controls['sDocConductor'].enable();
+      //this.tipoInputDate = true;
     }
   }
 
@@ -300,6 +321,9 @@ export class FormCasoComponent implements OnInit {
     this.form.controls['sObservacion'].disable();
     this.form.controls['nCulpabilidad'].disable();
     this.form.controls['nCausaSiniestro'].disable();
+    this.form.controls['nTipDocConductor'].disable();
+    this.form.controls['dFecNacConductor'].disable();
+    this.form.controls['sDocConductor'].disable();
     this.form.reset();
     this.tipoTab = 0;
     this.modificarActive = '';
@@ -308,6 +332,7 @@ export class FormCasoComponent implements OnInit {
     this.tituloTratamiento.emit(false);
     this.tratamientoCaso = new TratamientoCaso();
     this.showBotones = false;
+    //this.tipoInputDate = false;
   }
 
   validacionFormularioCaso(){
@@ -357,12 +382,16 @@ export class FormCasoComponent implements OnInit {
       return;
     }
     else {
-      SwalCarga();;
+      SwalCarga();
       let caso = new CasosBM();
       caso = this.form.getRawValue();
       var dateInicio = (this.form.controls['dInicioVigencia'].value).split("/");
       var dateFin = (this.form.controls['dFinDeVigencia'].value).split("/");
       
+      let cookie = this.authProtectaService.getCookie('AppSiniestro');
+      let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
+
+      caso.nCodUsuario = Number(atob(codUsuario));
       caso.dIniVigencia = new Date(+dateInicio[2], dateInicio[1] - 1, +dateInicio[0]);
       caso.dFinVigencia = new Date(+dateFin[2], dateFin[1] - 1, +dateFin[0]);
       caso.nCertif = 0;
@@ -421,10 +450,14 @@ export class FormCasoComponent implements OnInit {
       this.validacionFormularioCaso();
       return;
     }else{
+
+      let cookie = this.authProtectaService.getCookie('AppSiniestro');
+      let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
       let caso = new CasosBM();
       caso = {
         ...this.form.getRawValue(),
-        nCaso : this.form.controls['nPolicy'].value
+        nCaso : this.form.controls['nPolicy'].value,
+        nCodUsuario : Number(atob(codUsuario))
       };
       Swal.close();
       this.casoService.UpdateCase(caso).subscribe(

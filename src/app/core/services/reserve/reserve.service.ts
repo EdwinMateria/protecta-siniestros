@@ -26,6 +26,7 @@ import { ClaimValCoverRequest, ClaimValCoverResponse } from '../../models/claimV
 import { ClaimGetDatAddResponseVM } from '../../models/claimGetDatAddResponse';
 import { ClaimDeleteBenefRequest } from '../../models/claimDeleteBenefReques';
 import { ClaimUpdateDatAddRequestBM } from '../../models/claimUpdateDatAddRequest';
+import { CombosGenericoVM } from '../../models/caso';
 
 @Injectable({
   providedIn: 'root'
@@ -190,6 +191,18 @@ export class ReserveService {
     const body = JSON.stringify(data);
     return this.http.post<any>(this.Url + '/Reserve/UPD_BANK', body, {
       headers: this.headers,
+    });
+  }
+
+  public GetProvincias(nDepartamento: number): Observable<CombosGenericoVM[]> {
+    return this.http.get<CombosGenericoVM[]>(this.Url + '/Reserve/GetProvincias?nDepartamento='+ nDepartamento, {
+      headers: this.headers
+    });
+  }
+
+  public GetDistritos(nProvincia: number): Observable<CombosGenericoVM[]> {
+    return this.http.get<CombosGenericoVM[]>(this.Url + '/Reserve/GetDistritos?nProvincia='+nProvincia, {
+      headers: this.headers
     });
   }
 
