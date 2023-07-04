@@ -160,6 +160,7 @@ export class CargaMasivaComponent implements OnInit {
         };
         reader.readAsBinaryString(target.files[0]);
       }
+      evt.target.value = null;
     } else {
       this.archivoNombre = null;
       this.preliminar = true;

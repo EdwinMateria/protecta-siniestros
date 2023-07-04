@@ -117,7 +117,7 @@
                         <thead>
                             <tr class="grid-title">
                                 <td class="grid-title-item text-center">Nro Sin. Prov.</td>
-                                <td class="grid-title-item text-center">Caso</td>
+                                <td class="grid-title-item text-center">Producto</td>
                                 <td class="grid-title-item text-center">Póliza</td>
                                 <td class="grid-title-item text-center">Nro Certificado</td>
                                 <td class="grid-title-item text-center">Fecha Siniestro</td>
@@ -154,7 +154,7 @@
                                 <td class="data-table-tr-td text-center">
                                     {{ item.SFECHA_SINIESTRO }}
                                 </td>
-                                <td class="data-table-tr-td text-center onHover" (click)="mostrarModalErrores(contentError, item);">
+                                <td [ngClass]="item.SDET_ERROR ? 'data-table-tr-td text-center onHover' : 'null'" (click)="mostrarModalErrores(contentError, item);">
                                     {{ item.SDET_ERROR }}
                                 </td>
                                 <td class="data-table-tr-td text-center">
