@@ -568,7 +568,7 @@ export class ModalCoberturaComponent implements OnInit {
         return;
       }
       if(this.baseImponible.invalid){
-        this.tipoAtencion.markAllAsTouched();
+        this.baseImponible.markAllAsTouched();
         this.dataReserva.LIST_BENEF_COVERS = [];
         return;
       }else{
