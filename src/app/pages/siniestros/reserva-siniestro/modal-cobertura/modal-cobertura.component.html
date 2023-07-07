@@ -35,7 +35,7 @@
                     <strong>BENEFICIARIOS:</strong>
                 </div>
                 <div class="p-2">
-                    <button [disabled]="tab == 1 && data != 1 && beneficiarios.length == 1" class="btn btn-primary text-end float-end" align="end" (click)="openBeneficiario()"><i
+                    <button [disabled]="(tab == 1 && data != 1 && beneficiarios.length == 1) || disabledBotones" class="btn btn-primary text-end float-end" align="end" (click)="openBeneficiario()"><i
                             class="fa fa-search"></i></button>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                             <input type="text" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER" maxlength="15">
                         </td>
                         <td>
-                            <button class="btn btn-danger btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>
+                            <button [disabled]="disabledBotones" class="btn btn-danger btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -332,7 +332,7 @@
     <div class="row mt-3">
         <div class="col-sm-12" align="end">
             <button *ngIf="tab == 1" class="btn btn-success mb-2" (click)="guardarTablaTemporal()">Guardar</button>
-            <button *ngIf="tab == 2" class="btn btn-success mb-2" (click)="editarTablaTemporal()">Guardar</button>
+            <button [disabled]="disabledBotones" *ngIf="tab == 2" class="btn btn-success mb-2" (click)="editarTablaTemporal()">Guardar</button>
         </div>
     </div>
 </div>

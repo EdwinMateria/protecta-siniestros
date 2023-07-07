@@ -28,9 +28,10 @@ export class ReservaSiniestroComponent implements OnInit {
   claimRequest = new ClaimRequest();
   siniestro = 0;
   tiposAtencion: ClaimComboResponse[] = [];
-  tipoMovimiento = [];
+  tipoMovimiento = "";
   datosAdicionales = []
   posicion = 0;
+  posicionActual = 0;
   //RESULT
   reservaCaso: ClaimCoverResponse = new ClaimCoverResponse();
   showTable = false;
@@ -51,7 +52,9 @@ export class ReservaSiniestroComponent implements OnInit {
   }
 
   tabControl(index: number) {
-    this.tipoTab = index
+    this.tipoTab = index;
+    this.posicion = 0;
+    this.posicionActual = 0;
     this.reservaCaso = new ClaimCoverResponse();
     if (this.tipoTab == 1) {
       this.registroActive = 'active'
@@ -84,6 +87,8 @@ export class ReservaSiniestroComponent implements OnInit {
         res => {
           Swal.close();
           this.siniestros = res;
+          this.posicion = 0;
+          this.posicionActual = 0;
           if (res.length == 1) {
             Swal.fire('Información', 'No se encontraron siniestros para el caso ingresado', 'warning');
             return;
@@ -119,7 +124,9 @@ export class ReservaSiniestroComponent implements OnInit {
           this.reservaCaso = res;
           let siniestroEstado = this.siniestros.find(x => x.CODIGO == this.siniestro).ESTADO;
           if (siniestroEstado == '1' || siniestroEstado == '5' || siniestroEstado == '7') {
-            Swal.fire('Información', 'No se puede generar reserva para este siniestro', 'warning');
+            if(siniestroEstado == '1') Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Anulado.', 'warning');
+            if(siniestroEstado == '5') Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Pagado Total.', 'warning');
+            if(siniestroEstado == '7') Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Rechazado.', 'warning');
             this.disabledTodo = true;
             return;
           } else {
@@ -141,18 +148,19 @@ export class ReservaSiniestroComponent implements OnInit {
     modalRef.componentInstance.data = origen;
     modalRef.componentInstance.reservaCaso = this.reservaCaso;
     modalRef.componentInstance.tab = this.tipoTab;
+    modalRef.componentInstance.disabledBotones = this.disabledTodo;
     modalRef.result.then((res) => {
       if (res != undefined) {
         this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NRESERVEAMOUNT = res.NMONTO;
         if (origen == 4) this.reservaCaso.LISTA_COVERCLAIM[this.posicion].SNROLETTER = res.SNROLETTER;
         this.disabledCobertura = true;
       } else {
-        const adElement = document.getElementById(`a${this.posicion}`) as HTMLInputElement;
-        adElement.checked = false;
-        const ddElement = document.getElementById(`d${this.posicion}`) as HTMLInputElement;
-        ddElement.checked = false;
-        this.tipoMovimiento[this.posicion] = null;
-        this.datosAdicionales[this.posicion] = null;
+        // const adElement = document.getElementById(`a${this.posicion}`) as HTMLInputElement;
+        // adElement.checked = false;
+        // const ddElement = document.getElementById(`d${this.posicion}`) as HTMLInputElement;
+        // ddElement.checked = false;
+        // this.tipoMovimiento[this.posicion] = null;
+         this.datosAdicionales[this.posicion] = null;
       }
     });
   }
@@ -206,7 +214,7 @@ export class ReservaSiniestroComponent implements OnInit {
             if (res == "OK") {
               Swal.fire('Información', 'SE ELIMINARON LOS DATOS ADICIONALES DE LA COBERTURA.', 'success');
               this.disabledCobertura = false;
-              this.tipoMovimiento[posicion] = null;
+              //this.tipoMovimiento[posicion] = null;
 
               const adElement = document.getElementById(`a${posicion}`) as HTMLInputElement;
               adElement.checked = false;
@@ -244,13 +252,19 @@ export class ReservaSiniestroComponent implements OnInit {
         return;
       } else {
         this.posicion = i;
-        if (this.tipoMovimiento[i] == null || this.tipoMovimiento[i] == undefined) {
+        if (this.tipoMovimiento == null || this.tipoMovimiento == undefined || this.tipoMovimiento == "") {
           event.target.checked = false;
           Swal.fire('Información', 'Debe elegir el tipo de movimiento', 'warning');
           return;
         } else {
-          this.reservaCaso.SMOVETYPE = this.tipoMovimiento[i];
-          this.openModalCobertura(origen)
+          if(this.posicionActual != this.posicion){
+            event.target.checked = false;
+            Swal.fire('Información', 'Debe elegir el tipo de movimiento', 'warning');
+            return;
+          }else{
+            this.reservaCaso.SMOVETYPE = this.tipoMovimiento;
+            this.openModalCobertura(origen)
+          }
         }
       }
 
@@ -268,7 +282,7 @@ export class ReservaSiniestroComponent implements OnInit {
     if (this.disabledCobertura) {
       reserva.LIST_PARAM_RESERVE.push({
         SKEY: this.reservaCaso.SKEY,
-        SMOVETYPE: this.tipoMovimiento[this.posicion],
+        SMOVETYPE: this.tipoMovimiento,
         NCLAIM: Number(this.reservaCaso.NCLAIM),
         NCOVER: cover.NCOVER,
         NRESERVEAMOUNT: cover.NRESERVEAMOUNT,
@@ -318,6 +332,8 @@ export class ReservaSiniestroComponent implements OnInit {
                       this.reservaCaso = new ClaimCoverResponse();
                       this.disabledCobertura = false;
                       this.datosAdicionales = [];
+                      this.posicion = 0;
+                      this.posicionActual = 0;
                     } else {
                       Swal.fire('Información', 'Reserva creada. Informacion aun en temporal');
                       this.claimRequest = new ClaimRequest();
@@ -326,6 +342,8 @@ export class ReservaSiniestroComponent implements OnInit {
                       this.reservaCaso = new ClaimCoverResponse();
                       this.disabledCobertura = false;
                       this.datosAdicionales = [];
+                      this.posicion = 0;
+                      this.posicionActual = 0;
                     }
                   },
                   err => {
@@ -348,6 +366,12 @@ export class ReservaSiniestroComponent implements OnInit {
       return;
     }
 
+  }
+
+  changeRadio(i:number, event: any){
+    this.posicionActual = i;
+    console.log(i);
+    console.log(this.tipoMovimiento)
   }
 
 

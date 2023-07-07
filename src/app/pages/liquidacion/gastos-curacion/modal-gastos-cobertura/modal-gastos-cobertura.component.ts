@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Movimiento } from '../gastos-curacion.component';
 //import { Detalle } from '../gastos-curacion.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import Swal from 'sweetalert2';
@@ -10,6 +9,7 @@ import { Subject } from 'rxjs';
 import { LiquidacionService } from 'src/app/core/services/liquidacion/liquidacion.service';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 import { SwalCarga } from 'src/app/core/swal-loading';
+import { Movimiento } from '../../models/GastoCuracionModel';
 
 export class DatosSiniestro{
   PNCLAIM : string;

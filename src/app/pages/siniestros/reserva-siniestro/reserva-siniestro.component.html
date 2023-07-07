@@ -97,12 +97,12 @@
                 <td>{{claim.NSUMINSURED}}</td>
                 <td>
                     <div class="form-group">
-                        <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento[i]" ngDefaultControl>
+                        <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento" ngDefaultControl (ngModelChange)="changeRadio(i, $event)">
                             <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" name="radio" [id]="'a'+i" value="A" [disabled]="(disabledCobertura && posicion == i) || disabledTodo || (tipoTab == 2)"/> <i class="fa fa-arrow-up"></i>
+                                <input type="radio" name="radio" [id]="'a'+i" value="A" [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2)"/> <i class="fa fa-arrow-up"></i>
                             </label>
                             <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" name="radio" [id]="'d'+i" value="D" [disabled]="(disabledCobertura  && posicion == i) || disabledTodo || (tipoTab == 2)" /> <i class="fa fa-arrow-down"></i>
+                                <input type="radio" name="radio" [id]="'d'+i" value="D" [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2)" /> <i class="fa fa-arrow-down"></i>
                             </label>
                         </div>
                     </div>
@@ -114,7 +114,7 @@
                     {{claim.SNROLETTER}}
                 </td>
                 <td>
-                    <span *ngIf="claim.NACCUMRESERVE > 0">{{claim.NACCUMRESERVE}}</span>
+                    <span *ngIf="claim.NACCUMRESERVE != 0">{{claim.NACCUMRESERVE}}</span>
                 </td>
                 <td>
                     <div class="form-check" *ngIf="tipoTab == 1">
@@ -123,7 +123,7 @@
                     </div>
                 </td>
                 <td>
-                    <button *ngIf="tipoTab == 1 && disabledCobertura && posicion == i" class="btn btn-busqueda mr-3" (click)="eliminarTablaTemporal(claim, i)"><i class="fa fa-trash"></i></button>
+                    <button *ngIf="tipoTab == 1 && disabledCobertura && posicion == i" class="btn btn-danger mr-3" (click)="eliminarTablaTemporal(claim, i)"><i class="fa fa-trash"></i></button>
                     <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(claim.NCOVER)"><i class="fa fa-edit"></i></button>
                 </td>
             </tr>

@@ -90,12 +90,11 @@
                     [ngClass]="{'is-invalid': form.get('afectado').invalid && form.get('afectado').touched}">
                 <div class="input-group-append">
                     <button class="btn btn-primary" (click)="openBeneficiario()"><i class="fa fa-search"></i></button>
-                    <!-- <span class="input-group-text"><i class="fa fa-search"></i></span> -->
                 </div>
             </div>
         </div>
         <div class="col-sm-3 form-group">
-            <label>Tipo de ocupante</label>
+            <label>Ocupante</label>
             <select class="form-control" formControlName="nTipOcupante"
                 [ngClass]="{'is-invalid': form.get('nTipOcupante').invalid && form.get('nTipOcupante').touched}">
                 <option *ngFor="let ocupante of ocupantes" [value]="ocupante.codigo">{{ocupante.descript}}</option>
