@@ -10,11 +10,11 @@
     <div class="row" style="border-bottom: 1px solid #ccc!important;">
         <div class="col-sm-3 form-group">
             <label>Caso</label>
-            <input class="form-control" [(ngModel)]="caso" type="number">
+            <input class="form-control" [(ngModel)]="caso" type="number" (keyup.enter)="EventoBuscar($event)">
         </div>
         <div class="col-sm-3 form-group">
             <label>Nro. de siniestro</label>
-            <input class="form-control" [(ngModel)]="siniestro" type="number">
+            <input class="form-control" [(ngModel)]="siniestro" type="number" (keyup.enter)="EventoBuscar($event)">
         </div>
         <div class="col-sm-3" align="end">
             <p class="pb-0 mb-0">&nbsp;</p>
@@ -75,7 +75,7 @@
             <tr *ngFor="let movimiento of movimientos; let i = index"  [ngClass]="{'color_fila': movimientos[i].NROBENEF == 0 }">
                 <td style="text-align: center;">
                     <div class="form-check">
-                        <input [(ngModel)]="movimiento.SELECCION" class="form-check-input position-static" type="checkbox" (change)="seleccionChechbox(movimiento)" >
+                        <input [(ngModel)]="movimiento.SELECCION" class="form-check-input position-static" type="checkbox" (change)="seleccionChechbox(movimiento)" [disabled]=" movimientos[i].NROBENEF == 0 ? true : false " >
                     </div>
                 </td>
                 <!--<td>{{i+1}}</td>-->

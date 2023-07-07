@@ -5,6 +5,7 @@ import { ModalGastosCoberturaComponent } from './modal-gastos-cobertura/modal-ga
 import { DatosCasoSiniestro } from '../models/Liquidacion.model';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { LiquidacionService } from 'src/app/core/services/liquidacion/liquidacion.service';
+import { SwalCarga } from 'src/app/core/swal-loading';
 //import * as internal from 'stream';
 
 export class Movimiento{
@@ -66,41 +67,51 @@ export class GastosCuracionComponent implements OnInit {
     
 
   ngOnInit(): void {
-    //this.config.data = { Titulo: 'Generación de Factura de Abonos' };
-    //GASTOS DE CURACION
-    // this.movimientos.push({
-    //   NCLAIM: "44573", DESC_COBERTURA: "Gastos de curación", PENDIENTES: 548.00, DATO_ADICIONAL: "3735195", NCOVER : 1, seleccion : false, id:1
-    // });
-    // this.movimientos.push({
-    //   NCLAIM: "44573", DESC_COBERTURA: "Gastos de curación", PENDIENTES: 1000.85, DATO_ADICIONAL: "3735195", NCOVER : 1, seleccion : false, id:2
-    // })
-    // this.movimientos.push({
-    //   NCLAIM: "44573", DESC_COBERTURA: "Gastos de curación", PENDIENTES: -300.48, DATO_ADICIONAL: "Ajuste 105", NCOVER : 1, seleccion : false, id:3
-    // })
-    // //GASTOS DE SEPELIO
-    // this.movimientos.push({
-    //   NCLAIM: "44573", DESC_COBERTURA: "Gastos de sepelio", PENDIENTES: 2000.05, DATO_ADICIONAL: "", NCOVER : 2, seleccion : false, id:4
-    // })
-    // //INVALIDEZ PERMANENTE
-    // this.movimientos.push({
-    //   NCLAIM: "44573", DESC_COBERTURA: "Invalidez permanente", PENDIENTES: 18000, DATO_ADICIONAL: "", NCOVER : 3, seleccion : false, id:5
-    // })
-    // this.movimientos.push({
-    //   NCLAIM: "44573", DESC_COBERTURA: "Invalidez permanente", PENDIENTES: 10000.95, DATO_ADICIONAL: "", NCOVER : 3, seleccion : false, id:6
-    // })
-    // //INVALIDEZ TEMPORAL
-    // this.movimientos.push({
-    //   NCLAIM: "44573", DESC_COBERTURA: "Invalidez temporal", PENDIENTES: 500, DATO_ADICIONAL: "", NCOVER : 4, seleccion : false, id:7
-    // })
-    // this.movimientos.push({
-    //   NCLAIM: "44573", DESC_COBERTURA: "Invalidez temporal", PENDIENTES: 300, DATO_ADICIONAL: "", NCOVER : 4, seleccion : false, id:8
-    // })
-    // //MUERTE
-    // this.movimientos.push({
-    //   NCLAIM: "44573", DESC_COBERTURA: "Muerte", PENDIENTES: 198000, DATO_ADICIONAL: "", NCOVER : 5, seleccion : false, id:9
-    // })
+    /*
+    this.config.data = { Titulo: 'Generación de Factura de Abonos' };
+    GASTOS DE CURACION
+     this.movimientos.push({
+       NCLAIM: "44573", DESC_COBERTURA: "Gastos de curación", PENDIENTES: 548.00, DATO_ADICIONAL: "3735195", NCOVER : 1, seleccion : false, id:1
+     });
+     this.movimientos.push({
+       NCLAIM: "44573", DESC_COBERTURA: "Gastos de curación", PENDIENTES: 1000.85, DATO_ADICIONAL: "3735195", NCOVER : 1, seleccion : false, id:2
+     })
+     this.movimientos.push({
+       NCLAIM: "44573", DESC_COBERTURA: "Gastos de curación", PENDIENTES: -300.48, DATO_ADICIONAL: "Ajuste 105", NCOVER : 1, seleccion : false, id:3
+     })
+     //GASTOS DE SEPELIO
+     this.movimientos.push({
+       NCLAIM: "44573", DESC_COBERTURA: "Gastos de sepelio", PENDIENTES: 2000.05, DATO_ADICIONAL: "", NCOVER : 2, seleccion : false, id:4
+     })
+     //INVALIDEZ PERMANENTE
+     this.movimientos.push({
+       NCLAIM: "44573", DESC_COBERTURA: "Invalidez permanente", PENDIENTES: 18000, DATO_ADICIONAL: "", NCOVER : 3, seleccion : false, id:5
+     })
+     this.movimientos.push({
+       NCLAIM: "44573", DESC_COBERTURA: "Invalidez permanente", PENDIENTES: 10000.95, DATO_ADICIONAL: "", NCOVER : 3, seleccion : false, id:6
+     })
+     //INVALIDEZ TEMPORAL
+     this.movimientos.push({
+       NCLAIM: "44573", DESC_COBERTURA: "Invalidez temporal", PENDIENTES: 500, DATO_ADICIONAL: "", NCOVER : 4, seleccion : false, id:7
+     })
+     this.movimientos.push({
+       NCLAIM: "44573", DESC_COBERTURA: "Invalidez temporal", PENDIENTES: 300, DATO_ADICIONAL: "", NCOVER : 4, seleccion : false, id:8
+     })
+     //MUERTE
+     this.movimientos.push({
+       NCLAIM: "44573", DESC_COBERTURA: "Muerte", PENDIENTES: 198000, DATO_ADICIONAL: "", NCOVER : 5, seleccion : false, id:9
+     })
+     */
   }
+  EventoBuscar(e){
+    
+    //valor del input e.target.value
+    //if(e.keycode == 13){
+      this.buscadorMovimientos();
+    //}
 
+    //this.buscadorMovimientos();
+  }
 
   buscadorMovimientos(){
     //if(this.caso.replace(/ /g, "") == "" || this.siniestro.replace(/ /g, "") == ""){
@@ -110,7 +121,7 @@ export class GastosCuracionComponent implements OnInit {
       this.detalle = new Detalle();
       return;
     }else{
-      
+      SwalCarga();
       const datosCasoSiniestro = new DatosCasoSiniestro();
       datosCasoSiniestro.ncase = this.caso;
       datosCasoSiniestro.nclaim = this.siniestro;
@@ -119,6 +130,7 @@ export class GastosCuracionComponent implements OnInit {
         s => {
           console.log(s);
           this.dataSourceLiquidacion = s;
+          Swal.close();
 
           if (this.dataSourceLiquidacion.NCODERROR == "1"){
             Swal.fire('Error', this.dataSourceLiquidacion.SMESSAGEERROR, 'error');
@@ -175,6 +187,7 @@ export class GastosCuracionComponent implements OnInit {
         },
         e => {
           console.log(e);
+          Swal.close();
           //dialogRefLoad.close();
         });
     }

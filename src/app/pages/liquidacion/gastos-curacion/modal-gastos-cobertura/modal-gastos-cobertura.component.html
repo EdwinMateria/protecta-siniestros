@@ -124,7 +124,7 @@
         </div>
     </div>
     <div *ngIf="tipoCobertura == 2 || tipoCobertura == 3 || tipoCobertura == 4 || tipoCobertura == 5"> 
-        <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && reembolso == 2">
+        <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && cant_facturas > 0"> <!-- reembolso == 2-->
             <div class="col-sm-3 form-group" *ngIf="(cant_facturas == 1)">
                 <label>Nro. de factura</label>
                 <input type="text" class="form-control" disabled [(ngModel)]="nroFactura" id="nroFactura">
@@ -167,7 +167,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && reembolso== 2">
+        <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && cant_facturas > 0"> <!--reembolso== 2-->
             <div class="col-sm-3 form-group">
                 <label>Base imponible</label>
                 <input type="number" class="form-control" [(ngModel)]="baseImponible" disabled>
@@ -221,7 +221,7 @@
             </div>
             <div class="col-sm-3 form-group">
                 <label>Total a pagar</label>
-                <input type="number" [value]="totalFactura" class="form-control" id="totalPago" style="text-align: right;" [formControl]="formimporte" [ngClass]="{'is-invalid': formimporte.invalid && formimporte.touched}">
+                <input type="number" [value]="totalFactura" class="form-control" id="totalPago" style="text-align: right;" [formControl]="formimporte" [ngClass]="{'is-invalid': formimporte.invalid && formimporte.touched}" >
                 <input type="number" [value]="PendPagoClient" class="form-control" id="Txt_PendPagoClient" style="text-align: right;display: none;">
                 <input type="number" [value]="pendpagofac" class="form-control" id="pendpagofac" style="text-align: right;display: none;">
             </div>
@@ -292,7 +292,7 @@
                 <tr *ngFor="let beneficiarios of salidaBeneficiariosMuerte; let i = index">                    
                     <td>
                         <div class="form-check">
-                            <input class="form-check-input position-static" type="checkbox" [(ngModel)]="beneficiarios.SELECT" (change)="eventCheck(beneficiarios.SCLIENT)">
+                            <input class="form-check-input position-static" type="checkbox" [(ngModel)]="beneficiarios.SELECT">
                         </div>
                     </td>
                     <td>
@@ -301,7 +301,7 @@
                     <td>{{beneficiarios.SCLIENAME}}</td>
                     <td>{{beneficiarios.SSHORT_DES}} - {{beneficiarios.DOCUMENTO}}</td>
                     <td>
-                        <select class="form-control"  [(ngModel)]="beneficiarios.m_tipopago" ><!-- id="txt_tp_'+ beneficiarios.SCLIENT+'" -->
+                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_tipopago" ><!-- id="txt_tp_'+ beneficiarios.SCLIENT+'" -->
                             <option  [value]="0">
                                 Seleccionar
                             </option>
@@ -311,7 +311,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="form-control"  [(ngModel)]="beneficiarios.m_formapago">
+                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_formapago">
                             <option  [value]="0">
                                 Seleccionar
                             </option>
@@ -321,15 +321,15 @@
                         </select>
                     </td>                    
                     <td>
-                        <input type="text" class="form-control"  disabled [(ngModel)]="beneficiarios.NBANKEXT" style="display: none;">
-                        <input type="text" class="form-control"   disabled [(ngModel)]="beneficiarios.NOMBRE_BANCO">
-                    </td> <!--[value]="beneficiarios.NOMBRE_BANCO"  id="formaPago" id="tipoPago"  id="txtidbanco" id="nombreBanco" id="nroCuenta" id="observaciones" -->                    
-                    <td><input type="text" class="form-control"  disabled [(ngModel)]="beneficiarios.SACCOUNT"></td>  <!--[value]="beneficiarios.SACCOUNT">-->
-                    <td><input type="text" class="form-control" maxlength="30" [(ngModel)]="beneficiarios.Observaciones"></td>
+                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NBANKEXT" style="display: none;">
+                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NOMBRE_BANCO">
+                    </td>                  
+                    <td><input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SACCOUNT"></td>  <!--[value]="beneficiarios.SACCOUNT">-->
+                    <td><input type="text" class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" maxlength="30" [(ngModel)]="beneficiarios.Observaciones"></td>
                     <td>                        
-                        <input class="form-control" type="number" [(ngModel)]="beneficiarios.MONTO_PAGO">
-                        <input class="form-control" type="number" [(ngModel)]="beneficiarios.MONTO_PAGO2" style="display: none;">
-                        <input type="text" class="form-control" [(ngModel)]="beneficiarios.SCLIENT" style="display: none;">
+                        <input class="form-control" type="number" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.MONTO_PAGO">
+                        <input class="form-control" type="number" disabled [(ngModel)]="beneficiarios.MONTO_PAGO2" style="display: none;">
+                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SCLIENT" style="display: none;">
                         <!--{{ beneficiarios.MONTO_PAGO | number : '1.2-2' }}-->                            
                         <!--{{totalPagarMuerte | number : '1.2-2' }}-->
                     </td>

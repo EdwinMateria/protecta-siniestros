@@ -8,6 +8,8 @@ import { async } from 'rxjs/internal/scheduler/async';
 import { AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { LiquidacionService } from 'src/app/core/services/liquidacion/liquidacion.service';
+import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
+import { SwalCarga } from 'src/app/core/swal-loading';
 
 export class DatosSiniestro{
   PNCLAIM : string;
@@ -264,9 +266,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
   cant_facturas = 0; 
   FechaFinAnalisis = "";
   txttipopago = "";
-  txtformapago = "";
+  txtformapago = "";  
   BtnDisabled1 = false;
-  BtnDisabled2 = false;
+  BtnDisabled2 = false;  
   messageMVal = "";
   CbonomBeneficiarios = "";
   formfecha_analisis = new FormControl(null, [Validators.required]);
@@ -282,7 +284,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   }
 
   constructor(private service: LiquidacionService,
-              private modalService: NgbModal) { }
+              private modalService: NgbModal, public authProtectaService: AuthProtectaService) { }
 
   datosPago: DatosPago = new DatosPago;
   datosPagoSalida: DatosPago = new DatosPago;
@@ -472,7 +474,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   }
 
   ObtenerBeneficiarios(data : DatosBeneficiarios){
-
+    SwalCarga();
 
     this.service.ObtenerBeneficiarios(data).subscribe(
       s => {        
@@ -511,6 +513,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
                 this.totalFactura = this.redondearDecimales(this.salidaBeneficiarios[0].MONTO_PAGO,2);//monto a pagar por beneficario
                 this.PendPagoClient = this.redondearDecimales(this.salidaBeneficiarios[0].MONTO_PAGO,2);//monto a pagar por beneficario
                 this.pendientePagoCob = this.redondearDecimales(this.salidaBeneficiarios[0].MONTO_PAGO2,2);
+                this.cant_facturas = this.salidaBeneficiarios[0].CANT_FACTURAS;  
                 this.reembolso = this.salidaBeneficiarios[0].REEMBOLSO;
                 this.txttipopago = "10";                
                 this.txtformapago = "0";
@@ -520,13 +523,12 @@ export class ModalGastosCoberturaComponent implements OnInit {
                 }else{
                   this.txtformapago = "11";
                 }                
-
-                if( (this.tipoCobertura == 4 || this.tipoCobertura == 5) && this.reembolso == 2){//gastos medicos y gastos de sepelio && this.salidaBeneficiarios[0].SCLIENT 
+                
+                if( (this.tipoCobertura == 4 || this.tipoCobertura == 5) && this.cant_facturas > 0){//this.reembolso == 2   gastos medicos y gastos de sepelio && this.salidaBeneficiarios[0].SCLIENT 
                   
-                  this.cant_facturas = this.salidaBeneficiarios[0].CANT_FACTURAS;                 
-
+                  this.formimporte.disable();
                   //Armamos lista para filtrar las facturas de ese cliente
-                  if(this.cant_facturas > 0 ){
+                  //if(this.cant_facturas > 0 ){
 
                       this.FiltroList_Fact[0]= {
                         PNCLAIM : parseInt(data.PNCLAIM),
@@ -536,7 +538,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
                       };
 
                       this.ObtenerListarFacturas(this.FiltroList_Fact[0]);
-                  }
+                  //}
+                }else{
+                  this.formimporte.enable();
                 }               
 
             }
@@ -544,18 +548,20 @@ export class ModalGastosCoberturaComponent implements OnInit {
              selectElement.focus();
           }
           
-        //}        
+        //} 
+        Swal.close();  
         console.log('Beneficiarios: '); 
         console.log(this.salidaBeneficiarios);        
       },
       e => {
+        Swal.close();
         console.log(e);
         //dialogRefLoad.close();
       });
   }
 
   ObtenerBeneficiariosMuerte(data : DatosBeneficiarios){
-
+  SwalCarga();
     console.log(data);
     this.service.ObtenerBeneficiariosMuerte(data).subscribe(
       s => {        
@@ -587,9 +593,11 @@ export class ModalGastosCoberturaComponent implements OnInit {
             }            
         });
         console.log('Beneficiarios Muerte: '); 
-        console.log(this.salidaBeneficiariosMuerte);        
+        console.log(this.salidaBeneficiariosMuerte);      
+        Swal.close();    
       },
       e => {
+        Swal.close();
         console.log(e);
         //dialogRefLoad.close();
       });
@@ -615,7 +623,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   //salidaBeneficiariosMuerte
 
   cambioBeneficiario(){ //vsclient: string
-
+    SwalCarga();
     this.Clear_Inputs();
 
     const selectElement = document.getElementById("nomBeneficiarios") as HTMLSelectElement;
@@ -637,7 +645,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
           const cant_fac = lstbenef[0].CANT_FACTURAS;  
           this.pendientePagoCob = lstbenef[0].MONTO_PAGO2; 
           this.reembolso = lstbenef[0].REEMBOLSO; 
-
 
           /*
           const cod_client = selectedValue.split("|")[0]; 
@@ -669,6 +676,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
           this.nroCuenta = numCuenta;    
           this.totalFactura = this.redondearDecimales((montoPago),2); //monto a pagar por factura del beneficario
           this.PendPagoClient = this.redondearDecimales((montoPago),2);//monto a pagar por beneficario
+          this.cant_facturas = cant_fac;  
 
           this.nroFactura = "";
           this.fechaEmisionFac = "";
@@ -687,13 +695,13 @@ export class ModalGastosCoberturaComponent implements OnInit {
             this.txtformapago = "11";
           }
 
-          if((this.tipoCobertura == 4 || this.tipoCobertura == 5) && this.reembolso == 2){ //gastos medicos y gastos de sepelio  && this.salidaBeneficiarios[0].SCLIENT 
+          if((this.tipoCobertura == 4 || this.tipoCobertura == 5) && this.cant_facturas > 0){ //this.reembolso == 2  gastos medicos y gastos de sepelio  && this.salidaBeneficiarios[0].SCLIENT 
+
+            this.formimporte.disable();
 
               this.FechaFinAnalisis = "";
-
-              this.cant_facturas = cant_fac;    
               //Armamos lista para filtrar las facturas de ese cliente
-              if(this.cant_facturas > 0 ){
+              //if(this.cant_facturas > 0 ){
                   this.FiltroList_Fact[0]= {
                     PNCLAIM : parseInt(this.datosBeneficiarios.PNCLAIM),
                     PCASENUM : parseInt(this.datosBeneficiarios.PCASENUM),
@@ -702,13 +710,16 @@ export class ModalGastosCoberturaComponent implements OnInit {
                   };
 
                 this.ObtenerListarFacturas(this.FiltroList_Fact[0]);
-              }
+              //}
+          }else{
+            this.formimporte.enable();
           }
         const selectfinanalisis = document.getElementById("TxtFechaFinAnalisis") as HTMLSelectElement;
         selectfinanalisis.focus();
 
 
    }
+   Swal.close();  
   }
 
   ObtenerListarFacturas(data : FiltroList_Fact){//?????????????????
@@ -822,6 +833,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
     }else{
 
+      
         let lstbenef = this.salidaBenef_Origen.filter(x => x.SCLIENT == vsclient);
 
         const vreembolso = lstbenef[0].REEMBOLSO;
@@ -850,7 +862,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
         //console.log("fechas:" + FinAnalisis +  "|" + this.datos_siniestro[0].DOCCURDAT  +  "|" + this.datosPago.FECHADECLARACION  +  "|" + this.datosPago.FECHAAPERTURA)
 
 
-        if(vreembolso == 2 ){//tipoclient=='RUC'
+        if(lstbenef[0].CANT_FACTURAS > 0 && this.nroFactura!= '' ){//vreembolso == 2  tipoclient=='RUC'
           //const selectElementFactura = document.getElementById("nroFactura") as HTMLSelectElement;
           //const Factura = selectElementFactura.value;      
                     
@@ -897,7 +909,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
         //INICIAR VALIDACIONES Y PROCESO DE PAGO this.procesarPago(this.Campospago_validar[0]);
 
         const messageVal = await this.Validaciones(this.Campospago_validar[0]);//sclient, tipoclient, '', ''/*FinAnalisis*/, TipoPago, FormaPago, PendPagarCob, 0 ,PendPagoClient, MontoPago);
-        
+        let cookie = this.authProtectaService.getCookie('AppSiniestro');
+        let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
+
         this.FiltroProcesoPago=[];
 
         this.FiltroProcesoPago[0]= {
@@ -922,7 +936,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
           P_OBSERVACIONES : this.Campospago_validar[0].vObserv,
           P_COD_DIAG : this.codDiagnostico,
           P_ESPECIALIDAD : this.especialidad,
-          P_NUSERCODE : 0
+          P_NUSERCODE : Number(atob(codUsuario))
         };  
         
         if( messageVal != ""){
@@ -1101,7 +1115,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
                       
                       return;
                     }else{
-                    
+                      let cookie = this.authProtectaService.getCookie('AppSiniestro');
+                      let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
+
                         Envio_Data.push({              
                             P_NCLAIM : parseInt(this.siniestro),
                             P_NCASE : parseInt(this.caso),
@@ -1113,9 +1129,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
                             //P_NCURRENCY  : ,        
                             P_SCLIENT : benef.SCLIENT,
                             P_NUMFACT : '',
-                            P_FEC_EMISION_FAC : '',
-                            P_FEC_RECEP_FAC : '',
                             P_DFINANALISIS : this.FechaFinAnalisis,
+                            P_FEC_EMISION_FAC : '',
+                            P_FEC_RECEP_FAC : '',                            
                             P_NOPER_TYPE : benef.m_tipopago,
                             P_NPAY_FORM : benef.m_formapago,
                             P_NBANKEXT : benef.NBANKEXT,
@@ -1124,7 +1140,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
                             P_OBSERVACIONES : benef.Observaciones,
                             P_COD_DIAG : this.codDiagnostico,
                             P_ESPECIALIDAD : this.especialidad,
-                            P_NUSERCODE : 0                 
+                            P_NUSERCODE : Number(atob(codUsuario))                 
                         });
                     }
                 } 
@@ -1167,6 +1183,8 @@ export class ModalGastosCoberturaComponent implements OnInit {
                 this.BtnDisabled2 = false;
               }
             });
+          }else{
+            this.BtnDisabled2 = false;
           }
 
           
@@ -1491,7 +1509,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   }
 
   EnviarPago(sFiltroProcesoPago: FiltroProcesoPago){
-   
+   //SwalCarga();
     this.FiltroProcesoPagoEnvio[0]= sFiltroProcesoPago;
     console.log(this.FiltroProcesoPagoEnvio);
     //this.reference.close(true);
@@ -1500,6 +1518,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
       s => { 
         this.salidaProcesoPago = s;
         console.log(s);
+        //Swal.close();
         if (this.salidaProcesoPago){ 
               if(this.salidaProcesoPago.STATUS == ''){
                 
@@ -1513,23 +1532,27 @@ export class ModalGastosCoberturaComponent implements OnInit {
               this.BtnDisabled1 = false;
               this.BtnDisabled2 = false;
         }
+       
       },
       e => {
         console.log(e);
+        //Swal.close();
         //dialogRefLoad.close();
+        this.BtnDisabled1 = false;
       });
 
   
   } 
 
   EnviarPagoMuerte(sFiltroProcesoPago: FiltroProcesoPago[]){
-    
+    //SwalCarga();
     
     console.log(sFiltroProcesoPago);
     this.service.InsertarLiquidacionSoat(sFiltroProcesoPago).subscribe(
       s => { 
         this.salidaProcesoPago = s;
         console.log(s);
+        //Swal.close();
         if (this.salidaProcesoPago){ 
               if(this.salidaProcesoPago.STATUS == ''){
                 Swal.fire('Información','Proceso de pago se realizo correctamente', 'success'); 
@@ -1541,29 +1564,16 @@ export class ModalGastosCoberturaComponent implements OnInit {
               }
               this.BtnDisabled2 = false;
         }
+        
       },
       e => {
         console.log(e);
+        //Swal.close();
         //dialogRefLoad.close();
+        this.BtnDisabled2 = false;
       });
   } 
-  eventCheck(v_sclient : string){
-
-    /*
-    this.salidaBeneficiariosMuerte.forEach(benef => {
-
-        benef.m_tipopago = "10";
-
-        if(benef.NOMBRE_BANCO!="" && benef.SACCOUNT!=""){
-          benef.m_formapago= "10";
-        }else{
-          benef.m_formapago= "11";
-        }
-
-    });
-
-    */
-  }
+ 
 
   Clear_Inputs(){
     //setear variables, listas y campos del Modal
