@@ -148,23 +148,25 @@ export class FormCasoComponent implements OnInit {
             }else{
               this.showBotones = true
               this.casoBM = res.GenericResponse[0];
-              let d = this.casoBM.dFecNacConductor .split("-");
-              console.log(this.casoBM.dFecNacConductor);
-              console.log(d[0])
-              console.log(d[1])
-              console.log(d[2].substring(0,2))
+
+              let d : string []=[];
+
+              if(this.casoBM.dFecNacConductor == null){
+                d = this.casoBM.dFecNacConductor .split("-");
+                let fechaEmi = new Date(d[1] + '/' + d[2].substring(0,2) + '/' + d[0]);
+                this.fechaNacimiento = this.datePipe.transform(fechaEmi, 'yyyy-MM-dd');
+              }
 
               this.form.patchValue({
                 ...this.casoBM,
                 dInicioVigencia : new Date(this.casoBM.dIniVigencia).toLocaleDateString('en-GB'),
                 dFinDeVigencia : new Date(this.casoBM.dFinVigencia).toLocaleDateString('en-GB'),
                 dFecOcurrencia : new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB'),
-                dFecNacConductor : new Date( d[0] + '-' + d[1] + '-'  + d[2].substring(0,2)),
+                dFecNacConductor : this.casoBM.dFecNacConductor == null ? null : new Date( d[0] + '-' + d[1] + '-'  + d[2].substring(0,2)),
                 nCaso: this.casoBM.nPolicy,
                 nPolicy: valorInput,
               });
-              let fechaEmi = new Date(d[1] + '/' + d[2].substring(0,2) + '/' + d[0]);
-              this.fechaNacimiento = this.datePipe.transform(fechaEmi, 'yyyy-MM-dd');
+              
 
               //Provincia
               this.changeDepartamento(false);
