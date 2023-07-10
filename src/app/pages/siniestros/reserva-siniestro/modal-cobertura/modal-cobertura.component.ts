@@ -101,6 +101,31 @@ export class ModalCoberturaComponent implements OnInit {
     //this.getCobertura();
 
     if(this.tab == 2) this.obtenerReservaDefinitiva();
+
+    this.obtenerCodigoDiagnostico();
+  }
+
+  obtenerCodigoDiagnostico(){
+    let request = new ClaimValCoverRequest();
+    request.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
+    request.NCLAIM =  Number(this.reservaCaso.NCLAIM);
+    request.NCOVER = this.data;
+    SwalCarga();
+    this.reserveService.GetCodDiagnosticCover(request).subscribe(
+      res => {
+        Swal.close();
+        console.log(res);
+        if(res.SCODIGODIAGNOSTICO){
+          this.model.CCODCIE10 = res.SCODIGODIAGNOSTICO;
+          this.model.CDESCRIPT = res.CDESCRIPT;
+          this.diagnosticoValue = res.CDESCRIPT ;
+        }
+      },
+      err => {
+        Swal.close();
+        Swal.fire('Error', err , 'error');
+      }
+    )
   }
 
   obtenerReservaDefinitiva(){

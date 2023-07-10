@@ -206,4 +206,11 @@ export class ReserveService {
     });
   }
 
+  public GetCodDiagnosticCover(data: ClaimValCoverRequest): Observable<ClaimGetDatAddResponseVM> {
+    const body = JSON.stringify(data);
+    return this.http.post<ClaimGetDatAddResponseVM>(this.Url + '/Reserve/GetCodDiagnosticCover', body, {
+      headers: this.headers,
+    });
+  }
+
 }
