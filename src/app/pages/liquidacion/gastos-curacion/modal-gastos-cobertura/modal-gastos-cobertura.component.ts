@@ -607,7 +607,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     this.service.ObtenerBeneficiarios(data).subscribe(
       s => {        
         this.salidaBeneficiarios = s;
-        console.log('Salida longitud lista: ' + this.salidaBeneficiarios.length.toString());
+        console.log('Salida longitud lista: ' + this.salidaBeneficiarios.length.ing(toStr));
         if (this.salidaBeneficiarios.length > 0){
           //console.log(this.baseImponible);
           //this.totalPagarMuerte = this.baseImponible / this.salidaBeneficiarios.length;
@@ -813,7 +813,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     const selectElement = document.getElementById("formaPago") as HTMLSelectElement;
     const selectedValue = selectElement.value;
 
-    if(selectedValue == "5" && this.banco != '' &&  this.nroCuenta != '' ){
+    if(selectedValue == "11" && this.banco != '' &&  this.nroCuenta != '' ){
       Swal.fire('Información','Esta cambiando la forma de pago a Cheque.', 'warning');
     }    
   }
@@ -1237,6 +1237,11 @@ export class ModalGastosCoberturaComponent implements OnInit {
      
     this.mensaje ='';
 
+    const fec_act = new Date();
+    const shoy = parseInt((this.formato_fecha(fec_act, 'dd/mm/yyyy')).replace(/-/g, ""));   
+   
+  
+
     const txt_fechaOcurrencia= document.getElementById("Txt_fechaOcurrencia") as HTMLSelectElement;
     const vfechaOcurrencia= parseInt((txt_fechaOcurrencia.value).replace(/-/g, ""));
     const txt_fechaDenuncia= document.getElementById("Txt_fechaDenuncia") as HTMLSelectElement;
@@ -1254,7 +1259,13 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.mensaje = "E|ffa|Ingrese la fecha de fin de análisis";     
       return this.mensaje;
 
-    }else if((vfinanalisis < vfechaOcurrencia ) && this.mensaje==''){
+    }else if((vfinanalisis > shoy ) && this.mensaje==''){
+
+      this.mensaje = "E|ffa|La fecha de fin de análisis no puede ser mayor a la fecha actual";
+      return this.mensaje;
+
+    }    
+    else if((vfinanalisis < vfechaOcurrencia ) && this.mensaje==''){
 
       this.mensaje = "E|ffa|La fecha de fin de análisis es menor a la fecha de ocurrencia";
       return this.mensaje;
@@ -1600,4 +1611,35 @@ export class ModalGastosCoberturaComponent implements OnInit {
     this.cant_facturas = 0;
     this.reembolso = 0;
   }
+
+  formatoFecha(fecha, formato) {
+    const map = {
+        dd: fecha.getDate(),
+        mm: fecha.getMonth() + 1,
+        yy: fecha.getFullYear().toString().slice(-2),
+        yyyy: fecha.getFullYear()
+    }
+
+    return formato.replace(/dd|mm|yy|yyy/gi, matched => map[matched])
+  }
+
+  formato_fecha(fecha, formato) {
+
+    const sdia = (((fecha.getDate()).toString()).length < 2 ?  ("0" + fecha.getDate()) :  fecha.getDate());
+    const smes = (((fecha.getMonth() +1).toString()) .length < 2 ? ("0" + (fecha.getMonth() +1)) : (fecha.getMonth() +1) );    
+    return (fecha.getFullYear() +  "-" +  smes + "-" + sdia );
+  }
+
+/*
+  formatoFecha2(fecha) {
+    //2023-07-11
+     const sfecha = fecha.split("-");
+     const sdia = sfecha[2];
+     const smes = sfecha[1];
+     const saño = sfecha[0];
+
+    return (sdia + "/"  + smes + "/" + saño )
+  }
+*/
+
 }

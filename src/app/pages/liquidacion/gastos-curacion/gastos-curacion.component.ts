@@ -116,8 +116,8 @@ export class GastosCuracionComponent implements OnInit {
             this.detalle.SCLIENAME = this.dataSourceLiquidacion.SCLIENAME;
             this.detalle.UIT = this.dataSourceLiquidacion.UIT;
             
-            if (this.dataSourceLiquidacion.SSTACLAIM == "1" || this.dataSourceLiquidacion.SSTACLAIM == "5" || this.dataSourceLiquidacion.SSTACLAIM == "7"){ 
-               Swal.fire('No hay reserva pendiente por liquidar. Estado del siniestro: ' + this.dataSourceLiquidacion.ESTADO_SINIESTRO);
+            if (this.dataSourceLiquidacion.SSTACLAIM == "1" || this.dataSourceLiquidacion.SSTACLAIM == "5" || this.dataSourceLiquidacion.SSTACLAIM == "6" || this.dataSourceLiquidacion.SSTACLAIM == "7" || this.dataSourceLiquidacion.SSTACLAIM == "8"){ 
+               Swal.fire('No hay reserva pendiente por liquidar porque el estado del siniestro esta : ' + this.dataSourceLiquidacion.ESTADO_SINIESTRO);
                this.mostrarTable = false;
                //this.detalle = new Detalle();
                return;
@@ -226,7 +226,8 @@ export class GastosCuracionComponent implements OnInit {
         modalRef.result.then((res) => {
 
           if(res== true ){ 
-            this.buscadorMovimientos()
+            //this.buscadorMovimientos()
+            this.mostrarTable = false;
           }
       });
       }
