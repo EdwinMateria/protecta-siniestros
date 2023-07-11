@@ -150,8 +150,9 @@ export class FormCasoComponent implements OnInit {
               this.casoBM = res.GenericResponse[0];
 
               let d : string []=[];
-
-              if(this.casoBM.dFecNacConductor == null){
+              console.log(this.casoBM.dFecNacConductor);
+              
+              if(this.casoBM.dFecNacConductor != null){
                 d = this.casoBM.dFecNacConductor .split("-");
                 let fechaEmi = new Date(d[1] + '/' + d[2].substring(0,2) + '/' + d[0]);
                 this.fechaNacimiento = this.datePipe.transform(fechaEmi, 'yyyy-MM-dd');
