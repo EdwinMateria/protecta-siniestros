@@ -4,9 +4,7 @@
 
 export const environment = {
   production: true,
-  siniestroAPI: 'http://localhost:30897/Api',
-  reservaApi: 'http://localhost:30897/Api',
-  kunturapi: 'http://localhost:30897/Api',
+  siniestroAPI: 'https://plataformadigital.stg.protectasecurity.pe/SiniestroSoatApi/Api'
 };
 
 /*
