@@ -1021,6 +1021,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
     const vfechaApertura= parseInt((txt_fechaApertura.value).replace(/-/g, ""));
     const vfinanalisis = parseInt((this.FechaFinAnalisis).replace(/-/g, ""));
 
+    
+    const fec_act = new Date();
+    const shoy = parseInt((this.formato_fecha(fec_act, 'dd/mm/yyyy')).replace(/-/g, ""));   
 
     let lstdatos = this.salidaBeneficiariosMuerte.filter(x => x.SELECT == true);
     const suma_montos = lstdatos
@@ -1037,6 +1040,12 @@ export class ModalGastosCoberturaComponent implements OnInit {
       selectElementFinAnalisis.focus();
       Swal.fire('Error',"Ingrese la fecha de fin de análisis", 'error');
 
+    }else if((vfinanalisis > shoy )){
+
+      this.messageMVal="E";
+      selectElementFinAnalisis.focus();
+      Swal.fire('Error',"La fecha de fin de análisis no puede ser mayor a la fecha actual", 'error');
+      
     }else if((vfinanalisis < vfechaOcurrencia )){
 
       this.messageMVal="E";
@@ -1238,9 +1247,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     this.mensaje ='';
 
     const fec_act = new Date();
-    const shoy = parseInt((this.formato_fecha(fec_act, 'dd/mm/yyyy')).replace(/-/g, ""));   
-   
-  
+    const shoy = parseInt((this.formato_fecha(fec_act, 'dd/mm/yyyy')).replace(/-/g, ""));     
 
     const txt_fechaOcurrencia= document.getElementById("Txt_fechaOcurrencia") as HTMLSelectElement;
     const vfechaOcurrencia= parseInt((txt_fechaOcurrencia.value).replace(/-/g, ""));
