@@ -12,9 +12,7 @@ export class SiniestroGuard implements CanActivate {
   constructor(public authProtectaService: AuthProtectaService) { }
 
   canActivate() {
-    console.log('guard');
-    
-    if (this.authProtectaService.getCookie('AppSiniestro') != "") {
+    if (this.authProtectaService.getCookie('AppSiniestro') != undefined) {
       return true;
     } else {
       window.location.href = AppConfig.URL_SINIESTROS_WEB;

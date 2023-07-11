@@ -219,12 +219,12 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
             this.reserveService.UPD_BANK(request).subscribe(res => {
               Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
-              jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT
+              jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;
+              this.reference.close(jsonResponse);
             },err => {
-              jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT
+              jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;
+              this.reference.close(jsonResponse);
             });
-            
-            this.reference.close(jsonResponse);
           }
         },
         err => {

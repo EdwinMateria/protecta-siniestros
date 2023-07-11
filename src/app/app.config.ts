@@ -14,7 +14,7 @@ export class AppConfig{
     }
 
     public static get URL_SINIESTROS_WEB() : string {
-        //return 'http://190.216.170.173/siniestrodes'
-        return 'http://localhost:55556';
+        return 'http://190.216.170.173/siniestrodes'
+        //return 'http://localhost:55556';
     }
 }
