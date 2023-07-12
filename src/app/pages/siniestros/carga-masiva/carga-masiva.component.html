@@ -116,6 +116,7 @@
                     <table class="table">
                         <thead>
                             <tr class="grid-title">
+                                <td class="grid-title-item text-center">Nro Fila</td>
                                 <td class="grid-title-item text-center">Nro Sin. Prov.</td>
                                 <td class="grid-title-item text-center">Producto</td>
                                 <td class="grid-title-item text-center">Póliza</td>
@@ -132,13 +133,16 @@
                     <ng-template #hideGrid1>
                         <tbody>
                             <tr>
-                                <td class="text-center" colspan="7">No se encontraron registros.</td>
+                                <td class="text-center" colspan="8">No se encontraron registros.</td>
                             </tr>
                         </tbody>
                     </ng-template>
                     <ng-template #showGrid>
                         <tbody *ngFor="let item of listToShow" style="cursor: pointer;">
                             <tr>
+                                <td class="data-table-tr-td text-center">
+                                    {{ item.NID_SOAT_OPE }}
+                                </td>
                                 <td class="data-table-tr-td text-center">
                                     {{ item.SNRO_SINIESTRO }}
                                 </td>

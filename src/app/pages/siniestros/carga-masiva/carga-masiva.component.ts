@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 
-export interface ListApertura {
+export interface ListAperturaPreliminar {
   LIST?: any;
   P_CTIPMOV_SOAT?: any;
   P_TYPE_LOAD?: any;
@@ -32,6 +32,10 @@ export interface ReportePreliminar {
   P_CAUX_SOAT_OPE?: string;
 }
 
+export interface ListAperturaDefinitivo {
+  LIST?: any;
+}
+
 @Component({
   selector: 'app-carga-masiva',
   templateUrl: './carga-masiva.component.html',
@@ -40,10 +44,11 @@ export interface ReportePreliminar {
 
 export class CargaMasivaComponent implements OnInit {
 
-  ListApertura: ListApertura;
+  ListAperturaPreliminar: ListAperturaPreliminar;
   ListCabecera: ListCabecera;
   ListErrores: ListErrores;
   ReportePreliminar: ReportePreliminar;
+  ListAperturaDefinitivo: ListAperturaDefinitivo;
 
   isLoading: boolean = false;
   apertura: boolean = true;
@@ -53,6 +58,9 @@ export class CargaMasivaComponent implements OnInit {
   definitivo: boolean = true;
   preliminar: boolean = true;
 
+
+  booleanSelect: boolean = false;
+  booleanDisabled: boolean = true;
   carga: number = 1;
   codigo: number = 1;
   trama: string = 'O';
@@ -67,11 +75,6 @@ export class CargaMasivaComponent implements OnInit {
   primeraColumna: any = [];
   correctos: any = [];
   errores: any = [];
-
-  itemChecks: any = {};
-  itemChecksSend: any[] = [];
-  booleanSelect: boolean = false;
-  booleanDisabled: boolean = true;
   
   listResults: any = [];
   listToShow: any = [];
@@ -221,15 +224,15 @@ export class CargaMasivaComponent implements OnInit {
   }
 
   getCheckedList = () => {
-    this.itemChecks = [];
-    this.itemChecksSend = [];
+    this.ListAperturaDefinitivo = {};
+    this.ListAperturaDefinitivo.LIST = [];
     for (var i = 0; i < this.listResults.length; i++) {
       if (this.listResults[i].IS_SELECTED) {
-        this.itemChecks.push(this.listResults[i]);
+        this.listResults[i].USERCODE = JSON.parse(localStorage.getItem('currentUser')).id;
+        this.ListAperturaDefinitivo.LIST.push(this.listResults[i]);
       }
     }
-    this.itemChecksSend.push(this.itemChecks);
-    if (this.itemChecks.length > 0) {
+    if (this.ListAperturaDefinitivo.LIST.length > 0) {
       this.definitivo = false;
     } else {
       this.definitivo = true;
@@ -247,35 +250,6 @@ export class CargaMasivaComponent implements OnInit {
     this.preliminar = true;
   }
 
-  onDefinitivo = () => {
-    Swal.fire('Información', 'Martha está desarrollando.', 'info');
-  }
-
-  descargarReportePreliminar = () => {
-    this.ReportePreliminar = {};
-    this.ReportePreliminar.P_CAUX_SOAT_OPE = this.caux_soat_ope;
-    this.CargaMasivaService.ProcessReportePreliminarSiniestrosSOAT(this.ReportePreliminar).subscribe(
-      res => {
-        let _data = res;
-        if (_data.response == 0) {
-          if (_data.Data != null) {
-            const file = new File([this.obtenerBlobFromBase64(_data.Data, '')], 'Reporte_Preliminar_Siniestros_SOAT_' + this.ReportePreliminar.P_CAUX_SOAT_OPE + '.xlsx', { type: 'text/xls' });
-            FileSaver.saveAs(file);
-          }
-        }
-        else {
-          Swal.fire({
-            title: 'Información',
-            text: _data.Data,
-            icon: 'info',
-            confirmButtonText: 'Continuar',
-            allowOutsideClick: false
-          })
-        }
-      }
-    )
-  }
-
   onPreliminar = () => {
     this.isLoading = true;
     this.ListCabecera = {};
@@ -284,24 +258,24 @@ export class CargaMasivaComponent implements OnInit {
       this.CargaMasivaService.ListarCabeceraData(this.ListCabecera).subscribe(
         res => {
           this.cabeceraData = res.Result.P_TABLE;
-          this.ListApertura = {};
-          this.ListApertura.LIST = [];
-          this.ListApertura.P_CTIPMOV_SOAT = this.trama;
-          this.ListApertura.P_TYPE_LOAD = this.carga;
+          this.ListAperturaPreliminar = {};
+          this.ListAperturaPreliminar.LIST = [];
+          this.ListAperturaPreliminar.P_CTIPMOV_SOAT = this.trama;
+          this.ListAperturaPreliminar.P_TYPE_LOAD = this.carga;
           this.cabeceraDataName = [];
           for (var i = 0; i < this.cabeceraData.length; i++) {
             this.cabeceraDataName.push(this.cabeceraData[i].SFIELDNAME);
           }
           this.primeraColumna = this.dataSet[0];
           if (this.cabeceraDataName.length != this.primeraColumna.length) {
-            Swal.fire('Información', 'El número de columnas no coincide.', 'warning');
             this.isLoading = false;
+            Swal.fire('Información', 'El número de columnas no coincide.', 'warning');
             return;
           } else {
             for (var i = 0; i < this.cabeceraDataName.length; i++) {
               if (this.cabeceraDataName[i].trim() != this.primeraColumna[i].trim()) {
-                Swal.fire('Información', 'Los nombres de la cabecera no coinciden.', 'warning');
                 this.isLoading = false;
+                Swal.fire('Información', 'Los nombres de la cabecera no coinciden.', 'warning');
                 return;
               }
             }
@@ -343,11 +317,10 @@ export class CargaMasivaComponent implements OnInit {
                 item.FECHA_NACIMIENTO = this.dataSet[i][31]?.trim();
                 // item.CENTRO_MEDICO = this.dataSet[i][0]?.trim();
                 // item.TIPO_SINIESTRO = this.dataSet[i][0]?.trim();
-                this.ListApertura.LIST.push(item);
+                this.ListAperturaPreliminar.LIST.push(item);
               }
-              this.CargaMasivaService.RecorrerListaApertura(this.ListApertura).subscribe(
+              this.CargaMasivaService.RecorrerListaApertura(this.ListAperturaPreliminar).subscribe(
                 res => {
-                  Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
                   this.currentPage = 1;
                   this.listResults = res.Result.P_TABLE;
                   this.totalItems = this.listResults.length;
@@ -356,8 +329,9 @@ export class CargaMasivaComponent implements OnInit {
                     this.currentPage * this.itemsPerPage
                   );
                   this.caux_soat_ope = this.listResults[0].CAUX_SOAT_OPE;
-                  this.isLoading = false;
                   this.reporte_prel = false;
+                  this.isLoading = false;
+                  Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
                   for (var i = 0; i < this.listResults.length; i++) {
                     if (this.listResults[i].SDET_ERROR.length > 0) {
                       this.booleanDisabled = true;
@@ -368,13 +342,13 @@ export class CargaMasivaComponent implements OnInit {
                   }
                 },
                 err => {
-                  Swal.fire('Información', 'Ha ocurrido un error al procesar los datos.', 'error');
                   this.isLoading = false;
+                  Swal.fire('Información', 'Ha ocurrido un error al procesar los datos.', 'error');
                 }
               )
             } else {
-              Swal.fire('Información', 'No existen datos.', 'warning');
               this.isLoading = false;
+              Swal.fire('Información', 'No existen datos.', 'warning');
             }
           }
         },
@@ -384,15 +358,34 @@ export class CargaMasivaComponent implements OnInit {
         }
       )
     } else if (this.codigo == 2) {
-      Swal.fire('Información', 'Martha está desarrollando.', 'info');
       this.isLoading = false;
+      Swal.fire('Información', 'Martha está desarrollando.', 'info');
     } else if (this.codigo == 3) {
+      this.isLoading = false;
       Swal.fire('Información', 'Martha está desarrollando.', 'info');
-      this.isLoading = false;
     } else {
-      Swal.fire('Información', 'Seleccione el tipo de trama.', 'warning');
       this.isLoading = false;
+      Swal.fire('Información', 'Seleccione el tipo de trama.', 'warning');
     }
+  }
+
+  onDefinitivo = () => {
+    this.isLoading = true;
+    this.CargaMasivaService.CargarDefinitivoApertura(this.ListAperturaDefinitivo).subscribe(
+      res => {
+        if (res.Result.P_NCODE == 0) {
+          this.isLoading = false;
+          Swal.fire('Información', res.Result.P_SMESSAGE, 'success');
+        } else {
+          this.isLoading = false;
+          Swal.fire('Información', res.Result.P_SMESSAGE, 'error');
+        }
+      },
+      err => {
+        this.isLoading = false;
+        Swal.fire('Información', 'Ha ocurrido un error al procesar los datos.', 'error');
+      }
+    )
   }
 
   onApertura = (e) => {
@@ -429,6 +422,31 @@ export class CargaMasivaComponent implements OnInit {
       this.trama = null;
       this.codigo = null;
     }
+  }
+
+  descargarReportePreliminar = () => {
+    this.ReportePreliminar = {};
+    this.ReportePreliminar.P_CAUX_SOAT_OPE = this.caux_soat_ope;
+    this.CargaMasivaService.ProcessReportePreliminarSiniestrosSOAT(this.ReportePreliminar).subscribe(
+      res => {
+        let _data = res;
+        if (_data.response == 0) {
+          if (_data.Data != null) {
+            const file = new File([this.obtenerBlobFromBase64(_data.Data, '')], 'Reporte_Preliminar_Siniestros_SOAT_' + this.ReportePreliminar.P_CAUX_SOAT_OPE + '.xlsx', { type: 'text/xls' });
+            FileSaver.saveAs(file);
+          }
+        }
+        else {
+          Swal.fire({
+            title: 'Información',
+            text: _data.Data,
+            icon: 'info',
+            confirmButtonText: 'Continuar',
+            allowOutsideClick: false
+          })
+        }
+      }
+    )
   }
 
   obtenerBlobFromBase64 = (b64Data: string, contentType: string) => {

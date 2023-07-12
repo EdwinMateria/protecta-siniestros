@@ -31,4 +31,9 @@ export class CargaMasivaService {
         const data = JSON.stringify(idata);
         return this.http.post<any[]>(this.Url + '/Siniestros/ProcessReportePreliminarSiniestrosSOAT', data, { headers: this.headers });
     };
+
+    public CargarDefinitivoApertura(idata: any): Observable<any> {
+        const data = JSON.stringify(idata);
+        return this.http.post<any[]>(this.Url + '/Siniestros/CargarDefinitivoApertura', data, { headers: this.headers });
+    };
 }
