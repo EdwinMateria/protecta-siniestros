@@ -271,7 +271,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   BtnDisabled2 = false;  
   messageMVal = "";
   CbonomBeneficiarios = "";
-  formfecha_analisis = new FormControl(null, [Validators.required]);
+  //formfecha_analisis = new FormControl(null, [Validators.required]);
   formtipopago = new FormControl("0", [Validators.required, this.notAllowed(/^0/)]);
   formformapago = new FormControl("0", [Validators.required, this.notAllowed(/^0/)]);
   formimporte = new FormControl(0, [Validators.required, this.notAllowed(/^0/)]);
@@ -358,10 +358,10 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.datosBeneficiarios.PCASENUM = this.caso;    
       this.datosBeneficiarios.PPOLICY = this.poliza;
       this.ObtenerBeneficiarios(this.datosBeneficiarios);  
+      this.pendientePago = this.redondearDecimales(this.data[0].PAGOS_PEND_BENEF,2);
       //this.baseImponible = this.data.reduce(function (acc, obj) { return acc + obj.PENDIENTES; }, 0);
       //this.baseImponible = this.redondearDecimales(this.data[0].PENDIENTES,2);
-     //IGV:0.18 %     
-     this.pendientePago = this.redondearDecimales(this.data[0].PAGOS_PEND_BENEF,2);
+     //IGV:0.18 %    
     }
 
     if(this.tipoCobertura == 2 || this.tipoCobertura == 3){//Incapacidad Temporal ó Invalidez Permanente
@@ -373,7 +373,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.ObtenerBeneficiarios(this.datosBeneficiarios);
       this.pendientePago = this.redondearDecimales(this.data[0].PAGOS_PEND_BENEF,2);
       //this.baseImponible = this.redondearDecimales(0,2);
-      this.totalFactura = this.redondearDecimales(this.baseImponible,2) ;
+      /* Cambio dia 12-07-23 este campo no se utiliza en estas coberturas
+         this.totalFactura = this.redondearDecimales(this.baseImponible,2) ;
+      */
     }
 
     if(this.tipoCobertura ==  1){//Muerte
@@ -389,12 +391,23 @@ export class ModalGastosCoberturaComponent implements OnInit {
   }
 
   redondearDecimales(numero, decimales) {
-    const numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
+
+    const numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');// Expresion regular para numeros con un cierto numero de decimales o mas
+    
     if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
         return Number(numero.toFixed(decimales));
     } else {
         return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
     }
+    
+
+    /*
+    const numero_decimal1 = new RegExp('\\d\\.(\\d){' + 1 + ',}');   
+    const numero_decimal2 = new RegExp('\\d\\.(\\d){' + 2 + ',}');
+
+    const n_num = numero === 0 ? 0 : Number(numero.toFixed(decimales) + ("")  )   ;
+    return n_num;*/
+    
   }
 
   buscarDatosPago(data : DatosSiniestro){//comentar en el back
@@ -488,6 +501,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
              
           if (this.salidaBeneficiarios.length >0){ 
             const selectElement = document.getElementById("nomBeneficiarios") as HTMLSelectElement;
+            const selectFecFinAnalisis = document.getElementById("TxtFechaFinAnalisis") as HTMLSelectElement;
 
             this.objBeneficiario = this.salidaBeneficiarios[0];
             this.CbonomBeneficiarios = "0";
@@ -541,11 +555,15 @@ export class ModalGastosCoberturaComponent implements OnInit {
                   //}
                 }else{
                   this.formimporte.enable();
-                }               
+                } 
 
+                selectFecFinAnalisis.focus();
+
+            }else{
+              selectElement.focus();
             }
 
-             selectElement.focus();
+             
           }
           
         //} 
@@ -577,7 +595,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
         const selectfinanalisis = document.getElementById("TxtFechaFinAnalisis") as HTMLSelectElement;
         selectfinanalisis.focus();    
-
 
         this.sfila = 1;
         this.salidaBeneficiariosMuerte.forEach(benef => {
@@ -744,6 +761,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
             this.pendpagofac = this.redondearDecimales(this.salidaFacturas[0].TOTAL_PAGAR_FAC,2);
           }
         }
+        const selectfinanalisis = document.getElementById("TxtFechaFinAnalisis") as HTMLSelectElement;
+        selectfinanalisis.focus();
+
         console.log('Facturas: '); 
         console.log(this.salidaFacturas);        
       },
@@ -853,7 +873,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
         const selectElementPendPagoClient = document.getElementById("Txt_PendPagoClient") as HTMLSelectElement;
         const vPendPagoClient = this.redondearDecimales(parseFloat(selectElementPendPagoClient.value),2);      
         const selectElementMontoPago = document.getElementById("totalPago") as HTMLSelectElement;
-        const vMontoPago = this.redondearDecimales(parseFloat((selectElementMontoPago.value == "" ? "0" : selectElementMontoPago.value)),2);
+        const vMontoPago = this.redondearDecimales(parseFloat((selectElementMontoPago.value == "" ? "0" : (selectElementMontoPago.value).replace(/,/g, "") )),2);
         const selectElementObserv = document.getElementById("TxtObservaciones") as HTMLSelectElement;
         const vObserv = selectElementObserv.value;
         const selectElementFinAnalisis = document.getElementById("TxtFechaFinAnalisis") as HTMLSelectElement;
@@ -965,7 +985,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
           }else if (tipo_message =="A"){//advertencias
             Swal.fire({
               title: 'Información',
-              text: message +' ¿Desea Continuar?',
+              html: message  + " <br /> ¿Esta seguro de realizar el pago?", //Desea Continuar
               icon: 'question',
               showCancelButton: true,
               confirmButtonText: 'Sí',
@@ -1003,7 +1023,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   //procesarPago(vCampospago_validar : Campospago_validar) {////(sclient: string, tipoclient : string ,  vbanco :string, vnroCuenta: string, TipoPago : number, FormaPago : number, PendPagarCob : number,PendPagoClient : number, MontoPago : number,  Observ: string){
    //}
 
-  async IniciarPagoMuerte(){       
+   async IniciarPagoMuerte(){       
     this.BtnDisabled2 = true;
     let Envio_Data : any[];
     Envio_Data = [];
@@ -1012,20 +1032,14 @@ export class ModalGastosCoberturaComponent implements OnInit {
     this.Campospago_validar =[];
     const selectElementFinAnalisis = document.getElementById("TxtFechaFinAnalisis") as HTMLSelectElement;
     const selectElementPendPagar= document.getElementById("Txt_pendientePago") as HTMLSelectElement;
-    const vPendPagar= this.redondearDecimales(parseFloat(selectElementPendPagar.value),2); 
-    const txt_fechaOcurrencia= document.getElementById("Txt_fechaOcurrencia") as HTMLSelectElement;
-    const vfechaOcurrencia= parseInt((txt_fechaOcurrencia.value).replace(/-/g, ""));
-    const txt_fechaDenuncia= document.getElementById("Txt_fechaDenuncia") as HTMLSelectElement;
-    const vfechaDenuncia= parseInt((txt_fechaDenuncia.value).replace(/-/g, ""));
-    const txt_fechaApertura= document.getElementById("Txt_fechaApertura") as HTMLSelectElement;
-    const vfechaApertura= parseInt((txt_fechaApertura.value).replace(/-/g, ""));
+    const vPendPagar= this.redondearDecimales(parseFloat(selectElementPendPagar.value),2);     
     const vfinanalisis = parseInt((this.FechaFinAnalisis).replace(/-/g, ""));
+  
 
-    
-    const fec_act = new Date();
-    const shoy = parseInt((this.formato_fecha(fec_act, 'dd/mm/yyyy')).replace(/-/g, ""));   
+    let result = this.salidaBeneficiariosMuerte.filter(x => x.SELECT == true);
+   
+    let lstdatos = result.sort((a, b) => parseInt(a.m_tipopago) - parseInt(b.m_tipopago));
 
-    let lstdatos = this.salidaBeneficiariosMuerte.filter(x => x.SELECT == true);
     const suma_montos = lstdatos
                           .map(t => t["MONTO_PAGO"] ?? 0) 
                           .reduce((acc, value) => acc + value, 0);
@@ -1035,48 +1049,59 @@ export class ModalGastosCoberturaComponent implements OnInit {
     const count_pay_total = (lstdatos.filter(x => x.m_tipopago == "11")).length;
 
 
-    if(this.FechaFinAnalisis == ''){// agregar No puede ser antes de la fecha de denuncio, ni fecha de apertura. vCampospago_validar.vtipoclient=='RUC' && 
-      this.messageMVal="E";
-      selectElementFinAnalisis.focus();
-      Swal.fire('Error',"Ingrese la fecha de fin de análisis", 'error');
+    if(this.FechaFinAnalisis != ''){// agregar No puede ser antes de la fecha de denuncio, ni fecha de apertura. vCampospago_validar.vtipoclient=='RUC' && 
+      const fec_act = new Date();
+      const shoy = parseInt((this.formato_fecha(fec_act, 'dd/mm/yyyy')).replace(/-/g, ""));  
 
-    }else if((vfinanalisis > shoy )){
+      const txt_fechaOcurrencia= document.getElementById("Txt_fechaOcurrencia") as HTMLSelectElement;
+      const vfechaOcurrencia= parseInt((txt_fechaOcurrencia.value).replace(/-/g, ""));
+      const txt_fechaDenuncia= document.getElementById("Txt_fechaDenuncia") as HTMLSelectElement;
+      const vfechaDenuncia= parseInt((txt_fechaDenuncia.value).replace(/-/g, ""));
+      const txt_fechaApertura= document.getElementById("Txt_fechaApertura") as HTMLSelectElement;
+      const vfechaApertura= parseInt((txt_fechaApertura.value).replace(/-/g, ""));
 
-      this.messageMVal="E";
-      selectElementFinAnalisis.focus();
-      Swal.fire('Error',"La fecha de fin de análisis no puede ser mayor a la fecha actual", 'error');
-      
-    }else if((vfinanalisis < vfechaOcurrencia )){
+      //this.messageMVal="E";
+      //selectElementFinAnalisis.focus();
+      //Swal.fire('Error',"Ingrese la fecha de fin de análisis", 'error');
+      if((vfinanalisis > shoy )){
 
-      this.messageMVal="E";
-      selectElementFinAnalisis.focus();
-      Swal.fire('Error',"La fecha de fin de análisis es menor a la fecha de ocurrencia", 'error');
-      
-    }else if((vfinanalisis < vfechaDenuncia ) ){
+        this.messageMVal="E";
+        selectElementFinAnalisis.focus();
+        Swal.fire('Error',"La fecha de fin de análisis no puede ser mayor a la fecha actual", 'error');
+        
+      }else if((vfinanalisis < vfechaOcurrencia )){
+  
+        this.messageMVal="E";
+        selectElementFinAnalisis.focus();
+        Swal.fire('Error',"La fecha de fin de análisis es menor a la fecha de ocurrencia", 'error');
+        
+      }else if((vfinanalisis < vfechaDenuncia ) ){
+  
+        this.messageMVal="E";
+        selectElementFinAnalisis.focus();
+        Swal.fire('Error',"La fecha de fin de análisis es menor a la fecha de declaración", 'error');
+        
+  
+      }else if((vfinanalisis < vfechaApertura) ){
+  
+        this.messageMVal="E";
+        selectElementFinAnalisis.focus();
+        Swal.fire('Error',"La fecha de fin de análisis es menor a la fecha de apertura", 'error');    
+      }
 
-      this.messageMVal="E";
-      selectElementFinAnalisis.focus();
-      Swal.fire('Error',"La fecha de fin de análisis es menor a la fecha de declaración", 'error');
-      
+    } 
 
-    }else if((vfinanalisis < vfechaApertura) ){
-
-      this.messageMVal="E";
-      selectElementFinAnalisis.focus();
-      Swal.fire('Error',"La fecha de fin de análisis es menor a la fecha de apertura", 'error');
-      
-
-    }else if(count_benef_pagar < count_benef && count_pay_total == 1 ) {
-      //no puede ingresar un pago total porque existe beneficiarios por pagar.
-      this.messageMVal="E";
-      Swal.fire('Error',"No puede ingresar un registro con pago total porque existe beneficiarios por pagar", 'error');
-
-    }else if(count_pay_total >=2){
+    if(count_pay_total >=2 &&  this.messageMVal != "" ){
       //no puede ingresar mas de un pago total.
       this.messageMVal="E";
       Swal.fire('Error',"No puede ingresar mas de un pago total", 'error');
       
-    }    
+    }/* else if(count_benef_pagar < count_benef && count_pay_total == 1 ) {
+      //no puede ingresar un pago total porque existe beneficiarios por pagar.
+      this.messageMVal="E";
+      Swal.fire('Error',"No puede ingresar un registro con pago total porque existe beneficiarios por pagar", 'error');
+
+    }  */ 
        
     if (this.messageMVal!=""){
       this.BtnDisabled2 = false;
@@ -1088,7 +1113,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.BtnDisabled2 = false;
       return;
     }else{      
-       await lstdatos.forEach(benef => {
+        lstdatos.forEach(benef => {
             if(benef.SELECT){                  
                 if(this.messageMVal == ""){
                     this.Campospago_validar[0] = {
@@ -1109,8 +1134,11 @@ export class ModalGastosCoberturaComponent implements OnInit {
                     };
                     
                     //this.messageMVal = await this.Validaciones_Muerte(this.Campospago_validar[0]);
+
+                        //validaciones generales de los campos fila por fila
                     const messageVal = this.Validaciones_Muerte(this.Campospago_validar[0]);
                     this.messageMVal = messageVal;
+                    
                     if(this.messageMVal != ""){
 
                       const tipo_message = this.messageMVal.split("|")[0]; 
@@ -1124,6 +1152,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
                       
                       return;
                     }else{
+                           
                       let cookie = this.authProtectaService.getCookie('AppSiniestro');
                       let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
 
@@ -1151,12 +1180,15 @@ export class ModalGastosCoberturaComponent implements OnInit {
                             P_ESPECIALIDAD : this.especialidad,
                             P_NUSERCODE : Number(atob(codUsuario))                 
                         });
+
                     }
+
+
                 } 
             }
           })
 
-
+          /*
           if(count_benef_pagar == count_benef && count_pay_total == 1 && suma_montos < vPendPagar){
             //no puede ingresar un pago total porque el monto a pagar es menor a lo pendiente  
             this.messageMVal="E";
@@ -1167,36 +1199,92 @@ export class ModalGastosCoberturaComponent implements OnInit {
             this.messageMVal="E";
             Swal.fire('Error',"El ultimo beneficiario debe ser pago total", 'error');
 
-          }
+          }*/
+
 
           //validar si hay registros en la lista
 
           if(this.messageMVal == ""){
-
-            Swal.fire({
-              title: 'Información',
-              text: '¿Esta seguro de realizar el pago?',
-              icon: 'question',
-              showCancelButton: true,
-              confirmButtonText: 'Sí',
-              cancelButtonText: 'No'
-            }).then((result) => {
-              if(result.value){
+                //validaciones de los montos con la reserva pendiente por liquidar
+                this.FiltroValidar[0]= {
+                  P_NCLAIM : parseInt(this.siniestro),
+                  P_NCASE : parseInt(this.caso),
+                  P_NCOVER : this.tipoCobertura,   
+                  P_SCLIENT : '',
+                  P_REEMBOLSO: 0,
+                  P_NUMFACT : '',
+                  P_NOPER_TYPE : (count_pay_total > 0 ? 11 : 10),
+                  P_NAMOUNT : suma_montos,
+                }
+          
+                let vdata = await this.validarbd();
                 
-                  //validar si hay registros en la lista
-                  this.FiltProcPagoMuerteEnvio = Envio_Data;
-                  console.log(this.FiltProcPagoMuerteEnvio);
-                  this.EnviarPagoMuerte(this.FiltProcPagoMuerteEnvio);
-              }else{
-                console.log('Nos quedamos.');
-                this.BtnDisabled2 = false;
-              }
-            });
+                this.salidaValidaciones[0] = vdata[0]; 
+                console.log(vdata);      
+                if (this.salidaValidaciones.length > 0){ 
+                  if(this.salidaValidaciones[0].STATUS == '1'){
+                    this.messageMVal = this.salidaValidaciones[0].MENSAJE;      
+                  }
+                }
+
+                if(this.messageMVal != ""){//se verifica si hay mensaje de advertencia o error de la bd
+
+                  const tipo_message_bd = this.messageMVal.split("|")[0]; 
+                  const scampo_bd =  this.messageMVal.split("|")[1]; 
+                  const message_bd =  this.messageMVal.split("|")[2];
+                  
+                    if (tipo_message_bd == "E") {//mensajes de error de la bd
+                        Swal.fire('Error',message_bd , 'error');
+                        //focus
+                        //(benef.SACCOUNT).focus();
+                        this.BtnDisabled2 = false;
+
+                    }else if (tipo_message_bd == "A") {//mensajes de advertencia de la bd
+                      Swal.fire({
+                        title: 'Información',
+                        html: message_bd + " <br /> ¿Esta seguro de realizar el pago?",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí',
+                        cancelButtonText: 'No'
+                      }).then((result) => {
+                        if(result.value){
+                          
+                            this.FiltProcPagoMuerteEnvio = Envio_Data;
+                            console.log(this.FiltProcPagoMuerteEnvio);
+                            this.EnviarPagoMuerte(this.FiltProcPagoMuerteEnvio);
+                        }else{
+                          console.log('Nos quedamos.');
+                          this.BtnDisabled2 = false;
+                        }
+                      });
+
+                    }
+
+                }else{//sin mensajes de advertencia de la bd
+                      Swal.fire({
+                        title: 'Información',
+                        text: '¿Esta seguro de realizar el pago?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí',
+                        cancelButtonText: 'No'
+                      }).then((result) => {
+                        if(result.value){
+                          
+                            this.FiltProcPagoMuerteEnvio = Envio_Data;
+                            console.log(this.FiltProcPagoMuerteEnvio);
+                            this.EnviarPagoMuerte(this.FiltProcPagoMuerteEnvio);
+                        }else{
+                          console.log('Nos quedamos.');
+                          this.BtnDisabled2 = false;
+                        }
+                      });
+               }
+
           }else{
             this.BtnDisabled2 = false;
           }
-
-          
     }
 
     /*
@@ -1244,50 +1332,55 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
   async Validaciones(vCampospago_validar: Campospago_validar){//sclient : string , tipoclient :string, Factura : string, FinAnalisis : string , TipoPago : number, FormaPago : number, PendPagarCob: number, PendPagoFact: number,PendPagoClient: number, MontoPago: number){
      
-    this.mensaje ='';
-
-    const fec_act = new Date();
-    const shoy = parseInt((this.formato_fecha(fec_act, 'dd/mm/yyyy')).replace(/-/g, ""));     
-
-    const txt_fechaOcurrencia= document.getElementById("Txt_fechaOcurrencia") as HTMLSelectElement;
-    const vfechaOcurrencia= parseInt((txt_fechaOcurrencia.value).replace(/-/g, ""));
-    const txt_fechaDenuncia= document.getElementById("Txt_fechaDenuncia") as HTMLSelectElement;
-    const vfechaDenuncia= parseInt((txt_fechaDenuncia.value).replace(/-/g, ""));
-    const txt_fechaApertura= document.getElementById("Txt_fechaApertura") as HTMLSelectElement;
-    const vfechaApertura= parseInt((txt_fechaApertura.value).replace(/-/g, ""));
-    const vfinanalisis = parseInt((vCampospago_validar.vfinanalisis).replace(/-/g, ""));
+    this.mensaje ='';   
 
     if ((this.tipoCobertura== 4 ||this.tipoCobertura== 5)  && (vCampospago_validar.vReembolso == 2 && vCampospago_validar.vfactura == '' && this.mensaje=='')){
       this.mensaje = "E|fa|No existe factura asociada al beneficiario";
       return this.mensaje;
     }
     
-    if(vCampospago_validar.vfinanalisis == '' && this.mensaje==''){// agregar No puede ser antes de la fecha de denuncio, ni fecha de apertura. vCampospago_validar.vtipoclient=='RUC' && 
-      this.mensaje = "E|ffa|Ingrese la fecha de fin de análisis";     
-      return this.mensaje;
+    if(vCampospago_validar.vfinanalisis != '' && this.mensaje==''){// agregar No puede ser antes de la fecha de denuncio, ni fecha de apertura. vCampospago_validar.vtipoclient=='RUC' && 
+      const fec_act = new Date();
+      const shoy = parseInt((this.formato_fecha(fec_act, 'dd/mm/yyyy')).replace(/-/g, ""));     
+  
+      const txt_fechaOcurrencia= document.getElementById("Txt_fechaOcurrencia") as HTMLSelectElement;
+      const vfechaOcurrencia= parseInt((txt_fechaOcurrencia.value).replace(/-/g, ""));
+      const txt_fechaDenuncia= document.getElementById("Txt_fechaDenuncia") as HTMLSelectElement;
+      const vfechaDenuncia= parseInt((txt_fechaDenuncia.value).replace(/-/g, ""));
+      const txt_fechaApertura= document.getElementById("Txt_fechaApertura") as HTMLSelectElement;
+      const vfechaApertura= parseInt((txt_fechaApertura.value).replace(/-/g, ""));
+      const vfinanalisis = parseInt((vCampospago_validar.vfinanalisis).replace(/-/g, ""));
+      
+      //this.mensaje = "E|ffa|Ingrese la fecha de fin de análisis";     
+      //return this.mensaje;
 
-    }else if((vfinanalisis > shoy ) && this.mensaje==''){
+      if((vfinanalisis > shoy ) && this.mensaje==''){
 
-      this.mensaje = "E|ffa|La fecha de fin de análisis no puede ser mayor a la fecha actual";
-      return this.mensaje;
+        this.mensaje = "E|ffa|La fecha de fin de análisis no puede ser mayor a la fecha actual";
+        return this.mensaje;
+  
+      }    
+      else if((vfinanalisis < vfechaOcurrencia ) && this.mensaje==''){
+  
+        this.mensaje = "E|ffa|La fecha de fin de análisis es menor a la fecha de ocurrencia";
+        return this.mensaje;
+  
+      }else if((vfinanalisis < vfechaDenuncia ) && this.mensaje==''){
+  
+        this.mensaje = "E|ffa|La fecha de fin de análisis es menor a la fecha de declaración";
+        return this.mensaje;
+  
+      }else if((vfinanalisis < vfechaApertura) && this.mensaje==''){
+  
+        this.mensaje = "E|ffa|La fecha de fin de análisis es menor a la fecha de apertura";
+        return this.mensaje;
+  
+      } 
 
-    }    
-    else if((vfinanalisis < vfechaOcurrencia ) && this.mensaje==''){
-
-      this.mensaje = "E|ffa|La fecha de fin de análisis es menor a la fecha de ocurrencia";
-      return this.mensaje;
-
-    }else if((vfinanalisis < vfechaDenuncia ) && this.mensaje==''){
-
-      this.mensaje = "E|ffa|La fecha de fin de análisis es menor a la fecha de declaración";
-      return this.mensaje;
-
-    }else if((vfinanalisis < vfechaApertura) && this.mensaje==''){
-
-      this.mensaje = "E|ffa|La fecha de fin de análisis es menor a la fecha de apertura";
-      return this.mensaje;
-
-    }else if (vCampospago_validar.vTipoPago == 0 && this.mensaje==''){
+    } 
+    
+    
+    if (vCampospago_validar.vTipoPago == 0 && this.mensaje==''){
       this.mensaje = "E|tp|Seleccione un tipo de pago";
       return this.mensaje;
 
@@ -1452,6 +1545,8 @@ export class ModalGastosCoberturaComponent implements OnInit {
     ////else if((vCampospago_validar.vTipoPago == 11 && vCampospago_validar.vMontoPago < vCampospago_validar.vPendPagarCob) && this.mensaje==''){
     ////  this.mensaje = "E|mp|No se puede hacer pago total porque tiene reserva por pagar.";
     ////}
+
+    /*
     else if ((vCampospago_validar.vTipoPago == 11 && vCampospago_validar.vMontoPago < vCampospago_validar.vPendPagoClient) && this.mensaje==''){
       this.mensaje = "E|mp|El monto a pagar no puede ser menor al pendiente por pagar del beneficiario ("+ vCampospago_validar.vPendPagoClient +")";
       return this.mensaje;
@@ -1466,6 +1561,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
       return this.mensaje;
 
     }
+    */
       //si no hay errores
      return this.mensaje;
     /*

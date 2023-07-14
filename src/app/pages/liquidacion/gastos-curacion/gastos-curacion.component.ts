@@ -82,6 +82,8 @@ export class GastosCuracionComponent implements OnInit {
   }
 
   buscadorMovimientos(){
+    this.movimientos = [];
+    this.movimientosPago = [];
     //if(this.caso.replace(/ /g, "") == "" || this.siniestro.replace(/ /g, "") == ""){
     if(this.caso == "" || this.siniestro == ""){
       Swal.fire('Información', 'Coloque el caso y el nro. de siniestro', 'warning');
@@ -220,7 +222,7 @@ export class GastosCuracionComponent implements OnInit {
         Swal.fire('Información','La cobertura seleccionada no tiene beneficiarios', 'warning');
         return;
       }else{
-        const modalRef = this.modalService.open(ModalGastosCoberturaComponent,  { windowClass : "my-class"});
+        const modalRef = this.modalService.open(ModalGastosCoberturaComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
         modalRef.componentInstance.reference = modalRef;
         modalRef.componentInstance.data = this.movimientosPago;
         modalRef.result.then((res) => {
