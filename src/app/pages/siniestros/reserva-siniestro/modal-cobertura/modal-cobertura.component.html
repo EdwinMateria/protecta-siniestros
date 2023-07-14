@@ -166,7 +166,7 @@
                     <div class="input-group">
                         <input [type]="tab == 1 ? 'date': 'text'" class="form-control" [formControl]="inicioDescanso" (change)="changeFechasDescanso()"
                         [ngClass]="{'is-invalid': inicioDescanso.invalid && inicioDescanso.touched}">
-                        <div class="input-group-append">
+                        <div *ngIf="tab != 1" class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
                     </div>
@@ -176,7 +176,7 @@
                     <div class="input-group">
                         <input [type]="tab == 1 ? 'date': 'text'" class="form-control" [formControl]="finDescanso" (change)="changeFechasDescanso()"
                         [ngClass]="{'is-invalid': finDescanso.invalid && finDescanso.touched}">
-                        <div class="input-group-append">
+                        <div *ngIf="tab != 1" class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
                     </div>
@@ -217,18 +217,18 @@
                     <label>Fecha derivación INR: </label>
                     <div class="input-group">
                         <input type="date" class="form-control" [(ngModel)]="fechaDerivacion">
-                        <div class="input-group-append">
+                        <!-- <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="col-sm-3 form-group">
                     <label>Fecha respuesta INR : </label>
                     <div class="input-group">
                         <input type="date" class="form-control" [(ngModel)]="fechaRespuesta">
-                        <div class="input-group-append">
+                        <!-- <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -273,18 +273,18 @@
                 <label>Fecha emisión </label>
                 <div class="input-group">
                     <input type="date" class="form-control" [(ngModel)]="fechaEmision">
-                    <div class="input-group-append">
+                    <!-- <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="col-sm-3 form-group">
                 <label>Fecha recepción </label>
                 <div class="input-group">
                     <input type="date" class="form-control" [(ngModel)]="fechaRecepcion">
-                    <div class="input-group-append">
+                    <!-- <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

@@ -17,7 +17,7 @@ export class SiniestroIntercepInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     let cookie = this.authProtectaService.getCookie('AppSiniestro');
-    if(cookie == ''){
+    if(cookie == '' || cookie  == undefined){
       window.location.href = AppConfig.URL_SINIESTROS_WEB
     }
 

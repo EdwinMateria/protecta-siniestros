@@ -80,6 +80,9 @@ export class FormCasoComponent implements OnInit {
   constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService, public authProtectaService: AuthProtectaService, public datePipe : DatePipe) { }
 
   ngOnInit(): void {
+
+
+  
     this.form = this.fb.group({
       nPolicy: ['', Validators.required],
       nCertif: [{value:'', disabled: true}],
@@ -134,7 +137,7 @@ export class FormCasoComponent implements OnInit {
     let valorInput = this.referencia.nativeElement.value as string;
     if(valorInput != ""){
       if (!this.tipoForm) {
-        SwalCarga();;
+        SwalCarga();
         this.casoService.GetSearchCase(Number(valorInput)).subscribe(
           res => {
             Swal.close();
@@ -163,7 +166,7 @@ export class FormCasoComponent implements OnInit {
                 dInicioVigencia : new Date(this.casoBM.dIniVigencia).toLocaleDateString('en-GB'),
                 dFinDeVigencia : new Date(this.casoBM.dFinVigencia).toLocaleDateString('en-GB'),
                 dFecOcurrencia : new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB'),
-                dFecNacConductor : this.casoBM.dFecNacConductor == null ? null : new Date( d[0] + '-' + d[1] + '-'  + d[2].substring(0,2)),
+                dFecNacConductor : this.casoBM.dFecNacConductor == null ? null : this.fechaNacimiento,
                 nCaso: this.casoBM.nPolicy,
                 nPolicy: valorInput,
               });
@@ -195,37 +198,38 @@ export class FormCasoComponent implements OnInit {
           }
         )
       } else {
-        if(this.form.controls['dFecOcurrencia'].value != ""){
-          SwalCarga();
-
+        if (this.form.controls['dFecOcurrencia'].value != "") {
           let docur = new Date(this.form.controls['dFecOcurrencia'].value)
-          let date = new Date(docur.setDate(docur.getDate() + 1)).toLocaleDateString('en-GB');
-          
-          this.casoService.GetPolicyForCase(Number(valorInput), date).subscribe(
-            res => {
-              let caso = new CasosBM();
-              Swal.close();
-              caso = res.GenericResponse[0];
-              if(caso.sMensaje == 'Ok'){
-                this.form.controls['nCertif'].setValue(caso.nCertif);
-                this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
-                this.form.controls['nCaso'].setValue(caso.nCaso);
-                this.form.controls['dInicioVigencia'].setValue(new Date(caso.dIniVigencia).toLocaleDateString('en-GB'));
-                this.form.controls['dFinDeVigencia'].setValue(new Date(caso.dFinVigencia).toLocaleDateString('en-GB'));
-                this.form.controls['sNombreContratante'].setValue(caso.sNombreContratante);
-                this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
-                this.form.controls['nBranch'].setValue(caso.nBranch);
-                this.form.controls['nProduct'].setValue(caso.nProduct);
-              }else{
-                Swal.fire('Información',caso.sMensaje,'error');
-                return;
+          if (docur.getFullYear() > 1840) {
+            SwalCarga();
+            let date = new Date(docur.setDate(docur.getDate() + 1)).toLocaleDateString('en-GB');
+            this.casoService.GetPolicyForCase(Number(valorInput), date).subscribe(
+              res => {
+                let caso = new CasosBM();
+                Swal.close();
+                caso = res.GenericResponse[0];
+                if (caso.sMensaje == 'Ok') {
+                  this.form.controls['nCertif'].setValue(caso.nCertif);
+                  this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
+                  this.form.controls['nCaso'].setValue(caso.nCaso);
+                  this.form.controls['dInicioVigencia'].setValue(new Date(caso.dIniVigencia).toLocaleDateString('en-GB'));
+                  this.form.controls['dFinDeVigencia'].setValue(new Date(caso.dFinVigencia).toLocaleDateString('en-GB'));
+                  this.form.controls['sNombreContratante'].setValue(caso.sNombreContratante);
+                  this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
+                  this.form.controls['nBranch'].setValue(caso.nBranch);
+                  this.form.controls['nProduct'].setValue(caso.nProduct);
+                } else {
+                  Swal.fire('Información', caso.sMensaje, 'error');
+                  return;
+                }
+              },
+              err => {
+                Swal.close()
+                Swal.fire('Error', err, 'error')
               }
-            },
-            err => {
-              Swal.close()
-              Swal.fire('Error',err,'error')
-            }
-          )
+            )
+          }
+
         }
       }
     }

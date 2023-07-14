@@ -16,7 +16,7 @@ import { map } from 'rxjs/operators';
 export class LiquidacionService {
 
     private headers = new HttpHeaders({ "Content-Type": "application/json" });
-    private Url = AppConfig.URL_API_SOAT;
+    private Url = AppConfig.URL_API_SINIESTROS;
 
     constructor(private http: HttpClient) { }
 

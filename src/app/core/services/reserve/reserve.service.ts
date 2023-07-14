@@ -34,7 +34,7 @@ import { CombosGenericoVM } from '../../models/caso';
 export class ReserveService {
 
    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-   private Url = AppConfig.URL_API_SOAT_RESERVA;
+   private Url = AppConfig.URL_API_SINIESTROS;
 
   constructor(private http: HttpClient) { }
 
