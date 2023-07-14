@@ -31,6 +31,12 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
   }
 
   tabControl(index:number){
+    console.log(this.tipoTab, index);
+    
+    if(this.tipoTab == 3 && index == 1){
+      return;
+    }
+
     this.tipoTab = index
     if(this.tipoTab == 1){
       this.registroActive = 'active'

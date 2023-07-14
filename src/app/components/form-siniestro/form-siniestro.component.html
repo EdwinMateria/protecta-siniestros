@@ -86,7 +86,7 @@
         <div class="col-sm-6 form-group">
             <label>Afectado (siniestro)</label>
             <div class="input-group">
-                <input type="text" class="form-control" formControlName="afectado" readonly
+                <input type="text" class="form-control" formControlName="afectado" readonly style="background-color: white !important"
                     [ngClass]="{'is-invalid': form.get('afectado').invalid && form.get('afectado').touched}">
                 <div class="input-group-append">
                     <button class="btn btn-primary" (click)="openBeneficiario()"><i class="fa fa-search"></i></button>

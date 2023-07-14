@@ -316,7 +316,7 @@ export class ModalCoberturaComponent implements OnInit {
       text: 'Desea salir de la operación',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si',
+      confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       reverseButtons: true,
       showCloseButton: true
@@ -477,7 +477,7 @@ export class ModalCoberturaComponent implements OnInit {
           text: "¿Está seguro de eliminar al beneficiario?",
           icon: 'question',
           showCancelButton: true,
-          confirmButtonText: 'De acuerdo',
+          confirmButtonText: 'Sí',
           cancelButtonText: 'No',
           reverseButtons: true
         }).then((result) => {
@@ -677,7 +677,7 @@ export class ModalCoberturaComponent implements OnInit {
       text: 'Se procederá a grabar la información. ¿Desea continuar?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si',
+      confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       reverseButtons: true,
       showCloseButton: true
@@ -804,7 +804,7 @@ export class ModalCoberturaComponent implements OnInit {
       text: 'Se procederá a actualizar la información. ¿Desea continuar?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si',
+      confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       reverseButtons: true,
       showCloseButton: true

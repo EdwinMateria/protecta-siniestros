@@ -88,7 +88,7 @@ export class FormCasoComponent implements OnInit {
       nCertif: [{value:'', disabled: true}],
       sNroPlaca: [{value:'', disabled: true}],
       nCaso: [{value:'', disabled: true}],
-      dFecOcurrencia: [{value:null, disabled: this.tipoForm == true ? false : true}, Validators.required],
+      dFecOcurrencia: [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
       sHoraOcurrencia : [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
       nCulpabilidad: [{value:'0', disabled: this.tipoForm == true && this.tipoTab != 2 ? false:true}, [Validators.required, this.notAllowed(/^0/)]],
       nCausaSiniestro: [{value:'0', disabled: this.tipoForm == true ? false:true}, [Validators.required, this.notAllowed(/^0/)]],
@@ -251,7 +251,7 @@ export class FormCasoComponent implements OnInit {
       text: "¿Deseas rechazar el caso del siniestro?",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'De acuerdo',
+      confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       reverseButtons: true,
       showCloseButton: true
@@ -413,7 +413,7 @@ export class FormCasoComponent implements OnInit {
               text: `Se declaró el caso correctamente: ${res.numcase}. ¿Desea declarar los siniestros?`,
               icon: 'warning',
               showCancelButton: true,
-              confirmButtonText: 'De acuerdo',
+              confirmButtonText: 'Sí',
               cancelButtonText: 'No',
               reverseButtons: true,
               showCloseButton: true

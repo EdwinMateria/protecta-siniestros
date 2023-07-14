@@ -33,7 +33,7 @@ export class ReaperturaSiniestroComponent implements OnInit {
         text: 'Se actualizará el estado del siniestro. ¿Desea continuar?',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'De acuerdo',
+        confirmButtonText: 'Sí',
         cancelButtonText: 'No',
         reverseButtons: true
       }).then((result) => {

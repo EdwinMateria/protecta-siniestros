@@ -202,7 +202,7 @@ export class ReservaSiniestroComponent implements OnInit {
       text: '¿Está seguro de eliminar los datos adicionales para esta cobertura?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'De acuerdo',
+      confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       reverseButtons: true
     }).then((result) => {
@@ -303,7 +303,7 @@ export class ReservaSiniestroComponent implements OnInit {
         text: `¿Está seguro de registrar una reserva para la cobertura ${cover.SDESCOVER}?`,
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'De acuerdo',
+        confirmButtonText: 'Sí',
         cancelButtonText: 'No',
         reverseButtons: true
       }).then((result) => {

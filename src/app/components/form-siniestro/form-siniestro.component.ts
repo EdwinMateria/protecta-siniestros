@@ -172,7 +172,7 @@ export class FormSiniestroComponent implements OnInit {
               text: `Se declaró el siniestro ${res.numclaim} correctamente. ¿Desea declarar otro siniestro?`,
               icon: 'warning',
               showCancelButton: true,
-              confirmButtonText: 'De acuerdo',
+              confirmButtonText: 'Sí',
               cancelButtonText: 'No',
               reverseButtons: true,
               showCloseButton: true

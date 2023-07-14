@@ -171,6 +171,10 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         })
       }
       
+
+      let cookie = this.authProtectaService.getCookie('AppSiniestro');
+      let codUsuario = this.authProtectaService.getValueCookie('CodUsu', cookie);
+
       this.reserveService.SaveApi(this.data).subscribe(
         res =>{
           Swal.close();
@@ -191,7 +195,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             request.ApellidoMaterno = this.data.P_SLASTNAME2;
             request.Celular = this.form.controls['celular'].value;
             request.CodBanco = this.form.controls['banco'].value;
-            request.CodigoUsuario = "0";
+            request.CodigoUsuario = atob(codUsuario);
             request.CodTipoCuenta = this.form.controls['tipoCuenta'].value;
             request.CodViaPago = this.form.controls['viaPago'].value;
             request.Departamento = this.data.EListAddresClient[0].P_NPROVINCE;
