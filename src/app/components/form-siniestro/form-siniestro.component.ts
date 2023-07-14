@@ -33,6 +33,7 @@ export class FormSiniestroComponent implements OnInit {
   nSiniestro = "";
   sCliente = "";
   fechaRechazo : any;
+  moneda: number;
   //Tipos Ocupantes:
   ocupantes : SiniestroSelect[] = [
     {codigo: "", descript: "SELECCIONAR"},
@@ -74,23 +75,38 @@ export class FormSiniestroComponent implements OnInit {
       this.casoService.GetSearchClaim(this.casoBM.nSiniestro).subscribe(
         res => {
           Swal.close()
-          let siniestro = new SiniestroBM();
-          siniestro = res.GenericResponse[0];
-          this.nSiniestro = siniestro.nSiniestro.toString();
-          this.form.patchValue({
-            ...siniestro
-          })
-          this.form.controls['dFecDenuncia'].setValue(new Date(siniestro.dFecDenuncia).toLocaleDateString('en-GB'))
-          this.form.controls['afectado'].setValue(siniestro.sCliente);
-          this.form.controls['dFecApertura'].setValue(this.datePipe.transform(siniestro.dFecApertura, 'yyyy-MM-dd'))
-          this.form.controls['dFecFallecido'].setValue(this.datePipe.transform(siniestro.dFecFallecido, 'yyyy-MM-dd'))
-          this.sCliente = siniestro.sCodClie;
-          this.form.controls['nTipOcupante'].setValue(siniestro.sTipOcupante);
-
-          if(siniestro.nCodRechazo != 0 && this.estadoForm == 3){
-            this.eliminado = true;
-            this.fechaRechazo = this.datePipe.transform(siniestro.dFecRechazo, 'yyyy-MM-dd');
-            this.eliminarSiniestro = siniestro.nCodRechazo.toString();
+          if(res.GenericResponse.length == 0){
+            Swal.fire({
+              title: 'Información',
+              text: 'El siniestro tiene pago total',
+              icon: 'warning',
+              confirmButtonText: 'Ok',
+              allowOutsideClick: false
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.cancelBool.emit(true)
+              }
+            })
+          }else{
+            let siniestro = new SiniestroBM();
+            siniestro = res.GenericResponse[0];
+            this.moneda = siniestro.nMoneda;
+            this.nSiniestro = siniestro.nSiniestro.toString();
+            this.form.patchValue({
+              ...siniestro
+            })
+            this.form.controls['dFecDenuncia'].setValue(new Date(siniestro.dFecDenuncia).toLocaleDateString('en-GB'))
+            this.form.controls['afectado'].setValue(siniestro.sCliente);
+            this.form.controls['dFecApertura'].setValue(this.datePipe.transform(siniestro.dFecApertura, 'yyyy-MM-dd'))
+            this.form.controls['dFecFallecido'].setValue(this.datePipe.transform(siniestro.dFecFallecido, 'yyyy-MM-dd'))
+            this.sCliente = siniestro.sCodClie;
+            this.form.controls['nTipOcupante'].setValue(siniestro.sTipOcupante);
+  
+            if(siniestro.nCodRechazo != 0 && this.estadoForm == 3){
+              this.eliminado = true;
+              this.fechaRechazo = this.datePipe.transform(siniestro.dFecRechazo, 'yyyy-MM-dd');
+              this.eliminarSiniestro = siniestro.nCodRechazo.toString();
+            }
           }
         },
         err => {

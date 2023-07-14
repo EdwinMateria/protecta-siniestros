@@ -80,9 +80,6 @@ export class FormCasoComponent implements OnInit {
   constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService, public authProtectaService: AuthProtectaService, public datePipe : DatePipe) { }
 
   ngOnInit(): void {
-
-
-  
     this.form = this.fb.group({
       nPolicy: ['', Validators.required],
       nCertif: [{value:'', disabled: true}],
@@ -130,7 +127,6 @@ export class FormCasoComponent implements OnInit {
   }
 
   change(event:any){
-    console.log(event);
   }
 
   buscador(){
@@ -198,38 +194,40 @@ export class FormCasoComponent implements OnInit {
           }
         )
       } else {
-        if (this.form.controls['dFecOcurrencia'].value != "") {
-          let docur = new Date(this.form.controls['dFecOcurrencia'].value)
-          if (docur.getFullYear() > 1840) {
-            SwalCarga();
-            let date = new Date(docur.setDate(docur.getDate() + 1)).toLocaleDateString('en-GB');
-            this.casoService.GetPolicyForCase(Number(valorInput), date).subscribe(
-              res => {
-                let caso = new CasosBM();
-                Swal.close();
-                caso = res.GenericResponse[0];
-                if (caso.sMensaje == 'Ok') {
-                  this.form.controls['nCertif'].setValue(caso.nCertif);
-                  this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
-                  this.form.controls['nCaso'].setValue(caso.nCaso);
-                  this.form.controls['dInicioVigencia'].setValue(new Date(caso.dIniVigencia).toLocaleDateString('en-GB'));
-                  this.form.controls['dFinDeVigencia'].setValue(new Date(caso.dFinVigencia).toLocaleDateString('en-GB'));
-                  this.form.controls['sNombreContratante'].setValue(caso.sNombreContratante);
-                  this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
-                  this.form.controls['nBranch'].setValue(caso.nBranch);
-                  this.form.controls['nProduct'].setValue(caso.nProduct);
-                } else {
-                  Swal.fire('Información', caso.sMensaje, 'error');
-                  return;
-                }
-              },
-              err => {
-                Swal.close()
-                Swal.fire('Error', err, 'error')
-              }
-            )
-          }
 
+        let date1 = this.form.controls['dFecOcurrencia'].value;
+        console.log(date1);
+        
+        let docur = new Date(this.form.controls['dFecOcurrencia'].value)
+        console.log(docur);
+        if (docur.getFullYear() > 1840 || date1 == "") {
+          SwalCarga();
+          let date = new Date(docur.setDate(docur.getDate() + 1)).toLocaleDateString('en-GB');
+          this.casoService.GetPolicyForCase(Number(valorInput), !isNaN(docur.getTime()) ? date : "").subscribe(
+            res => {
+              let caso = new CasosBM();
+              Swal.close();
+              caso = res.GenericResponse[0];
+              if (caso.sMensaje == 'Ok') {
+                this.form.controls['nCertif'].setValue(caso.nCertif);
+                this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
+                this.form.controls['nCaso'].setValue(caso.nCaso);
+                this.form.controls['dInicioVigencia'].setValue(new Date(caso.dIniVigencia).toLocaleDateString('en-GB'));
+                this.form.controls['dFinDeVigencia'].setValue(new Date(caso.dFinVigencia).toLocaleDateString('en-GB'));
+                this.form.controls['sNombreContratante'].setValue(caso.sNombreContratante);
+                this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
+                this.form.controls['nBranch'].setValue(caso.nBranch);
+                this.form.controls['nProduct'].setValue(caso.nProduct);
+              } else {
+                Swal.fire('Información', caso.sMensaje, 'error');
+                return;
+              }
+            },
+            err => {
+              Swal.close()
+              Swal.fire('Error', err, 'error')
+            }
+          )
         }
       }
     }
@@ -313,6 +311,9 @@ export class FormCasoComponent implements OnInit {
       this.form.controls['nTipDocConductor'].enable();
       this.form.controls['dFecNacConductor'].enable();
       this.form.controls['sDocConductor'].enable();
+      this.form.controls['sNombreConductor'].enable();
+      this.form.controls['sPaternoConductor'].enable();
+      this.form.controls['sMaternoConductor'].enable();
       //this.tipoInputDate = true;
     }
   }
@@ -331,6 +332,10 @@ export class FormCasoComponent implements OnInit {
     this.form.controls['nTipDocConductor'].disable();
     this.form.controls['dFecNacConductor'].disable();
     this.form.controls['sDocConductor'].disable();
+
+    this.form.controls['sNombreConductor'].disable();
+    this.form.controls['sPaternoConductor'].disable();
+    this.form.controls['sMaternoConductor'].disable();
     this.form.reset();
     this.tipoTab = 0;
     this.modificarActive = '';
