@@ -810,6 +810,14 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.totalFactura = this.redondearDecimales(m_total_pagar_fac,2);  //montoPago tengo que considerar los pagos que se a hecho a la factura
       this.pendpagofac = this.redondearDecimales(m_total_pagar_fac,2);
 
+      if (this.baseImponible > 0  ){
+        this.formimporte.disable();
+      }else{
+        this.formimporte.enable();
+      }
+
+
+
     }else{
 
       this.nroFactura = ""
