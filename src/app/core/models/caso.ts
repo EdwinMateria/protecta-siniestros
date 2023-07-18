@@ -32,6 +32,7 @@ export class CasosBM {
     sObservacion            : string;
     sMensaje                : string;
     nCodUsuario             : number;
+    nMoneda                 : number;
     //Opcional
     nSiniestro              ?:number;
 

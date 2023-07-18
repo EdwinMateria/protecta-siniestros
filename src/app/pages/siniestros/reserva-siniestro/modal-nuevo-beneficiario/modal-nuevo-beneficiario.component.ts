@@ -23,6 +23,7 @@ export class TipoDocumento{
 export class ModalNuevoBeneficiarioComponent implements OnInit {
 
   @Input() public reference: any;
+  @Input() public origen: number;
   form!: FormGroup;
   documentos: TipoDocumento[]=[];
   labelNombres = 'Nombres';
@@ -178,6 +179,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       this.reserveService.SaveApi(this.data).subscribe(
         res =>{
           Swal.close();
+          console.log(res);
+          
           let jsonResponse = JSON.parse(res);
           if(jsonResponse.P_NCODE == 1){
             Swal.fire('Información', jsonResponse.P_SMESSAGE ,'error')

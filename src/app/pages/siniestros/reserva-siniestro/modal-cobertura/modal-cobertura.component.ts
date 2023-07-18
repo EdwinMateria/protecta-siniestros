@@ -438,6 +438,7 @@ export class ModalCoberturaComponent implements OnInit {
     const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
     modalRef.componentInstance.beneficiarios = this.beneficiarios;
+    modalRef.componentInstance.origen = 2;  
     modalRef.result.then((benef) => {
       if((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)){
         SwalCarga();

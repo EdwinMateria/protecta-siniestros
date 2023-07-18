@@ -1,6 +1,7 @@
 <div class="modal-header w-100">
     <!-- objBeneficiarioModel -->
-    <h4 class="modal-title" id="modal-basic-title">INGRESAR BENEFICIARIO</h4>
+    <h4 *ngIf="origen == 1" class="modal-title" id="modal-basic-title">INGRESAR AFECTADO</h4>
+    <h4 *ngIf="origen == 2" class="modal-title" id="modal-basic-title">INGRESAR BENEFICIARIO</h4>
     <button type="button" aria-label="Close" (click)="closeModal()" style="cursor: pointer;">
         <i class="fa fa-close"></i>
     </button>
