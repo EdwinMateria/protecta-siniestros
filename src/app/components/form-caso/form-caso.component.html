@@ -172,7 +172,7 @@
                 <div class="form-group">
                     <label>Ubicación</label>
                     <input type="text" class="form-control"  
-                     placeholder="Escribir ubicación" formControlName="sUbicacion" [ngClass]="{'is-invalid': form.get('sUbicacion').invalid && form.get('sUbicacion').touched}">
+                     placeholder="Escribir ubicación" formControlName="sUbicacion" maxlength="50" [ngClass]="{'is-invalid': form.get('sUbicacion').invalid && form.get('sUbicacion').touched}">
                 </div>
             </div>
             <div class="col-sm-6">

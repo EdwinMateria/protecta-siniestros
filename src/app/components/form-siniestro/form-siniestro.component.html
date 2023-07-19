@@ -1,5 +1,5 @@
 <div *ngIf="estadoForm == 3" class="col-sm-12 mb-2">
-    <button class="btn btn-danger"><i class="fa fa-close mr-2"></i>Rechazar</button>
+    <button class="btn btn-danger" style="cursor:default"><i class="fa fa-close mr-2"></i>Rechazar</button>
 </div>
 <div class="row">
     <div class="col-sm-3 form-group">
@@ -46,7 +46,7 @@
     </div>
     <div class="col-sm-3 form-group">
         <label>Moneda</label>
-        <input type="text" class="form-control" disabled [value]="moneda == 1 ? 'SOLES' : 'DOLARES'">
+        <input type="text" class="form-control" disabled [value]="moneda == 1 ? 'SOLES' : (moneda == 2 ? 'DOLARES' : '')">
     </div>
 </div>
 <form [formGroup]="form">

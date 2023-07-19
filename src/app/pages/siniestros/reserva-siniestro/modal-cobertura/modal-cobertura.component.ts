@@ -511,17 +511,27 @@ export class ModalCoberturaComponent implements OnInit {
     }
   }
 
-  changeFechasDescanso(){
+  changeFechasDescanso() {
     let inicio = new Date(this.inicioDescanso.value);
     let fin = new Date(this.finDescanso.value);
-    if(this.inicioDescanso.value != "" && this.finDescanso.value != ""){
-      if(inicio > fin){
-        Swal.fire('Información','La fecha de inicio de descanso no debe ser mayor a la fecha fin de descanso', 'warning');
+
+    let docurFin = new Date(this.finDescanso.value);
+    let Ini = new Date(this.inicioDescanso.value);
+
+    if(docurFin.getFullYear() < 2000 || Ini.getFullYear() < 2000){
+      this.dataReserva.NDAYSOFF = null;
+      this.dataReserva.NRESERVEAMOUNT = null;
+      return;
+    }
+
+    if (this.inicioDescanso.value != "" && this.finDescanso.value != "") {
+      if (inicio > fin) {
+        Swal.fire('Información', 'La fecha de inicio de descanso no debe ser mayor a la fecha fin de descanso', 'warning');
         this.dataReserva.NDAYSOFF = null;
         this.dataReserva.NRESERVEAMOUNT = null;
         return;
-      }else{
-        this.dataReserva.NDAYSOFF = ((fin.getTime() - inicio.getTime())/(1000*60*60*24)) + 1;
+      } else {
+        this.dataReserva.NDAYSOFF = ((fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24)) + 1;
         this.dataReserva.NRESERVEAMOUNT = Number(((this.rmvResponse.N_RMV / 30) * this.dataReserva.NDAYSOFF).toFixed(2))
       }
     }
@@ -613,6 +623,12 @@ export class ModalCoberturaComponent implements OnInit {
         return;
       }else{
         this.changeFechasDescanso() //Validacion de fechas;
+
+        if(this.dataReserva.NDAYSOFF == null && this.dataReserva.NRESERVEAMOUNT == null){
+          Swal.fire('Información','Debe ingresar fechas válidas','warning');
+          return;
+        }
+
         this.dataReserva.DRESTSTART =  this.datePipe.transform(this.inicioDescanso.value, 'dd/MM/yyyy')
         this.dataReserva.DRESTEND = this.datePipe.transform(this.finDescanso.value, 'dd/MM/yyyy');
         this.dataReserva.DOCCURDAT = this.reservaCaso.DOCCURDAT;

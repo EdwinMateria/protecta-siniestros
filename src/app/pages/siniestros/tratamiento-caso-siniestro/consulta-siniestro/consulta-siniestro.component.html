@@ -50,7 +50,7 @@
         </div>
         <div class="col-sm-3 form-group">
             <label>Moneda</label>
-            <input type="text" [value]="siniestro.nMoneda == 1 ? 'SOLES' : 'DOLARES'" class="form-control" disabled>
+            <input type="text" [value]="siniestro.nMoneda == 1 ? 'SOLES' : (siniestro.nMoneda == 2 ? 'DOLARES' : '')" class="form-control" disabled>
         </div>
     </div>
     <div class="row">
@@ -120,32 +120,11 @@
             <input type="text" class="form-control" disabled [(ngModel)]="siniestro.sEquivSiniestro">
         </div>
     </div>
-    <!-- <div class="row">
-        <div class="col-sm-6 form-group">
-            <label>Beneficiario</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-search"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Siniestro equivalente</label>
-            <input type="text" class="form-control" disabled>
-        </div>
-    </div> -->
-    <!-- <div class="row">
-        <div class="col-sm-6 form-group">
-            <label>Observación</label>
-            <input type="text" class="form-control" disabled>
-        </div>
-    </div> -->
     <div *ngIf="siniestro.nCodRechazo != 0" class="row" style="padding-top: 10px !important; border-top: 1px solid #ccc!important;">
         <div class="col-sm-3 form-group">
             <label>Motivo de rechazo</label>
-            <select class="form-control" disabled [(ngModel)]="siniestro.nCodRechazo">
-                <option *ngFor="let rechazo of listaRechazo"></option>
+            <select class="form-control" disabled [(ngModel)]="codRechazo">
+                <option *ngFor="let rechazo of listaRechazo" [value]="rechazo.nCodRechazo">{{rechazo.sDescript}}</option>
               </select>
         </div>
         <div class="col-sm-3 form-group">

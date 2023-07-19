@@ -107,7 +107,11 @@ export class FormSiniestroComponent implements OnInit {
   
             if(siniestro.nCodRechazo != 0 && this.estadoForm == 3){
               this.eliminado = true;
-              this.fechaRechazo = this.datePipe.transform(siniestro.dFecRechazo, 'yyyy-MM-dd');
+              let fRechazo = this.datePipe.transform(siniestro.dFecRechazo, 'yyyy-MM-dd').split('-');
+              let anio = fRechazo[0];
+              let mes = fRechazo[1];
+              let dia = fRechazo[2];
+              this.fechaRechazo = `${dia}/${mes}/${anio}`;
               this.eliminarSiniestro = siniestro.nCodRechazo.toString();
             }
           }
@@ -142,12 +146,16 @@ export class FormSiniestroComponent implements OnInit {
       this.casoService.AddRechazo(data).subscribe(
         res => {
           Swal.close()
-          if(res.Message.length > 0){
+          if(res.Message != 'Ok'){
             Swal.fire('Información',res.Message,'error');
             return;
           }else{
             Swal.fire('Información', 'Siniestro rechazado correctamente', 'success');
-            this.eliminado = true
+            this.eliminado = true;
+            let dia = ("0" + (new Date().getDate())).slice(-2);
+            let mes = ("0" + (new Date().getMonth() + 1)).slice(-2);
+            let anio = new Date().getFullYear();
+            this.fechaRechazo = `${dia}/${mes}/${anio}`;
             return;
           }
         },

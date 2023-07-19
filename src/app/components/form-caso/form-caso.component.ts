@@ -424,8 +424,6 @@ export class FormCasoComponent implements OnInit {
               showCloseButton: true
             }).then((result) => {
               if (result.isConfirmed) {
-                // this.tipoForm = false;
-                // this.showBotones = true
                 this.casoBM.nCaso = res.numcase;
                 this.casoBM.nPolicy = this.form.controls['nPolicy'].value;
                 this.casoBM.nCertif = 0;
