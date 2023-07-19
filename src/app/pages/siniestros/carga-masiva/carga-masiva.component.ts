@@ -315,8 +315,6 @@ export class CargaMasivaComponent implements OnInit {
                 item.FECHA_APERTURA = this.dataSet[i][29]?.trim();
                 item.LUGAR_OCURRENCIA = this.dataSet[i][30]?.trim();
                 item.FECHA_NACIMIENTO = this.dataSet[i][31]?.trim();
-                // item.CENTRO_MEDICO = this.dataSet[i][0]?.trim();
-                // item.TIPO_SINIESTRO = this.dataSet[i][0]?.trim();
                 this.ListAperturaPreliminar.LIST.push(item);
               }
               this.CargaMasivaService.RecorrerListaApertura(this.ListAperturaPreliminar).subscribe(
@@ -358,8 +356,106 @@ export class CargaMasivaComponent implements OnInit {
         }
       )
     } else if (this.codigo == 2) {
-      this.isLoading = false;
-      Swal.fire('Información', 'Martha está desarrollando.', 'info');
+      this.CargaMasivaService.ListarCabeceraData(this.ListCabecera).subscribe(
+        res => {
+          this.cabeceraData = res.Result.P_TABLE;
+          this.ListAperturaPreliminar = {};
+          this.ListAperturaPreliminar.LIST = [];
+          this.ListAperturaPreliminar.P_CTIPMOV_SOAT = this.trama;
+          this.ListAperturaPreliminar.P_TYPE_LOAD = this.carga;
+          this.cabeceraDataName = [];
+          for (var i = 0; i < this.cabeceraData.length; i++) {
+            this.cabeceraDataName.push(this.cabeceraData[i].SFIELDNAME);
+          }
+          this.primeraColumna = this.dataSet[0];
+          if (this.cabeceraDataName.length != this.primeraColumna.length) {
+            this.isLoading = false;
+            Swal.fire('Información', 'El número de columnas no coincide.', 'warning');
+            return;
+          } else {
+            for (var i = 0; i < this.cabeceraDataName.length; i++) {
+              if (this.cabeceraDataName[i].trim() != this.primeraColumna[i].trim()) {
+                this.isLoading = false;
+                Swal.fire('Información', 'Los nombres de la cabecera no coinciden.', 'warning');
+                return;
+              }
+            }
+            if (this.dataSet.length > 1) {
+              for (var i = 1; i < this.dataSet.length; i++) {
+                var item: any = {};
+                item.NUMERO_FILA = i + 1;
+                item.FECHA_SINIESTRO = this.dataSet[i][0]?.trim();
+                item.HORA_SINIESTRO = this.dataSet[i][1]?.trim();
+                item.RAMO = this.dataSet[i][2]?.trim();
+                item.NRO_SINIESTRO = this.dataSet[i][3]?.trim();
+                item.NRO_POLIZA = this.dataSet[i][4]?.trim();
+                item.PLACA = this.dataSet[i][5]?.trim();
+                item.NRO_CASO = this.dataSet[i][6]?.trim();
+                item.NRO_AUDITORIA = this.dataSet[i][7]?.trim();
+                item.NOMBRES = this.dataSet[i][8]?.trim();
+                item.APELLIDO_PATERNO = this.dataSet[i][9]?.trim();
+                item.APELLIDO_MATERNO = this.dataSet[i][10]?.trim();
+                item.TIPO_DOCUMENTO = this.dataSet[i][11]?.trim();
+                item.NRO_DOCUMENTO = this.dataSet[i][12]?.trim();
+                item.IPRESS_AQ_EMITECG = this.dataSet[i][13]?.trim();
+                item.IPRESS_RUC = this.dataSet[i][14]?.trim();
+                item.CAUSA_SINIESTRO = this.dataSet[i][15]?.trim();
+                item.FECHA_DENUNCIO = this.dataSet[i][16]?.trim();
+                item.HORA_RECEPCION = this.dataSet[i][17]?.trim();
+                item.OCUPANTE = this.dataSet[i][18]?.trim();
+                item.FALLECIDO = this.dataSet[i][19]?.trim();
+                item.FECHA_FALLECIDO = this.dataSet[i][20]?.trim();
+                item.UBIGEO = this.dataSet[i][21]?.trim();
+                item.ESTADO_SINIESTRO = this.dataSet[i][22]?.trim();
+                item.CODIGO_COMISARIA = this.dataSet[i][23]?.trim();
+                item.PATERNO_CONDUCTOR = this.dataSet[i][24]?.trim();
+                item.MATERNO_CONDUCTOR = this.dataSet[i][25]?.trim();
+                item.NOMBRES_CONDUCTOR = this.dataSet[i][26]?.trim();
+                item.MOTIVO_RECHAZO = this.dataSet[i][27]?.trim();
+                item.TIPO_ATENCION = this.dataSet[i][28]?.trim();
+                item.FECHA_APERTURA = this.dataSet[i][29]?.trim();
+                item.LUGAR_OCURRENCIA = this.dataSet[i][30]?.trim();
+                item.FECHA_NACIMIENTO = this.dataSet[i][31]?.trim();
+                this.ListAperturaPreliminar.LIST.push(item);
+              }
+              this.CargaMasivaService.RecorrerListaApertura(this.ListAperturaPreliminar).subscribe(
+                res => {
+                  this.currentPage = 1;
+                  this.listResults = res.Result.P_TABLE;
+                  this.totalItems = this.listResults.length;
+                  this.listToShow = this.listResults.slice(
+                    (this.currentPage - 1) * this.itemsPerPage,
+                    this.currentPage * this.itemsPerPage
+                  );
+                  this.caux_soat_ope = this.listResults[0].CAUX_SOAT_OPE;
+                  this.reporte_prel = false;
+                  this.isLoading = false;
+                  Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
+                  for (var i = 0; i < this.listResults.length; i++) {
+                    if (this.listResults[i].SDET_ERROR.length > 0) {
+                      this.booleanDisabled = true;
+                    } else {
+                      this.booleanDisabled = false;
+                      return;
+                    }
+                  }
+                },
+                err => {
+                  this.isLoading = false;
+                  Swal.fire('Información', 'Ha ocurrido un error al procesar los datos.', 'error');
+                }
+              )
+            } else {
+              this.isLoading = false;
+              Swal.fire('Información', 'No existen datos.', 'warning');
+            }
+          }
+        },
+        err => {
+          this.isLoading = false;
+          Swal.fire('Información', 'Ha ocurrido un error al obtener la cabecera de los datos.', 'error');
+        }
+      )
     } else if (this.codigo == 3) {
       this.isLoading = false;
       Swal.fire('Información', 'Martha está desarrollando.', 'info');
