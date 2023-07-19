@@ -27,6 +27,7 @@ export class ConsultaSiniestroComponent implements OnInit {
   fechaApertura = "";
   fechaFallecido = "";
   fechaRechazo = "";
+  codRechazo = "";
 
   //Tipos Ocupantes:
   ocupantes : SiniestroSelect[] = [
@@ -66,6 +67,7 @@ export class ConsultaSiniestroComponent implements OnInit {
         this.fechaFallecido = new Date(this.siniestro.dFecFallecido).toLocaleDateString('en-GB');
 
         if(this.siniestro.nCodRechazo != 0){
+          this.codRechazo = this.siniestro.nCodRechazo.toString();
           this.fechaRechazo = new Date(this.siniestro.dFecRechazo).toLocaleDateString('en-GB');
         }
       },

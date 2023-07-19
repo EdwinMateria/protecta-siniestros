@@ -23,6 +23,7 @@ export class TipoDocumento{
 export class ModalNuevoBeneficiarioComponent implements OnInit {
 
   @Input() public reference: any;
+  @Input() public origen: number;
   form!: FormGroup;
   documentos: TipoDocumento[]=[];
   labelNombres = 'Nombres';

@@ -15,6 +15,7 @@ import { SwalCarga } from "src/app/core/swal-loading";
 export class ModalBeneficiarioComponent implements OnInit {
 
   @Input() public reference: any;
+  @Input() public origen: number;
   beneficiarioResponse = new ClaimBenefParamResponse();
   buscador = new ClaimBenefParamRequest();
   pagina = 1;
@@ -58,7 +59,8 @@ export class ModalBeneficiarioComponent implements OnInit {
 
   openBeneficiario(){
     const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
-    modalRef.componentInstance.reference = modalRef;  
+    modalRef.componentInstance.reference = modalRef; 
+    modalRef.componentInstance.origen = this.origen;  
     modalRef.result.then((json) => {
       this.closeModal(json);
     });

@@ -9,6 +9,8 @@ import { ModalBeneficiarioComponent } from 'src/app/pages/siniestros/reserva-sin
 import Swal from 'sweetalert2';
 import { SwalCarga } from "src/app/core/swal-loading";
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
+import { ReserveService } from 'src/app/core/services/reserve/reserve.service';
+import { ClaimBeneficiarioRequest } from 'src/app/core/models/claimBeneficiarioRequest';
 
 
 export class SiniestroSelect{
@@ -49,7 +51,8 @@ export class FormSiniestroComponent implements OnInit {
     {codigo: "E", descript: "Emergencia"}
   ]
 
-  constructor(public fb: FormBuilder, private modalService: NgbModal, public casoService: CasosService, private datePipe: DatePipe, public authProtectaService: AuthProtectaService) {
+  constructor(public fb: FormBuilder, private modalService: NgbModal, public casoService: CasosService, private datePipe: DatePipe, 
+    public authProtectaService: AuthProtectaService, public reserveService: ReserveService) {
   }
 
   ngOnInit(): void {
@@ -66,6 +69,7 @@ export class FormSiniestroComponent implements OnInit {
     })
     this.disabledForm();
 
+    this.moneda = this.casoBM.nMoneda;
     if(this.estadoForm == 2){
       //Creacion siniestro
     }
@@ -104,7 +108,11 @@ export class FormSiniestroComponent implements OnInit {
   
             if(siniestro.nCodRechazo != 0 && this.estadoForm == 3){
               this.eliminado = true;
-              this.fechaRechazo = this.datePipe.transform(siniestro.dFecRechazo, 'yyyy-MM-dd');
+              let fRechazo = this.datePipe.transform(siniestro.dFecRechazo, 'yyyy-MM-dd').split('-');
+              let anio = fRechazo[0];
+              let mes = fRechazo[1];
+              let dia = fRechazo[2];
+              this.fechaRechazo = `${dia}/${mes}/${anio}`;
               this.eliminarSiniestro = siniestro.nCodRechazo.toString();
             }
           }
@@ -139,12 +147,16 @@ export class FormSiniestroComponent implements OnInit {
       this.casoService.AddRechazo(data).subscribe(
         res => {
           Swal.close()
-          if(res.Message.length > 0){
+          if(res.Message  != 'Ok'){
             Swal.fire('Información',res.Message,'error');
             return;
           }else{
             Swal.fire('Información', 'Siniestro rechazado correctamente', 'success');
-            this.eliminado = true
+            this.eliminado = true;
+            let dia = ("0" + (new Date().getDate())).slice(-2);
+            let mes = ("0" + (new Date().getMonth() + 1)).slice(-2);
+            let anio = new Date().getFullYear();
+            this.fechaRechazo = `${dia}/${mes}/${anio}`;
             return;
           }
         },
@@ -273,11 +285,28 @@ export class FormSiniestroComponent implements OnInit {
 
   openBeneficiario(){
     const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
-    modalRef.componentInstance.reference = modalRef;  
+    modalRef.componentInstance.reference = modalRef; 
+    modalRef.componentInstance.origen = 1;   
     modalRef.result.then((benef) => {
-      if(benef != undefined){
-        this.form.controls['afectado'].setValue(benef.SNAME);
-        this.sCliente = benef.SCODE;
+      console.log(benef);
+      if((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)){
+        SwalCarga();
+        let data = new ClaimBeneficiarioRequest();
+        if(benef.SCODE) data.SCODCLI = benef.SCODE.trim();
+        if(benef.P_SCOD_CLIENT) data.SCODCLI = benef.P_SCOD_CLIENT.trim();
+        console.log(data);
+        this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
+          res =>{
+            Swal.close();
+            this.form.controls['afectado'].setValue(res.ListBeneficiaries[0].SNAME);
+            this.sCliente = res.ListBeneficiaries[0].SCODE.trim();
+          },
+          err => {
+            Swal.close();
+            Swal.fire('Información',err,'error');
+          }
+        )
+
       }
     })
   }
