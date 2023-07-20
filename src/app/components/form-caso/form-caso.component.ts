@@ -77,7 +77,8 @@ export class FormCasoComponent implements OnInit {
     };
   }
 
-  constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService, public authProtectaService: AuthProtectaService, public datePipe : DatePipe) { }
+  constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService, public authProtectaService: AuthProtectaService
+    , public datePipe : DatePipe, private elementRef: ElementRef) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -196,8 +197,7 @@ export class FormCasoComponent implements OnInit {
       } else {
 
         let date1 = this.form.controls['dFecOcurrencia'].value;
-        console.log(date1);
-        
+
         let docur = new Date(this.form.controls['dFecOcurrencia'].value)
         console.log(docur);
         if (docur.getFullYear() > 1840 || date1 == "") {
@@ -220,6 +220,7 @@ export class FormCasoComponent implements OnInit {
                 this.form.controls['nProduct'].setValue(caso.nProduct);
               } else {
                 Swal.fire('Información', caso.sMensaje, 'error');
+                this.form.controls['dFecOcurrencia'].setValue('');
                 return;
               }
             },

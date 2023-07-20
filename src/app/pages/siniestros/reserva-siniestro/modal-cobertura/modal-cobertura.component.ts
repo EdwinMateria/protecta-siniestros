@@ -684,11 +684,7 @@ export class ModalCoberturaComponent implements OnInit {
       Swal.fire('Información', 'Debe ingresar al menos un beneficiario', 'warning');
       return;
     }
-
-
-    console.log(this.dataReserva);
-
-
+    
     Swal.fire({
       title: 'Información',
       text: 'Se procederá a grabar la información. ¿Desea continuar?',
@@ -769,28 +765,6 @@ export class ModalCoberturaComponent implements OnInit {
       reservaUpdate.SPROCEEDING = this.dataReserva.SINR_FILENUMBER
     }
 
-    if(this.data == Cobertura.Gastos_Medicos || this.data == Cobertura.Gastos_Sepelio){
-      reservaUpdate.FECHAEMISIONFACTURA = this.datePipe.transform(this.fechaEmision, 'dd/MM/yyyy');
-      reservaUpdate.FECHARECEPCIONFACTURA = this.datePipe.transform(this.fechaRecepcion, 'dd/MM/yyyy');
-      reservaUpdate.NDOC_TYPE = this.dataReserva.NTYPERECEIPT;
-      reservaUpdate.SBILL = this.dataReserva.SVOUCHERNUMBER;
-      reservaUpdate.NAMOUNT = this.modelBase
-      reservaUpdate.SAFFECTS_IGV = this.dataReserva.SAFFECTIGV;
-      reservaUpdate.SNOMBREPROVEEDOR = this.dataReserva.SREFERENTIALNAMEIPRESS;
-      reservaUpdate.SRED_IPRESS = this.dataReserva.SRED_IPRESS;
-      reservaUpdate.SRUCPROVEEDOR = this.dataReserva.SRUC;
-      reservaUpdate.SDOCUMENTTYPE = reservaUpdate.ListBeneficiariesMod[0].SDESCRIPTYPCLIENTDOC
-
-      if(this.data == Cobertura.Gastos_Medicos){
-        reservaUpdate.STIPOATENCION = this.tipoAtencion.value;
-        reservaUpdate.SORDER_NUM = this.dataReserva.SNROLETTER;
-        reservaUpdate.SREFUND = this.dataReserva.SREFUND
-        reservaUpdate.NAMOUNT_LETTER = this.modelBase;
-      }
-    }
-
-    reservaUpdate.NUSERCODE = Number(atob(codUsuario));
-
     if(this.beneficiarios.length > 0){
       this.beneficiarios.forEach(benef => {
         reservaUpdate.ListBeneficiariesMod.push({
@@ -813,6 +787,28 @@ export class ModalCoberturaComponent implements OnInit {
       Swal.fire('Información', 'Debe ingresar al menos un beneficiario','warning');
       return;
     }
+
+    if(this.data == Cobertura.Gastos_Medicos || this.data == Cobertura.Gastos_Sepelio){
+      reservaUpdate.FECHAEMISIONFACTURA = this.datePipe.transform(this.fechaEmision, 'dd/MM/yyyy');
+      reservaUpdate.FECHARECEPCIONFACTURA = this.datePipe.transform(this.fechaRecepcion, 'dd/MM/yyyy');
+      reservaUpdate.NDOC_TYPE = this.dataReserva.NTYPERECEIPT;
+      reservaUpdate.SBILL = this.dataReserva.SVOUCHERNUMBER;
+      reservaUpdate.NAMOUNT = this.modelBase
+      reservaUpdate.SAFFECTS_IGV = this.dataReserva.SAFFECTIGV;
+      reservaUpdate.SNOMBREPROVEEDOR = this.dataReserva.SREFERENTIALNAMEIPRESS;
+      reservaUpdate.SRED_IPRESS = this.dataReserva.SRED_IPRESS;
+      reservaUpdate.SRUCPROVEEDOR = this.dataReserva.SRUC;
+      reservaUpdate.SDOCUMENTTYPE = reservaUpdate.ListBeneficiariesMod[0].SDESCRIPTYPCLIENTDOC
+
+      if(this.data == Cobertura.Gastos_Medicos){
+        reservaUpdate.STIPOATENCION = this.tipoAtencion.value;
+        reservaUpdate.SORDER_NUM = this.dataReserva.SNROLETTER;
+        reservaUpdate.SREFUND = this.dataReserva.SREFUND
+        reservaUpdate.NAMOUNT_LETTER = this.modelBase;
+      }
+    }
+
+    reservaUpdate.NUSERCODE = Number(atob(codUsuario));
 
     console.log(reservaUpdate);
 

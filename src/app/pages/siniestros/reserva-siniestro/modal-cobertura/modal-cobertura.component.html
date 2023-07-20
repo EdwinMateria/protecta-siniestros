@@ -1,10 +1,10 @@
 <div class="modal-header w-100">
-    <h4 class="modal-title" id="modal-basic-title">Datos cobertura:
-        <span *ngIf="data == 1">1 - Muerte</span>
-        <span *ngIf="data == 2">2 - Incapacidad Temporal</span>
-        <span *ngIf="data == 3">3 - Invalidez Permanente</span>
-        <span *ngIf="data == 4">4 - Gastos Médicos</span>
-        <span *ngIf="data == 5">5 - Gastos de Sepelio</span>
+    <h4 class="modal-title" id="modal-basic-title">DATOS COBERTURA:
+        <span *ngIf="data == 1">1 - MUERTE</span>
+        <span *ngIf="data == 2">2 - INCAPACIDAD TEMPORAL</span>
+        <span *ngIf="data == 3">3 - INVALIDEZ PERMANENTE</span>
+        <span *ngIf="data == 4">4 - GASTOS MÉDICOS</span>
+        <span *ngIf="data == 5">5 - GASTOS DE SEPELIO</span>
     </h4>
     <button type="button" aria-label="Close" (click)="closeModal()" style="cursor: pointer;">
         <i class="fa fa-close"></i>
@@ -72,11 +72,11 @@
                             {{beneficiario.SBENEFICIARYTYPE}}
                         </td>
                         <td>
-                            <span *ngIf="data == 1">1 - Muerte</span>
-                            <span *ngIf="data == 2">2 - Incapacidad Temporal</span>
-                            <span *ngIf="data == 3">3 - Invalidez Permanente</span>
-                            <span *ngIf="data == 4">4 - Gastos Médicos</span>
-                            <span *ngIf="data == 5">5 - Gastos de Sepelio</span>
+                            <span *ngIf="data == 1">MUERTE</span>
+                            <span *ngIf="data == 2">INCAPACIDAD TEMPORAL</span>
+                            <span *ngIf="data == 3">INVALIDEZ PERMANENTE</span>
+                            <span *ngIf="data == 4">GASTOS MÉDICOS</span>
+                            <span *ngIf="data == 5">GASTOS DE SEPELIO</span>
                         </td>
                         <td>
                             <select class="form-control" [(ngModel)]="beneficiario.SBANK">
@@ -128,7 +128,7 @@
         </div>
         <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-3 form-group">
             <label>Zona del tramitador: </label>
-            <input class="form-control" [(ngModel)]="dataReserva.SPROCESSORZONE">
+            <input class="form-control" placeholder="Zona del tramitador" [(ngModel)]="dataReserva.SPROCESSORZONE">
         </div>
     </div>
     <div *ngIf="data != 4 && data != 5">

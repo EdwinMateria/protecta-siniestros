@@ -155,11 +155,6 @@ export class ReservaSiniestroComponent implements OnInit {
         if (origen == 4) this.reservaCaso.LISTA_COVERCLAIM[this.posicion].SNROLETTER = res.SNROLETTER;
         this.disabledCobertura = true;
       } else {
-        // const adElement = document.getElementById(`a${this.posicion}`) as HTMLInputElement;
-        // adElement.checked = false;
-        // const ddElement = document.getElementById(`d${this.posicion}`) as HTMLInputElement;
-        // ddElement.checked = false;
-        // this.tipoMovimiento[this.posicion] = null;
          this.datosAdicionales[this.posicion] = null;
       }
     });
