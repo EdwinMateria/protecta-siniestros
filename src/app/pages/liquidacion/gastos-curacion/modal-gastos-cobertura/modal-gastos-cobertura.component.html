@@ -125,11 +125,11 @@
     </div>
     <div *ngIf="tipoCobertura == 2 || tipoCobertura == 3 || tipoCobertura == 4 || tipoCobertura == 5"> 
         <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && cant_facturas > 0"> <!-- reembolso == 2-->
-            <div class="col-sm-3 form-group" *ngIf="(cant_facturas == 1)">
+            <div class="col-sm-3 form-group" *ngIf="(cant_facturas == 1 && salidaFacturas.length == 1)">
                 <label>Nro. de factura</label>
                 <input type="text" class="form-control" disabled [(ngModel)]="nroFactura" id="nroFactura">
             </div>
-            <div class="col-sm-3 form-group" *ngIf="(cant_facturas >= 2)">
+            <div class="col-sm-3 form-group" *ngIf="(cant_facturas >= 2  || salidaFacturas.length >= 2)">
                 <label>Nro. de factura</label>
                 <select class="form-control" (change)="cambioFactura()" id="CboFactura">
                     <option  [value]="0">
