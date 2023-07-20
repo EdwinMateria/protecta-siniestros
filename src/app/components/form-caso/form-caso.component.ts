@@ -220,6 +220,7 @@ export class FormCasoComponent implements OnInit {
                 this.form.controls['nProduct'].setValue(caso.nProduct);
               } else {
                 Swal.fire('Información', caso.sMensaje, 'error');
+                this.form.controls['dFecOcurrencia'].setValue('');
                 return;
               }
             },
