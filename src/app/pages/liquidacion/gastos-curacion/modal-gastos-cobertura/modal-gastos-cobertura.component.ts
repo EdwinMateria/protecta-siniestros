@@ -1345,6 +1345,10 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.mensaje = "E|fa|No existe factura asociada al beneficiario";
       return this.mensaje;
     }
+    if ((this.tipoCobertura== 4 ||this.tipoCobertura== 5)  && (vCampospago_validar.vfactura == '' && this.salidaFacturas.length >= 1 && this.mensaje=='' )){
+      this.mensaje = "E|fa|Seleccione un comprobante";
+      return this.mensaje;
+    }
     
     if(vCampospago_validar.vfinanalisis != '' && this.mensaje==''){// agregar No puede ser antes de la fecha de denuncio, ni fecha de apertura. vCampospago_validar.vtipoclient=='RUC' && 
       const fec_act = new Date();
