@@ -311,7 +311,7 @@
                         </select>
                     </td>
                     <td>
-                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_formapago">
+                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_formapago" (change)="cambioFormaPagoGrilla($event,beneficiarios.NBANKEXT,beneficiarios.SACCOUNT,i + 1)">
                             <option  [value]="0">
                                 Seleccionar
                             </option>

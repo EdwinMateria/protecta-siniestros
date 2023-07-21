@@ -1755,5 +1755,13 @@ export class ModalGastosCoberturaComponent implements OnInit {
     return (sdia + "/"  + smes + "/" + saño )
   }
 */
+cambioFormaPagoGrilla(e,sbanco, scuenta, nro){//nro, svalue, sbanco, scuenta
+  const val_fp = Number(e.target.value);
+
+
+  if(val_fp == 11 && sbanco != '' &&  scuenta != '' ){
+    Swal.fire('Información','Esta cambiando la forma de pago a Cheque. <br /> Beneficiario N°' + nro, 'warning');
+  }    
+}
 
 }
