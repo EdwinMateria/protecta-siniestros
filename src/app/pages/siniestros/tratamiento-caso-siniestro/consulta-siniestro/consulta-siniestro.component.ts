@@ -21,6 +21,8 @@ export class ConsultaSiniestroComponent implements OnInit {
   @Input() public data: number;
   @Input() public causasSiniestro : CausasVM[] = [];
   @Input() public listaRechazo : RechazoVM[] = [];
+  @Input() public origen : number;
+
   siniestro = new SiniestroBM();
   fechaOcurrencia = "";
   fechaDenuncia = "";
@@ -56,7 +58,7 @@ export class ConsultaSiniestroComponent implements OnInit {
 
   getSiniestro(){
     SwalCarga()
-    this.casoService.GetSearchClaim(this.data).subscribe(
+    this.casoService.GetSearchClaim(this.data , 2).subscribe(
       res => {
         Swal.close();
         this.siniestro = res.GenericResponse[0]

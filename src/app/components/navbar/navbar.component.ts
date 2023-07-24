@@ -72,7 +72,7 @@ export class NavbarComponent implements OnInit {
     let nav = div.getElementsByClassName("sideNav2");
     for (let i = 0; i< nav.length ; i++){
       if (nav[i].getAttribute("style") == "display: block")
-        nav[i].setAttribute("style","display: none");
+        nav[i].setAttribute("style","display: block");
       else
         nav[i].setAttribute("style","display: block");
     } 

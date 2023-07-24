@@ -27,6 +27,8 @@ import { ClaimGetDatAddResponseVM } from '../../models/claimGetDatAddResponse';
 import { ClaimDeleteBenefRequest } from '../../models/claimDeleteBenefReques';
 import { ClaimUpdateDatAddRequestBM } from '../../models/claimUpdateDatAddRequest';
 import { CombosGenericoVM } from '../../models/caso';
+import { ClaimBenefValidRequest } from '../../models/claimBenefValidRequest';
+import { ClaimBenefValidResponseVM } from '../../models/claimBenefValidResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -106,6 +108,13 @@ export class ReserveService {
   public GetBeneficiariesAdditionalDataCover(data: ClaimBeneficiarioRequest): Observable<ClaimBenefParamResponse> {
     const body = JSON.stringify(data);
     return this.http.post<ClaimBenefParamResponse>(this.Url + '/Reserve/GetBeneficiariesAdditionalDataCover', body, {
+      headers: this.headers,
+    });
+  }
+
+  public GetBeneficiariesValidCover(data: ClaimBenefValidRequest): Observable<ClaimBenefValidResponseVM> {
+    const body = JSON.stringify(data);
+    return this.http.post<ClaimBenefValidResponseVM>(this.Url + '/Reserve/GetBeneficiariesValidCover', body, {
       headers: this.headers,
     });
   }

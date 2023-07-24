@@ -6,11 +6,11 @@
 
 
   body{
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Bliss Pro Bold', sans-serif;
 }
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif !important; }
+body { margin: 0; font-family: Bliss Pro Bold, "Helvetica Neue", sans-serif !important; }
 
 
 /* Chrome, Safari, Edge, Opera */
@@ -39,4 +39,9 @@ input[type="date"]::-webkit-calendar-picker-indicator, input[type="time"]::-webk
 
 input{
   text-transform: uppercase !important;
+}
+
+.btn-success {
+  background-color: #3baa55;
+  border-color: #3baa55;
 }

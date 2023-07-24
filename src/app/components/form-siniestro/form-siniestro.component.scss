@@ -5,3 +5,26 @@
 .btn-danger:hover {
     background-color: #dc3545;
 }
+
+.btn-perso {
+    cursor: default !important;
+    border-radius: 20px;
+    background-color: #b64545 !important;
+    border-color: #b64545 !important;
+    outline: none !important; /* Quita el resaltado al hacer clic */
+    border: none !important;
+}
+
+.btn-perso:disabled {
+    opacity: 1 !important;
+  }
+
+
+  .card-header{
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.card{
+    border-radius: 0px;
+}

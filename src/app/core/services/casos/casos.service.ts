@@ -68,8 +68,8 @@ export class CasosService {
     });
   }
 
-  public GetSearchClaim(Siniestro: number): Observable<GenericResponse> {
-    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetSearchClaim?Siniestro='+ Siniestro, {
+  public GetSearchClaim(Siniestro: number, nproceso: number): Observable<GenericResponse> {
+    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetSearchClaim?Siniestro='+ Siniestro + '&Nproceso=' +  nproceso, {
       headers: this.headers
     });
   }

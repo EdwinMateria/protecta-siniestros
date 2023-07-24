@@ -149,6 +149,7 @@ export class ReservaSiniestroComponent implements OnInit {
     modalRef.componentInstance.reservaCaso = this.reservaCaso;
     modalRef.componentInstance.tab = this.tipoTab;
     modalRef.componentInstance.disabledBotones = this.disabledTodo;
+    modalRef.componentInstance.tipoMovimiento = this.tipoMovimiento;
     modalRef.result.then((res) => {
       if (res != undefined) {
         this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NRESERVEAMOUNT = res.NMONTO;

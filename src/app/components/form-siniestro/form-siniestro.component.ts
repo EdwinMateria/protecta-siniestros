@@ -58,6 +58,14 @@ export class FormSiniestroComponent implements OnInit {
   ngOnInit(): void {
     this.fechaMap = new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB')
     this.form = this.fb.group({
+      npolicy: [{value: '', disabled: true}],
+      certif: [{value: '', disabled: true}],
+      ncaso : [{value: '', disabled: true}],
+      nsiniestro : [{value: '', disabled: true}],
+      fOcurrencia: [{value: '', disabled: true}],
+      hOcurrencia: [{value: '', disabled: true}],
+      causaSiniestro: [{value: '', disabled: true}],
+      moneda: [{value: '', disabled: true}],
       dFecDenuncia : [{value:'', disabled: false}, Validators.required],
       sHoraRecepcion: [{value:'', disabled: false}, Validators.required],
       dFecApertura: [{value:'', disabled: false}, Validators.required],
@@ -69,13 +77,16 @@ export class FormSiniestroComponent implements OnInit {
     })
     this.disabledForm();
     this.moneda = this.casoBM.nMoneda;
+    this.form.controls['moneda'].setValue(this.moneda == 1 ? 'SOLES' : (this.moneda == 2 ? 'DOLARES' : ''))
     if(this.estadoForm == 2){
       //Creacion siniestro
     }
     if(this.estadoForm != 2 ){
+      let origen = 1;
+      if(this.estadoForm == 3) origen = 2
       //Edicion y rechazo siniestro 
       SwalCarga();
-      this.casoService.GetSearchClaim(this.casoBM.nSiniestro).subscribe(
+      this.casoService.GetSearchClaim(this.casoBM.nSiniestro , origen).subscribe(
         res => {
           Swal.close()
           if(res.GenericResponse.length == 0){

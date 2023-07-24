@@ -19,7 +19,7 @@ import { ModalBeneficiarioComponent } from './pages/siniestros/reserva-siniestro
 import { ModalNuevoBeneficiarioComponent } from './pages/siniestros/reserva-siniestro/modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-siniestro/reapertura-siniestro.component';
 import { DecimalesDirective } from './core/directive/decimales.directive';
 import { SiniestroIntercepInterceptor } from './core/services/interceptor/siniestro-intercep.interceptor';
@@ -50,7 +50,8 @@ import { SiniestroIntercepInterceptor } from './core/services/interceptor/sinies
     FormsModule,
     ReactiveFormsModule,
     NgbTypeaheadModule,
-    NgbPaginationModule
+    NgbPaginationModule,
+    CommonModule
   ],
   providers: [
     DatePipe

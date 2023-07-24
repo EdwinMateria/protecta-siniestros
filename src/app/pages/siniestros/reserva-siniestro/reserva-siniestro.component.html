@@ -2,7 +2,7 @@
 <div class="container mt-3">
     <div class="row border_head">
         <div class="col-sm-8">
-            <h3>Reserva de siniestro</h3>
+            <h3>RESERVA DE SINIESTRO</h3>
         </div>
         <div class="col-sm-4 text-end float-end">
             <nav class="nav nav-pills nav-fill">
@@ -16,12 +16,14 @@
     <div class="row">
         <div class="col-sm-3 form-group">
             <label>Caso</label>
-            <input class="form-control" type="number" (keyup.enter)="buscadorSiniestro()" [(ngModel)]="claimRequest.NCASE">
+            <input class="form-control" type="number" (keyup.enter)="buscadorSiniestro()"
+                [(ngModel)]="claimRequest.NCASE">
         </div>
         <div class="col-sm-3 form-group">
             <label>Nro. de siniestro</label>
             <select class="form-control" (change)="buscadorGlobal()" [(ngModel)]="siniestro">
-                <option *ngFor="let sntro of siniestros" [value]="sntro.CODIGO" [disabled]="sntro.CODIGO == 0">{{sntro.DESCRIPCION}}</option>
+                <option *ngFor="let sntro of siniestros" [value]="sntro.CODIGO" [disabled]="sntro.CODIGO == 0">
+                    {{sntro.DESCRIPCION}}</option>
             </select>
         </div>
         <div class="col-sm-3 form-group">
@@ -62,7 +64,8 @@
         <div class="col-sm-3 form-group">
             <label>Tipo de atención</label>
             <select class="form-control" disabled [(ngModel)]="reservaCaso.STIPOATENCION">
-                <option *ngFor="let atencion of tiposAtencion" [value]="atencion.SCODIGO">{{atencion.SCODIGO}} - {{atencion.SDESCRIPCION}}</option>
+                <option *ngFor="let atencion of tiposAtencion" [value]="atencion.SCODIGO">{{atencion.SCODIGO}} -
+                    {{atencion.SDESCRIPCION}}</option>
             </select>
         </div>
         <div class="col-sm-3 form-group">
@@ -72,66 +75,79 @@
     </div>
 </div>
 <div class="table-reserva mt-3 pb-4" *ngIf="showTable">
-    <table class="table table-striped w-100">
-        <thead>
-            <tr>
-                <th scope="col">Afectado</th>
-                <th scope="col">Moneda</th>
-                <th scope="col">Cobertura</th>
-                <th scope="col">UIT</th>
-                <th scope="col">Suma asegurada</th>
-                <th scope="col">Tipo movimiento</th>
-                <th scope="col">Monto reserva</th>
-                <th scope="col">Nro. de carta</th>
-                <th scope="col">Reserva acumulada</th>
-                <th scope="col">Datos adicionales</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let claim of reservaCaso.LISTA_COVERCLAIM; let i = index">
-                <td>{{claim.SCLIENT}} - {{claim.SCLIENAME}}</td>
-                <td>{{claim.SCURRDES}}</td>
-                <td>{{claim.NCOVER}} - {{claim.SDESCOVER}}</td>
-                <td>{{claim.NDAMAGES}}</td>
-                <td>{{claim.NSUMINSURED}}</td>
-                <td>
-                    <div class="form-group">
-                        <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento" ngDefaultControl (ngModelChange)="changeRadio(i, $event)">
-                            <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" name="radio" [id]="'a'+i" value="A" [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2)"/> <i class="fa fa-arrow-up"></i>
-                            </label>
-                            <label class="radio-inline" style="vertical-align:middle;">
-                                <input type="radio" name="radio" [id]="'d'+i" value="D" [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2)" /> <i class="fa fa-arrow-down"></i>
-                            </label>
+    <div class="table-responsive">
+        <table class="table table-striped w-100">
+            <thead>
+                <tr>
+                    <th scope="col">Afectado</th>
+                    <th scope="col">Moneda</th>
+                    <th scope="col">Cobertura</th>
+                    <th scope="col">UIT</th>
+                    <th align="end" scope="col">Suma asegurada</th>
+                    <th align="center" scope="col">Tipo movimiento</th>
+                    <th scope="col">Monto reserva</th>
+                    <th scope="col">Nro. de carta</th>
+                    <th align="end" scope="col">Reserva acumulada</th>
+                    <th align="center" scope="col">Datos adicionales</th>
+                    <th align="center" scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let claim of reservaCaso.LISTA_COVERCLAIM; let i = index">
+                    <td>{{claim.SCLIENT}} - {{claim.SCLIENAME}}</td>
+                    <td>{{claim.SCURRDES}}</td>
+                    <td>{{claim.NCOVER}} - {{claim.SDESCOVER}}</td>
+                    <td>{{claim.NDAMAGES}}</td>
+                    <td align="end" class="mr-3">{{claim.NSUMINSURED | number: '1.0-0'}}</td>
+                    <td>
+                        <div class="form-group" align="center">
+                            <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento" ngDefaultControl
+                                (ngModelChange)="changeRadio(i, $event)">
+                                <label class="radio-inline" style="vertical-align:middle;">
+                                    <input type="radio" name="radio" [id]="'a'+i" value="A"
+                                        [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2)" /> <i
+                                        class="fa fa-arrow-up"></i>
+                                </label>
+                                <label class="radio-inline" style="vertical-align:middle;">
+                                    <input type="radio" name="radio" [id]="'d'+i" value="D"
+                                        [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2)" /> <i
+                                        class="fa fa-arrow-down"></i>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    {{claim.NRESERVEAMOUNT}}
-                </td>
-                <td>
-                    {{claim.SNROLETTER}}
-                </td>
-                <td>
-                    <span *ngIf="claim.NACCUMRESERVE != 0">{{claim.NACCUMRESERVE}}</span>
-                </td>
-                <td>
-                    <div class="form-check" *ngIf="tipoTab == 1">
-                        <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]" type="checkbox" (change)="reserva($event, claim.NCOVER, i)" [disabled]="(disabledCobertura  && posicion == i) || disabledTodo">
-                        <!-- <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]" type="checkbox" (change)="deselect(i)" [disabled]="disabledCobertura  && posicion == i"> -->
-                    </div>
-                </td>
-                <td>
-                    <button *ngIf="tipoTab == 1 && disabledCobertura && posicion == i" class="btn btn-danger mr-3" (click)="eliminarTablaTemporal(claim, i)"><i class="fa fa-trash"></i></button>
-                    <button *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3" (click)="openModalCobertura(claim.NCOVER)"><i class="fa fa-edit"></i></button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="row pb-4">
+                    </td>
+                    <td align="end" class="mr-3">
+                        {{claim.NRESERVEAMOUNT | number: '1.0-0'}}
+                    </td>
+                    <td>
+                        {{claim.SNROLETTER}}
+                    </td>
+                    <td align="end" class="mr-3">
+                        <span *ngIf="claim.NACCUMRESERVE != 0">{{claim.NACCUMRESERVE | number: '1.0-0'}}</span>
+                    </td>
+                    <td>
+                        <div align="center" class="form-check" *ngIf="tipoTab == 1">
+                            <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]"
+                                type="checkbox" (change)="reserva($event, claim.NCOVER, i)"
+                                [disabled]="(disabledCobertura  && posicion == i) || disabledTodo">
+                            <!-- <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]" type="checkbox" (change)="deselect(i)" [disabled]="disabledCobertura  && posicion == i"> -->
+                        </div>
+                    </td>
+                    <td>
+                        <button align="center" *ngIf="tipoTab == 1 && disabledCobertura && posicion == i"
+                            class="btn btn-danger mr-3" (click)="eliminarTablaTemporal(claim, i)"><i
+                                class="fa fa-trash"></i></button>
+                        <button align="center" *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3"
+                            (click)="openModalCobertura(claim.NCOVER)"><i class="fa fa-edit"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row pb-4 mt-3">
         <div class="col-sm-12" align="end" *ngIf="tipoTab == 1">
-            <button class="btn btn-success" [disabled]="disabledTodo" (click)="guardarTablasDefinitivas()">Guardar</button>
+            <button class="btn btn-success" [disabled]="disabledTodo"
+                (click)="guardarTablasDefinitivas()">Guardar</button>
         </div>
     </div>
 </div>

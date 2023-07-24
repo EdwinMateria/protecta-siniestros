@@ -24,6 +24,7 @@ import { ClaimDeleteBenefRequest } from 'src/app/core/models/claimDeleteBenefReq
 import { ClaimUpdateDatAddRequestBM } from 'src/app/core/models/claimUpdateDatAddRequest';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 import { SwalCarga } from "src/app/core/swal-loading";
+import { ClaimBenefValidRequest } from 'src/app/core/models/claimBenefValidRequest';
 
 @Component({
   selector: 'app-modal-cobertura',
@@ -37,6 +38,7 @@ export class ModalCoberturaComponent implements OnInit {
   @Input() public reservaCaso: ClaimCoverResponse;
   @Input() public tab : number;
   @Input() public disabledBotones : boolean;
+  @Input() public tipoMovimiento: string;
 
   beneficiarios: BeneficiariesVM[] = [];
   listCodeBeneficiarios : string[] = [];
@@ -435,25 +437,37 @@ export class ModalCoberturaComponent implements OnInit {
   }
 
   openBeneficiario(){
-    const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
+    const modalRef = this.modalService.open(ModalBeneficiarioComponent, { windowClass: "my-class", backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
     modalRef.componentInstance.beneficiarios = this.beneficiarios;
     modalRef.componentInstance.origen = 2;  
     modalRef.result.then((benef) => {
       if((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)){
         SwalCarga();
-        let data = new ClaimBeneficiarioRequest();
-        if(benef.SCODE) data.SCODCLI = benef.SCODE.trim();
-        if(benef.P_SCOD_CLIENT) data.SCODCLI = benef.P_SCOD_CLIENT.trim();
-
-        this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
-          res =>{
+        let data = new ClaimBenefValidRequest();
+        if(benef.SCODE) data.SCLIENT = benef.SCODE.trim();
+        if(benef.P_SCOD_CLIENT) data.SCLIENT = benef.P_SCOD_CLIENT.trim();
+        data.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
+        data.NCLAIM = Number(this.reservaCaso.NCLAIM);
+        data.NCOVER = this.data;
+        data.SMOVETYPE = this.tipoMovimiento;
+        //caso siniestro cobertura cliente tipo Movimiento
+        
+        this.reserveService.GetBeneficiariesValidCover(data).subscribe(
+          res => {
             Swal.close();
-            if(res.ListBeneficiaries[0].SBANK == "") res.ListBeneficiaries[0].SBANK = "0";
+            if(res.SRESULT == 'OK'){
+              Swal.close();
+            if(res.ListBeneficiariesValid[0].SBANK == "") res.ListBeneficiariesValid[0].SBANK = "0";
             
-            this.beneficiarios.push(res.ListBeneficiaries[0])
+            this.beneficiarios.push(res.ListBeneficiariesValid[0])
             if(this.beneficiarios.length == 1){
               this.obtenerBancos()
+            }
+            }else{
+              Swal.close();
+              Swal.fire('Información', res.SRESULT, 'warning');
+              return;
             }
           },
           err => {
