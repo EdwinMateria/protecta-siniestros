@@ -6,8 +6,8 @@ export class AppConfig{
         return environment.siniestroAPI;
     }
     public static get URL_SINIESTROS_WEB() : string {
-        return 'http://190.216.170.173/siniestrodes' //DESARROLLO
-        //return 'http://190.216.170.173/siniestroqa' //QA
+        //return 'http://190.216.170.173/siniestrodes' //DESARROLLO
+        return 'http://190.216.170.173/siniestroqa' //QA
         //return 'http://localhost:55556';
     }
 }

@@ -1,30 +1,32 @@
-<app-navbar></app-navbar>
-<div class="container mt-3">
-    <div class="row border_head">
-        <div class="col-sm-8">
-            <h3 *ngIf="!tituloState">Tratamiento del caso</h3>
-            <h3 *ngIf="tituloState">Tratamiento del siniestro</h3>
-        </div>
-        <div class="col-sm-4 text-end float-end">
-            <nav class="nav nav-pills nav-fill">
-                <a class="nav-link {{registroActive}}" style="cursor: pointer;" (click)="tabControl(1)">Registrar</a>
-                <a class="nav-link {{consultaActive}}" style="cursor: pointer;" (click)="tabControl(2)">
-                    <span *ngIf="tipoTab != 3">Consultar</span>
-                    <span *ngIf="tipoTab == 3">Volver al caso</span>
-                </a>
-            </nav>
+<app-navbar (showModal)="showModal($event)"></app-navbar>
+<div [ngClass]="{'empujar': openModal === true , 'restaurar' : openModal === false}">
+    <div class="body-tratamiento mt-3">
+        <div class="row border_head">
+            <div class="col-sm-8">
+                <h3 *ngIf="!tituloState">Tratamiento del caso</h3>
+                <h3 *ngIf="tituloState">Tratamiento del siniestro</h3>
+            </div>
+            <div class="col-sm-4 text-end float-end" align="end">
+                <nav class="nav nav-pills nav-fill text-end float-end" align="end">
+                    <a class="nav-link {{registroActive}}" style="cursor: pointer;" (click)="tabControl(1)">Registrar</a>
+                    <a class="nav-link {{consultaActive}} text-end float-end"  align="end" style="cursor: pointer;" (click)="tabControl(2)">
+                        <span *ngIf="tipoTab != 3">Consultar</span>
+                        <span *ngIf="tipoTab == 3">Volver al caso</span>
+                    </a>
+                </nav>
+            </div>
         </div>
     </div>
-</div>
-
-<div class="body-tratamiento mt-3" *ngIf="tipoTab == 1">
-    <app-form-caso [tipoForm]="true" (tituloTratamiento)="getvalueTitulo($event)" (formSiniestro)="estadoFormSiniestro($event)" (casoEmit)="getCaso($event)"></app-form-caso>
-</div>
-
-<div class="body-tratamiento mt-3" *ngIf="tipoTab == 2">
-    <app-form-caso [tipoForm]="false"  (tituloTratamiento)="getvalueTitulo($event)" (formSiniestro)="estadoFormSiniestro($event)" (casoEmit)="getCaso($event)"></app-form-caso>
-</div>
-
-<div class="body-tratamiento mt-3" *ngIf="tipoTab == 3">
-    <app-form-siniestro [estadoForm]="formSiniestro" (cancelBool)="cancelSiniestro($event)" [casoBM]="caso"></app-form-siniestro>
+    
+    <div class="body-tratamiento mt-3" *ngIf="tipoTab == 1">
+        <app-form-caso [tipoForm]="true" (tituloTratamiento)="getvalueTitulo($event)" (formSiniestro)="estadoFormSiniestro($event)" (casoEmit)="getCaso($event)"></app-form-caso>
+    </div>
+    
+    <div class="body-tratamiento mt-3" *ngIf="tipoTab == 2">
+        <app-form-caso [tipoForm]="false"  (tituloTratamiento)="getvalueTitulo($event)" (formSiniestro)="estadoFormSiniestro($event)" (casoEmit)="getCaso($event)"></app-form-caso>
+    </div>
+    
+    <div class="body-tratamiento mt-3" *ngIf="tipoTab == 3">
+        <app-form-siniestro [estadoForm]="formSiniestro" (cancelBool)="cancelSiniestro($event)" [casoBM]="caso"></app-form-siniestro>
+    </div>
 </div>

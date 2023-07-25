@@ -29,6 +29,7 @@ export class GastosCuracionComponent implements OnInit {
   movimientosPago: Movimiento[]=[];
 
   pendientePagoInput = new PendientePago();
+  openModal = false;
 
   constructor(private modalService: NgbModal,
               private service: LiquidacionService) { }
@@ -236,4 +237,8 @@ export class GastosCuracionComponent implements OnInit {
     }
   }
 
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
+  }
+  
 }

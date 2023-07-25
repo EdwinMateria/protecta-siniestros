@@ -45,3 +45,13 @@ input{
   background-color: #3baa55;
   border-color: #3baa55;
 }
+
+.empujar{
+  margin-left: 350px;
+  transition: margin-left 0.5s ease;
+}
+
+.restaurar{
+  margin-left: 0px;
+  transition: margin-left 0.5s ease;
+}

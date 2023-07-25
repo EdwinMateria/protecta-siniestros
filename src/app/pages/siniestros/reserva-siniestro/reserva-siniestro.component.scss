@@ -10,13 +10,13 @@
 }
 
 .body-reserva{
-    margin-left: 15% !important;
-    margin-right: 15% !important;
+    margin-left: 8% !important;
+    margin-right: 8% !important;
 }
 
 .table-reserva{
-    margin-left: 10% !important;
-    margin-right: 10% !important;
+    margin-left: 8% !important;
+    margin-right: 8% !important;
 }
 
 ::ng-deep .my-class .modal-dialog { 
@@ -26,4 +26,9 @@
 .btn-busqueda{
     background-color: rgb(235, 156, 9);
     color: white
+}
+
+.card-header{
+    background-color: #2b0d61;
+    color: #fff;
 }

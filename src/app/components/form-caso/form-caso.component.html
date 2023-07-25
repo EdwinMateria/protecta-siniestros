@@ -16,10 +16,10 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header py-2">
                         <h5>Datos del siniestro</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body py-1">
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
@@ -30,7 +30,8 @@
                                         formControlName="nPolicy"
                                         #referencia
                                         [placeholder]="!this.tipoForm ? 'Escribir nro. de caso' : 'Escribir nro. de poliza'" 
-                                        (keyup.enter)="buscador()">
+                                        (keyup.enter)="buscador()"
+                                        (keydown)="onKeyDown($event)">
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -124,10 +125,10 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card mt-2">
-                    <div class="card-header">
+                    <div class="card-header py-2">
                         <h5>Datos del contratante</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body py-1">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -150,10 +151,10 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card mt-2">
-                    <div class="card-header">
+                    <div class="card-header py-2">
                         <h5>Datos del conductor</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body py-1">
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
@@ -210,10 +211,10 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card mt-2 mb-2">
-                    <div class="card-header">
+                    <div class="card-header py-2">
                         <h5>Datos de ubicación</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body py-1">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -277,7 +278,10 @@
         </div>
     </form>
         <div class="row" *ngIf="tipoForm">
-            <div class="col-sm-12" align="end">
+            <div class="col-sm-6">
+                <small>(*) Campos obligatorios</small>
+            </div>
+            <div class="col-sm-6" align="end">
                 <button class="btn btn-success mb-3" (click)="saveCaso()">Guardar</button>
             </div>
         </div>

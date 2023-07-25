@@ -68,7 +68,7 @@ export class FormSiniestroComponent implements OnInit {
       moneda: [{value: '', disabled: true}],
       dFecDenuncia : [{value:'', disabled: false}, Validators.required],
       sHoraRecepcion: [{value:'', disabled: false}, Validators.required],
-      dFecApertura: [{value:'', disabled: false}, Validators.required],
+      dFecApertura: [{value:'', disabled: true}, Validators.required],
       afectado: [{value:'', disabled: false}, Validators.required],
       nTipOcupante : [{value:'', disabled: false}, Validators.required],
       sTipAtencion: [{value:'', disabled: false}, Validators.required],
@@ -79,7 +79,7 @@ export class FormSiniestroComponent implements OnInit {
     this.moneda = this.casoBM.nMoneda;
     this.form.controls['moneda'].setValue(this.moneda == 1 ? 'SOLES' : (this.moneda == 2 ? 'DOLARES' : ''))
     if(this.estadoForm == 2){
-      //Creacion siniestro
+      this.form.controls['dFecApertura'].setValue(this.datePipe.transform(new Date(), 'dd/MM/yyyy'))
     }
     if(this.estadoForm != 2 ){
       let origen = 1;
@@ -111,7 +111,7 @@ export class FormSiniestroComponent implements OnInit {
             })
             this.form.controls['dFecDenuncia'].setValue(new Date(siniestro.dFecDenuncia).toLocaleDateString('en-GB'))
             this.form.controls['afectado'].setValue(siniestro.sCliente);
-            this.form.controls['dFecApertura'].setValue(this.datePipe.transform(siniestro.dFecApertura, 'yyyy-MM-dd'))
+            this.form.controls['dFecApertura'].setValue(this.datePipe.transform(siniestro.dFecApertura, 'dd/MM/yyyy'))
             this.form.controls['dFecFallecido'].setValue(this.datePipe.transform(siniestro.dFecFallecido, 'yyyy-MM-dd'))
             this.sCliente = siniestro.sCodClie;
             this.form.controls['nTipOcupante'].setValue(siniestro.sTipOcupante);
@@ -189,11 +189,14 @@ export class FormSiniestroComponent implements OnInit {
         let siniestroBM = new SiniestroBM();
         let cookie = this.authProtectaService.getCookie('AppSiniestro');
       let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
+      this.form.controls['nsiniestro'].setValue("0");
+      this.form.controls['dFecApertura'].setValue(this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
+
       siniestroBM = {
         ...this.form.getRawValue(),
         nCaso : this.casoBM.nCaso,
         sCliente : this.sCliente,
-        nCodUsuario : Number(atob(codUsuario))
+        nCodUsuario : Number(atob(codUsuario)),
       }
       const data: FormData = new FormData();
       data.append('siniestrosData', JSON.stringify(siniestroBM));

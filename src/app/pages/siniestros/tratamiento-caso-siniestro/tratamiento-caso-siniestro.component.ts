@@ -16,7 +16,7 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
 
   formSiniestro = 0;
   caso = new CasosBM();
-
+  openModal = false;
   constructor() { }
 
   ngOnInit(): void {
@@ -73,6 +73,10 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
 
   getCaso(caso:any){
     this.caso = caso;
+  }
+
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
   }
 
 }

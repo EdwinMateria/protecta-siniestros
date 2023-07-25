@@ -4,8 +4,8 @@
 
 export const environment = {
   production: true,
-  siniestroAPI: 'https://plataformadigital.stg.protectasecurity.pe/SiniestroSoatApi/Api'  //DESARROLLO
-  //siniestroAPI: 'https://plataformadigital.stg.protectasecurity.pe/ApiSiniestroSoatQA/Api'  //QA
+  //siniestroAPI: 'https://plataformadigital.stg.protectasecurity.pe/SiniestroSoatApi/Api'  //DESARROLLO
+  siniestroAPI: 'https://plataformadigital.stg.protectasecurity.pe/ApiSiniestroSoatQA/Api'  //QA
   //siniestroAPI: 'http://localhost:30897/Api'
 };
 

@@ -39,6 +39,7 @@ export class ModalCoberturaComponent implements OnInit {
   @Input() public tab : number;
   @Input() public disabledBotones : boolean;
   @Input() public tipoMovimiento: string;
+  @Input() public sclient : string;
 
   beneficiarios: BeneficiariesVM[] = [];
   listCodeBeneficiarios : string[] = [];
@@ -105,6 +106,28 @@ export class ModalCoberturaComponent implements OnInit {
     if(this.tab == 2) this.obtenerReservaDefinitiva();
 
     this.obtenerCodigoDiagnostico();
+
+    // if(this.data != 1 && this.data != 5){
+    //   let data = new ClaimBeneficiarioRequest();
+    //   data.SCODCLI = this.sclient;
+    //   this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
+    //     res => {
+    //       Swal.close();
+    //       if(res.ListBeneficiaries[0].SBANK == "") res.ListBeneficiaries[0].SBANK = "0";
+          
+    //       this.beneficiarios.push(res.ListBeneficiaries[0])
+    //       if(this.beneficiarios.length == 1){
+    //         this.obtenerBancos()
+    //       }
+          
+    //     },
+    //     err => {
+    //       Swal.close();
+    //       Swal.fire('Información',err,'error');
+    //     }
+    //   )
+    // }
+
   }
 
   obtenerCodigoDiagnostico(){

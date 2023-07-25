@@ -10,6 +10,7 @@ import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-pr
 })
 export class HomeComponent implements OnInit {
 
+  openModal = false;
   constructor(public authProtectaService: AuthProtectaService, public route: ActivatedRoute, public router: Router) {
     
   }
@@ -37,6 +38,11 @@ export class HomeComponent implements OnInit {
         }
       }
   });
+  }
+
+
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
   }
 
 }

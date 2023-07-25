@@ -14,6 +14,7 @@ export class ReaperturaSiniestroComponent implements OnInit {
   
   nroSiniestro = new FormControl('', Validators.required);
   fechaSiniestro = new FormControl(null, Validators.required);
+  openModal = false;
 
   constructor(public casoService: CasosService) { }
 
@@ -69,6 +70,10 @@ export class ReaperturaSiniestroComponent implements OnInit {
   limpiarForm(){
     this.nroSiniestro.reset();
     this.fechaSiniestro.reset();
+  }
+
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
   }
 
 }

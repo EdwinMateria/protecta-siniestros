@@ -21,6 +21,7 @@ import { SwalCarga } from "src/app/core/swal-loading";
 })
 export class ReservaSiniestroComponent implements OnInit {
 
+  
   tipoTab = 1;
   registroActive = 'active';
   consultaActive = '';
@@ -37,6 +38,8 @@ export class ReservaSiniestroComponent implements OnInit {
   showTable = false;
   disabledCobertura = false;
   disabledTodo = false;
+  openModal = false;
+  sclient = "";
 
   constructor(private modalService: NgbModal, public reserveService: ReserveService, public authProtectaService: AuthProtectaService) { }
 
@@ -150,6 +153,7 @@ export class ReservaSiniestroComponent implements OnInit {
     modalRef.componentInstance.tab = this.tipoTab;
     modalRef.componentInstance.disabledBotones = this.disabledTodo;
     modalRef.componentInstance.tipoMovimiento = this.tipoMovimiento;
+    modalRef.componentInstance.sclient = this.sclient;
     modalRef.result.then((res) => {
       if (res != undefined) {
         this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NRESERVEAMOUNT = res.NMONTO;
@@ -240,7 +244,7 @@ export class ReservaSiniestroComponent implements OnInit {
     })
   }
 
-  reserva(event: any, origen: number, i: number) {
+  reserva(event: any, origen: number, i: number, client: string) {
     if (event.target.checked) {
 
       if (this.disabledCobertura) {
@@ -264,6 +268,7 @@ export class ReservaSiniestroComponent implements OnInit {
             return;
           }else{
             this.reservaCaso.SMOVETYPE = this.tipoMovimiento;
+            this.sclient = client;
             this.openModalCobertura(origen)
           }
         }
@@ -371,9 +376,10 @@ export class ReservaSiniestroComponent implements OnInit {
 
   changeRadio(i:number, event: any){
     this.posicionActual = i;
-    console.log(i);
-    console.log(this.tipoMovimiento)
   }
 
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
+  }
 
 }

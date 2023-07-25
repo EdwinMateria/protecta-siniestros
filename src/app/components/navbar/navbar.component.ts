@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import * as $ from 'jQuery';
 import { AppConfig } from 'src/app/app.config';
@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit {
   public pruebaSubmenu: any = [];
   public updateModal = false;
   public STIPO_USUARIO
-
+  @Output() showModal = new EventEmitter<boolean>();
   sidebarNav: any;
   contentButton: any;
   linkactual = "";
@@ -56,14 +56,17 @@ export class NavbarComponent implements OnInit {
 
   closeNav(){
     this.renderer.removeClass(this.contenido.nativeElement, "abrirNav");
+    this.showModal.emit(false)
   }
 
   openNav(){
     if (this.contenido.nativeElement.classList.contains("abrirNav")){
       this.renderer.removeClass(this.contenido.nativeElement, "abrirNav");
+      this.showModal.emit(false)
     }
     else {
       this.renderer.addClass(this.contenido.nativeElement, "abrirNav");
+      this.showModal.emit(true)
     }
   }
 

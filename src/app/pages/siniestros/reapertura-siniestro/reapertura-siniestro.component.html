@@ -1,41 +1,43 @@
-<app-navbar></app-navbar>
-<div class="container mt-3">
-    <div class="row border_head">
-        <div class="col-sm-8">
-            <h3>Reapertura de siniestro</h3>
+<app-navbar (showModal)="showModal($event)"></app-navbar>
+<div [ngClass]="{'empujar': openModal === true , 'restaurar' : openModal === false}">
+    <div class="container mt-3">
+        <div class="row border_head">
+            <div class="col-sm-8">
+                <h3>Reapertura de siniestro</h3>
+            </div>
         </div>
     </div>
-</div>
-<div class="body-reserva mt-3">
-    <div class="row">
-        <div class="col-sm-8">
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Nro. de Siniestro: </label>
-                        <div class="col-sm-4">
-                            <input class="form-control" type="number" [formControl]="nroSiniestro" [ngClass]="{'is-invalid': nroSiniestro.invalid && nroSiniestro.touched}">
+    <div class="body-reserva mt-3">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Nro. de Siniestro: </label>
+                            <div class="col-sm-4">
+                                <input class="form-control" type="number" [formControl]="nroSiniestro" [ngClass]="{'is-invalid': nroSiniestro.invalid && nroSiniestro.touched}">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Fec. Reapertura: </label>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <input type="date" class="form-control" [formControl]="fechaSiniestro" [ngClass]="{'is-invalid': fechaSiniestro.invalid && fechaSiniestro.touched}">
-                                <!-- <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                </div> -->
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Fec. Reapertura: </label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="date" class="form-control" [formControl]="fechaSiniestro" [ngClass]="{'is-invalid': fechaSiniestro.invalid && fechaSiniestro.touched}">
+                                    <!-- <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" align="end">
+                                <button class="btn btn-success mr-2" (click)="limpiarForm()"> Limpiar</button>
+                                <button class="btn btn-primary" (click)="AddReopening()"> Actualizar </button>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12" align="end">
-                            <button class="btn btn-success mr-2" (click)="limpiarForm()"> Limpiar</button>
-                            <button class="btn btn-primary" (click)="AddReopening()"> Actualizar </button>
-                        </div>
-                    </div>
-                </div>
-              </div>
+                  </div>
+            </div>
         </div>
     </div>
 </div>

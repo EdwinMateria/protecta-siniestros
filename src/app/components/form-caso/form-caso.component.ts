@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AutocompleteBE, CasosBM } from 'src/app/core/models/caso';
@@ -75,6 +75,14 @@ export class FormCasoComponent implements OnInit {
       const forbidden = input.test(control.value);
       return forbidden ? {notAllowed: {value: control.value}} : null;
     };
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      this.buscador()
+    }
   }
 
   constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService, public authProtectaService: AuthProtectaService, public datePipe : DatePipe) { }
