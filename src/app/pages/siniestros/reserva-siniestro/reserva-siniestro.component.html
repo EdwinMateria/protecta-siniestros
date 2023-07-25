@@ -126,7 +126,7 @@
                                     </label>
                                     <label class="radio-inline" style="vertical-align:middle;">
                                         <input type="radio" name="radio" [id]="'d'+i" value="D"
-                                            [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2)" /> <i
+                                            [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2) || (claim.NCOVER == 1) || (claim.NFLAT_MOVE_TYPE == 0)" /> <i
                                             class="fa fa-arrow-down"></i>
                                     </label>
                                 </div>
@@ -146,7 +146,6 @@
                                 <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]"
                                     type="checkbox" (change)="reserva($event, claim.NCOVER, i, claim.SCLIENT)"
                                     [disabled]="(disabledCobertura  && posicion == i) || disabledTodo">
-                                <!-- <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]" type="checkbox" (change)="deselect(i)" [disabled]="disabledCobertura  && posicion == i"> -->
                             </div>
                         </td>
                         <td>
