@@ -31,5 +31,6 @@ export class ClaimCoverResponse{
     NOPT_CLAITYP    :   string;
     SKEY            :   string;
     SMOVETYPE       :   string;
+    NFLAT_MOVE_TYPE :   number;
     LISTA_COVERCLAIM:   ClaimDataCoverVM[]   
 }

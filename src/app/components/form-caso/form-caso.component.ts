@@ -77,7 +77,6 @@ export class FormCasoComponent implements OnInit {
     };
   }
 
-  @HostListener('window:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
     if (event.key === 'Tab') {
       event.preventDefault();
@@ -284,10 +283,10 @@ export class FormCasoComponent implements OnInit {
   }
 
   tabControl(index:number, stateTituloSiniestro?:number, nSiniestro?:number){
-    this.tipoTab = index;
     // 1: Declarar siniestro;
     // Tab = 1 ,  
-    if(this.tipoTab == 1){
+    if(index == 1){
+      this.tipoTab = index;
       if(stateTituloSiniestro == 1){
         this.stateTituloSiniestro = 1
       }else if(stateTituloSiniestro == 2){
@@ -304,26 +303,49 @@ export class FormCasoComponent implements OnInit {
       
       this.casoEmit.emit(this.casoBM);
     }
-    if(this.tipoTab == 2){
-      this.declararActive = ''
-      this.modificarActive = 'active'
-      this.tituloTratamiento.emit(false);
-      this.form.controls['nPolicy'].disable();
-      this.form.controls['sUbicacion'].enable();
-      this.form.controls['sDelegacion'].enable();
-      this.form.controls['sReferencia'].enable();
-      this.form.controls['nDepartamento'].enable();
-      this.form.controls['nProvincia'].enable();
-      this.form.controls['nDistrito'].enable();
-      this.form.controls['sObservacion'].enable();
-      this.form.controls['nCulpabilidad'].enable();
-      this.form.controls['nCausaSiniestro'].enable();
-      this.form.controls['nTipDocConductor'].enable();
-      this.form.controls['dFecNacConductor'].enable();
-      this.form.controls['sDocConductor'].enable();
-      this.form.controls['sNombreConductor'].enable();
-      this.form.controls['sPaternoConductor'].enable();
-      this.form.controls['sMaternoConductor'].enable();
+    if(index == 2){
+      let caso = new CasosBM;
+      let valorInput = this.referencia.nativeElement.value as string;
+      caso.nCaso = Number(valorInput);
+      SwalCarga();
+      this.casoService.ValidateCase(caso).subscribe(
+        res => {
+          if(res.Message == "Ok"){
+            Swal.close();
+            this.tipoTab = index;
+            this.declararActive = ''
+            this.modificarActive = 'active'
+            this.tituloTratamiento.emit(false);
+            this.form.controls['nPolicy'].disable();
+            this.form.controls['sUbicacion'].enable();
+            this.form.controls['sDelegacion'].enable();
+            this.form.controls['sReferencia'].enable();
+            this.form.controls['nDepartamento'].enable();
+            this.form.controls['nProvincia'].enable();
+            this.form.controls['nDistrito'].enable();
+            this.form.controls['sObservacion'].enable();
+            this.form.controls['nCulpabilidad'].enable();
+            this.form.controls['nCausaSiniestro'].enable();
+            this.form.controls['nTipDocConductor'].enable();
+            this.form.controls['dFecNacConductor'].enable();
+            this.form.controls['sDocConductor'].enable();
+            this.form.controls['sNombreConductor'].enable();
+            this.form.controls['sPaternoConductor'].enable();
+            this.form.controls['sMaternoConductor'].enable();
+            return;
+          }else{
+            Swal.close();
+            this.tipoTab = 0;
+            Swal.fire('Información',res.Message, 'warning');
+            return;
+          }
+        },
+        err => {
+          Swal.close();
+          this.tipoTab = 0;
+          Swal.fire('Error',err,'error')
+        }
+      )
       //this.tipoInputDate = true;
     }
   }
