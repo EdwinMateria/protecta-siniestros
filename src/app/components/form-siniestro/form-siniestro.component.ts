@@ -147,7 +147,9 @@ export class FormSiniestroComponent implements OnInit {
       siniestro.sCliente = this.sCliente;
       siniestro.nCodRechazo = Number(this.eliminarSiniestro);
       siniestro.nSiniestro = Number(this.nSiniestro);
-      siniestro.dFecApertura = this.form.controls['dFecApertura'].value;
+
+      let faper = (this.form.controls['dFecApertura'].value).split("/")
+      siniestro.dFecApertura = this.datePipe.transform(new Date(faper[2], faper[1] - 1, faper[0]), 'yyyy-MM-dd');
 
       let cookie = this.authProtectaService.getCookie('AppSiniestro');
       let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
@@ -190,13 +192,16 @@ export class FormSiniestroComponent implements OnInit {
         let cookie = this.authProtectaService.getCookie('AppSiniestro');
       let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
       this.form.controls['nsiniestro'].setValue("0");
-      this.form.controls['dFecApertura'].setValue(this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
-
+      //this.form.controls['dFecApertura'].setValue(this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
+      let faper = (this.form.controls['dFecApertura'].value).split("/")
+      console.log(faper[2], faper[1], faper[0]);
+      
       siniestroBM = {
         ...this.form.getRawValue(),
         nCaso : this.casoBM.nCaso,
         sCliente : this.sCliente,
         nCodUsuario : Number(atob(codUsuario)),
+        dFecApertura : (this.datePipe.transform(new Date(faper[2], faper[1] - 1, faper[0]), 'yyyy-MM-dd'))
       }
       const data: FormData = new FormData();
       data.append('siniestrosData', JSON.stringify(siniestroBM));
@@ -219,7 +224,13 @@ export class FormSiniestroComponent implements OnInit {
               showCloseButton: true
             }).then((result) => {
               if (result.isConfirmed) {
-                this.form.reset()
+                this.form.controls['dFecDenuncia'].setValue("");
+                this.form.controls['sHoraRecepcion'].setValue("");
+                this.form.controls['afectado'].setValue("");
+                this.form.controls['nTipOcupante'].setValue("");
+                this.form.controls['sTipAtencion'].setValue("");
+                this.form.controls['dFecFallecido'].setValue("");
+                this.form.controls['sEquivSiniestro'].setValue("");
               }else{
                 this.cancelBool.emit(true)
               }
@@ -237,6 +248,7 @@ export class FormSiniestroComponent implements OnInit {
         let siniestroBM = new SiniestroBM();
         let cookie = this.authProtectaService.getCookie('AppSiniestro');
         let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
+        let faper = (this.form.controls['dFecApertura'].value).split("/")
         siniestroBM = {
           ...this.form.getRawValue(),
           nPolicy : this.casoBM.nPolicy,
@@ -244,7 +256,8 @@ export class FormSiniestroComponent implements OnInit {
           nCaso : this.casoBM.nCaso,
           nSiniestro : this.nSiniestro,
           sCliente : this.sCliente,
-          nCodUsuario : Number(atob(codUsuario))
+          nCodUsuario : Number(atob(codUsuario)),
+          dFecApertura : (this.datePipe.transform(new Date(faper[2], faper[1] - 1, faper[0]), 'yyyy-MM-dd'))
         }
         SwalCarga();
         this.casoService.UpdateClaim(siniestroBM).subscribe(

@@ -24,6 +24,11 @@ export class CasosService {
     });
   }
 
+  public ValidateCase(casos: CasosBM): Observable<any> {
+    //const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/CasosManager/ValidateCase', casos);
+  }
+
   public GetProvincias(nDepartamento: number): Observable<CombosGenericoVM[]> {
     return this.http.get<CombosGenericoVM[]>(this.Url + '/CasosManager/GetProvincias?nDepartamento='+ nDepartamento, {
       headers: this.headers

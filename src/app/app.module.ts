@@ -23,6 +23,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-siniestro/reapertura-siniestro.component';
 import { DecimalesDirective } from './core/directive/decimales.directive';
 import { SiniestroIntercepInterceptor } from './core/services/interceptor/siniestro-intercep.interceptor';
+import { DecimalPipe } from './core/pipe/decimal.pipe';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { SiniestroIntercepInterceptor } from './core/services/interceptor/sinies
     ModalBeneficiarioComponent,
     ModalNuevoBeneficiarioComponent,
     ReaperturaSiniestroComponent,
-    DecimalesDirective
+    DecimalesDirective,
+    DecimalPipe
   ],
   imports: [
     BrowserModule,

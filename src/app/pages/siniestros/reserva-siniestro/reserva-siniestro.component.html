@@ -114,7 +114,7 @@
                         <td>{{claim.SCURRDES}}</td>
                         <td style="white-space: nowrap">{{claim.NCOVER}} - {{claim.SDESCOVER}}</td>
                         <td>{{claim.NDAMAGES}}</td>
-                        <td align="end" class="mr-3">{{claim.NSUMINSURED | number: '1.0-0'}}</td>
+                        <td align="end" class="mr-3">{{claim.NSUMINSURED | decimal}}</td>
                         <td>
                             <div class="form-group" align="center">
                                 <div class="col-sm-offset-3" [(ngModel)]="tipoMovimiento" ngDefaultControl
@@ -128,18 +128,21 @@
                                         <input type="radio" name="radio" [id]="'d'+i" value="D"
                                             [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2) || (claim.NCOVER == 1) || (claim.NFLAT_MOVE_TYPE == 0)" /> <i
                                             class="fa fa-arrow-down"></i>
+                                            <!-- <input type="radio" name="radio" [id]="'d'+i" value="D"
+                                            [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2)" /> <i
+                                            class="fa fa-arrow-down"></i> -->
                                     </label>
                                 </div>
                             </div>
                         </td>
                         <td align="end" class="mr-3">
-                            {{claim.NRESERVEAMOUNT | number: '1.0-0'}}
+                            {{claim.NRESERVEAMOUNT | decimal}}
                         </td>
                         <td>
                             {{claim.SNROLETTER}}
                         </td>
                         <td align="end" class="mr-3">
-                            <span *ngIf="claim.NACCUMRESERVE != 0">{{claim.NACCUMRESERVE | number: '1.0-0'}}</span>
+                            <span *ngIf="claim.NACCUMRESERVE != 0">{{claim.NACCUMRESERVE | decimal}}</span>
                         </td>
                         <td>
                             <div align="center" class="form-check" *ngIf="tipoTab == 1">
