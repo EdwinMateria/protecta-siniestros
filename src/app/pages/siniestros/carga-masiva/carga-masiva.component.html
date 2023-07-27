@@ -29,8 +29,8 @@
                     </div>
                     <div class="col-md-3">
                         <select class="form-control" [(ngModel)]="carga">
-                            <option value="1">Nuevo</option>
-                            <option value="2">Antiguo</option>
+                            <option value="2">Nuevo</option>
+                            <option value="1">Antiguo</option>
                         </select>
                     </div>
                     <div class="col-md-6"></div>
@@ -42,18 +42,15 @@
                     </div>
                     <div class="col-md-3">
                         <input type="checkbox" [(ngModel)]="apertura" (change)="onApertura($event.target.checked)" />
-                        &nbsp;
-                        <label>Apertura</label>
+                        <label class="control-label ml-3">Apertura</label>
                     </div>
                     <div class="col-md-3">
                         <input type="checkbox" [(ngModel)]="reserva" (change)="onReserva($event.target.checked)" />
-                        &nbsp;
-                        <label>Reserva</label>
+                        <label class="control-label ml-3">Reserva</label>
                     </div>
                     <div class="col-md-3">
                         <input type="checkbox" [(ngModel)]="liquidacion" (change)="onLiquidacion($event.target.checked)" />
-                        &nbsp;
-                        <label>Liquidación</label>
+                        <label class="control-label ml-3">Liquidación</label>
                     </div>
                 </div>
 
@@ -74,7 +71,7 @@
             <div class="col-md-5">
                 <div class="row mr-4 mt-4 mb-4">
                     <div class="col-md-6">
-                        <button type="button" (click)="descargarReportePreliminar()" [disabled]="reporte_prel" [ngClass]="reporte_prel ? 'disabled' : 'full-colorN'">
+                        <button type="button" (click)="onReportePreliminar()" [disabled]="reporte_prel" [ngClass]="reporte_prel ? 'disabled' : 'full-colorN'">
                             <span>Reporte preliminar</span>
                             <img class="icon-btn" src="assets/img/download.png" />
                         </button>
@@ -136,7 +133,7 @@
                         </tbody>
                     </ng-template>
                     <ng-template #showGrid>
-                        <tbody *ngFor="let item of listToShow" style="cursor: pointer;">
+                        <tbody *ngFor="let item of listToShow">
                             <tr>
                                 <td class="data-table-tr-td text-center">
                                     {{ item.NID_SOAT_OPE }}
@@ -217,7 +214,7 @@
                             </tbody>
                         </ng-template>
                         <ng-template #showGrid>
-                            <tbody *ngFor="let item of listToShowError" style="cursor: pointer;">
+                            <tbody *ngFor="let item of listToShowError">
                                 <tr>
                                     <td class="data-table-tr-td text-center">
                                         {{ item.SLINE_REGISTRO }}
