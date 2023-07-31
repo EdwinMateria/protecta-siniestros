@@ -1098,7 +1098,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
     } 
 
-    if(count_pay_total >=2 &&  this.messageMVal != "" ){
+    if(count_pay_total >=2 &&  this.messageMVal == "" ){
       //no puede ingresar mas de un pago total.
       this.messageMVal="E";
       Swal.fire('Error',"No puede ingresar mas de un pago total", 'error');
