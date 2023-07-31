@@ -6,3 +6,8 @@
     background-color: #2b0d61;
     color: #fff;
 }
+
+.typeahead-scrollbar .dropdown-menu {
+    max-height: 200px !important; /* Altura máxima para la lista de resultados */
+    overflow-y: auto !important; /* Agregar una barra de desplazamiento vertical si los resultados exceden la altura máxima */
+  }

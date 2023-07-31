@@ -37,8 +37,8 @@
                             <h5>Beneficiarios</h5>
                         </div>
                         <div class="p-2">
-                            <button [disabled]="(tab == 1 && data != 1 && beneficiarios.length == 1) || disabledBotones" class="btn btn-primary text-end float-end" align="end" (click)="openBeneficiario()"><i
-                                    class="fa fa-search"></i></button>
+                            <button [disabled]="(tab == 1 && data != 1 && beneficiarios.length == 1) || disabledBotones" class="btn btn-primary btn-sm text-end float-end" align="end" (click)="openBeneficiario()"><i
+                                    class="fa fa-search fa-sm"></i></button>
                         </div>
                     </div>
                 </div>
@@ -109,20 +109,20 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header py-2">
-                    <h5>Datos</h5>
+                    <h5>Datos generales</h5>
                 </div>
                 <div class="card-body py-1">
                     <div class="row mt-3">
-                        <div class="col-sm-8 form-group">
+                        <div class="col-sm-7 form-group">
                             <label>Diagnóstico (CIE10)</label>
                             <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" [value]="diagnosticoValue"
-                                [resultFormatter]="formatter" [inputFormatter]="formatter" />
+                                [resultFormatter]="formatter" [inputFormatter]="formatter"  [class.typeahead-scrollbar]="true"/>
                         </div>
                         <div class="col-sm-2 form-group" *ngIf="data != 1">
                             <label>Especialidad</label>
                             <input class="form-control" [(ngModel)]="dataReserva.SSPECIALTY">
                         </div>
-                        <div class="col-sm-2 form-group" *ngIf="data != 1 && data!=5">
+                        <div class="col-sm-3 form-group" *ngIf="data != 1 && data!=5">
                             <label>Complejidad Diagnostico</label>
                             <select class="form-control" [(ngModel)]="dataReserva.SDIAGNOSTICCOMPLEXITY">
                                 <option *ngFor="let combo of comboComplejidadDiagnostico$ | async" [value]="combo.SCODIGO"
@@ -139,7 +139,7 @@
                                     [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
                             </select>
                         </div>
-                        <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-5 form-group">
+                        <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-4 form-group">
                             <label>Nombre del tramitador <span>(*)</span></label>
                             <input class="form-control" placeholder="Nombre del tramitador" [(ngModel)]="dataReserva.SPROCESSORNAME">
                         </div>

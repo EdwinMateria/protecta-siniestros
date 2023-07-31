@@ -112,6 +112,10 @@ export class CasosService {
     });
   }
 
+  public ValidateRechazo(data: any): Observable<any> {
+    return this.http.post<any>(this.Url + '/CasosManager/ValidateRechazo', data);
+  }
+
   transformDate(date) {
     let a = this.datePipe.transform(date, 'dd/MM/yyyy'); //whatever format you need. 
     return a;
