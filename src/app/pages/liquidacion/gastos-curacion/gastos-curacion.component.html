@@ -1,98 +1,112 @@
 <app-navbar (showModal)="showModal($event)"></app-navbar>
 <div [ngClass]="{'empujar': openModal === true , 'restaurar' : openModal === false}">
-    <div class="container mt-3">
+    <div class="body-gastos mt-3">
         <div class="row border_head">
             <div class="col-sm-12">
-                <h3>Liquidaciones pendientes de Siniestros de SOAT</h3>
+                <h3>LIQUIDACIONES PENDIENTES DE SINIESTROS DE SOAT</h3>
             </div>
         </div>
     </div>
     <div class="body-gastos mt-3">
-        <div class="row" style="border-bottom: 1px solid #ccc!important;">
-            <div class="col-sm-3 form-group">
-                <label>Caso</label>
-                <input class="form-control" [(ngModel)]="caso" type="number" (keyup.enter)="EventoBuscar($event)">
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Nro. de siniestro</label>
-                <input class="form-control" [(ngModel)]="siniestro" type="number" (keyup.enter)="EventoBuscar($event)">
-            </div>
-            <div class="col-sm-3" align="end">
-                <p class="pb-0 mb-0">&nbsp;</p>
-                <button class="btn btn-busqueda" (click)="buscadorMovimientos()">
-                    <i class="fa fa-search mr-1"></i> Buscar
-                </button>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-sm-3 form-group">
-                <label>Póliza</label>
-                <input class="form-control" [(ngModel)]="detalle.NPOLICY" disabled>
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Fecha de ocurrencia</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" [(ngModel)]="detalle.DOCCURDAT" disabled>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Hora de ocurrencia</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" [(ngModel)]="detalle.HORAOCURRENCIA" disabled>
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="row">
-            <div class="col-sm-6 form-group">
-                <label>Siniestrado</label>
-                <input class="form-control" [(ngModel)]="detalle.SCLIENAME" disabled>
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>UIT</label>
-                <input class="form-control" [ngModel]="detalle.UIT | number:'1.2-2'" disabled>
-            </div>
-        </div>
-        
-        <table  class="table w-100 mt-2"><!--table-striped-->
-            <thead>
-                <tr>
-                  <th scope="col" ></th>
-                  <th scope="col" style="text-align: center;">Nro. Siniestro</th>
-                  <th scope="col" style="text-align: center;">Nro. Cobertura</th>
-                  <th scope="col" style="text-align: center;">Cobertura</th>
-                  <th scope="col" style="text-align: center;">Importe</th>
-                  <!--<th scope="col" style="text-align: center;">Importe Cobertura</th>-->
-                  <th scope="col" style="text-align: center;">Cant. Beneficiarios</th>
-                  <th scope="col" style="text-align: center;">Dato Adicional</th>
-                </tr>
-              </thead>
-              <tbody *ngIf="mostrarTable">
-                <tr *ngFor="let movimiento of movimientos; let i = index"  [ngClass]="{'color_fila': movimientos[i].NROBENEF == 0 }">
-                    <td style="text-align: center;">
-                        <div class="form-check">
-                            <input [(ngModel)]="movimiento.SELECCION" class="form-check-input position-static" type="checkbox" (change)="seleccionChechbox(movimiento)" [disabled]=" movimientos[i].NROBENEF == 0 ? true : false " >
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header py-2">
+                        <h5>Datos del siniestro</h5>
+                    </div>
+                    <div class="card-body py-1">
+
+                        <div class="row" style="border-bottom: 1px solid #ccc!important;">
+                            <div class="col-sm-3 form-group">
+                                <label>Caso</label>
+                                <input class="form-control" [(ngModel)]="caso" type="number" (keyup.enter)="EventoBuscar($event)">
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>Nro. de siniestro</label>
+                                <input class="form-control" [(ngModel)]="siniestro" type="number" (keyup.enter)="EventoBuscar($event)">
+                            </div>
+                            <div class="col-sm-1" align="end">
+                                <p class="pb-0 mb-0" style="padding-top: 6px;">&nbsp;</p>
+                                <button class="btn btn-busqueda" (click)="buscadorMovimientos()">
+                                    <i class="fa fa-search mr-1"></i> Buscar
+                                </button>
+                            </div>
                         </div>
-                    </td>
-                    <!--<td>{{i+1}}</td>-->
-                    <!--<td></td>-->
-                    <td style="text-align: center;">{{movimiento.NCLAIM}}</td>
-                    <td style="text-align: center;">{{movimiento.NCOVER}}</td>
-                    <td style="text-align: center;">{{movimiento.DESC_COBERTURA}}</td>
-                    <td style="text-align: center;">{{movimiento.PAGOS_PEND_BENEF | number:'1.2-2'}}</td>
-                    <!--<td style="text-align: right;">{{movimiento.PENDIENTES | number:'1.2-2'}}</td>-->
-                    <td style="text-align: center;">{{movimiento.NROBENEF}}</td>
-                    <td style="text-align: center;">{{movimiento.DATO_ADICIONAL}}</td>
-                </tr>
-              </tbody>
-        </table>
-    
-        <div class="row mt-3" *ngIf="mostrarTable">
+                        <div class="row mt-3">
+                            <div class="col-sm-3 form-group">
+                                <label>Póliza</label>
+                                <input class="form-control" [(ngModel)]="detalle.NPOLICY" disabled>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>Fecha de ocurrencia</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" [(ngModel)]="detalle.DOCCURDAT" disabled>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>Hora de ocurrencia</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" [(ngModel)]="detalle.HORAOCURRENCIA" disabled>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <label>Siniestrado</label>
+                                <input class="form-control" [(ngModel)]="detalle.SCLIENAME" disabled>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>UIT</label>
+                                <input class="form-control" [ngModel]="detalle.UIT | number:'1.2-2'" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>  
+    <div class="table-gastos mt-3 pb-4" *ngIf="mostrarTable">
+        <div class="table-responsive">  
+            <table  class="table w-100"><!--table-striped mt-2-->
+                <thead>
+                    <tr>
+                    <th scope="col" ></th>
+                    <th scope="col">Nro. Siniestro</th>
+                    <th scope="col">Nro. Cobertura</th>
+                    <th scope="col">Cobertura</th>
+                    <th align="end" scope="col">Importe</th>
+                    <!--<th scope="col" style="text-align: center;">Importe Cobertura</th>-->
+                    <th scope="col" style="text-align: center;">Cant. Beneficiarios</th>
+                    <th scope="col">Dato Adicional</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="mostrarTable">
+                    <tr *ngFor="let movimiento of movimientos; let i = index"  [ngClass]="{'color_fila': movimientos[i].NROBENEF == 0 }">
+                        <td>
+                            <div class="form-check">
+                                <input [(ngModel)]="movimiento.SELECCION" class="form-check-input position-static" type="checkbox" (change)="seleccionChechbox(movimiento)" [disabled]=" movimientos[i].NROBENEF == 0 ? true : false " >
+                            </div>
+                        </td>
+                        <!--<td>{{i+1}}</td>-->
+                        <!--<td></td>-->
+                        <td >{{movimiento.NCLAIM}}</td>
+                        <td>{{movimiento.NCOVER}}</td>
+                        <td style="white-space: nowrap">{{movimiento.DESC_COBERTURA}}</td>
+                        <td align="end" class="mr-3">{{movimiento.PAGOS_PEND_BENEF | number:'1.2-2'}}</td>
+                        <!--<td style="text-align: right;">{{movimiento.PENDIENTES | number:'1.2-2'}}</td>-->
+                        <td align="center">{{movimiento.NROBENEF}}</td>
+                        <td>{{movimiento.DATO_ADICIONAL}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row pb-4 mt-3">
             <div class="col-sm-12" align="end">
                 <button class="btn btn-success mb-3" (click)="procesoPago()">Proceso de pago</button>
             </div>
