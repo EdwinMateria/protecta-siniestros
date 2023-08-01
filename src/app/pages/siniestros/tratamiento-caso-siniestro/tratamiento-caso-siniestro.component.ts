@@ -16,7 +16,7 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
 
   formSiniestro = 0;
   caso = new CasosBM();
-
+  openModal = false;
   constructor() { }
 
   ngOnInit(): void {
@@ -31,6 +31,10 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
   }
 
   tabControl(index:number){
+    if(this.tipoTab == 3 && index == 1){
+      return;
+    }
+
     this.tipoTab = index
     if(this.tipoTab == 1){
       this.registroActive = 'active'
@@ -69,6 +73,10 @@ export class TratamientoCasoSiniestroComponent implements OnInit {
 
   getCaso(caso:any){
     this.caso = caso;
+  }
+
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
   }
 
 }

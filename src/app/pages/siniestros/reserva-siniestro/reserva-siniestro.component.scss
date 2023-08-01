@@ -10,20 +10,25 @@
 }
 
 .body-reserva{
-    margin-left: 20% !important;
-    margin-right: 20% !important;
+    margin-left: 8% !important;
+    margin-right: 8% !important;
 }
 
 .table-reserva{
-    margin-left: 10% !important;
-    margin-right: 10% !important;
+    margin-left: 8% !important;
+    margin-right: 8% !important;
 }
 
 ::ng-deep .my-class .modal-dialog { 
-    max-width: 60%;
+    max-width: 75%;
 }
 
 .btn-busqueda{
     background-color: rgb(235, 156, 9);
     color: white
+}
+
+.card-header{
+    background-color: #2b0d61;
+    color: #fff;
 }

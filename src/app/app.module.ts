@@ -17,10 +17,14 @@ import { GastosCuracionComponent } from './pages/liquidacion/gastos-curacion/gas
 import { ModalGastosCoberturaComponent } from './pages/liquidacion/gastos-curacion/modal-gastos-cobertura/modal-gastos-cobertura.component';
 import { ModalBeneficiarioComponent } from './pages/siniestros/reserva-siniestro/modal-beneficiario/modal-beneficiario.component';
 import { ModalNuevoBeneficiarioComponent } from './pages/siniestros/reserva-siniestro/modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
-import { DatePipe } from '@angular/common';
 import { CargaMasivaComponent } from './pages/siniestros/carga-masiva/carga-masiva.component';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-siniestro/reapertura-siniestro.component';
+import { DecimalesDirective } from './core/directive/decimales.directive';
+import { SiniestroIntercepInterceptor } from './core/services/interceptor/siniestro-intercep.interceptor';
+import { DecimalPipe } from './core/pipe/decimal.pipe';
 
 @NgModule({
   declarations: [
@@ -38,7 +42,10 @@ import { CargaMasivaComponent } from './pages/siniestros/carga-masiva/carga-masi
     ModalGastosCoberturaComponent,
     ModalBeneficiarioComponent,
     ModalNuevoBeneficiarioComponent,
-    CargaMasivaComponent
+    CargaMasivaComponent,
+    ReaperturaSiniestroComponent,
+    DecimalesDirective,
+    DecimalPipe
   ],
   imports: [
     BrowserModule,
@@ -47,7 +54,8 @@ import { CargaMasivaComponent } from './pages/siniestros/carga-masiva/carga-masi
     FormsModule,
     ReactiveFormsModule,
     NgbTypeaheadModule,
-    NgbPaginationModule
+    NgbPaginationModule,
+    CommonModule
   ],
   providers: [
     DatePipe

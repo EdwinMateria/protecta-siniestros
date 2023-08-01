@@ -1,10 +1,10 @@
 <div class="modal-header w-100">
-    <h4 class="modal-title" id="modal-basic-title">Datos cobertura:
-        <span *ngIf="data == 1">1 - Muerte</span>
-        <span *ngIf="data == 2">2 - Incapacidad Temporal</span>
-        <span *ngIf="data == 3">3 - Invalidez Permanente</span>
-        <span *ngIf="data == 4">4 - Gastos Médicos</span>
-        <span *ngIf="data == 5">4 - Gastos de Sepelio</span>
+    <h4 class="modal-title" id="modal-basic-title">DATOS COBERTURA:
+        <span *ngIf="data == 1">1 - MUERTE</span>
+        <span *ngIf="data == 2">2 - INCAPACIDAD TEMPORAL</span>
+        <span *ngIf="data == 3">3 - INVALIDEZ PERMANENTE</span>
+        <span *ngIf="data == 4">4 - GASTOS MÉDICOS</span>
+        <span *ngIf="data == 5">5 - GASTOS DE SEPELIO</span>
     </h4>
     <button type="button" aria-label="Close" (click)="closeModal()" style="cursor: pointer;">
         <i class="fa fa-close"></i>
@@ -30,206 +30,239 @@
     </div>
     <div class="row mt-1">
         <div class="col-sm-12">
-            <div class="d-flex">
-                <div class="mr-auto p-2">
-                    <strong>BENEFICIARIOS:</strong>
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="d-flex">
+                        <div class="mr-auto p-2">
+                            <h5>Beneficiarios</h5>
+                        </div>
+                        <div class="p-2">
+                            <button [disabled]="(tab == 1 && data != 1 && beneficiarios.length == 1) || disabledBotones" class="btn btn-primary btn-sm text-end float-end" align="end" (click)="openBeneficiario()"><i
+                                    class="fa fa-search fa-sm"></i></button>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-2">
-                    <button [disabled]="data != 1 && beneficiarios.length == 1" class="btn btn-primary text-end float-end" align="end" (click)="openBeneficiario()"><i
-                            class="fa fa-search"></i></button>
+                <div class="card-body py-1">
+                    <div class="table-responsive">
+                        <table class="table table-striped w-100">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Código cliente</th>
+                                    <th scope="col">Beneficiario</th>
+                                    <th scope="col">Tipo Documento</th>
+                                    <th scope="col">Nro. Documento</th>
+                                    <th scope="col">Tipo Beneficiario</th>
+                                    <th scope="col">Cobertura</th>
+                                    <th scope="col">Banco</th>
+                                    <th scope="col">Nro. Cuenta</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let beneficiario of beneficiarios; let i = index">
+                                    <td>
+                                        {{beneficiario.SCODE}}
+                                    </td>
+                                    <td>
+                                        {{beneficiario.SNAME}}
+                                    </td>
+                                    <td>
+                                        {{beneficiario.SDOCUMENTTYPE}}
+                                    </td>
+                                    <td>
+                                        {{beneficiario.SDOCUMENTNUMBER}}
+                                    </td>
+                                    <td>
+                                        {{beneficiario.SBENEFICIARYTYPE}}
+                                    </td>
+                                    <td>
+                                        <span *ngIf="data == 1">MUERTE</span>
+                                        <span *ngIf="data == 2">INCAPACIDAD TEMPORAL</span>
+                                        <span *ngIf="data == 3">INVALIDEZ PERMANENTE</span>
+                                        <span *ngIf="data == 4">GASTOS MÉDICOS</span>
+                                        <span *ngIf="data == 5">GASTOS DE SEPELIO</span>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" [(ngModel)]="beneficiario.SBANK">
+                                            <option *ngFor="let banco of bancos" [value]="banco.SCODIGO">{{banco.SDESCRIPCION}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER" maxlength="15">
+                                    </td>
+                                    <td>
+                                        <button [disabled]="disabledBotones" class="btn btn-danger btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <table class="table table-striped w-100">
-                <thead>
-                    <tr>
-                        <th scope="col">Código cliente</th>
-                        <th scope="col">Beneficiario</th>
-                        <th scope="col">Tipo Documento</th>
-                        <th scope="col">Nro. Documento</th>
-                        <th scope="col">Tipo Beneficiario</th>
-                        <th scope="col">Cobertura</th>
-                        <th scope="col">Banco</th>
-                        <th scope="col">Nro. Cuenta</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let beneficiario of beneficiarios; let i = index">
-                        <td>
-                            {{beneficiario.SCODE}}
-                        </td>
-                        <td>
-                            {{beneficiario.SNAME}}
-                        </td>
-                        <td>
-                            {{beneficiario.SDOCUMENTTYPE}}
-                        </td>
-                        <td>
-                            {{beneficiario.SDOCUMENTNUMBER}}
-                            <!-- <input type="text" class="form-control" [(ngModel)]="beneficiarios[i].nroDocumento"
-                                (keyup.enter)="completarCampos(i)"> -->
-                        </td>
-                        <td>
-                            {{beneficiario.SBENEFICIARYTYPE}}
-                        </td>
-                        <td>
-                            <span *ngIf="data == 1">1 - Muerte</span>
-                            <span *ngIf="data == 2">2 - Incapacidad Temporal</span>
-                            <span *ngIf="data == 3">3 - Invalidez Permanente</span>
-                            <span *ngIf="data == 4">4 - Gastos Médicos</span>
-                            <span *ngIf="data == 5">4 - Gastos de Sepelio</span>
-                        </td>
-                        <td>
-                            <select class="form-control" [(ngModel)]="beneficiario.SBANK">
-                                <option *ngFor="let banco of bancos" [value]="banco.SCODE">{{banco.SDESCRIPCION}}
-                                </option>
+            
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header py-2">
+                    <h5>Datos generales</h5>
+                </div>
+                <div class="card-body py-1">
+                    <div class="row mt-3">
+                        <div class="col-sm-7 form-group">
+                            <label>Diagnóstico (CIE10)</label>
+                            <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" [value]="diagnosticoValue"
+                                [resultFormatter]="formatter" [inputFormatter]="formatter"  [class.typeahead-scrollbar]="true"/>
+                        </div>
+                        <div class="col-sm-2 form-group" *ngIf="data != 1">
+                            <label>Especialidad</label>
+                            <input class="form-control" [(ngModel)]="dataReserva.SSPECIALTY">
+                        </div>
+                        <div class="col-sm-3 form-group" *ngIf="data != 1 && data!=5">
+                            <label>Complejidad Diagnostico</label>
+                            <select class="form-control" [(ngModel)]="dataReserva.SDIAGNOSTICCOMPLEXITY">
+                                <option *ngFor="let combo of comboComplejidadDiagnostico$ | async" [value]="combo.SCODIGO"
+                                    [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
                             </select>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER">
-                        </td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" (click)="borrarBeneficiario(i)"><i class="fa fa-trash"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-sm-8 form-group">
-            <label>Diagnóstico (CIE10)</label>
-            <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" [value]="diagnosticoValue"
-                [resultFormatter]="formatter" [inputFormatter]="formatter" />
-        </div>
-        <div class="col-sm-2 form-group" *ngIf="data != 1">
-            <label>Especialidad</label>
-            <input class="form-control" [(ngModel)]="dataReserva.SSPECIALTY">
-        </div>
-        <div class="col-sm-2 form-group" *ngIf="data != 1">
-            <label>Complejidad Diagnostico</label>
-            <select class="form-control" [(ngModel)]="dataReserva.SDIAGNOSTICCOMPLEXITY">
-                <option *ngFor="let combo of comboComplejidadDiagnostico$ | async" [value]="combo.SCODIGO"
-                    [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-3 form-group">
-            <label>Tramitador </label>
-            <select class="form-control" [(ngModel)]="dataReserva.SPROCESSOR">
-                <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
-                    [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
-            </select>
-        </div>
-        <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-5 form-group">
-            <label>Nombre del tramitador: </label>
-            <input class="form-control" placeholder="Nombre del tramitador" [(ngModel)]="dataReserva.SPROCESSORNAME">
-        </div>
-        <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-3 form-group">
-            <label>Zona del tramitador: </label>
-            <input class="form-control" [(ngModel)]="dataReserva.SPROCESSORZONE">
-        </div>
-    </div>
-    <div *ngIf="data != 4 && data != 5">
-        <div *ngIf="data == 2 || data == 3" class="row">
-            <div class="col-sm-3 form-group">
-                <label>Médico tratante</label>
-                <input type="text" class="form-control" [(ngModel)]="dataReserva.SATTENDINGMEDIC">
-            </div>
-            <div class="col-sm-5 form-group">
-                <label>IPRESS de atención: </label>
-                <input type="text" class="form-control" [(ngModel)]="dataReserva.SATENTIONIPRESS">
-            </div>
-        </div>
-
-        <div class="row" *ngIf="data == 3">
-            <div class="col-sm-3 form-group">
-                <label>Menoscabo: </label>
-                <div class="input-group">
-                    <input type="number" class="form-control" [(ngModel)]="modelCabo" [formControl]="menoscabo" [ngClass]="{'is-invalid': menoscabo.invalid && menoscabo.touched}" (ngModelChange)="changeMenoscabo()">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-percent"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2 form-group">
-                <label>Monto reserva</label>
-                <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NRESERVEAMOUNT">
-            </div>
-        </div>
-
-        <div *ngIf="data == 2">
-            <div class="row">
-                <div class="col-sm-3 form-group">
-                    <label>Inicio de descanso: </label>
-                    <div class="input-group">
-                        <input type="date" class="form-control" [formControl]="inicioDescanso" (change)="changeFechasDescanso()"
-                        [ngClass]="{'is-invalid': inicioDescanso.invalid && inicioDescanso.touched}">
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-3 form-group">
-                    <label>Fin de descanso: </label>
-                    <div class="input-group">
-                        <input type="date" class="form-control" [formControl]="finDescanso" (change)="changeFechasDescanso()"
-                        [ngClass]="{'is-invalid': finDescanso.invalid && finDescanso.touched}">
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label>Tramitador</label>
+                            <select class="form-control" [(ngModel)]="dataReserva.SPROCESSOR">
+                                <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
+                                    [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
+                            </select>
+                        </div>
+                        <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-4 form-group">
+                            <label>Nombre del tramitador <span>(*)</span></label>
+                            <input class="form-control" placeholder="Nombre del tramitador" [(ngModel)]="dataReserva.SPROCESSORNAME">
+                        </div>
+                        <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-3 form-group">
+                            <label>Zona del tramitador <span>(*)</span> </label>
+                            <input class="form-control" placeholder="Zona del tramitador" [(ngModel)]="dataReserva.SPROCESSORZONE">
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-2 form-group">
-                    <label>RMV: </label>
-                    <input type="text" class="form-control" disabled [(ngModel)]="dataReserva.NMINIMUNREMUNERATION">
-                </div>
-
-                <div class="col-sm-3 form-group">
-                    <label>Monto reserva: </label>
-                    <input type="text" class="form-control" disabled [(ngModel)]="dataReserva.NRESERVEAMOUNT">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3 form-group">
-                    <label>Días de descanso: </label>
-                    <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NDAYSOFF">
-                </div>
-            </div>
-        </div>
-
-        <div *ngIf="data == 2 || data == 3">
-            <div class="row">
-                <div class="col-sm-3 form-group">
-                    <label>Derivación al INR: </label>
-                    <select class="form-control" [(ngModel)]="dataReserva.SINR_REFERRAL">
-                        <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO">{{combo.SDESCRIPCION}}</option>
-                    </select>
-                </div>
-
-                <div class="col-sm-2 form-group">
-                    <label>Nro expediente INR: </label>
-                    <input type="text" class="form-control" [(ngModel)]="dataReserva.SINR_FILENUMBER">
-                </div>
-
-                <div class="col-sm-3 form-group">
-                    <label>Fecha derivación INR: </label>
-                    <div class="input-group">
-                        <input type="date" class="form-control" [(ngModel)]="fechaDerivacion">
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    <div *ngIf="data != 4 && data != 5">
+                        <div *ngIf="data == 2 || data == 3" class="row">
+                            <div class="col-sm-3 form-group">
+                                <label>Médico tratante</label>
+                                <input type="text" class="form-control" [(ngModel)]="dataReserva.SATTENDINGMEDIC">
+                            </div>
+                            <div class="col-sm-5 form-group">
+                                <label>IPRESS de atención: </label>
+                                <input type="text" class="form-control" [(ngModel)]="dataReserva.SATENTIONIPRESS">
+                            </div>
+                        </div>
+                
+                        <div class="row" *ngIf="data == 3">
+                            <div class="col-sm-3 form-group">
+                                <label>Menoscabo <span>(*)</span> </label>
+                                <div class="input-group">
+                                    <input type="textbox" class="form-control" [(ngModel)]="modelCabo" [formControl]="menoscabo" [ngClass]="{'is-invalid': menoscabo.invalid && menoscabo.touched}" (ngModelChange)="changeMenoscabo()" appDecimales>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-percent"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <label>Monto reserva</label>
+                                <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NRESERVEAMOUNT">
+                            </div>
+                        </div>
+                
+                        <div *ngIf="data == 2">
+                            <div class="row">
+                                <div class="col-sm-3 form-group">
+                                    <label>Inicio de descanso <span>(*)</span> </label>
+                                    <div class="input-group">
+                                        <input [type]="tab == 1 ? 'date': 'text'" class="form-control" [formControl]="inicioDescanso" (change)="changeFechasDescanso()"
+                                        [ngClass]="{'is-invalid': inicioDescanso.invalid && inicioDescanso.touched}">
+                                        <div *ngIf="tab != 1" class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label>Fin de descanso <span>(*)</span> </label>
+                                    <div class="input-group">
+                                        <input [type]="tab == 1 ? 'date': 'text'" class="form-control" [formControl]="finDescanso" (change)="changeFechasDescanso()"
+                                        [ngClass]="{'is-invalid': finDescanso.invalid && finDescanso.touched}">
+                                        <div *ngIf="tab != 1" class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2 form-group">
+                                    <label>RMV: </label>
+                                    <input type="text" class="form-control" disabled [(ngModel)]="dataReserva.NMINIMUNREMUNERATION">
+                                </div>
+                
+                                <div class="col-sm-3 form-group">
+                                    <label>Monto reserva: </label>
+                                    <input type="text" class="form-control" disabled [(ngModel)]="dataReserva.NRESERVEAMOUNT">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3 form-group">
+                                    <label>Días de descanso: </label>
+                                    <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NDAYSOFF">
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div *ngIf="data == 2 || data == 3">
+                            <div class="row">
+                                <div class="col-sm-3 form-group">
+                                    <label>Derivación al INR: </label>
+                                    <select class="form-control" [(ngModel)]="dataReserva.SINR_REFERRAL">
+                                        <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO">{{combo.SDESCRIPCION}}</option>
+                                    </select>
+                                </div>
+                
+                                <div class="col-sm-2 form-group">
+                                    <label>Nro expediente INR: </label>
+                                    <input type="text" class="form-control" [(ngModel)]="dataReserva.SINR_FILENUMBER">
+                                </div>
+                
+                                <div class="col-sm-3 form-group">
+                                    <label>Fecha derivación INR: </label>
+                                    <div class="input-group">
+                                        <input type="date" class="form-control" [(ngModel)]="fechaDerivacion">
+                                        <!-- <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div> -->
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label>Fecha respuesta INR : </label>
+                                    <div class="input-group">
+                                        <input type="date" class="form-control" [(ngModel)]="fechaRespuesta">
+                                        <!-- <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-3 form-group">
-                    <label>Fecha respuesta INR : </label>
-                    <div class="input-group">
-                        <input type="date" class="form-control" [(ngModel)]="fechaRespuesta">
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                
+                    <div class="row" *ngIf="data == 4">
+                        <div class="col-sm-3 form-group">
+                            <label>Reembolso </label>
+                            <select class="form-control" [(ngModel)]="dataReserva.SREFUND">
+                                <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
+                                    [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Nro. de Carta </label>
+                            <input type="text" class="form-control" [(ngModel)]="dataReserva.SNROLETTER">
                         </div>
                     </div>
                 </div>
@@ -237,95 +270,85 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="data == 4">
-        <div class="col-sm-3 form-group">
-            <label>Reembolso </label>
-            <select class="form-control" [(ngModel)]="dataReserva.SREFUND">
-                <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
-                    [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
-            </select>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Nro. de Carta </label>
-            <input type="text" class="form-control" [(ngModel)]="dataReserva.SNROLETTER">
-        </div>
-    </div>
-
-    <div *ngIf="data == 4 || data == 5" class="mt-1">
-        <div class="row">
-            <div class="col-sm-12" style="border-bottom: 1px solid #ccc!important; width: 100% !important;">
-                <span>Datos del comprobante o Sustento</span>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-sm-3 form-group">
-                <label>Tipo de comprobante </label>
-                <select class="form-control" [(ngModel)]="dataReserva.NTYPERECEIPT">
-                    <option *ngFor="let comprobante of tiposComprobantes" [value]="comprobante.SCODIGO"
-                        [disabled]="comprobante.SCODIGO == '0'">{{comprobante.SDESCRIPCION}}</option>
-                </select>
-            </div>
-
-            <div class="col-sm-2 form-group">
-                <label>Nro. Comprobante </label>
-                <input type="text" class="form-control" [(ngModel)]="dataReserva.SVOUCHERNUMBER">
-            </div>
-
-            <div class="col-sm-3 form-group">
-                <label>Fecha emisión </label>
-                <div class="input-group">
-                    <input type="date" class="form-control" [(ngModel)]="fechaEmision">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
+    <div *ngIf="data == 4 || data == 5" class="row mt-2">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header py-2">
+                    <h5>Datos del comprobante o Sustento</h5>
                 </div>
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Fecha recepción </label>
-                <div class="input-group">
-                    <input type="date" class="form-control" [(ngModel)]="fechaRecepcion">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                <div class="card-body py-1">
+                    <div class="row mt-3">
+                        <div class="col-sm-3 form-group">
+                            <label>Tipo de comprobante </label>
+                            <select class="form-control" [(ngModel)]="dataReserva.NTYPERECEIPT" [disabled]="tab == 2">
+                                <option *ngFor="let comprobante of tiposComprobantes" [value]="comprobante.SCODIGO"
+                                    [disabled]="comprobante.SCODIGO == '0'">{{comprobante.SDESCRIPCION}}</option>
+                            </select>
+                        </div>
+            
+                        <div class="col-sm-3 form-group">
+                            <label>Nro. Comprobante </label>
+                            <input type="text" class="form-control" [(ngModel)]="dataReserva.SVOUCHERNUMBER" [disabled]="tab == 2">
+                        </div>
+            
+                        <div class="col-sm-3 form-group">
+                            <label>Fecha emisión </label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" [(ngModel)]="fechaEmision">
+                                <!-- <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Fecha recepción </label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" [(ngModel)]="fechaRecepcion">
+                                <!-- <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div> -->
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-5 form-group">
-                <label>Nombre Referencial / IPRESS </label>
-                <input type="text" class="form-control" [(ngModel)]="dataReserva.SREFERENTIALNAMEIPRESS">
-            </div>
-            <div *ngIf="data == 4" class="col-sm-3 form-group">
-                <label>Red de IPRESS </label>
-                <input type="text" class="form-control" [(ngModel)]="dataReserva.SRED_IPRESS">
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Ruc: </label>
-                <input type="text" class="form-control" [(ngModel)]="dataReserva.SRUC">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3 form-group">
-                <label>Base Imponible</label>
-                <input type="number" class="form-control" [formControl]="baseImponible" [(ngModel)]="modelBase" [ngClass]="{'is-invalid': baseImponible.invalid && baseImponible.touched}" (ngModelChange)="changeBaseImponible()">
-            </div>
-            <div class="col-sm-2 form-group">
-                <label>IGV</label>
-                <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NIGV">
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Total comprobante: </label>
-                <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NAMOUNTTOTAL">
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-sm-3">
-                <div class="form-inline">
-                    <label>Afecta al IGV: </label>
-                    <select class="form-control ml-3" [(ngModel)]="dataReserva.SAFFECTIGV" (change)="changeBaseImponible()">
-                        <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
-                            [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
-                    </select>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <label>Nombre Referencial / IPRESS </label>
+                            <input type="text" class="form-control" [(ngModel)]="dataReserva.SREFERENTIALNAMEIPRESS">
+                        </div>
+                        <div *ngIf="data == 4" class="col-sm-3 form-group">
+                            <label>Red de IPRESS </label>
+                            <input type="text" class="form-control" [(ngModel)]="dataReserva.SRED_IPRESS" maxlength="3">
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Ruc: </label>
+                            <input type="text" class="form-control" [(ngModel)]="dataReserva.SRUC">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label>Base Imponible <span>(*)</span></label>
+                            <input type="number" class="form-control" [formControl]="baseImponible" [(ngModel)]="modelBase" [ngClass]="{'is-invalid': baseImponible.invalid && baseImponible.touched}" (ngModelChange)="changeBaseImponible()">
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>IGV</label>
+                            <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NIGV">
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Total comprobante: </label>
+                            <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NAMOUNTTOTAL">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <div class="form-inline">
+                                <label>Afecta al IGV: </label>
+                                <select class="form-control ml-3" [(ngModel)]="dataReserva.SAFFECTIGV" (change)="changeBaseImponible()" [disabled]="tab == 2">
+                                    <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
+                                        [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -333,7 +356,8 @@
 
     <div class="row mt-3">
         <div class="col-sm-12" align="end">
-            <button class="btn btn-success mb-2" (click)="guardarTablaTemporal()">Guardar</button>
+            <button *ngIf="tab == 1" class="btn btn-success mb-2" (click)="guardarTablaTemporal()">Guardar</button>
+            <button [disabled]="disabledBotones" *ngIf="tab == 2" class="btn btn-success mb-2" (click)="editarTablaTemporal()">Guardar</button>
         </div>
     </div>
 </div>

@@ -1,3 +1,8 @@
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #27246d!important;
+}
+
 .border_head{
     padding-top: 10px !important;
     padding-bottom: 10px !important;
@@ -5,8 +10,16 @@
 }
 
 .body-gastos{
-    margin-left: 15% !important;
-    margin-right: 15% !important;
+    margin-left: 8% !important;
+    margin-right: 8% !important;
+}
+.table-gastos{
+    margin-left: 8% !important;
+    margin-right: 8% !important;
+}
+
+::ng-deep .my-class .modal-dialog { 
+    max-width: 75%;
 }
 
 .btn-busqueda{
@@ -14,6 +27,16 @@
     color: white
 }
 
-::ng-deep .my-class .modal-dialog { 
-    max-width: 70%;
+.color_fila{
+    background-color: rgba(0,0,0,.05) !important;
 }
+/*
+.card{
+    border-radius: 0px;
+}*/
+
+.card-header{
+    background-color: #2b0d61;
+    color: #fff;
+}
+

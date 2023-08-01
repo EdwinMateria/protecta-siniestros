@@ -1,5 +1,5 @@
 ::ng-deep .my-class .modal-dialog { 
-    max-width: 50%;
+    max-width: 70%;
 }
 
 .nav-decla{
@@ -16,28 +16,16 @@
     background-color: #fdb477!important;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-    background: transparent;
-    bottom: 0;
-    color: transparent;
-    cursor: pointer;
-    height: auto;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: auto;
+.border_head{
+    padding-top: 10px !important;
+    border-bottom: 1px solid #ccc!important;
 }
 
-input[type="time"]::-webkit-calendar-picker-indicator {
-    background: transparent;
-    bottom: 0;
-    color: transparent;
-    cursor: pointer;
-    height: auto;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: auto;
+.card-header{
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.card{
+    border-radius: 0px;
 }

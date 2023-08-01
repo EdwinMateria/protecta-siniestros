@@ -5,6 +5,7 @@ import { ModalNuevoBeneficiarioComponent } from '../modal-nuevo-beneficiario/mod
 import { ReserveService } from 'src/app/core/services/reserve/reserve.service';
 import { ClaimBenefParamRequest } from 'src/app/core/models/claimBenefParamRequest';
 import { BeneficiariesVM, ClaimBenefParamResponse } from 'src/app/core/models/claimBenefParamResponse';
+import { SwalCarga } from "src/app/core/swal-loading";
 
 @Component({
   selector: 'app-modal-beneficiario',
@@ -14,11 +15,13 @@ import { BeneficiariesVM, ClaimBenefParamResponse } from 'src/app/core/models/cl
 export class ModalBeneficiarioComponent implements OnInit {
 
   @Input() public reference: any;
+  @Input() public origen: number;
   beneficiarioResponse = new ClaimBenefParamResponse();
   buscador = new ClaimBenefParamRequest();
   pagina = 1;
   listaBeneficiarios : BeneficiariesVM[]=[];
   beneficiarioSeleccion = new BeneficiariesVM()
+  @Input() public beneficiarios: BeneficiariesVM[] = [];
 
   constructor(private modalService: NgbModal, public reserveService: ReserveService) { }
 
@@ -34,7 +37,7 @@ export class ModalBeneficiarioComponent implements OnInit {
       Swal.fire('Información', 'Debe llenar al menos un campo.', 'warning');
       return;
     }else{
-      Swal.showLoading()
+      SwalCarga()
       this.reserveService.BusquedaBeneficiario(this.buscador).subscribe(
         res =>{
           Swal.close()
@@ -43,7 +46,7 @@ export class ModalBeneficiarioComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err);
+          Swal.fire('Error',err,'error')
         }
       )
     }
@@ -56,7 +59,8 @@ export class ModalBeneficiarioComponent implements OnInit {
 
   openBeneficiario(){
     const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
-    modalRef.componentInstance.reference = modalRef;  
+    modalRef.componentInstance.reference = modalRef;
+    modalRef.componentInstance.origen = this.origen;  
     modalRef.result.then((json) => {
       this.closeModal(json);
     });
@@ -78,7 +82,14 @@ export class ModalBeneficiarioComponent implements OnInit {
       Swal.fire('Información', 'Debe seleccionar un beneficiario.','warning');
       return;
     }else{
-      this.reference.close(this.beneficiarioSeleccion);
+      let benefExiste = this.beneficiarios.find(x => x.SCODE == this.beneficiarioSeleccion.SCODE);
+      if(benefExiste){
+        Swal.fire('Información','El beneficiario ya fue insertado', 'warning');
+        return;
+      }else{
+        this.reference.close(this.beneficiarioSeleccion);
+      }
+
     }
   }
 

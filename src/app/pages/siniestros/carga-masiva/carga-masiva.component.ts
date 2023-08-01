@@ -66,6 +66,7 @@ export class CargaMasivaComponent implements OnInit {
   archivoNombre: string = null;
   numero_siniestro: string = null;
   caux_soat_ope: string = null;
+  openModal = false;
 
   data: any = [];
   dataSet: any = [];
@@ -793,5 +794,9 @@ export class CargaMasivaComponent implements OnInit {
     }
     const blob = new Blob(byteArrays, { type: contentType });
     return blob;
+  }
+
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
   }
 }

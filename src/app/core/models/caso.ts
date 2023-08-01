@@ -31,6 +31,8 @@ export class CasosBM {
     sTipoAtencion           : string;
     sObservacion            : string;
     sMensaje                : string;
+    nCodUsuario             : number;
+    nMoneda                 : number;
     //Opcional
     nSiniestro              ?:number;
 

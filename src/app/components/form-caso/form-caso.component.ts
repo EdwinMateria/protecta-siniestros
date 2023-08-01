@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AutocompleteBE, CasosBM } from 'src/app/core/models/caso';
@@ -8,6 +8,9 @@ import { ConsultaSiniestroComponent } from 'src/app/pages/siniestros/tratamiento
 import Swal from 'sweetalert2';
 import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { SwalCarga } from "src/app/core/swal-loading";
+import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
+import { DatePipe } from '@angular/common';
 
 export class Generic{
   id:string;
@@ -60,10 +63,12 @@ export class FormCasoComponent implements OnInit {
 
   @Input() tipoTabForm = 0;
   casoBM = new CasosBM();
+  //tipoInputDate = true;
 
   //RESULTADO
   tratamientoCaso = new TratamientoCaso();
   siniestros: SiniestroBM[] = [];
+  fechaNacimiento : any;
 
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -72,7 +77,14 @@ export class FormCasoComponent implements OnInit {
     };
   }
 
-  constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService) { }
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      this.buscador()
+    }
+  }
+
+  constructor(private modalService: NgbModal, public fb: FormBuilder, public casoService: CasosService, public authProtectaService: AuthProtectaService, public datePipe : DatePipe) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -80,7 +92,7 @@ export class FormCasoComponent implements OnInit {
       nCertif: [{value:'', disabled: true}],
       sNroPlaca: [{value:'', disabled: true}],
       nCaso: [{value:'', disabled: true}],
-      dFecOcurrencia: [{value:null, disabled: this.tipoForm == true ? false : true}, Validators.required],
+      dFecOcurrencia: [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
       sHoraOcurrencia : [{value:'', disabled: this.tipoForm == true ? false : true}, Validators.required],
       nCulpabilidad: [{value:'0', disabled: this.tipoForm == true && this.tipoTab != 2 ? false:true}, [Validators.required, this.notAllowed(/^0/)]],
       nCausaSiniestro: [{value:'0', disabled: this.tipoForm == true ? false:true}, [Validators.required, this.notAllowed(/^0/)]],
@@ -108,7 +120,7 @@ export class FormCasoComponent implements OnInit {
   }
 
   obtenerCasoIndex(){
-    Swal.showLoading();
+    SwalCarga();;
     this.casoService.Index().subscribe(
       res =>{
         Swal.close();
@@ -116,71 +128,94 @@ export class FormCasoComponent implements OnInit {
       },
       err =>{
         Swal.close();
-        console.log(err);
+        Swal.fire('Error',err,'error')
       }
     )
+  }
+
+  change(event:any){
   }
 
   buscador(){
     let valorInput = this.referencia.nativeElement.value as string;
     if(valorInput != ""){
       if (!this.tipoForm) {
-        this.showBotones = true
-        Swal.showLoading();
+        SwalCarga();
         this.casoService.GetSearchCase(Number(valorInput)).subscribe(
           res => {
             Swal.close();
-            this.casoBM = res.GenericResponse[0];
-            this.form.patchValue({
-              ...this.casoBM,
-              dInicioVigencia : new Date(this.casoBM.dIniVigencia).toLocaleDateString('en-GB'),
-              dFinDeVigencia : new Date(this.casoBM.dFinVigencia).toLocaleDateString('en-GB'),
-              dFecOcurrencia : new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB'),
-              dFecNacConductor : new Date(this.casoBM.dFecNacConductor).toLocaleDateString('en-GB'),
-              nCaso: this.casoBM.nPolicy,
-              nPolicy: valorInput,
-            });
-            //Provincia
-            this.changeDepartamento(false);
-            this.form.controls['nProvincia'].setValue(this.casoBM.nProvincia);
-            this.changeProvincia(false)
-            this.casoBM.nCaso = Number(valorInput)
-            console.log(this.casoBM);
-            
+            if(res.GenericResponse.length == 0){
+              Swal.fire('Información',`No se encontro el caso N° ${valorInput}`, 'warning');
+              this.showBotones = false;
+              this.casoBM = new CasosBM();
+              this.form.reset();
+              this.siniestros = [];
+              return;
+            }else{
+              this.showBotones = true
+              this.casoBM = res.GenericResponse[0];
+
+              let d : string []=[];
+              console.log(this.casoBM.dFecNacConductor);
+              
+              if(this.casoBM.dFecNacConductor != null){
+                d = this.casoBM.dFecNacConductor .split("-");
+                let fechaEmi = new Date(d[1] + '/' + d[2].substring(0,2) + '/' + d[0]);
+                this.fechaNacimiento = this.datePipe.transform(fechaEmi, 'yyyy-MM-dd');
+              }
+
+              this.form.patchValue({
+                ...this.casoBM,
+                dInicioVigencia : new Date(this.casoBM.dIniVigencia).toLocaleDateString('en-GB'),
+                dFinDeVigencia : new Date(this.casoBM.dFinVigencia).toLocaleDateString('en-GB'),
+                dFecOcurrencia : new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB'),
+                dFecNacConductor : this.casoBM.dFecNacConductor == null ? null : this.fechaNacimiento,
+                nCaso: this.casoBM.nPolicy,
+                nPolicy: valorInput,
+              });
+              
+
+              //Provincia
+              this.changeDepartamento(false);
+              this.form.controls['nProvincia'].setValue(this.casoBM.nProvincia);
+              this.changeProvincia(false)
+              this.casoBM.nCaso = Number(valorInput)
+
+              //Siniestros del Caso
+              SwalCarga();;
+              this.casoService.GetClaimForCase(Number(valorInput)).subscribe(
+                res => {
+                  Swal.close();
+                  this.siniestros = res.GenericResponse;
+                },
+                err => {
+                  Swal.close();
+                  Swal.fire('Error',err,'error')
+                }
+              )
+            }
           },
           err => {
             Swal.close();
-            console.log(err);
-          }
-        )
-        //Siniestros del Caso
-        Swal.showLoading();
-        this.casoService.GetClaimForCase(Number(valorInput)).subscribe(
-          res => {
-            Swal.close();
-            this.siniestros = res.GenericResponse;
-          },
-          err => {
-            Swal.close();
-            console.log(err);
+            Swal.fire('Error',err,'error')
           }
         )
       } else {
-        if(this.form.controls['dFecOcurrencia'].value != ""){
-          Swal.showLoading()
 
-          let docur = new Date(this.form.controls['dFecOcurrencia'].value)
+        let date1 = this.form.controls['dFecOcurrencia'].value;
+        console.log(date1);
+        
+        let docur = new Date(this.form.controls['dFecOcurrencia'].value)
+        console.log(docur);
+        if (docur.getFullYear() > 1840 || date1 == "") {
+          SwalCarga();
           let date = new Date(docur.setDate(docur.getDate() + 1)).toLocaleDateString('en-GB');
-          //let date = new Date(this.form.controls['dFecOcurrencia'].value).toLocaleDateString('en-GB');
-          console.log(date);
-          console.log(this.form.controls['dFecOcurrencia'].value);
-          
-          this.casoService.GetPolicyForCase(Number(valorInput), date).subscribe(
+          this.casoService.GetPolicyForCase(Number(valorInput), !isNaN(docur.getTime()) ? date : "").subscribe(
             res => {
               let caso = new CasosBM();
               Swal.close();
               caso = res.GenericResponse[0];
-              if(caso.sMensaje == 'Ok'){
+              if (caso.sMensaje == 'Ok') {
                 this.form.controls['nCertif'].setValue(caso.nCertif);
                 this.form.controls['sNroPlaca'].setValue(caso.sNroPlaca);
                 this.form.controls['nCaso'].setValue(caso.nCaso);
@@ -190,14 +225,15 @@ export class FormCasoComponent implements OnInit {
                 this.form.controls['sDocContratante'].setValue(caso.sDocContratante);
                 this.form.controls['nBranch'].setValue(caso.nBranch);
                 this.form.controls['nProduct'].setValue(caso.nProduct);
-              }else{
-                Swal.fire('Información',caso.sMensaje,'error');
+              } else {
+                Swal.fire('Información', caso.sMensaje, 'error');
+                this.form.controls['dFecOcurrencia'].setValue('');
                 return;
               }
             },
             err => {
               Swal.close()
-              console.log(err);
+              Swal.fire('Error', err, 'error')
             }
           )
         }
@@ -211,44 +247,65 @@ export class FormCasoComponent implements OnInit {
     modalRef.componentInstance.data = codSiniestro;
     modalRef.componentInstance.causasSiniestro = this.casoIndex.Lista_CausaSiniestro;
     modalRef.componentInstance.listaRechazo = this.casoIndex.Lista_Rechazos;
+    modalRef.componentInstance.origen = 2;
     modalRef.result.then((Interval) => {
     });
   }
 
   rechazarSiniestro(numSiniestro:number){
-    Swal.fire({
-      title: 'Información',
-      text: "¿Deseas rechazar el caso del siniestro?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'De acuerdo',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then((result) => {
-      
-      if(result.isConfirmed){
-        this.declararActive = 'active'
-        this.modificarActive = ''
-        this.tituloTratamiento.emit(true);
-        this.formSiniestro.emit(3);
 
-        let cs = new CasosBM();
-        cs = this.casoBM;
-        cs.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
-        cs.Lista_Rechazos = this.casoIndex.Lista_Rechazos;
-        cs.nSiniestro = numSiniestro;
-        this.casoEmit.emit(cs)
-        this.stateTituloSiniestro = 3
-        this.tipoTab = 1;
+    let request =  new SiniestroBM();
+    request.nSiniestro = numSiniestro;
+    SwalCarga();
+    this.casoService.ValidateRechazo(request).subscribe(
+      res => {
+        Swal.close();
+        if(res.Message != "Ok"){
+          Swal.fire('Información', res.Message, 'warning');
+          return
+        }else{
+          Swal.fire({
+            title: 'Información',
+            text: "¿Deseas rechazar el caso del siniestro?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+            reverseButtons: true,
+            showCloseButton: true
+          }).then((result) => {
+            
+            if(result.isConfirmed){
+              this.declararActive = 'active'
+              this.modificarActive = ''
+              this.tituloTratamiento.emit(true);
+              this.formSiniestro.emit(3);
+      
+              let cs = new CasosBM();
+              cs = this.casoBM;
+              cs.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
+              cs.Lista_Rechazos = this.casoIndex.Lista_Rechazos;
+              cs.nSiniestro = numSiniestro;
+              this.casoEmit.emit(cs)
+              this.stateTituloSiniestro = 3
+              this.tipoTab = 1;
+            }
+          })
+        }
+      },
+      err => {
+        Swal.close();
+        Swal.fire('Error',err,'error')
+        return;
       }
-    })
+    )
   }
 
   tabControl(index:number, stateTituloSiniestro?:number, nSiniestro?:number){
-    this.tipoTab = index;
     // 1: Declarar siniestro;
     // Tab = 1 ,  
-    if(this.tipoTab == 1){
+    if(index == 1){
+      this.tipoTab = index;
       if(stateTituloSiniestro == 1){
         this.stateTituloSiniestro = 1
       }else if(stateTituloSiniestro == 2){
@@ -265,20 +322,50 @@ export class FormCasoComponent implements OnInit {
       
       this.casoEmit.emit(this.casoBM);
     }
-    if(this.tipoTab == 2){
-      this.declararActive = ''
-      this.modificarActive = 'active'
-      this.tituloTratamiento.emit(false);
-      this.form.controls['nPolicy'].disable();
-      this.form.controls['sUbicacion'].enable();
-      this.form.controls['sDelegacion'].enable();
-      this.form.controls['sReferencia'].enable();
-      this.form.controls['nDepartamento'].enable();
-      this.form.controls['nProvincia'].enable();
-      this.form.controls['nDistrito'].enable();
-      this.form.controls['sObservacion'].enable();
-      this.form.controls['nCulpabilidad'].enable();
-      this.form.controls['nCausaSiniestro'].enable();
+    if(index == 2){
+      let caso = new CasosBM;
+      let valorInput = this.referencia.nativeElement.value as string;
+      caso.nCaso = Number(valorInput);
+      SwalCarga();
+      this.casoService.ValidateCase(caso).subscribe(
+        res => {
+          if(res.Message == "Ok"){
+            Swal.close();
+            this.tipoTab = index;
+            this.declararActive = ''
+            this.modificarActive = 'active'
+            this.tituloTratamiento.emit(false);
+            this.form.controls['nPolicy'].disable();
+            this.form.controls['sUbicacion'].enable();
+            this.form.controls['sDelegacion'].enable();
+            this.form.controls['sReferencia'].enable();
+            this.form.controls['nDepartamento'].enable();
+            this.form.controls['nProvincia'].enable();
+            this.form.controls['nDistrito'].enable();
+            this.form.controls['sObservacion'].enable();
+            this.form.controls['nCulpabilidad'].enable();
+            this.form.controls['nCausaSiniestro'].enable();
+            this.form.controls['nTipDocConductor'].enable();
+            this.form.controls['dFecNacConductor'].enable();
+            this.form.controls['sDocConductor'].enable();
+            this.form.controls['sNombreConductor'].enable();
+            this.form.controls['sPaternoConductor'].enable();
+            this.form.controls['sMaternoConductor'].enable();
+            return;
+          }else{
+            Swal.close();
+            this.tipoTab = 0;
+            Swal.fire('Información',res.Message, 'warning');
+            return;
+          }
+        },
+        err => {
+          Swal.close();
+          this.tipoTab = 0;
+          Swal.fire('Error',err,'error')
+        }
+      )
+      //this.tipoInputDate = true;
     }
   }
 
@@ -293,6 +380,13 @@ export class FormCasoComponent implements OnInit {
     this.form.controls['sObservacion'].disable();
     this.form.controls['nCulpabilidad'].disable();
     this.form.controls['nCausaSiniestro'].disable();
+    this.form.controls['nTipDocConductor'].disable();
+    this.form.controls['dFecNacConductor'].disable();
+    this.form.controls['sDocConductor'].disable();
+
+    this.form.controls['sNombreConductor'].disable();
+    this.form.controls['sPaternoConductor'].disable();
+    this.form.controls['sMaternoConductor'].disable();
     this.form.reset();
     this.tipoTab = 0;
     this.modificarActive = '';
@@ -301,6 +395,7 @@ export class FormCasoComponent implements OnInit {
     this.tituloTratamiento.emit(false);
     this.tratamientoCaso = new TratamientoCaso();
     this.showBotones = false;
+    //this.tipoInputDate = false;
   }
 
   validacionFormularioCaso(){
@@ -350,12 +445,16 @@ export class FormCasoComponent implements OnInit {
       return;
     }
     else {
-      Swal.showLoading();
+      SwalCarga();
       let caso = new CasosBM();
       caso = this.form.getRawValue();
       var dateInicio = (this.form.controls['dInicioVigencia'].value).split("/");
       var dateFin = (this.form.controls['dFinDeVigencia'].value).split("/");
       
+      let cookie = this.authProtectaService.getCookie('AppSiniestro');
+      let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
+
+      caso.nCodUsuario = Number(atob(codUsuario));
       caso.dIniVigencia = new Date(+dateInicio[2], dateInicio[1] - 1, +dateInicio[0]);
       caso.dFinVigencia = new Date(+dateFin[2], dateFin[1] - 1, +dateFin[0]);
       caso.nCertif = 0;
@@ -364,20 +463,18 @@ export class FormCasoComponent implements OnInit {
       this.casoService.AddCasos(data).subscribe(
         res => {
           Swal.close();
-          console.log(res);
           if(res.numcase != 0){
             Swal.fire({
               title: 'Información',
               text: `Se declaró el caso correctamente: ${res.numcase}. ¿Desea declarar los siniestros?`,
               icon: 'warning',
               showCancelButton: true,
-              confirmButtonText: 'De acuerdo',
+              confirmButtonText: 'Sí',
               cancelButtonText: 'No',
-              reverseButtons: true
+              reverseButtons: true,
+              showCloseButton: true
             }).then((result) => {
               if (result.isConfirmed) {
-                // this.tipoForm = false;
-                // this.showBotones = true
                 this.casoBM.nCaso = res.numcase;
                 this.casoBM.nPolicy = this.form.controls['nPolicy'].value;
                 this.casoBM.nCertif = 0;
@@ -402,7 +499,7 @@ export class FormCasoComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err)
+          Swal.fire('Error',err,'error')
         }
       )
     }
@@ -414,10 +511,14 @@ export class FormCasoComponent implements OnInit {
       this.validacionFormularioCaso();
       return;
     }else{
+
+      let cookie = this.authProtectaService.getCookie('AppSiniestro');
+      let codUsuario = this.authProtectaService.getValueCookie('CodUsu',cookie);
       let caso = new CasosBM();
       caso = {
         ...this.form.getRawValue(),
-        nCaso : this.form.controls['nPolicy'].value
+        nCaso : this.form.controls['nPolicy'].value,
+        nCodUsuario : Number(atob(codUsuario))
       };
       Swal.close();
       this.casoService.UpdateCase(caso).subscribe(
@@ -433,7 +534,7 @@ export class FormCasoComponent implements OnInit {
         },
         err => {
           Swal.close();
-          console.log(err);
+          Swal.fire('Error',err,'error')
         }
       )
     }
@@ -441,7 +542,7 @@ export class FormCasoComponent implements OnInit {
 
   changeDepartamento(origen:boolean){
     let departamento = this.form.controls['nDepartamento'].value;
-    Swal.showLoading();
+    SwalCarga();;
     this.casoService.GetProvincias(departamento).subscribe(
       res => {
         Swal.close();
@@ -458,7 +559,7 @@ export class FormCasoComponent implements OnInit {
 
   changeProvincia(origen:boolean){
     let provincia = this.form.controls['nProvincia'].value;
-    Swal.showLoading();
+    SwalCarga();;
     this.casoService.GetDistritos(provincia).subscribe(
       res => {
         Swal.close();

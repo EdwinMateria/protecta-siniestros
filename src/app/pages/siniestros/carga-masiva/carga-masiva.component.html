@@ -6,180 +6,184 @@
 /*  VERSIÓN             :   1.0 - CARGAS MASIVAS SINIESTROS                                      */
 /************************************************************************************************-->
 
-<app-navbar></app-navbar>
-<!-- TÍTULO -->
-<div class="m-5">
-    <div class="header-content">
-        <div class="containt-item">
-            <div class="header-item">
-                <span class="title">Carga Masiva SOAT</span>
-            </div>
-        </div>
-    </div>
-</div>
+<app-navbar (showModal)="showModal($event)"></app-navbar>
 
-<!-- FILTROS -->
-<div class="m-5">
-    <div class="card">
-        <div class="row">
-            <div class="col-md-7">
-                <div class="row ml-4 mt-4 mb-4">
-                    <div class="col-md-3">
-                        <label>Tipo de Carga:</label>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-control" [(ngModel)]="carga">
-                            <option value="2">Nuevo</option>
-                            <option value="1">Antiguo</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6"></div>
-                </div>
-
-                <div class="row ml-4 mt-4 mb-4">
-                    <div class="col-md-3">
-                        <label>Tipo de Trama:</label>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="checkbox" [(ngModel)]="apertura" (change)="onApertura($event.target.checked)" />
-                        <label class="control-label ml-3">Apertura</label>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="checkbox" [(ngModel)]="reserva" (change)="onReserva($event.target.checked)" />
-                        <label class="control-label ml-3">Reserva</label>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="checkbox" [(ngModel)]="liquidacion" (change)="onLiquidacion($event.target.checked)" />
-                        <label class="control-label ml-3">Liquidación</label>
-                    </div>
-                </div>
-
-                <div class="row ml-4 mt-4 mb-4">
-                    <div class="col-md-4">
-                        <button type="button" class="full-colorN" (click)="fileInput.click()">
-                            <span>Cargar archivo</span>
-                            <img class="icon-btn" src="assets/img/upload.png" />
-                        </button>
-                        <input hidden #fileInput type="file" (change)="onFileChange($event)" accept=".xlsx">
-                    </div>
-                    <div class="col-md-8">
-                        <input [(ngModel)]="archivoNombre" disabled style="width: 100%; height: 100%;">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-5">
-                <div class="row mr-4 mt-4 mb-4">
-                    <div class="col-md-6">
-                        <button type="button" (click)="onReportePreliminar()" [disabled]="reporte_prel" [ngClass]="reporte_prel ? 'disabled' : 'full-colorN'">
-                            <span>Reporte preliminar</span>
-                            <img class="icon-btn" src="assets/img/download.png" />
-                        </button>
-                    </div>
-                    <div class="col-md-6">
-                        <button type="button" (click)="onLimpiar()" class="full-colorN">
-                            <span>Limpiar</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="row mr-4 mt-4 mb-4">
-                    <div class="col-md-6">
-                        <button type="button" (click)="onPreliminar()" [disabled]="preliminar" [ngClass]="preliminar ? 'disabled' : 'full-color'">
-                            <span>Preliminar</span>
-                        </button>
-                    </div>
-                    <div class="col-md-6">
-                        <button type="button" (click)="onDefinitivo()" [disabled]="definitivo" [ngClass]="definitivo ? 'disabled' : 'full-color'">
-                            <span>Definitivo</span>
-                        </button>
-                    </div>
+<div [ngClass]="{'empujar': openModal === true , 'restaurar' : openModal === false}">
+    <!-- TÍTULO -->
+    <div class="m-5">
+        <div class="header-content">
+            <div class="containt-item">
+                <div class="header-item">
+                    <span class="title">Carga Masiva SOAT</span>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- GRILLA -->
-<div class="m-5">
-    <div class="card">
-        <div class="row m-2">
-            <div class="col-sm-12">
-                <span class="titleN">Preliminar</span>
-            </div>
-            <div class="grid form-group">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr class="grid-title">
-                                <td class="grid-title-item text-center">Nro Fila</td>
-                                <td class="grid-title-item text-center">Nro Sin. Prov.</td>
-                                <td class="grid-title-item text-center">Producto</td>
-                                <td class="grid-title-item text-center">Póliza</td>
-                                <td class="grid-title-item text-center">Nro Certificado</td>
-                                <td class="grid-title-item text-center">Fecha Siniestro</td>
-                                <td class="grid-title-item text-center">Observaciones</td>
-                                <td class="grid-title-item text-center">
-                                    <input type="checkbox" [(ngModel)]="booleanSelect" (change)="checkAll()" [disabled]="booleanDisabled" />
-                                </td>
-                            </tr>
-                        </thead>
-                        <ng-container *ngIf="listToShow == null || listToShow.length == 0; then hideGrid1 else showGrid"></ng-container>
-                    </table>
-                    <ng-template #hideGrid1>
-                        <tbody>
-                            <tr>
-                                <td class="text-center" colspan="8">No se encontraron registros.</td>
-                            </tr>
-                        </tbody>
-                    </ng-template>
-                    <ng-template #showGrid>
-                        <tbody *ngFor="let item of listToShow">
-                            <tr>
-                                <td class="data-table-tr-td text-center">
-                                    {{ item.NID_SOAT_OPE }}
-                                </td>
-                                <td class="data-table-tr-td text-center">
-                                    {{ item.SNRO_SINIESTRO }}
-                                </td>
-                                <td class="data-table-tr-td text-center">
-                                    {{ item.SPRODUCTO }}
-                                </td>
-                                <td class="data-table-tr-td text-center">
-                                    {{ item.SNRO_POLIZA }}
-                                </td>
-                                <td class="data-table-tr-td text-center">
-                                    {{ item.SCERTIFICADO }}
-                                </td>
-                                <td class="data-table-tr-td text-center">
-                                    {{ item.SFECHA_SINIESTRO }}
-                                </td>
-                                <td [ngClass]="item.SDET_ERROR ? 'data-table-tr-td text-center onHover' : 'null'" (click)="mostrarModalErrores(contentError, item);">
-                                    {{ item.SDET_ERROR }}
-                                </td>
-                                <td class="data-table-tr-td text-center">
-                                    <input type="checkbox" [(ngModel)]="item.IS_SELECTED" (change)="checkItem()" [disabled]="item.NSTA1_SOAT_OPE == 3 ? true : false" />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </ng-template>
+    <!-- FILTROS -->
+    <div class="m-5">
+        <div class="card">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="row ml-4 mt-4 mb-4">
+                        <div class="col-md-3">
+                            <label>Tipo de Carga:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" [(ngModel)]="carga">
+                                <option value="2">Nuevo</option>
+                                <option value="1">Antiguo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6"></div>
+                    </div>
+
+                    <div class="row ml-4 mt-4 mb-4">
+                        <div class="col-md-3">
+                            <label>Tipo de Trama:</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="checkbox" [(ngModel)]="apertura" (change)="onApertura($event.target.checked)" />
+                            <label class="control-label ml-3">Apertura</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="checkbox" [(ngModel)]="reserva" (change)="onReserva($event.target.checked)" />
+                            <label class="control-label ml-3">Reserva</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="checkbox" [(ngModel)]="liquidacion" (change)="onLiquidacion($event.target.checked)" />
+                            <label class="control-label ml-3">Liquidación</label>
+                        </div>
+                    </div>
+
+                    <div class="row ml-4 mt-4 mb-4">
+                        <div class="col-md-4">
+                            <button type="button" class="full-colorN" (click)="fileInput.click()">
+                                <span>Cargar archivo</span>
+                                <img class="icon-btn" src="assets/img/upload.png" />
+                            </button>
+                            <input hidden #fileInput type="file" (change)="onFileChange($event)" accept=".xlsx">
+                        </div>
+                        <div class="col-md-8">
+                            <input [(ngModel)]="archivoNombre" disabled style="width: 100%; height: 100%;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="row mr-4 mt-4 mb-4">
+                        <div class="col-md-6">
+                            <button type="button" (click)="onReportePreliminar()" [disabled]="reporte_prel" [ngClass]="reporte_prel ? 'disabled' : 'full-colorN'">
+                                <span>Reporte preliminar</span>
+                                <img class="icon-btn" src="assets/img/download.png" />
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" (click)="onLimpiar()" class="full-colorN">
+                                <span>Limpiar</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mr-4 mt-4 mb-4">
+                        <div class="col-md-6">
+                            <button type="button" (click)="onPreliminar()" [disabled]="preliminar" [ngClass]="preliminar ? 'disabled' : 'full-color'">
+                                <span>Preliminar</span>
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" (click)="onDefinitivo()" [disabled]="definitivo" [ngClass]="definitivo ? 'disabled' : 'full-color'">
+                                <span>Definitivo</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div [hidden]="!isLoading" class="loadingScreen">
-                <div style="display: flex; height: 100%; width: 100%">
-                    <i style="margin: auto; font-size: 50px" class="fa fa-spinner fa-spin"></i>
-                </div>
-            </div>
-            <div *ngIf="listToShow != null && listToShow.length > 0" class="row" style="display: flex">
+        </div>
+    </div>
+
+    <!-- GRILLA -->
+    <div class="m-5">
+        <div class="card">
+            <div class="row m-2">
                 <div class="col-sm-12">
-                    <ngb-pagination [(page)]="currentPage" [pageSize]="itemsPerPage" [collectionSize]="totalItems" [maxSize]="maxSize" (pageChange)="pageChanged(currentPage)">
-                        <ng-template ngbPaginationPrevious>ANTERIOR</ng-template>
-                        <ng-template ngbPaginationNext>SIGUIENTE</ng-template>
-                    </ngb-pagination>
+                    <span class="titleN">Preliminar</span>
+                </div>
+                <div class="grid form-group">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="grid-title">
+                                    <td class="grid-title-item text-center">Nro Fila</td>
+                                    <td class="grid-title-item text-center">Nro Sin. Prov.</td>
+                                    <td class="grid-title-item text-center">Producto</td>
+                                    <td class="grid-title-item text-center">Póliza</td>
+                                    <td class="grid-title-item text-center">Nro Certificado</td>
+                                    <td class="grid-title-item text-center">Fecha Siniestro</td>
+                                    <td class="grid-title-item text-center">Observaciones</td>
+                                    <td class="grid-title-item text-center">
+                                        <input type="checkbox" [(ngModel)]="booleanSelect" (change)="checkAll()" [disabled]="booleanDisabled" />
+                                    </td>
+                                </tr>
+                            </thead>
+                            <ng-container *ngIf="listToShow == null || listToShow.length == 0; then hideGrid1 else showGrid"></ng-container>
+                        </table>
+                        <ng-template #hideGrid1>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center" colspan="8">No se encontraron registros.</td>
+                                </tr>
+                            </tbody>
+                        </ng-template>
+                        <ng-template #showGrid>
+                            <tbody *ngFor="let item of listToShow">
+                                <tr>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.NID_SOAT_OPE }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SNRO_SINIESTRO }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SPRODUCTO }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SNRO_POLIZA }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SCERTIFICADO }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        {{ item.SFECHA_SINIESTRO }}
+                                    </td>
+                                    <td [ngClass]="item.SDET_ERROR ? 'data-table-tr-td text-center onHover' : 'null'" (click)="mostrarModalErrores(contentError, item);">
+                                        {{ item.SDET_ERROR }}
+                                    </td>
+                                    <td class="data-table-tr-td text-center">
+                                        <input type="checkbox" [(ngModel)]="item.IS_SELECTED" (change)="checkItem()" [disabled]="item.NSTA1_SOAT_OPE == 3 ? true : false" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </ng-template>
+                    </div>
+                </div>
+                <div [hidden]="!isLoading" class="loadingScreen">
+                    <div style="display: flex; height: 100%; width: 100%">
+                        <i style="margin: auto; font-size: 50px" class="fa fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+                <div *ngIf="listToShow != null && listToShow.length > 0" class="row" style="display: flex">
+                    <div class="col-sm-12">
+                        <ngb-pagination [(page)]="currentPage" [pageSize]="itemsPerPage" [collectionSize]="totalItems" [maxSize]="maxSize" (pageChange)="pageChanged(currentPage)">
+                            <ng-template ngbPaginationPrevious>ANTERIOR</ng-template>
+                            <ng-template ngbPaginationNext>SIGUIENTE</ng-template>
+                        </ngb-pagination>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- MODAL DE ERRORES -->
 <ng-template #contentError let-modal>

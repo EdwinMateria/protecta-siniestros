@@ -6,154 +6,166 @@
 </div>
 <div class="modal-body w-100">
     <div class="row">
-        <div class="col-sm-3 form-group">
-            <label>Póliza</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.nPolicy">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Certificado</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.nCertif">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Nro. de caso</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.nCaso">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Nro. de siniestro</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.nSiniestro">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header py-2">
+                    <h5>Datos del siniestro</h5>
+                </div>
+                <div class="card-body py-1">
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label>Nro. de caso</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.nCaso">
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Nro. de siniestro</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.nSiniestro">
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Certificado</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.nCertif">
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Póliza</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.nPolicy">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label>Fecha de ocurrencia</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled [(ngModel)]="fechaOcurrencia">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Hora de ocurrencia</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled [(ngModel)]="siniestro.sHoraOcurrencia">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Causa del siniestro</label>
+                            <select class="form-control" disabled [(ngModel)]="siniestro.nCausaSiniestro"> 
+                                <option *ngFor="let causa of causasSiniestro" [value]="causa.nCodCausa">{{causa.sDescript}}</option>
+                              </select>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Moneda</label>
+                            <input type="text" [value]="siniestro.nMoneda == 1 ? 'SOLES' : (siniestro.nMoneda == 2 ? 'DOLARES' : '')" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label>Fecha de denuncia</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled [(ngModel)]="fechaDenuncia">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Hora de recepción</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled [(ngModel)]="siniestro.sHoraRecepcion">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Fecha de apertura</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled [(ngModel)]="fechaApertura">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-3 form-group">
-            <label>Fecha de ocurrencia</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="fechaOcurrencia">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+    <div class="row mt-3">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header py-2">
+                    <h5>Datos del afectado</h5>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Hora de ocurrencia</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="siniestro.sHoraOcurrencia">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Causa del siniestro</label>
-            <select class="form-control" disabled [(ngModel)]="siniestro.nCausaSiniestro"> 
-                <option *ngFor="let causa of causasSiniestro" [value]="causa.nCodCausa">{{causa.sDescript}}</option>
-              </select>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Moneda</label>
-            <input type="text" class="form-control" disabled>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3 form-group">
-            <label>Fecha de denuncia</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="fechaDenuncia">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Hora de recepción</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="siniestro.sHoraRecepcion">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Fecha de apertura</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="fechaApertura">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                <div class="card-body py-1">
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <label>Afectado (siniestro)</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled [(ngModel)]="siniestro.sCliente">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Ocupante</label>
+                            <select class="form-control" disabled [(ngModel)]="siniestro.sTipOcupante">
+                                <option *ngFor="let ocupante of ocupantes" [value]="ocupante.codigo">{{ocupante.descript}}</option>
+                              </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label>Tipo de atención</label>
+                            <select class="form-control" disabled [(ngModel)]="siniestro.sTipAtencion">
+                                <option *ngFor="let atencion of atenciones" [value]="atencion.codigo">{{atencion.descript}}</option>
+                              </select>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Fecha de fallecido</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled [(ngModel)]="fechaFallecido">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Siniestro equivalente</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.sEquivSiniestro">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row" style="padding-top: 10px !important; border-top: 1px solid #ccc!important;">
-        <div class="col-sm-6 form-group">
-            <label>Afectado (siniestro)</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="siniestro.sCliente">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+    <div class="row mt-3" *ngIf="siniestro.nCodRechazo != 0">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header py-2">
+                    <h5>Datos del rechazo</h5>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Tipo de ocupante</label>
-            <select class="form-control" disabled [(ngModel)]="siniestro.sTipOcupante">
-                <option *ngFor="let ocupante of ocupantes" [value]="ocupante.codigo">{{ocupante.descript}}</option>
-              </select>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3 form-group">
-            <label>Tipo de atención</label>
-            <select class="form-control" disabled [(ngModel)]="siniestro.sTipAtencion">
-                <option *ngFor="let atencion of atenciones" [value]="atencion.codigo">{{atencion.descript}}</option>
-              </select>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Fecha de fallecido</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="fechaFallecido">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Siniestro equivalente</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="siniestro.sEquivSiniestro">
-        </div>
-    </div>
-    <!-- <div class="row">
-        <div class="col-sm-6 form-group">
-            <label>Beneficiario</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-search"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Siniestro equivalente</label>
-            <input type="text" class="form-control" disabled>
-        </div>
-    </div> -->
-    <!-- <div class="row">
-        <div class="col-sm-6 form-group">
-            <label>Observación</label>
-            <input type="text" class="form-control" disabled>
-        </div>
-    </div> -->
-    <div *ngIf="siniestro.nCodRechazo != 0" class="row" style="padding-top: 10px !important; border-top: 1px solid #ccc!important;">
-        <div class="col-sm-3 form-group">
-            <label>Motivo de rechazo</label>
-            <select class="form-control" disabled [(ngModel)]="siniestro.nCodRechazo">
-                <option *ngFor="let rechazo of listaRechazo"></option>
-              </select>
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Fecha de rechazo</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="fechaRechazo">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                <div class="card-body py-1">
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label>Motivo de rechazo</label>
+                            <select class="form-control" disabled [(ngModel)]="codRechazo">
+                                <option *ngFor="let rechazo of listaRechazo" [value]="rechazo.nCodRechazo">{{rechazo.sDescript}}</option>
+                              </select>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Fecha de rechazo</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled [(ngModel)]="fechaRechazo">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

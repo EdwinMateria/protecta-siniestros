@@ -1,12 +1,13 @@
-input[type="date"]::-webkit-calendar-picker-indicator {
-    background: transparent;
-    bottom: 0;
-    color: transparent;
-    cursor: pointer;
-    height: auto;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: auto;
+::ng-deep .my-class .modal-dialog { 
+    max-width: 80%;
 }
+
+.card-header{
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.typeahead-scrollbar .dropdown-menu {
+    max-height: 200px !important; /* Altura máxima para la lista de resultados */
+    overflow-y: auto !important; /* Agregar una barra de desplazamiento vertical si los resultados exceden la altura máxima */
+  }
