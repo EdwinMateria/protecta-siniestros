@@ -243,7 +243,7 @@ export class CargaMasivaComponent implements OnInit {
 
   checkAll = () => {
     for (var i = 0; i < this.listResults.length; i++) {
-      if (!this.listResults[i].SDET_ERROR) {
+      if (this.listResults[i].NSTA1_SOAT_OPE !== 3) {
         this.listResults[i].IS_SELECTED = this.booleanSelect;
       }
     }
@@ -367,7 +367,7 @@ export class CargaMasivaComponent implements OnInit {
                   this.isLoading = false;
                   Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
                   for (var i = 0; i < this.listResults.length; i++) {
-                    if (this.listResults[i].SDET_ERROR.length > 0) {
+                    if (this.listResults[i].NSTA1_SOAT_OPE == 3) {
                       this.booleanDisabled = true;
                     } else {
                       this.booleanDisabled = false;
@@ -464,7 +464,7 @@ export class CargaMasivaComponent implements OnInit {
                   this.isLoading = false;
                   Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
                   for (var i = 0; i < this.listResults.length; i++) {
-                    if (this.listResults[i].SDET_ERROR.length > 0) {
+                    if (this.listResults[i].NSTA1_SOAT_OPE == 3) {
                       this.booleanDisabled = true;
                     } else {
                       this.booleanDisabled = false;
@@ -585,7 +585,7 @@ export class CargaMasivaComponent implements OnInit {
                   this.isLoading = false;
                   Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
                   for (var i = 0; i < this.listResults.length; i++) {
-                    if (this.listResults[i].SDET_ERROR.length > 0) {
+                    if (this.listResults[i].NSTA1_SOAT_OPE == 3) {
                       this.booleanDisabled = true;
                     } else {
                       this.booleanDisabled = false;

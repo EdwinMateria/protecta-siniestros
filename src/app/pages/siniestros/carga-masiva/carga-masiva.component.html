@@ -157,7 +157,7 @@
                                     {{ item.SDET_ERROR }}
                                 </td>
                                 <td class="data-table-tr-td text-center">
-                                    <input type="checkbox" [(ngModel)]="item.IS_SELECTED" (change)="checkItem()" [disabled]="item.SDET_ERROR ? true : false" />
+                                    <input type="checkbox" [(ngModel)]="item.IS_SELECTED" (change)="checkItem()" [disabled]="item.NSTA1_SOAT_OPE == 3 ? true : false" />
                                 </td>
                             </tr>
                         </tbody>
