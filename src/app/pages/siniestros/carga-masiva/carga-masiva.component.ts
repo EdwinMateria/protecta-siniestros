@@ -9,6 +9,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CargaMasivaService } from 'src/app/core/services/carga-masiva/carga-masiva.service';
+import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
@@ -92,7 +93,8 @@ export class CargaMasivaComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    private CargaMasivaService: CargaMasivaService
+    private CargaMasivaService: CargaMasivaService,
+    public authProtectaService: AuthProtectaService
   ) { }
 
   ngOnInit(): void { }
@@ -107,6 +109,7 @@ export class CargaMasivaComponent implements OnInit {
 
   onFileChange = (evt: any) => {
     this.archivoNombre = null;
+    this.booleanSelect = false;
     this.data = null;
     this.dataSet = null;
     this.listToShow = null;
@@ -265,7 +268,9 @@ export class CargaMasivaComponent implements OnInit {
     this.ListDefinitivo.LIST = [];
     for (var i = 0; i < this.listResults.length; i++) {
       if (this.listResults[i].IS_SELECTED) {
-        this.listResults[i].USERCODE = JSON.parse(localStorage.getItem('currentUser')).id;
+        let cookie = this.authProtectaService.getCookie('AppSiniestro');
+        let codUsuario = this.authProtectaService.getValueCookie('CodUsu', cookie);
+        this.listResults[i].USERCODE = Number(atob(codUsuario));
         this.ListDefinitivo.LIST.push(this.listResults[i]);
       }
     }
@@ -278,6 +283,7 @@ export class CargaMasivaComponent implements OnInit {
 
   onLimpiar = () => {
     this.archivoNombre = null;
+    this.booleanSelect = false;
     this.data = null;
     this.dataSet = null;
     this.listToShow = null;
@@ -289,6 +295,7 @@ export class CargaMasivaComponent implements OnInit {
 
   onPreliminar = () => {
     this.isLoading = true;
+    this.booleanSelect = false;
     this.ListCabecera = {};
     this.ListCabecera.P_NREPORTE = this.codigo;
     if (this.codigo == 1) {
@@ -366,7 +373,7 @@ export class CargaMasivaComponent implements OnInit {
                   this.caux_soat_ope = this.listResults[0].CAUX_SOAT_OPE;
                   this.reporte_prel = false;
                   this.isLoading = false;
-                  Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
+                  Swal.fire('Información', 'Carga Preliminar exitosa.', 'success');
                   for (var i = 0; i < this.listResults.length; i++) {
                     if (this.listResults[i].NSTA1_SOAT_OPE == 3) {
                       this.booleanDisabled = true;
@@ -463,7 +470,7 @@ export class CargaMasivaComponent implements OnInit {
                   this.caux_soat_ope = this.listResults[0].CAUX_SOAT_OPE;
                   this.reporte_prel = false;
                   this.isLoading = false;
-                  Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
+                  Swal.fire('Información', 'Carga Preliminar exitosa.', 'success');
                   for (var i = 0; i < this.listResults.length; i++) {
                     if (this.listResults[i].NSTA1_SOAT_OPE == 3) {
                       this.booleanDisabled = true;
@@ -584,7 +591,7 @@ export class CargaMasivaComponent implements OnInit {
                   this.caux_soat_ope = this.listResults[0].CAUX_SOAT_OPE;
                   this.reporte_prel = false;
                   this.isLoading = false;
-                  Swal.fire('Información', 'Se procesaron los datos correctamente.', 'success');
+                  Swal.fire('Información', 'Carga Preliminar exitosa.', 'success');
                   for (var i = 0; i < this.listResults.length; i++) {
                     if (this.listResults[i].NSTA1_SOAT_OPE == 3) {
                       this.booleanDisabled = true;
@@ -623,7 +630,15 @@ export class CargaMasivaComponent implements OnInit {
         res => {
           if (res.Result.P_NCODE == 0) {
             this.isLoading = false;
-            Swal.fire('Información', res.Result.P_SMESSAGE, 'success');
+            this.archivoNombre = null;
+            this.booleanSelect = false;
+            this.data = null;
+            this.dataSet = null;
+            this.listToShow = null;
+            this.reporte_prel = true;
+            this.definitivo = true;
+            this.preliminar = true;
+            Swal.fire('Información', 'Carga Definitiva exitosa.', 'success');
           } else {
             this.isLoading = false;
             Swal.fire('Información', res.Result.P_SMESSAGE, 'error');
@@ -639,7 +654,15 @@ export class CargaMasivaComponent implements OnInit {
         res => {
           if (res.Result.P_NCODE == 0) {
             this.isLoading = false;
-            Swal.fire('Información', res.Result.P_SMESSAGE, 'success');
+            this.archivoNombre = null;
+            this.booleanSelect = false;
+            this.data = null;
+            this.dataSet = null;
+            this.listToShow = null;
+            this.reporte_prel = true;
+            this.definitivo = true;
+            this.preliminar = true;
+            Swal.fire('Información', 'Carga Definitiva exitosa.', 'success');
           } else {
             this.isLoading = false;
             Swal.fire('Información', res.Result.P_SMESSAGE, 'error');
@@ -655,7 +678,15 @@ export class CargaMasivaComponent implements OnInit {
         res => {
           if (res.Result.P_NCODE == 0) {
             this.isLoading = false;
-            Swal.fire('Información', res.Result.P_SMESSAGE, 'success');
+            this.archivoNombre = null;
+            this.booleanSelect = false;
+            this.data = null;
+            this.dataSet = null;
+            this.listToShow = null;
+            this.reporte_prel = true;
+            this.definitivo = true;
+            this.preliminar = true;
+            Swal.fire('Información', 'Carga Definitiva exitosa.', 'success');
           } else {
             this.isLoading = false;
             Swal.fire('Información', res.Result.P_SMESSAGE, 'error');
