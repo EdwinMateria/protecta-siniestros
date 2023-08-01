@@ -6,7 +6,7 @@ import { DatosCasoSiniestro } from '../models/Liquidacion.model';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { LiquidacionService } from 'src/app/core/services/liquidacion/liquidacion.service';
 import { SwalCarga } from 'src/app/core/swal-loading';
-import { Detalle, Movimiento, PendientePago } from '../models/GastoCuracionModel';
+import { Detalle, Movimiento, PendientePago, FiltroCaso, Lista_Siniestros } from '../models/GastoCuracionModel';
 //import * as internal from 'stream';
 
 @Component({
@@ -31,11 +31,15 @@ export class GastosCuracionComponent implements OnInit {
   pendientePagoInput = new PendientePago();
   openModal = false;
 
+  lst_siniestros: Lista_Siniestros[]=[];
+  FiltroCaso: FiltroCaso[]=[];
+
   constructor(private modalService: NgbModal,
               private service: LiquidacionService) { }
     
 
   ngOnInit(): void {
+    this.siniestro = "0";
     /*
     this.config.data = { Titulo: 'Generación de Factura de Abonos' };
     GASTOS DE CURACION
@@ -72,27 +76,50 @@ export class GastosCuracionComponent implements OnInit {
      })
      */
   }
+
   EventoBuscar(e){
     
-    //valor del input e.target.value
-    //if(e.keycode == 13){
-      this.buscadorMovimientos();
-    //}
+    ///valor del input e.target.value
+    ///if(e.keycode == 13){
+      //this.buscadorMovimientos();--ultimo comentado
+    ///}
 
-    //this.buscadorMovimientos();
+    ///this.buscadorMovimientos();  
+    
+    //e.target.value;
+    this.movimientos = [];
+    this.movimientosPago = [];
+    this.detalle = new Detalle();
+    this.lst_siniestros = [];
+    this.mostrarTable = false;
+    this.siniestro = "0";
+
+    const ncaso = (this.caso == "" ? "0" : this.caso );
+    this.FiltroCaso = [];
+    this.FiltroCaso[0] = { PCASENUM: parseInt(ncaso)} 
+
+    if (parseInt(ncaso) > 0){
+       this.RetornarListaSiniestros(this.FiltroCaso[0]);
+    }else{
+       this.lst_siniestros = [];
+       this.mostrarTable = false;
+       Swal.fire('Información','Debe ingresar un nro. caso válido.', 'warning');       
+    }
+
   }
 
-  buscadorMovimientos(){
+  buscadorMovimientos(scerrar : boolean){
     this.movimientos = [];
     this.movimientosPago = [];
     //if(this.caso.replace(/ /g, "") == "" || this.siniestro.replace(/ /g, "") == ""){
-    if(this.caso == "" || this.siniestro == ""){
-      Swal.fire('Información', 'Coloque el caso y el nro. de siniestro', 'warning');
+    if(this.siniestro == "0"){//this.caso == "" || 
+      //Swal.fire('Información', 'Coloque el caso y el nro. de siniestro', 'warning');
+      Swal.fire('Información', 'Seleccione el número de siniestro', 'warning');
       this.mostrarTable = false;
       this.detalle = new Detalle();
       return;
     }else{
-      SwalCarga();
+      //SwalCarga();
       const datosCasoSiniestro = new DatosCasoSiniestro();
       datosCasoSiniestro.ncase = this.caso;
       datosCasoSiniestro.nclaim = this.siniestro;
@@ -101,7 +128,9 @@ export class GastosCuracionComponent implements OnInit {
         s => {
           console.log(s);
           this.dataSourceLiquidacion = s;
-          Swal.close();
+          if (scerrar){
+           Swal.close();
+          }
 
           if (this.dataSourceLiquidacion.NCODERROR == "1"){
             Swal.fire('Error', this.dataSourceLiquidacion.SMESSAGEERROR, 'error');
@@ -120,7 +149,9 @@ export class GastosCuracionComponent implements OnInit {
             this.detalle.UIT = this.dataSourceLiquidacion.UIT;
             
             if (this.dataSourceLiquidacion.SSTACLAIM == "1" || this.dataSourceLiquidacion.SSTACLAIM == "5" || this.dataSourceLiquidacion.SSTACLAIM == "6" || this.dataSourceLiquidacion.SSTACLAIM == "7" || this.dataSourceLiquidacion.SSTACLAIM == "8"){ 
-               Swal.fire('No hay reserva pendiente por liquidar porque el estado del siniestro esta : ' + this.dataSourceLiquidacion.ESTADO_SINIESTRO);
+                if (scerrar){
+                Swal.fire('No hay reserva pendiente por liquidar porque el estado del siniestro esta : ' + this.dataSourceLiquidacion.ESTADO_SINIESTRO);
+                }
                this.mostrarTable = false;
                //this.detalle = new Detalle();
                return;
@@ -158,7 +189,9 @@ export class GastosCuracionComponent implements OnInit {
         },
         e => {
           console.log(e);
-          Swal.close();
+          if (scerrar){
+            Swal.close();
+          }
           //dialogRefLoad.close();
         });
     }
@@ -229,8 +262,8 @@ export class GastosCuracionComponent implements OnInit {
         modalRef.result.then((res) => {
 
           if(res== true ){ 
-            //this.buscadorMovimientos()
-            this.mostrarTable = false;
+            this.buscadorMovimientos(false)
+            //this.mostrarTable = false;
           }
       });
       }
@@ -239,6 +272,37 @@ export class GastosCuracionComponent implements OnInit {
 
   showModal(openSidebar:boolean){
     this.openModal = openSidebar
+  }
+
+  RetornarListaSiniestros(data : FiltroCaso){
+
+    this.service.RetornarListaSiniestros(data).subscribe(
+      s => {
+        
+        this.lst_siniestros = s;
+        console.log(this.lst_siniestros);
+        if (this.lst_siniestros.length > 0){
+            if(this.lst_siniestros.length == 1){   
+              this.siniestro = (this.lst_siniestros[0].NCODIGO).toString();   
+              SwalCarga();      
+              this.buscadorMovimientos(true);
+              this.mostrarTable = true;
+
+            }else{
+              //this.mostrarTable = false;
+              return;
+            }            
+        }else{
+          Swal.fire('Información','El caso ingresado no tiene siniestros pendientes por liquidar', 'warning');
+          //this.mostrarTable = false;
+          return;
+        }
+      },
+      e => {
+        console.log(e);
+        //dialogRefLoad.close();
+      });
+
   }
   
 }
