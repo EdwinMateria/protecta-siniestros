@@ -22,15 +22,25 @@
                                 <input class="form-control" [(ngModel)]="caso" type="number" (keyup.enter)="EventoBuscar($event)">
                             </div>
                             <div class="col-sm-3 form-group">
-                                <label>Nro. de siniestro</label>
-                                <input class="form-control" [(ngModel)]="siniestro" type="number" (keyup.enter)="EventoBuscar($event)">
+                                <label>Siniestro</label>
+                                <select class="form-control" (change)="buscadorMovimientos(true)" [(ngModel)]="siniestro">
+                                    <option  [value]="0">
+                                        SELECCIONE
+                                    </option>
+                                    <option *ngFor="let data of lst_siniestros" [value]="data.NCODIGO">
+                                        {{ data.SDESCRIPT }}
+                                    </option>
+                                </select>
+                                <!--<input class="form-control" [(ngModel)]="siniestro" type="number" (keyup.enter)="EventoBuscar($event)">-->
                             </div>
+                            <!--
                             <div class="col-sm-1" align="end">
                                 <p class="pb-0 mb-0" style="padding-top: 6px;">&nbsp;</p>
                                 <button class="btn btn-busqueda" (click)="buscadorMovimientos()">
                                     <i class="fa fa-search mr-1"></i> Buscar
                                 </button>
                             </div>
+                            -->
                         </div>
                         <div class="row mt-3">
                             <div class="col-sm-3 form-group">

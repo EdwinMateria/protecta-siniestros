@@ -11,7 +11,7 @@ export class Movimiento{
     DOCCURDAT: string;
     NROBENEF: number;
   }
-  
+
   export class Detalle{
     NCODERROR : string;
     SMESSAGEERROR : string;
@@ -241,3 +241,12 @@ export class Movimiento{
    vObserv : string;
    vReembolso: number;
   }
+
+export class FiltroCaso{    
+    PCASENUM : number;
+}
+
+ export class Lista_Siniestros{    
+    NCODIGO : number;
+    SDESCRIPT : string;
+ } 
