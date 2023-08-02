@@ -99,6 +99,7 @@ export class ReservaSiniestroComponent implements OnInit {
           this.siniestros = res;
           this.posicion = 0;
           this.posicionActual = 0;
+          this.disabledTodo = false;
           if (res.length == 1) {
             Swal.fire('Información', 'No se encontraron siniestros para el caso ingresado', 'warning');
             return;
@@ -118,10 +119,14 @@ export class ReservaSiniestroComponent implements OnInit {
     }
   }
 
+  openSelect(event: any){
+    console.log(event);
+    
+  }
+
   buscadorGlobal() {
     if (this.siniestro != 0) {
       SwalCarga();
-      this.disabledCobertura = false;
       this.datosAdicionales = [];
       let data = new ClaimCaseDataRequest();
       data.NCLAIM = this.siniestro;
@@ -173,9 +178,10 @@ export class ReservaSiniestroComponent implements OnInit {
     modalRef.componentInstance.edit = this.edit;
     modalRef.result.then((res) => {
       if (res != undefined) {
+
         this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NRESERVEAMOUNT = res.NMONTO;
         this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE = 0;
-        this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE =  this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE2 + res.NMONTO;
+        this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE = this.tipoMovimiento == "D" ? this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE2 - res.NMONTO : this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE2 + res.NMONTO;
         if (origen == 4) this.reservaCaso.LISTA_COVERCLAIM[this.posicion].SNROLETTER = res.SNROLETTER;
         this.disabledCobertura = true;
       } else {
@@ -264,6 +270,7 @@ export class ReservaSiniestroComponent implements OnInit {
   reserva(event: any, claim: ClaimDataCoverVM, i: number) {
     if (event.target.checked) {
 
+      this.edit = false;
       if(claim.NACCUMRESERVE == claim.NSUMINSURED){
         Swal.fire('Información', 'Cobertura no tiene saldo.','warning');
         const adElement = document.getElementById(`a${i}`) as HTMLInputElement;
