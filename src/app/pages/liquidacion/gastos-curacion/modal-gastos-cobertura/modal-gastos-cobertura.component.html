@@ -5,340 +5,364 @@
     </button>
 </div>
 <div class="modal-body w-100">
-    <div class="row">
-        <div class="col-sm-2 form-group">
-            <label>Caso</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="caso">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Siniestro</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="siniestro">
-        </div>
-        <div class="col-sm-2 form-group">
-            <label>Póliza</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="poliza">
-        </div>
-        <div class="col-sm-2 form-group">
-            <label>Placa</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="placa">
-        </div>
-        <div class="col-sm-3 form-group">
-            <label>Pendiente por pagar</label>
-            <input type="text" class="form-control" disabled [ngModel]="pendientePago | number:'1.2-2'" id="Txt_pendientePago">
-            <input type="text" class="form-control" disabled [(ngModel)]="pendientePagoCob" style="display: none;;">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-5 form-group">
-            <label>Siniestrado</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="siniestrado">
-        </div>
-        <div class="col-sm-2 form-group" style="display: none;">
-            <label>Fecha de Ocurrencia</label>
-            <div class="input-group">
-                <input type="date" class="form-control" disabled [(ngModel)]="fechaOcurrencia" id="Txt_fechaOcurrencia">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+    <div class="row mt-2">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header py-2">
+                    <h5>Datos</h5>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-2 form-group">
-            <label>Fecha de denuncia</label>
-            <div class="input-group">
-                <input type="date" class="form-control" disabled [(ngModel)]="fechaDenuncia" id="Txt_fechaDenuncia"> 
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-2 form-group">
-            <label>Fecha de apertura</label>
-            <div class="input-group">
-                <input type="date" class="form-control" disabled [(ngModel)]="fechaApertura" id="Txt_fechaApertura">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row" *ngIf="tipoCobertura != 1">
-        <div class="col-sm-5 form-group">
-            <label>Beneficiario</label>
-            <select class="form-control" (change)="cambioBeneficiario()" id="nomBeneficiarios" [(ngModel)]="CbonomBeneficiarios">
-                <option  [value]="0">
-                    Seleccionar Beneficiario
-                </option>
-                <option *ngFor="let benef of salidaBeneficiarios" [value]="benef.SCLIENT">
-                    {{ benef.SCLIENAME }}
-                </option>
-                <!--<option  [value]="'||0||||0.00|||0|0'">
-                    Seleccionar Beneficiario
-                </option>
-                <option *ngFor="let benef of salidaBeneficiarios" [value]=" benef.SCLIENT + '|' +  benef.SSHORT_DES + '|' + benef.DOCUMENTO + '|'  + benef.NBANKEXT + '|'+ benef.NOMBRE_BANCO + '|' + benef.SACCOUNT + '|' + benef.MONTO_PAGO + '|' + benef.DIAGNOSTICO + '|' + benef.ESPECIALIDAD + '|' + benef.CANT_FACTURAS + '|' + benef.MONTO_PAGO2">
-                    {{ benef.SCLIENAME }}
-                </option>-->
-                <!-- <option *ngFor="let benef of salidaBeneficiarios" [value]="benef.SSHORT_DES + '|' + benef.SCLIENT + '|' + benef.NOMBRE_BANCO + '|' + benef.SACCOUNT + '|' + benef.MONTO_PAGO + '|' + benef.NAMOUNT + '|' + benef.NBILL + '|' + benef.IGV + '|' + benef.TOTAL_COMP + '|' + benef.DIAGNOSTICO + '|' + benef.ESPECIALIDAD"> -->                  
-            </select>
-        </div>
-        <div class="col-sm-2 form-group">
-            <label>Tipo documento</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="tipoDocumento">
-        </div>
-        <div class="col-sm-2 form-group">
-            <label>Número documento</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="nroDocumento">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-5 form-group">
-            <label> Código de diagnóstico (CIE10)</label>
-            <div class="input-group">
-                <input type="text" class="form-control" disabled [(ngModel)]="codDiagnostico">
-                <input type="text" class="form-control" disabled [(ngModel)]="txtDiagnostico" style="width: 60%;">
-            </div>
-        </div>
-        <!-- <div class="col-sm-6 form-group">
-            <label>Diagnóstico (CIE10)</label>
-            <input type="text" class="form-control" disabled>
-        </div> -->
-        <div class="col-sm-5 form-group">
-            <label>Especialidad</label>
-            <input type="text" class="form-control" disabled [(ngModel)]="especialidad">
-        </div>
-        <div class="col-sm-2 form-group">
-            <label>Fecha fin de análisis</label>
-            <div class="input-group">
-                <input type="date" class="form-control" id="TxtFechaFinAnalisis"  [(ngModel)]="FechaFinAnalisis" > <!-- [formControl]="formfecha_analisis"  [ngClass]="{'is-invalid': formfecha_analisis.invalid && formfecha_analisis.touched}"-->
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-calendar" ></i></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="row">
-        <div class="col-sm-12"
-            style="padding-top: 10px !important; padding-bottom: 10px !important; border-top: 1px solid #ccc!important;">
-            <h3>Datos del pago</h3>
-        </div>
-    </div>
-    <div *ngIf="tipoCobertura == 2 || tipoCobertura == 3 || tipoCobertura == 4 || tipoCobertura == 5"> 
-        <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && cant_facturas > 0"> <!-- reembolso == 2-->
-            <div class="col-sm-3 form-group" *ngIf="(cant_facturas == 1 && salidaFacturas.length == 1)">
-                <label>Nro. de factura</label>
-                <input type="text" class="form-control" disabled [(ngModel)]="nroFactura" id="nroFactura">
-            </div>
-            <div class="col-sm-3 form-group" *ngIf="(cant_facturas >= 2  || salidaFacturas.length >= 2)">
-                <label>Nro. de factura</label>
-                <select class="form-control" (change)="cambioFactura()" id="CboFactura">
-                    <option  [value]="0">
-                        Seleccionar
-                    </option>
-                    <option *ngFor="let fact of salidaFacturas" [value]="fact.NUM_FACTURA">
-                        {{ fact.NUM_FACTURA }}
-                    </option>
-                <!--
-                    <option  [value]="'|||0.00|0.00|0.00|0.00'">
-                        Seleccionar
-                    </option>
-                    <option *ngFor="let fact of salidaFacturas" [value]="fact.NUM_FACTURA + '|' + fact.FECHAEMISIONFACTURA + '|' + fact.FECHARECEPCIONFACTURA + '|' + fact.BASE_IMPONIBLE+ '|' +  fact.IGV + '|' + fact.TOTAL_COMP + '|' + fact.TOTAL_PAGAR_FAC">
-                        {{ fact.NUM_FACTURA }}
-                    </option>
-                -->   
-                </select>
-            </div>
-            <div class="col-sm-3 form-group" *ngIf="baseImponible > 0">
-                <label>Fecha emisión de factura</label>
-                <div class="input-group">
-                    <input type="date" class="form-control" disabled [(ngModel)]="fechaEmisionFac">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3 form-group" *ngIf="baseImponible > 0">
-                <label>Fecha recepción de factura</label>
-                <div class="input-group">
-                    <input type="date" class="form-control" disabled [(ngModel)]="fechaRecibeFac">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && cant_facturas > 0 && baseImponible > 0"> <!--reembolso== 2-->
-            <div class="col-sm-3 form-group">
-                <label>Base imponible</label>
-                <input type="text" class="form-control" [ngModel]="baseImponible | number:'1.2-2'" disabled>
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>IGV</label>
-                <input type="text" class="form-control" [ngModel]="igv  | number:'1.2-2'" disabled>
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Total de comprobante</label>
-                <input type="text" class="form-control" [ngModel]="totalComprobante | number:'1.2-2'" disabled>
-            </div>  
-        </div>
-        <div class="row">
-            <div class="col-sm-3 form-group">
-                <label>Tipo de pago</label>              
-                <select class="form-control" (change)="cambioTipoPago()" [(ngModel)]="txttipopago" id="tipoPago" [formControl]="formtipopago" [ngClass]="{'is-invalid': formtipopago.invalid && formtipopago.touched}" >
-                    <option  [value]="0">
-                        Seleccionar
-                    </option>
-                    <option *ngFor="let data of tipoPago" [value]="data.id">
-                        {{ data.description }}
-                      </option>
-                </select>
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Forma de pago</label>
-                <select class="form-control" (change)="cambioFormaPago()" [(ngModel)]="txtformapago" id="formaPago" [formControl]="formformapago" [ngClass]="{'is-invalid': formformapago.invalid && formformapago.touched}">
-                    <option  [value]="0">
-                        Seleccionar
-                    </option>
-                    <option *ngFor="let data of formaPago" [value]="data.id">
-                        {{ data.description }}
-                      </option>
-                </select>
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Banco</label>
-                <input type="text" class="form-control" disabled [(ngModel)]="banco">
-                <input type="text" class="form-control" disabled [(ngModel)]="idBanco" id="idBanco" style="display: none;">
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Nro. de cuenta</label>
-                <input type="text" class="form-control" disabled [(ngModel)]="nroCuenta" id="TxtnroCuenta" >
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6 form-group">
-                <label>Observaciones</label>
-                <input type="text" class="form-control" id="TxtObservaciones" maxlength="30">
-            </div>
-            <div class="col-sm-3 form-group">
-                <label>Total a pagar</label>
-                <input type="number" [ngModel]=" totalFactura > 999 ? totalFactura : (totalFactura | number:'1.2-2') " class="form-control" id="totalPago" style="text-align: right;" [formControl]="formimporte" [ngClass]="{'is-invalid': formimporte.invalid && formimporte.touched}" >
-                <input type="number" [value]="PendPagoClient" class="form-control" id="Txt_PendPagoClient" style="text-align: right;display: none;">
-                <input type="number" [value]="pendpagofac" class="form-control" id="pendpagofac" style="text-align: right;display: none;">
-            </div>
-        </div>
-    </div>
-    <!-- <div *ngIf="tipoCobertura == 3 || tipoCobertura == 4">
-        <table class="table table-striped w-100 mt-2">
-            <thead>
-                <tr>
-                    <th scope="col">Beneficiario</th>
-                    <th scope="col">Documento</th>
-                    <th scope="col">Tipo de pago</th>
-                    <th scope="col">Banco</th>
-                    <th scope="col">Nro. de cuenta</th>
-                    <th scope="col">Observaciones</th>
-                    <th scope="col">Total a pagar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let movimiento of data">
-                    <td>
-                        {{movimiento.beneficiario}}
-                    </td>
-                    <td>
-                        DNI - 77666553
-                    </td>
-                    <td>
-                        <select class="form-control">
-                            <option>Transferencia</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control">
-                            <option>Banco de crédito</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input class="form-control" value="23456789">
-                    </td>
-                    <td>
-                        <input class="form-control">
-                    </td>
-                    <td>
-                        <span *ngIf="tipoCobertura == 3">{{movimiento.importe | number : '1.2-2' }}</span>
-                        <input *ngIf="tipoCobertura == 4" class="form-control">
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div> -->
-    <div *ngIf="tipoCobertura == 1" style="overflow-y: auto;max-height: 440px;">
-        <table class="table table-striped w-100 mt-2">
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col">N°</th>
-                    <th scope="col">Beneficiario</th>
-                    <th scope="col">Documento</th>
-                    <th scope="col">Tipo de pago</th>
-                    <th scope="col">Forma de pago</th>
-                    <th scope="col">Banco</th>
-                    <th scope="col">Nro. de cuenta</th>
-                    <th scope="col">Observaciones</th>
-                    <th scope="col">Total a pagar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let beneficiarios of salidaBeneficiariosMuerte; let i = index">                    
-                    <td>
-                        <div class="form-check">
-                            <input class="form-check-input position-static" type="checkbox" [(ngModel)]="beneficiarios.SELECT">
+                <div class="card-body py-1">
+                    <div class="row mt-3">
+                        <div class="col-sm-2 form-group">
+                            <label>Caso</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="caso">
                         </div>
-                    </td>
-                    <td>
-                        {{i + 1}}
-                    </td>
-                    <td>{{beneficiarios.SCLIENAME}}</td>
-                    <td>{{beneficiarios.SSHORT_DES}} - {{beneficiarios.DOCUMENTO}}</td>
-                    <td>
-                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_tipopago" ><!-- id="txt_tp_'+ beneficiarios.SCLIENT+'" -->
-                            <option  [value]="0">
-                                Seleccionar
-                            </option>
-                            <option *ngFor="let data of tipoPago" [value]="data.id">
-                                {{ data.description }}
-                              </option>
-                        </select>
-                    </td>
-                    <td>
-                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_formapago" (change)="cambioFormaPagoGrilla($event,beneficiarios.NBANKEXT,beneficiarios.SACCOUNT,i + 1)">
-                            <option  [value]="0">
-                                Seleccionar
-                            </option>
-                            <option *ngFor="let data of formaPago" [value]="data.id">
-                                {{ data.description }}
-                            </option>
-                        </select>
-                    </td>                    
-                    <td>
-                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NBANKEXT" style="display: none;">
-                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NOMBRE_BANCO">
-                    </td>                  
-                    <td><input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SACCOUNT"></td>  <!--[value]="beneficiarios.SACCOUNT">-->
-                    <td><input type="text" class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" maxlength="30" [(ngModel)]="beneficiarios.Observaciones"></td>
-                    <td>                        
-                        <input class="form-control" type="number" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.MONTO_PAGO">
-                        <input class="form-control" type="number" disabled [(ngModel)]="beneficiarios.MONTO_PAGO2" style="display: none;">
-                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SCLIENT" style="display: none;">
-                        <!--{{ beneficiarios.MONTO_PAGO | number : '1.2-2' }}-->                            
-                        <!--{{totalPagarMuerte | number : '1.2-2' }}-->
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        <div class="col-sm-3 form-group">
+                            <label>Siniestro</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="siniestro">
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label>Póliza</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="poliza">
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label>Placa</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="placa">
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label>Pendiente por pagar</label>
+                            <input type="text" class="form-control" disabled [ngModel]="pendientePago | number:'1.2-2'" id="Txt_pendientePago">
+                            <input type="text" class="form-control" disabled [(ngModel)]="pendientePagoCob" style="display: none;;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5 form-group">
+                            <label>Siniestrado</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="siniestrado">
+                        </div>
+                        <div class="col-sm-2 form-group" style="display: none;">
+                            <label>Fecha de Ocurrencia</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" disabled [(ngModel)]="fechaOcurrencia" id="Txt_fechaOcurrencia">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label>Fecha de denuncia</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" disabled [(ngModel)]="fechaDenuncia" id="Txt_fechaDenuncia"> 
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label>Fecha de apertura</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" disabled [(ngModel)]="fechaApertura" id="Txt_fechaApertura">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="tipoCobertura != 1">
+                        <div class="col-sm-5 form-group">
+                            <label>Beneficiario (*)</label>
+                            <select class="form-control" (change)="cambioBeneficiario()" id="nomBeneficiarios" [(ngModel)]="CbonomBeneficiarios">
+                                <option  [value]="0">
+                                    Seleccionar Beneficiario
+                                </option>
+                                <option *ngFor="let benef of salidaBeneficiarios" [value]="benef.SCLIENT">
+                                    {{ benef.SCLIENAME }}
+                                </option>
+                                <!--<option  [value]="'||0||||0.00|||0|0'">
+                                    Seleccionar Beneficiario
+                                </option>
+                                <option *ngFor="let benef of salidaBeneficiarios" [value]=" benef.SCLIENT + '|' +  benef.SSHORT_DES + '|' + benef.DOCUMENTO + '|'  + benef.NBANKEXT + '|'+ benef.NOMBRE_BANCO + '|' + benef.SACCOUNT + '|' + benef.MONTO_PAGO + '|' + benef.DIAGNOSTICO + '|' + benef.ESPECIALIDAD + '|' + benef.CANT_FACTURAS + '|' + benef.MONTO_PAGO2">
+                                    {{ benef.SCLIENAME }}
+                                </option>-->
+                                <!-- <option *ngFor="let benef of salidaBeneficiarios" [value]="benef.SSHORT_DES + '|' + benef.SCLIENT + '|' + benef.NOMBRE_BANCO + '|' + benef.SACCOUNT + '|' + benef.MONTO_PAGO + '|' + benef.NAMOUNT + '|' + benef.NBILL + '|' + benef.IGV + '|' + benef.TOTAL_COMP + '|' + benef.DIAGNOSTICO + '|' + benef.ESPECIALIDAD"> -->                  
+                            </select>
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label>Tipo documento</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="tipoDocumento">
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label>Número documento</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="nroDocumento">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5 form-group">
+                            <label> Código de diagnóstico (CIE10)</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled [(ngModel)]="codDiagnostico">
+                                <input type="text" class="form-control" disabled [(ngModel)]="txtDiagnostico" style="width: 60%;">
+                            </div>
+                        </div>
+                        <!-- <div class="col-sm-6 form-group">
+                            <label>Diagnóstico (CIE10)</label>
+                            <input type="text" class="form-control" disabled>
+                        </div> -->
+                        <div class="col-sm-5 form-group">
+                            <label>Especialidad</label>
+                            <input type="text" class="form-control" disabled [(ngModel)]="especialidad">
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label>Fecha fin de análisis</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="TxtFechaFinAnalisis"  [(ngModel)]="FechaFinAnalisis" > <!-- [formControl]="formfecha_analisis"  [ngClass]="{'is-invalid': formfecha_analisis.invalid && formfecha_analisis.touched}"-->
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar" ></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>    
+            </div>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12" align="end">
+    
+    <!--style="padding-top: 10px !important; padding-bottom: 10px !important; border-top: 1px solid #ccc!important;"-->
+    
+    <div class="row mt-2">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header py-2">
+                    <h5>Datos del pago</h5>
+                </div>
+            
+                <div class="card-body py-1">
+                    <div *ngIf="tipoCobertura == 2 || tipoCobertura == 3 || tipoCobertura == 4 || tipoCobertura == 5"> 
+                        <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && cant_facturas > 0"> <!-- reembolso == 2-->
+                            <div class="col-sm-3 form-group" *ngIf="(cant_facturas == 1 && salidaFacturas.length == 1)">
+                                <label>Nro. de factura (*)</label>
+                                <input type="text" class="form-control" disabled [(ngModel)]="nroFactura" id="nroFactura">
+                            </div>
+                            <div class="col-sm-3 form-group" *ngIf="(cant_facturas >= 2  || salidaFacturas.length >= 2)">
+                                <label>Nro. de factura (*)</label>
+                                <select class="form-control" (change)="cambioFactura()" id="CboFactura">
+                                    <option  [value]="0">
+                                        Seleccionar
+                                    </option>
+                                    <option *ngFor="let fact of salidaFacturas" [value]="fact.NUM_FACTURA">
+                                        {{ fact.NUM_FACTURA }}
+                                    </option>
+                                <!--
+                                    <option  [value]="'|||0.00|0.00|0.00|0.00'">
+                                        Seleccionar
+                                    </option>
+                                    <option *ngFor="let fact of salidaFacturas" [value]="fact.NUM_FACTURA + '|' + fact.FECHAEMISIONFACTURA + '|' + fact.FECHARECEPCIONFACTURA + '|' + fact.BASE_IMPONIBLE+ '|' +  fact.IGV + '|' + fact.TOTAL_COMP + '|' + fact.TOTAL_PAGAR_FAC">
+                                        {{ fact.NUM_FACTURA }}
+                                    </option>
+                                -->   
+                                </select>
+                            </div>
+                            <div class="col-sm-3 form-group" *ngIf="baseImponible > 0">
+                                <label>Fecha emisión de factura</label>
+                                <div class="input-group">
+                                    <input type="date" class="form-control" disabled [(ngModel)]="fechaEmisionFac">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 form-group" *ngIf="baseImponible > 0">
+                                <label>Fecha recepción de factura</label>
+                                <div class="input-group">
+                                    <input type="date" class="form-control" disabled [(ngModel)]="fechaRecibeFac">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="(tipoCobertura == 4 || tipoCobertura == 5) && cant_facturas > 0 && baseImponible > 0"> <!--reembolso== 2-->
+                            <div class="col-sm-3 form-group">
+                                <label>Base imponible</label>
+                                <input type="text" class="form-control" [ngModel]="baseImponible | number:'1.2-2'" disabled>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>IGV</label>
+                                <input type="text" class="form-control" [ngModel]="igv  | number:'1.2-2'" disabled>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>Total de comprobante</label>
+                                <input type="text" class="form-control" [ngModel]="totalComprobante | number:'1.2-2'" disabled>
+                            </div>  
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3 form-group">
+                                <label>Tipo de pago (*)</label>              
+                                <select class="form-control" (change)="cambioTipoPago()" [(ngModel)]="txttipopago" id="tipoPago" [formControl]="formtipopago" [ngClass]="{'is-invalid': formtipopago.invalid && formtipopago.touched}" >
+                                    <option  [value]="0">
+                                        Seleccionar
+                                    </option>
+                                    <option *ngFor="let data of tipoPago" [value]="data.id">
+                                        {{ data.description }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>Forma de pago (*)</label>
+                                <select class="form-control" (change)="cambioFormaPago()" [(ngModel)]="txtformapago" id="formaPago" [formControl]="formformapago" [ngClass]="{'is-invalid': formformapago.invalid && formformapago.touched}">
+                                    <option  [value]="0">
+                                        Seleccionar
+                                    </option>
+                                    <option *ngFor="let data of formaPago" [value]="data.id">
+                                        {{ data.description }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>Banco</label>
+                                <input type="text" class="form-control" disabled [(ngModel)]="banco">
+                                <input type="text" class="form-control" disabled [(ngModel)]="idBanco" id="idBanco" style="display: none;">
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>Nro. de cuenta</label>
+                                <input type="text" class="form-control" disabled [(ngModel)]="nroCuenta" id="TxtnroCuenta" >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <label>Observaciones</label>
+                                <input type="text" class="form-control" id="TxtObservaciones" maxlength="30">
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>Total a pagar <span *ngIf="baseImponible == 0">(*)</span></label>
+                                <input type="number" [ngModel]=" totalFactura > 999 ? totalFactura : (totalFactura | number:'1.2-2') " class="form-control" id="totalPago" style="text-align: right;" [formControl]="formimporte" [ngClass]="{'is-invalid': formimporte.invalid && formimporte.touched}" >
+                                <input type="number" [value]="PendPagoClient" class="form-control" id="Txt_PendPagoClient" style="text-align: right;display: none;">
+                                <input type="number" [value]="pendpagofac" class="form-control" id="pendpagofac" style="text-align: right;display: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div *ngIf="tipoCobertura == 3 || tipoCobertura == 4">
+                        <table class="table table-striped w-100 mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Beneficiario</th>
+                                    <th scope="col">Documento</th>
+                                    <th scope="col">Tipo de pago</th>
+                                    <th scope="col">Banco</th>
+                                    <th scope="col">Nro. de cuenta</th>
+                                    <th scope="col">Observaciones</th>
+                                    <th scope="col">Total a pagar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let movimiento of data">
+                                    <td>
+                                        {{movimiento.beneficiario}}
+                                    </td>
+                                    <td>
+                                        DNI - 77666553
+                                    </td>
+                                    <td>
+                                        <select class="form-control">
+                                            <option>Transferencia</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control">
+                                            <option>Banco de crédito</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" value="23456789">
+                                    </td>
+                                    <td>
+                                        <input class="form-control">
+                                    </td>
+                                    <td>
+                                        <span *ngIf="tipoCobertura == 3">{{movimiento.importe | number : '1.2-2' }}</span>
+                                        <input *ngIf="tipoCobertura == 4" class="form-control">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> -->
+                    <div *ngIf="tipoCobertura == 1" style="overflow-y: auto;max-height: 440px;">
+                        <table class="table table-striped w-100 mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">N°</th>
+                                    <th scope="col">Beneficiario</th>
+                                    <th scope="col">Documento</th>
+                                    <th scope="col">Tipo de pago (*)</th>
+                                    <th scope="col">Forma de pago (*)</th>
+                                    <th scope="col">Banco</th>
+                                    <th scope="col">Nro. de cuenta</th>
+                                    <th scope="col">Observaciones</th>
+                                    <th scope="col">Total a pagar (*)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let beneficiarios of salidaBeneficiariosMuerte; let i = index">                    
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input position-static" type="checkbox" [(ngModel)]="beneficiarios.SELECT">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{i + 1}}
+                                    </td>
+                                    <td>{{beneficiarios.SCLIENAME}}</td>
+                                    <td>{{beneficiarios.SSHORT_DES}} - {{beneficiarios.DOCUMENTO}}</td>
+                                    <td>
+                                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_tipopago" ><!-- id="txt_tp_'+ beneficiarios.SCLIENT+'" -->
+                                            <option  [value]="0">
+                                                Seleccionar
+                                            </option>
+                                            <option *ngFor="let data of tipoPago" [value]="data.id">
+                                                {{ data.description }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_formapago" (change)="cambioFormaPagoGrilla($event,beneficiarios.NBANKEXT,beneficiarios.SACCOUNT,i + 1)">
+                                            <option  [value]="0">
+                                                Seleccionar
+                                            </option>
+                                            <option *ngFor="let data of formaPago" [value]="data.id">
+                                                {{ data.description }}
+                                            </option>
+                                        </select>
+                                    </td>                    
+                                    <td>
+                                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NBANKEXT" style="display: none;">
+                                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NOMBRE_BANCO">
+                                    </td>                  
+                                    <td><input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SACCOUNT"></td>  <!--[value]="beneficiarios.SACCOUNT">-->
+                                    <td><input type="text" class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" maxlength="30" [(ngModel)]="beneficiarios.Observaciones"></td>
+                                    <td>                        
+                                        <input class="form-control" type="number" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.MONTO_PAGO">
+                                        <input class="form-control" type="number" disabled [(ngModel)]="beneficiarios.MONTO_PAGO2" style="display: none;">
+                                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SCLIENT" style="display: none;">
+                                        <!--{{ beneficiarios.MONTO_PAGO | number : '1.2-2' }}-->                            
+                                        <!--{{totalPagarMuerte | number : '1.2-2' }}-->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>    
+            </div> 
+        </div> 
+    </div> 
+
+    <div class="row mt-3">
+        <div class="col-sm-6">
+            <small>(*) Campos obligatorios</small>
+        </div>
+        <div class="col-sm-6" align="end">
             <!-- <button *ngIf="tipoCobertura == 1 || tipoCobertura == 2" class="btn btn-success mb-3">Guardar</button> -->
             <!-- <button *ngIf="tipoCobertura != 1 && tipoCobertura != 2" class="btn btn-success mb-3">Pagar</button> -->
             
