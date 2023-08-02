@@ -24,6 +24,7 @@ import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-sini
 import { DecimalesDirective } from './core/directive/decimales.directive';
 import { SiniestroIntercepInterceptor } from './core/services/interceptor/siniestro-intercep.interceptor';
 import { DecimalPipe } from './core/pipe/decimal.pipe';
+import { NumberMaxLengthDirective } from './core/directive/number-max-length.directive';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { DecimalPipe } from './core/pipe/decimal.pipe';
     ModalNuevoBeneficiarioComponent,
     ReaperturaSiniestroComponent,
     DecimalesDirective,
-    DecimalPipe
+    DecimalPipe,
+    NumberMaxLengthDirective
   ],
   imports: [
     BrowserModule,

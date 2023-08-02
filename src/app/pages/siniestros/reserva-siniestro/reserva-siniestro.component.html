@@ -34,6 +34,7 @@
                                     <option *ngFor="let sntro of siniestros" [value]="sntro.CODIGO" [disabled]="sntro.CODIGO == 0">
                                         {{sntro.DESCRIPCION}}</option>
                                 </select>
+                                <small *ngIf="disabledTodo" class="text-danger mb-0 pb-0">El siniestro se encuentra con estado : {{estadoSiniestro}}</small>
                             </div>
                             <div class="col-sm-3 form-group">
                                 <label>Póliza</label>
@@ -46,6 +47,10 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <label>Tipo - Nro Documento</label>
+                                <input class="form-control" disabled [(ngModel)]="reservaCaso.STYPE_NRO_DOC">
+                            </div>
                             <div class="col-sm-6 form-group">
                                 <label>Afectado</label>
                                 <input class="form-control" disabled [(ngModel)]="reservaCaso.SCLIENAME">
@@ -95,25 +100,23 @@
             <table class="table table-striped w-100">
                 <thead>
                     <tr>
-                        <th scope="col">Afectado</th>
-                        <th scope="col">Moneda</th>
                         <th scope="col">Cobertura</th>
-                        <th scope="col">UIT</th>
-                        <th align="end" scope="col">Suma asegurada</th>
-                        <th align="center" scope="col">Tipo movimiento</th>
-                        <th scope="col">Monto reserva</th>
-                        <th scope="col">Nro. de carta</th>
-                        <th align="end" scope="col">Reserva acumulada</th>
-                        <th align="center" scope="col">Datos adicionales</th>
-                        <th align="center" scope="col">Acciones</th>
+                        <th style="text-align: right;">UIT</th>
+                        <th style="text-align: center;">Moneda</th>
+                        <th style="text-align: right;">Suma asegurada</th>
+                        <th style="text-align: center;">Tipo movimiento</th>
+                        <th style="text-align: right;" scope="col">Monto reserva</th>
+                        <th style="text-align: right;" scope="col">Nro. de carta</th>
+                        <th style="text-align: right;" scope="col">Reserva acumulada</th>
+                        <th style="text-align: center;" scope="col">Datos adicionales</th>
+                        <th style="text-align: center;" scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let claim of reservaCaso.LISTA_COVERCLAIM; let i = index">
-                        <td>{{claim.SCLIENT}} - {{claim.SCLIENAME}}</td>
-                        <td>{{claim.SCURRDES}}</td>
                         <td style="white-space: nowrap">{{claim.NCOVER}} - {{claim.SDESCOVER}}</td>
-                        <td>{{claim.NDAMAGES}}</td>
+                        <td  align="end">{{claim.NDAMAGES}}</td>
+                        <td align="center">{{claim.SCURRDES}}</td>
                         <td align="end" class="mr-3">{{claim.NSUMINSURED | decimal}}</td>
                         <td>
                             <div class="form-group" align="center">
@@ -128,9 +131,6 @@
                                         <input type="radio" name="radio" [id]="'d'+i" value="D"
                                             [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2) || (claim.NCOVER == 1) || (claim.NFLAT_MOVE_TYPE == 0)" /> <i
                                             class="fa fa-arrow-down"></i>
-                                            <!-- <input type="radio" name="radio" [id]="'d'+i" value="D"
-                                            [disabled]="(disabledCobertura) || disabledTodo || (tipoTab == 2)" /> <i
-                                            class="fa fa-arrow-down"></i> -->
                                     </label>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                         <td align="end" class="mr-3">
                             {{claim.NRESERVEAMOUNT | decimal}}
                         </td>
-                        <td>
+                        <td align="end" class="mr-3">
                             {{claim.SNROLETTER}}
                         </td>
                         <td align="end" class="mr-3">
@@ -147,24 +147,29 @@
                         <td>
                             <div align="center" class="form-check" *ngIf="tipoTab == 1">
                                 <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]"
-                                    type="checkbox" (change)="reserva($event, claim.NCOVER, i, claim.SCLIENT)"
+                                    type="checkbox" (change)="reserva($event, claim, i)"
                                     [disabled]="(disabledCobertura  && posicion == i) || disabledTodo">
+                                <!-- <input class="form-check-input position-static" [(ngModel)]="datosAdicionales[i]" type="checkbox" (change)="deselect(i)" [disabled]="disabledCobertura  && posicion == i"> -->
                             </div>
                         </td>
                         <td>
-                            <button align="center" *ngIf="tipoTab == 1 && disabledCobertura && posicion == i"
-                                class="btn btn-danger mr-3" (click)="eliminarTablaTemporal(claim, i)"><i
-                                    class="fa fa-trash"></i></button>
-                            <button align="center" *ngIf="tipoTab == 2" class="btn btn-busqueda mr-3"
-                                (click)="openModalCobertura(claim.NCOVER)"><i class="fa fa-edit"></i></button>
+                            <div align="center">
+                                <button *ngIf="tipoTab == 1 && disabledCobertura && posicion == i" class="btn  btn-sm mr-2"
+                                    (click)="eliminarTablaTemporal(claim, i)"><i class="fa fa-trash fa-sm"></i></button>
+                                <button *ngIf="tipoTab == 1 && disabledCobertura && posicion == i" class="btn btn-sm mr-2"
+                                    (click)="editarTemporal(claim)"><i class="fa fa-edit fa-sm"></i></button>
+                            
+                                <button *ngIf="tipoTab == 2 && disabledTodo == false" class="btn btn-sm mr-2" (click)="openModalCobertura(claim.NCOVER)"><i
+                                        class="fa fa-edit fa-sm"></i></button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="row pb-4 mt-3">
+        <div class="row pb-4 mt-3 ">
             <div class="col-sm-12" align="end" *ngIf="tipoTab == 1">
-                <button class="btn btn-success" [disabled]="disabledTodo"
+                <button class="buttonN" [disabled]="disabledTodo"
                     (click)="guardarTablasDefinitivas()">Guardar</button>
             </div>
         </div>

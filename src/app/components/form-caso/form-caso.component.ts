@@ -253,37 +253,55 @@ export class FormCasoComponent implements OnInit {
   }
 
   rechazarSiniestro(numSiniestro:number){
-    Swal.fire({
-      title: 'Información',
-      text: "¿Deseas rechazar el caso del siniestro?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí',
-      cancelButtonText: 'No',
-      reverseButtons: true,
-      showCloseButton: true
-    }).then((result) => {
-      
-      if(result.isConfirmed){
-        this.declararActive = 'active'
-        this.modificarActive = ''
-        this.tituloTratamiento.emit(true);
-        this.formSiniestro.emit(3);
 
-        let cs = new CasosBM();
-        cs = this.casoBM;
-        cs.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
-        cs.Lista_Rechazos = this.casoIndex.Lista_Rechazos;
-        cs.nSiniestro = numSiniestro;
-        this.casoEmit.emit(cs)
-        this.stateTituloSiniestro = 3
-        this.tipoTab = 1;
+    let request =  new SiniestroBM();
+    request.nSiniestro = numSiniestro;
+    SwalCarga();
+    this.casoService.ValidateRechazo(request).subscribe(
+      res => {
+        Swal.close();
+        if(res.Message != "Ok"){
+          Swal.fire('Información', res.Message, 'warning');
+          return
+        }else{
+          Swal.fire({
+            title: 'Información',
+            text: "¿Deseas rechazar el caso del siniestro?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+            reverseButtons: true,
+            showCloseButton: true
+          }).then((result) => {
+            
+            if(result.isConfirmed){
+              this.declararActive = 'active'
+              this.modificarActive = ''
+              this.tituloTratamiento.emit(true);
+              this.formSiniestro.emit(3);
+      
+              let cs = new CasosBM();
+              cs = this.casoBM;
+              cs.Lista_CausaSiniestro = this.casoIndex.Lista_CausaSiniestro;
+              cs.Lista_Rechazos = this.casoIndex.Lista_Rechazos;
+              cs.nSiniestro = numSiniestro;
+              this.casoEmit.emit(cs)
+              this.stateTituloSiniestro = 3
+              this.tipoTab = 1;
+            }
+          })
+        }
+      },
+      err => {
+        Swal.close();
+        Swal.fire('Error',err,'error')
+        return;
       }
-    })
+    )
   }
 
   tabControl(index:number, stateTituloSiniestro?:number, nSiniestro?:number){
-    
     // 1: Declarar siniestro;
     // Tab = 1 ,  
     if(index == 1){
@@ -305,8 +323,6 @@ export class FormCasoComponent implements OnInit {
       this.casoEmit.emit(this.casoBM);
     }
     if(index == 2){
-
-      //Validacion caso
       let caso = new CasosBM;
       let valorInput = this.referencia.nativeElement.value as string;
       caso.nCaso = Number(valorInput);
@@ -349,9 +365,6 @@ export class FormCasoComponent implements OnInit {
           Swal.fire('Error',err,'error')
         }
       )
-
-
-      
       //this.tipoInputDate = true;
     }
   }

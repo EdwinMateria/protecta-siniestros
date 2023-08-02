@@ -23,7 +23,7 @@
             <div class="form-inline" *ngIf="data == 4">
                 <label>Tipo de atención: </label>
                 <select class="form-control ml-3" [formControl]="tipoAtencion" [ngClass]="{'is-invalid': tipoAtencion.invalid && tipoAtencion.touched}">
-                    <option *ngFor="let atencion of tiposAtencion" [value]="atencion.SCODIGO">{{atencion.SDESCRIPCION}}</option>
+                    <option *ngFor="let atencion of tiposAtencion" [value]="atencion.SCODIGO" [disabled]="atencion.SCODIGO == '0'">{{atencion.SDESCRIPCION}}</option>
                 </select>
             </div>
         </div>
@@ -37,14 +37,14 @@
                             <h5>Beneficiarios</h5>
                         </div>
                         <div class="p-2">
-                            <button [disabled]="(tab == 1 && data != 1 && beneficiarios.length == 1) || disabledBotones" class="btn btn-primary text-end float-end" align="end" (click)="openBeneficiario()"><i
-                                    class="fa fa-search"></i></button>
+                            <button [disabled]="(tab == 1 && data != 1 && beneficiarios.length == 1) || disabledBotones" class="btn btn-primary btn-sm" align="end" (click)="openBeneficiario()"><i
+                                    class="fa fa-search fa-sm"></i></button>
                         </div>
                     </div>
                 </div>
-                <div class="card-body py-1">
+                <div class="card-body py-1" [ngClass]="{'border_table': validadorTabla}">
                     <div class="table-responsive">
-                        <table class="table table-striped w-100">
+                        <table class="table table-striped w-100" >
                             <thead>
                                 <tr>
                                     <th scope="col">Código cliente</th>
@@ -89,10 +89,10 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER" maxlength="15">
+                                        <input type="number" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER" maxlength="15">
                                     </td>
                                     <td>
-                                        <button [disabled]="disabledBotones" class="btn btn-danger btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>
+                                        <button [disabled]="disabledBotones" class="btn btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -109,20 +109,20 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header py-2">
-                    <h5>Datos</h5>
+                    <h5>Datos generales</h5>
                 </div>
                 <div class="card-body py-1">
                     <div class="row mt-3">
-                        <div class="col-sm-8 form-group">
+                        <div class="col-sm-7 form-group">
                             <label>Diagnóstico (CIE10)</label>
                             <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" [value]="diagnosticoValue"
-                                [resultFormatter]="formatter" [inputFormatter]="formatter" />
+                                [resultFormatter]="formatter" [inputFormatter]="formatter"  [class.typeahead-scrollbar]="true"/>
                         </div>
                         <div class="col-sm-2 form-group" *ngIf="data != 1">
                             <label>Especialidad</label>
                             <input class="form-control" [(ngModel)]="dataReserva.SSPECIALTY">
                         </div>
-                        <div class="col-sm-2 form-group" *ngIf="data != 1 && data!=5">
+                        <div class="col-sm-3 form-group" *ngIf="data != 1 && data!=5">
                             <label>Complejidad Diagnostico</label>
                             <select class="form-control" [(ngModel)]="dataReserva.SDIAGNOSTICCOMPLEXITY">
                                 <option *ngFor="let combo of comboComplejidadDiagnostico$ | async" [value]="combo.SCODIGO"
@@ -134,18 +134,18 @@
                     <div class="row">
                         <div class="col-sm-3 form-group">
                             <label>Tramitador</label>
-                            <select class="form-control" [(ngModel)]="dataReserva.SPROCESSOR">
+                            <select class="form-control" [(ngModel)]="dataReserva.SPROCESSOR" (ngModelChange)="cambioTramitador()">
                                 <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO"
                                     [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
                             </select>
                         </div>
-                        <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-5 form-group">
+                        <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-4 form-group">
                             <label>Nombre del tramitador <span>(*)</span></label>
-                            <input class="form-control" placeholder="Nombre del tramitador" [(ngModel)]="dataReserva.SPROCESSORNAME">
+                            <input class="form-control" placeholder="Nombre del tramitador" [(ngModel)]="dataReserva.SPROCESSORNAME" [formControl]="nombreTramitador" [ngClass]="{'is-invalid': nombreTramitador.invalid && nombreTramitador.touched}">
                         </div>
                         <div *ngIf="dataReserva.SPROCESSOR == '1'" class="col-sm-3 form-group">
                             <label>Zona del tramitador <span>(*)</span> </label>
-                            <input class="form-control" placeholder="Zona del tramitador" [(ngModel)]="dataReserva.SPROCESSORZONE">
+                            <input class="form-control" placeholder="Zona del tramitador" [(ngModel)]="dataReserva.SPROCESSORZONE" [formControl]="zonaTramitador" [ngClass]="{'is-invalid': zonaTramitador.invalid && zonaTramitador.touched}">
                         </div>
                     </div>
                     <div *ngIf="data != 4 && data != 5">
@@ -234,18 +234,12 @@
                                     <label>Fecha derivación INR: </label>
                                     <div class="input-group">
                                         <input type="date" class="form-control" [(ngModel)]="fechaDerivacion">
-                                        <!-- <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                        </div> -->
                                     </div>
                                 </div>
                                 <div class="col-sm-3 form-group">
                                     <label>Fecha respuesta INR : </label>
                                     <div class="input-group">
                                         <input type="date" class="form-control" [(ngModel)]="fechaRespuesta">
-                                        <!-- <div class="input-group-append">
-                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -321,7 +315,7 @@
                         </div>
                         <div class="col-sm-3 form-group">
                             <label>Ruc: </label>
-                            <input type="text" class="form-control" [(ngModel)]="dataReserva.SRUC">
+                            <input type="number" class="form-control" [(ngModel)]="dataReserva.SRUC">
                         </div>
                     </div>
                     <div class="row">
@@ -338,7 +332,7 @@
                             <input type="number" class="form-control" disabled [(ngModel)]="dataReserva.NAMOUNTTOTAL">
                         </div>
                     </div>
-                    <div class="row mt-2">
+                    <div class="row mt-2 mb-2">
                         <div class="col-sm-3">
                             <div class="form-inline">
                                 <label>Afecta al IGV: </label>
@@ -356,8 +350,8 @@
 
     <div class="row mt-3">
         <div class="col-sm-12" align="end">
-            <button *ngIf="tab == 1" class="btn btn-success mb-2" (click)="guardarTablaTemporal()">Guardar</button>
-            <button [disabled]="disabledBotones" *ngIf="tab == 2" class="btn btn-success mb-2" (click)="editarTablaTemporal()">Guardar</button>
+            <button *ngIf="tab == 1" class="buttonN mb-2" (click)="guardarTablaTemporal()">Guardar</button>
+            <button [disabled]="disabledBotones" *ngIf="tab == 2" class="buttonN mb-2" (click)="editarTablaTemporal()">Guardar</button>
         </div>
     </div>
 </div>

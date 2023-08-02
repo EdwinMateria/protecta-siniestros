@@ -147,6 +147,7 @@ export class FormSiniestroComponent implements OnInit {
       siniestro.sCliente = this.sCliente;
       siniestro.nCodRechazo = Number(this.eliminarSiniestro);
       siniestro.nSiniestro = Number(this.nSiniestro);
+      siniestro.dFecApertura = this.form.controls['dFecApertura'].value;
 
       let faper = (this.form.controls['dFecApertura'].value).split("/")
       siniestro.dFecApertura = this.datePipe.transform(new Date(faper[2], faper[1] - 1, faper[0]), 'yyyy-MM-dd');
@@ -194,8 +195,7 @@ export class FormSiniestroComponent implements OnInit {
       this.form.controls['nsiniestro'].setValue("0");
       //this.form.controls['dFecApertura'].setValue(this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
       let faper = (this.form.controls['dFecApertura'].value).split("/")
-      console.log(faper[2], faper[1], faper[0]);
-      
+
       siniestroBM = {
         ...this.form.getRawValue(),
         nCaso : this.casoBM.nCaso,

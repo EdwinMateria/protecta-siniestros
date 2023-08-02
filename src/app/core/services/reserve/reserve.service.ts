@@ -29,6 +29,8 @@ import { ClaimUpdateDatAddRequestBM } from '../../models/claimUpdateDatAddReques
 import { CombosGenericoVM } from '../../models/caso';
 import { ClaimBenefValidRequest } from '../../models/claimBenefValidRequest';
 import { ClaimBenefValidResponseVM } from '../../models/claimBenefValidResponse';
+import { ClaimBeneficiariesShowRequest } from '../../models/claimBeneficiariesShowRequest';
+import { ClaimBeneficiariesShowResponse } from '../../models/claimBeneficiariesShowResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -143,6 +145,13 @@ export class ReserveService {
   public GetRmv(data: ClaimRmvRequest): Observable<ClaimRmvResponse[]> {
     const body = JSON.stringify(data);
     return this.http.post<ClaimRmvResponse[]>(this.Url + '/Reserve/GetRmv', body, {
+      headers: this.headers,
+    });
+  }
+
+  public GetBeneficiariesShowCover(data: ClaimBeneficiariesShowRequest): Observable<ClaimBeneficiariesShowResponse> {
+    const body = JSON.stringify(data);
+    return this.http.post<ClaimBeneficiariesShowResponse>(this.Url + '/Reserve/GetBeneficiariesShowCover', body, {
       headers: this.headers,
     });
   }

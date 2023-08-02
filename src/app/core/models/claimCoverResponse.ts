@@ -7,6 +7,7 @@ export class ClaimDataCoverVM{
     SCLIENAME       :   string;
     NSUMINSURED     :   number;
     NACCUMRESERVE   :   number;
+    NACCUMRESERVE2   :   number;
     NMODULEC        :   number;
     NCURRENCY       :   number;
     NRESERVEAMOUNT  :   number;
@@ -32,5 +33,6 @@ export class ClaimCoverResponse{
     SKEY            :   string;
     SMOVETYPE       :   string;
     NFLAT_MOVE_TYPE :   number;
+    STYPE_NRO_DOC   :   string;
     LISTA_COVERCLAIM:   ClaimDataCoverVM[]   
 }
