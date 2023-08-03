@@ -19,6 +19,7 @@ export class ClaimCoverResponse{
     NCERTIF         :   number;
     SCLIENAME       :   string;
     DOCCURDAT       :   string;
+    DDECLADAT       :   string;
     HORAOCURRENCIA  :   string;
     UIT             :   number;
     STIPOATENCION   :   string;
