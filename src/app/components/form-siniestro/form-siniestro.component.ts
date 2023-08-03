@@ -310,7 +310,7 @@ export class FormSiniestroComponent implements OnInit {
   }
 
   openBeneficiario(){
-    const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
+    const modalRef = this.modalService.open(ModalBeneficiarioComponent, { windowClass: "my-class", backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;
     modalRef.componentInstance.origen = 1;  
     modalRef.result.then((benef) => {

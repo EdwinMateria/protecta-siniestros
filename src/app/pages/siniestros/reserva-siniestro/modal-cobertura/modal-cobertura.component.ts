@@ -85,6 +85,7 @@ export class ModalCoberturaComponent implements OnInit {
 
   diagnosticoValue = "";
   tiposAtencion : ClaimComboResponse[]=[];
+  disabledReembolso = false;
 
 	search = (text$: Observable<string>) =>
 		text$.pipe(
@@ -127,10 +128,13 @@ export class ModalCoberturaComponent implements OnInit {
           if(this.data != 1 && this.data != 5 && res.NFLAT_SCLIENT == 1){
             this.sclient = res.SCLIENT;
             this.obtenerCliente();
-          }
-          if(this.data != 1 && res.NFLAT_SCLIENT == 2){
-            this.sclient = res.SCLIENT;
-            this.obtenerCliente();
+          }else{
+            if(this.data != 1 && res.NFLAT_SCLIENT == 2){
+              this.sclient = res.SCLIENT;
+              this.obtenerCliente();
+            }else{
+              this.dataReserva.SREFUND = "0";
+            }
           }
         },
         err => {
@@ -164,9 +168,21 @@ export class ModalCoberturaComponent implements OnInit {
         if (res.ListBeneficiaries[0].SBANK == "") res.ListBeneficiaries[0].SBANK = "0";
 
         this.beneficiarios.push(res.ListBeneficiaries[0])
+
+        if(this.data == Cobertura.Gastos_Medicos && res.ListBeneficiaries[0].SDOCUMENTTYPE != "RUC"){
+          this.dataReserva.SREFUND = "1"
+        }else{
+          if(this.data == Cobertura.Gastos_Medicos && res.ListBeneficiaries[0].SDOCUMENTTYPE == "RUC"){
+            this.dataReserva.SREFUND = "2"
+          }
+        }
+
         if (this.beneficiarios.length == 1) {
           this.obtenerBancos()
         }
+        console.log(res.ListBeneficiaries[0]);
+        
+
       }, err => {
         Swal.close();
         Swal.fire('Error', err, 'error');
@@ -353,7 +369,6 @@ export class ModalCoberturaComponent implements OnInit {
       this.dataReserva.SAFFECTIGV = "1";
 
       if(this.data == Cobertura.Gastos_Medicos) {
-        this.dataReserva.SREFUND = '0';
         this.reserveService.GetComboTipoAtencion().subscribe(
           res => {
             this.tiposAtencion = res;
@@ -552,6 +567,16 @@ export class ModalCoberturaComponent implements OnInit {
             if(this.beneficiarios.length == 1){
               this.obtenerBancos()
             }
+
+            if(this.data == Cobertura.Gastos_Medicos){
+              let benef = this.beneficiarios[0].SDOCUMENTTYPE;
+              if(benef == 'RUC'){
+                this.dataReserva.SREFUND = '2'
+              }else{
+                this.dataReserva.SREFUND = '1'
+              }
+            }
+
             }else{
               Swal.close();
               Swal.fire('Información', res.SRESULT, 'warning');
@@ -570,6 +595,12 @@ export class ModalCoberturaComponent implements OnInit {
   borrarBeneficiario(i:number, sclient?:any){
     if(this.tab == 1){
       this.beneficiarios.splice(i,1);
+
+      if(this.beneficiarios.length == 0 && this.data == Cobertura.Gastos_Medicos){
+        this.dataReserva.SREFUND = "0";
+        this.disabledReembolso = false;
+      }
+
     }else{
       let clientDelete = this.listCodeBeneficiarios.find(x => x == sclient);
       if(!clientDelete){
@@ -988,5 +1019,37 @@ export class ModalCoberturaComponent implements OnInit {
 
   }
 
+  changeReembolso(){
+    if(this.beneficiarios.length == 0 && (this.dataReserva.SREFUND == '1' || this.dataReserva.SREFUND == '2')){
+
+      Swal.fire({
+        title: 'Información',
+        text: 'Debe elegir un beneficiario.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.dataReserva.SREFUND = '0';
+          return;
+        }
+      })
+    }
+
+    let benef = this.beneficiarios[0].SDOCUMENTTYPE;
+
+    if( benef == 'RUC' && this.dataReserva.SREFUND == '1' ){
+      Swal.fire('Información','Se selecciono Reembolso SI.El tipo de documento no puede ser RUC.','warning');
+      this.disabledReembolso = true;
+    }else{
+      if(benef != 'RUC' && this.dataReserva.SREFUND == '2'){
+        Swal.fire('Información','Se selecciono Reembolso NO.El tipo de documento tiene que ser RUC.','warning');
+        this.disabledReembolso = true;
+      }else{
+        this.disabledReembolso = false;
+      }
+    }
+
+  }
 
 }

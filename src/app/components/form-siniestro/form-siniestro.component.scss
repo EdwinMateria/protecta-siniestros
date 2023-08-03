@@ -2,6 +2,11 @@
     background-color: white !important
 }
 
+::ng-deep .my-class .modal-dialog { 
+    max-width: 80%;
+}
+
+
 .btn-danger:hover {
     background-color: #dc3545;
 }
