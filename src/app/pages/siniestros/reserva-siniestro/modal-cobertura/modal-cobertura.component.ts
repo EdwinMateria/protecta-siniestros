@@ -114,6 +114,8 @@ export class ModalCoberturaComponent implements OnInit {
 
     if(this.tab == 2){
       this.obtenerReservaDefinitiva();
+    }else{
+      this.dataReserva.SINR_REFERRAL = "2";
     }
 
     if(this.tab == 1 && !this.edit){
@@ -234,7 +236,7 @@ export class ModalCoberturaComponent implements OnInit {
               NCODBENEFICIARYTYPE : benef.NCODBENEFICIARYTYPE.toString(),
               SCOVER_DESC : this.data,
               SBANK : benef.NBANK_CODE.toString(),
-              SACCOUNTNUMBER :  benef.SACCOUNT,
+              SACCOUNTNUMBER :  benef.SACCOUNT.trim(),
               NCODDOCUMENTTYPE : benef.NTYPCLIENTDOC.toString()
             })
             this.listCodeBeneficiarios.push(benef.SCLIENT);
@@ -702,7 +704,7 @@ export class ModalCoberturaComponent implements OnInit {
     this.dataReserva.NUITAMOUNT = this.reservaCaso.UIT;
     this.dataReserva.NAMOUNT = claimData.NSUMINSURED;
     this.dataReserva.SMOVETYPE = this.reservaCaso.SMOVETYPE;
-    if(this.data == Cobertura.Muerte) this.dataReserva.NRESERVEAMOUNT = claimData.NSUMINSURED;
+    if(this.data == Cobertura.Muerte) this.dataReserva.NRESERVEAMOUNT = claimData.NSUMINSURED - claimData.NACCUMRESERVE;
     this.dataReserva.SKEY = this.reservaCaso.SKEY;
     this.dataReserva.NCASE = Number(this.reservaCaso.NCASE_NUM);
     this.dataReserva.NCLAIM = Number(this.reservaCaso.NCLAIM);
@@ -791,8 +793,16 @@ export class ModalCoberturaComponent implements OnInit {
     }
 
     if(this.data == Cobertura.Incapacidad_Temporal || this.data == Cobertura.Invalidez_Permanente){
-      this.dataReserva.DINR_REFERRALDATE =  this.datePipe.transform(this.fechaDerivacion, 'dd/MM/yyyy')
-      this.dataReserva.DINR_RESPONSEDATE = this.datePipe.transform(this.fechaRespuesta, 'dd/MM/yyyy')
+
+      if(this.dataReserva.SINR_REFERRAL == "1"){
+        this.dataReserva.DINR_REFERRALDATE =  this.datePipe.transform(this.fechaDerivacion, 'dd/MM/yyyy')
+        this.dataReserva.DINR_RESPONSEDATE = this.datePipe.transform(this.fechaRespuesta, 'dd/MM/yyyy')
+      }else{
+        this.dataReserva.DINR_REFERRALDATE = null;
+        this.dataReserva.DINR_RESPONSEDATE = null;
+        this.dataReserva.SINR_FILENUMBER = "";
+      }
+
     }
 
     if(this.dataReserva.SPROCESSOR == "1"){
@@ -927,10 +937,19 @@ export class ModalCoberturaComponent implements OnInit {
     reservaUpdate.SIPRESS_AT = this.dataReserva.SATENTIONIPRESS;
 
     if(this.data == Cobertura.Incapacidad_Temporal || this.data == Cobertura.Invalidez_Permanente){
-      reservaUpdate.FDERIVATION =  this.datePipe.transform(this.fechaDerivacion, 'dd/MM/yyyy')
-      reservaUpdate.FANSWER = this.datePipe.transform(this.fechaRespuesta, 'dd/MM/yyyy')
-      reservaUpdate.SDERIVATIONINR = this.dataReserva.SINR_REFERRAL;
-      reservaUpdate.SPROCEEDING = this.dataReserva.SINR_FILENUMBER
+
+      if(this.dataReserva.SINR_REFERRAL == "1" ){
+        reservaUpdate.FDERIVATION =  this.datePipe.transform(this.fechaDerivacion, 'dd/MM/yyyy')
+        reservaUpdate.FANSWER = this.datePipe.transform(this.fechaRespuesta, 'dd/MM/yyyy')
+        reservaUpdate.SDERIVATIONINR = this.dataReserva.SINR_REFERRAL;
+        reservaUpdate.SPROCEEDING = this.dataReserva.SINR_FILENUMBER
+      }else{
+        reservaUpdate.FDERIVATION =  null
+        reservaUpdate.FANSWER = null
+        reservaUpdate.SDERIVATIONINR = this.dataReserva.SINR_REFERRAL;
+        reservaUpdate.SPROCEEDING = ""
+      }
+
     }
 
     if(this.beneficiarios.length > 0){
