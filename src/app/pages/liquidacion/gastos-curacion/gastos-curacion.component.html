@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-sm-3 form-group">
                                 <label>Siniestro</label>
-                                <select class="form-control" (change)="buscadorMovimientos(true)" [(ngModel)]="siniestro">
+                                <select class="form-control" (change)="buscadorMovimientos(true)" [(ngModel)]="siniestro" id="cboSiniestro">
                                     <option  [value]="0">
                                         SELECCIONE
                                     </option>
@@ -57,11 +57,11 @@
                                 </div>
                             </div>
                             <div class="col-sm-3 form-group">
-                                <label>Hora de ocurrencia</label>
+                                <label>Fecha de ocurrencia</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" [(ngModel)]="detalle.HORAOCURRENCIA" disabled>
                                     <div class="input-group-append">
-                                        <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -88,12 +88,12 @@
                     <tr>
                     <th scope="col" ></th>
                     <th scope="col">Nro. Siniestro</th>
-                    <th scope="col">Nro. Cobertura</th>
+                    <th scope="col" style="text-align: center;">Nro. Cobertura</th>
                     <th scope="col">Cobertura</th>
                     <th align="end" scope="col">Importe</th>
                     <!--<th scope="col" style="text-align: center;">Importe Cobertura</th>-->
                     <th scope="col" style="text-align: center;">Cant. Beneficiarios</th>
-                    <th scope="col">Dato Adicional</th>
+                    <th scope="col" style="text-align: center;">Dato Adicional</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="mostrarTable">
@@ -106,12 +106,12 @@
                         <!--<td>{{i+1}}</td>-->
                         <!--<td></td>-->
                         <td >{{movimiento.NCLAIM}}</td>
-                        <td>{{movimiento.NCOVER}}</td>
+                        <td align="center">{{movimiento.NCOVER}}</td>
                         <td style="white-space: nowrap">{{movimiento.DESC_COBERTURA}}</td>
                         <td align="end" class="mr-3">{{movimiento.PAGOS_PEND_BENEF | number:'1.2-2'}}</td>
                         <!--<td style="text-align: right;">{{movimiento.PENDIENTES | number:'1.2-2'}}</td>-->
                         <td align="center">{{movimiento.NROBENEF}}</td>
-                        <td>{{movimiento.DATO_ADICIONAL}}</td>
+                        <td align="end">{{movimiento.DATO_ADICIONAL}}</td>
                     </tr>
                 </tbody>
             </table>
