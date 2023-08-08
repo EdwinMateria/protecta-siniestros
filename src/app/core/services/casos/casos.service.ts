@@ -28,7 +28,7 @@ export class CasosService {
     //const body = JSON.stringify(data);
     return this.http.post<any>(this.Url + '/CasosManager/ValidateCase', casos);
   }
-
+  
   public GetProvincias(nDepartamento: number): Observable<CombosGenericoVM[]> {
     return this.http.get<CombosGenericoVM[]>(this.Url + '/CasosManager/GetProvincias?nDepartamento='+ nDepartamento, {
       headers: this.headers
@@ -110,6 +110,10 @@ export class CasosService {
     return this.http.get<AutocompleteBE[]>(this.Url + '/CasosManager/Delegaciones?sDeleg='+ delegacion, {
       headers: this.headers
     });
+  }
+
+  public ValidateRechazo(data: any): Observable<any> {
+    return this.http.post<any>(this.Url + '/CasosManager/ValidateRechazo', data);
   }
 
   transformDate(date) {

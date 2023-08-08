@@ -282,13 +282,13 @@
                 <small>(*) Campos obligatorios</small>
             </div>
             <div class="col-sm-6" align="end">
-                <button class="btn btn-success mb-3" (click)="saveCaso()">Guardar</button>
+                <button class="buttonN mb-3" (click)="saveCaso()">Guardar</button>
             </div>
         </div>
         <div class="row" *ngIf="tipoTab == 2">
             <div class="col-sm-12" align="end">
-                <button class="btn mr-2 mb-3" (click)="opcionVolver()">Cancelar</button>
-                <button class="btn btn-success mb-3" (click)="editarCaso()">Guardar</button>
+                <button class="buttonN mr-2 mb-3" (click)="opcionVolver()">Cancelar</button>
+                <button class="buttonN mb-3" (click)="editarCaso()">Guardar</button>
             </div>
         </div>
         <!-- RECHAZAR -->
@@ -320,9 +320,9 @@
                             <td>{{siniestro.dFecApertura | date: 'dd/MM/yyyy'}}</td>
                             <td>{{siniestro.dFecRechazo | date: 'dd/MM/yyyy'}}</td>
                             <td>
-                                <button class="btn btn-sm btn-primary mr-3" (click)="consultaSiniestro(siniestro.nSiniestro)"><i class="fa fa-eye"></i></button>
-                                <button *ngIf="siniestro.dFecRechazo == null" class="btn btn-sm btn-success mr-3" (click)="tabControl(1, 1, siniestro.nSiniestro)"><i class="fa fa-edit"></i></button>
-                                <button *ngIf="siniestro.dFecRechazo == null" class="btn btn-sm btn-danger"  (click)="rechazarSiniestro(siniestro.nSiniestro)"><i class="fa fa-close"></i></button>
+                                <button class="btn btn-sm mr-3" (click)="consultaSiniestro(siniestro.nSiniestro)"><i class="fa fa-eye"></i></button>
+                                <button *ngIf="siniestro.dFecRechazo == null" class="btn btn-sm mr-3" (click)="tabControl(1, 1, siniestro.nSiniestro)" style="min-width: 35px !important"><i class="fa fa-edit py-0 py-0"></i></button>
+                                <button *ngIf="siniestro.dFecRechazo == null" class="btn btn-sm"  (click)="rechazarSiniestro(siniestro.nSiniestro)" style="min-width: 35px !important"><i class="fa fa-close"></i></button>
                             </td>
                           </tr>
                         </tbody>
