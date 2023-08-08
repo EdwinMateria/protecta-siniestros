@@ -123,7 +123,7 @@
                             <input class="form-control" [(ngModel)]="dataReserva.SSPECIALTY">
                         </div>
                         <div class="col-sm-3 form-group" *ngIf="data != 1 && data!=5">
-                            <label>Complejidad Diagnostico</label>
+                            <label>Complejidad Diagnóstico</label>
                             <select class="form-control" [(ngModel)]="dataReserva.SDIAGNOSTICCOMPLEXITY">
                                 <option *ngFor="let combo of comboComplejidadDiagnostico$ | async" [value]="combo.SCODIGO"
                                     [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
@@ -221,22 +221,22 @@
                                 <div class="col-sm-3 form-group">
                                     <label>Derivación al INR: </label>
                                     <select class="form-control" [(ngModel)]="dataReserva.SINR_REFERRAL">
-                                        <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO">{{combo.SDESCRIPCION}}</option>
+                                        <option *ngFor="let combo of comboGeneral$ | async" [value]="combo.SCODIGO" [disabled]="combo.SCODIGO == '0'">{{combo.SDESCRIPCION}}</option>
                                     </select>
                                 </div>
                 
-                                <div class="col-sm-2 form-group">
+                                <div class="col-sm-2 form-group" *ngIf="dataReserva.SINR_REFERRAL == '1'">
                                     <label>Nro expediente INR: </label>
                                     <input type="text" class="form-control" [(ngModel)]="dataReserva.SINR_FILENUMBER">
                                 </div>
                 
-                                <div class="col-sm-3 form-group">
+                                <div class="col-sm-3 form-group" *ngIf="dataReserva.SINR_REFERRAL == '1'">
                                     <label>Fecha derivación INR: </label>
                                     <div class="input-group">
                                         <input type="date" class="form-control" [(ngModel)]="fechaDerivacion">
                                     </div>
                                 </div>
-                                <div class="col-sm-3 form-group">
+                                <div class="col-sm-3 form-group" *ngIf="dataReserva.SINR_REFERRAL == '1'">
                                     <label>Fecha respuesta INR : </label>
                                     <div class="input-group">
                                         <input type="date" class="form-control" [(ngModel)]="fechaRespuesta">
@@ -311,7 +311,7 @@
                         </div>
                         <div *ngIf="data == 4" class="col-sm-3 form-group">
                             <label>Red de IPRESS </label>
-                            <input type="text" class="form-control" [(ngModel)]="dataReserva.SRED_IPRESS" maxlength="3">
+                            <input type="number" class="form-control" [(ngModel)]="dataReserva.SRED_IPRESS" maxlength="3">
                         </div>
                         <div class="col-sm-3 form-group">
                             <label>Ruc: </label>
