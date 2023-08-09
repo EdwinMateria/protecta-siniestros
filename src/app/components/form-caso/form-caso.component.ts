@@ -480,7 +480,10 @@ export class FormCasoComponent implements OnInit {
                 this.casoBM.nCertif = 0;
                 this.casoBM.sHoraOcurrencia = this.form.controls['sHoraOcurrencia'].value;
                 this.casoBM.nCausaSiniestro = this.form.controls['nCausaSiniestro'].value;
-                this.casoBM.dFecOcurrencia = this.form.controls['dFecOcurrencia'].value;
+                let dateFechaOcurrencia = new Date(this.form.controls['dFecOcurrencia'].value);
+                dateFechaOcurrencia.setDate(new Date(this.form.controls['dFecOcurrencia'].value).getDate() + 1);
+
+                this.casoBM.dFecOcurrencia = dateFechaOcurrencia.toString();
                 this.declararActive = 'active'
                 this.modificarActive = ''
                 this.tituloTratamiento.emit(true);
