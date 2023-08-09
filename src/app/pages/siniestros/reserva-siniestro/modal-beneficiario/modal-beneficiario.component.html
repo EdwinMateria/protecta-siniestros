@@ -35,7 +35,10 @@
         <thead>
             <tr>
                 <th scope="col">Código</th>
-                <th scope="col">Beneficiario</th>
+                <th scope="col">
+                    <span *ngIf="origen == 1">Afectado</span>
+                    <span *ngIf="origen == 2">Beneficiario</span>
+                </th>
             </tr>
         </thead>
         <tbody>

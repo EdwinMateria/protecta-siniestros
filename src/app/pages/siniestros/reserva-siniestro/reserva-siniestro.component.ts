@@ -237,10 +237,10 @@ export class ReservaSiniestroComponent implements OnInit {
           res => {
             Swal.close();
             if (res == "OK") {
-              Swal.fire('Información', 'SE ELIMINARON LOS DATOS ADICIONALES DE LA COBERTURA.', 'success');
+              Swal.fire('Información', 'Se eliminaron los datos adicionales de la cobertura.', 'success');
               this.disabledCobertura = false;
               //this.tipoMovimiento[posicion] = null;
-
+              this.tipoMovimiento = ""
               const adElement = document.getElementById(`a${posicion}`) as HTMLInputElement;
               adElement.checked = false;
               const ddElement = document.getElementById(`d${posicion}`) as HTMLInputElement;
