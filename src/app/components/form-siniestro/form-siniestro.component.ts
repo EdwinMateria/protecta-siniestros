@@ -56,6 +56,9 @@ export class FormSiniestroComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.casoBM.dFecOcurrencia);
+    console.log(new Date(this.casoBM.dFecOcurrencia))
+    
     this.fechaMap = new Date(this.casoBM.dFecOcurrencia).toLocaleDateString('en-GB')
     this.form = this.fb.group({
       npolicy: [{value: '', disabled: true}],
@@ -309,32 +312,35 @@ export class FormSiniestroComponent implements OnInit {
     }
   }
 
-  openBeneficiario(){
-    const modalRef = this.modalService.open(ModalBeneficiarioComponent, { windowClass: "my-class", backdrop:'static', keyboard: false});
-    modalRef.componentInstance.reference = modalRef;
-    modalRef.componentInstance.origen = 1;  
-    modalRef.result.then((benef) => {
-      console.log(benef);
-      if((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)){
-        SwalCarga();
-        let data = new ClaimBeneficiarioRequest();
-        if(benef.SCODE) data.SCODCLI = benef.SCODE.trim();
-        if(benef.P_SCOD_CLIENT) data.SCODCLI = benef.P_SCOD_CLIENT.trim();
-        console.log(data);
-        this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
-          res =>{
-            Swal.close();
-            this.form.controls['afectado'].setValue(res.ListBeneficiaries[0].SNAME);
-            this.sCliente = res.ListBeneficiaries[0].SCODE.trim();
-          },
-          err => {
-            Swal.close();
-            Swal.fire('Información',err,'error');
-          }
-        )
-        
-      }
-    })
+  openBeneficiario() {
+
+    if (this.estadoForm != 3) {
+      const modalRef = this.modalService.open(ModalBeneficiarioComponent, { windowClass: "my-class", backdrop: 'static', keyboard: false });
+      modalRef.componentInstance.reference = modalRef;
+      modalRef.componentInstance.origen = 1;
+      modalRef.result.then((benef) => {
+        console.log(benef);
+        if ((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)) {
+          SwalCarga();
+          let data = new ClaimBeneficiarioRequest();
+          if (benef.SCODE) data.SCODCLI = benef.SCODE.trim();
+          if (benef.P_SCOD_CLIENT) data.SCODCLI = benef.P_SCOD_CLIENT.trim();
+          console.log(data);
+          this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
+            res => {
+              Swal.close();
+              this.form.controls['afectado'].setValue(res.ListBeneficiaries[0].SNAME);
+              this.sCliente = res.ListBeneficiaries[0].SCODE.trim();
+            },
+            err => {
+              Swal.close();
+              Swal.fire('Información', err, 'error');
+            }
+          )
+
+        }
+      })
+    }
   }
 
 

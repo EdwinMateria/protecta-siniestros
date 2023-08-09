@@ -105,7 +105,7 @@
                                 <input type="text" class="form-control" formControlName="afectado" readonly
                                     [ngClass]="{'is-invalid': form.get('afectado').invalid && form.get('afectado').touched, 'class_readonly' :  estadoForm != 3}">
                                 <div class="input-group-append">
-                                    <button [disabled]="estadoForm == 3" class="btn btn-primary" style="background-color: #2b0d61 !important; border: 1px solid rgb(129, 118, 157);" (click)="openBeneficiario()"><i class="fa fa-search"></i></button>
+                                    <span style="background-color: #2b0d61 !important; cursor: pointer;"  (click)="openBeneficiario()"><i class="fa fa-search fa-lg m-1 p-1" style="color: white;"></i></span>
                                 </div>
                             </div>
                         </div>
