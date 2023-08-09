@@ -1763,4 +1763,48 @@ cambioFormaPagoGrilla(e,sbanco, scuenta, nro){//nro, svalue, sbanco, scuenta
     Swal.fire('Información','Esta cambiando la forma de pago a Cheque. <br /> Beneficiario N°' + nro, 'warning');
   }    
 }
+
+
+changePago(tipo,nro){//campo
+
+       const numeroRegexp = new RegExp('\\d\\.(\\d){' + 3 + ',}');
+ 
+      if (tipo == 1){
+        const selectElementMontoPago = document.getElementById("totalPago") as HTMLSelectElement;
+        let nMontoPago = selectElementMontoPago.value;//e;//.target.value
+        
+      
+        if (numeroRegexp.test(nMontoPago)) { 
+          nMontoPago = nMontoPago.substring(0, nMontoPago.length - 1);
+          selectElementMontoPago.value = (nMontoPago).toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2'); //(Number(nMontoPago).toFixed(2));
+        } 
+      }else{
+
+        let nMontoPago = (this.salidaBeneficiariosMuerte[nro].MONTO_PAGO).toString();
+        if (numeroRegexp.test(nMontoPago)) { 
+          nMontoPago = nMontoPago.substring(0, nMontoPago.length - 1);
+          let _num =  Number((nMontoPago).toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2')); //(Number(nMontoPago).toFixed(2));
+          this.salidaBeneficiariosMuerte[nro].MONTO_PAGO = _num;
+          return;
+        } 
+        //if (campo > 0) {
+        //  campo = Number(((campo).toString()).toFixed(2))  
+        //} 
+  
+      }
+  
+    }
+
+    numberOnly(event) {
+      let regex = new RegExp(/^\d*\.?\d{0,2}$/g);
+      let specialKeys = ['Backspace', 'Tab', 'End', 'Home', 'ArrowLeft', 'ArrowRight', 'Del', 'Delete'];
+
+       let value = event.target.value;
+      if (specialKeys.indexOf(event.key) !== -1) { return; }
+      let current: string = value;
+       const position = event.target.selectionStart;
+      const next: string = [current.slice(0, position), event.key == 'Decimal' ? '.' : event.key, current.slice(position)].join('');
+       if (next && !String(next).match(regex)) { event.preventDefault();}
+    }
+
 }

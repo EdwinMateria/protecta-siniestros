@@ -236,7 +236,7 @@
                             </div>
                             <div class="col-sm-3 form-group">
                                 <label>Total a pagar <span *ngIf="baseImponible == 0">(*)</span></label>
-                                <input type="number" [ngModel]=" totalFactura > 999 ? totalFactura : (totalFactura | number:'1.2-2') " class="form-control" id="totalPago" style="text-align: right;" [formControl]="formimporte" [ngClass]="{'is-invalid': formimporte.invalid && formimporte.touched}" >
+                                <input type="number" [ngModel]=" totalFactura > 999 ? totalFactura : (totalFactura | number:'1.2-2') " class="form-control" id="totalPago" style="text-align: right;" [formControl]="formimporte" [ngClass]="{'is-invalid': formimporte.invalid && formimporte.touched}" (ngModelChange)="changePago(1,1)" >
                                 <input type="number" [value]="PendPagoClient" class="form-control" id="Txt_PendPagoClient" style="text-align: right;display: none;">
                                 <input type="number" [value]="pendpagofac" class="form-control" id="pendpagofac" style="text-align: right;display: none;">
                             </div>
@@ -288,7 +288,10 @@
                             </tbody>
                         </table>
                     </div> -->
-                    <div *ngIf="tipoCobertura == 1" style="overflow-y: auto;max-height: 440px;">
+
+                    <!--style="overflow-y: auto;max-height: 440px;"-->
+
+                    <div *ngIf="tipoCobertura == 1" class="table-responsive">
                         <table class="table table-striped w-100 mt-2">
                             <thead>
                                 <tr>
@@ -343,7 +346,7 @@
                                     <td><input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SACCOUNT"></td>  <!--[value]="beneficiarios.SACCOUNT">-->
                                     <td><input type="text" class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" maxlength="30" [(ngModel)]="beneficiarios.Observaciones"></td>
                                     <td>                        
-                                        <input class="form-control" type="number" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.MONTO_PAGO">
+                                        <input class="form-control" type="number" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.MONTO_PAGO" (keyup)="changePago(2,i)" > 
                                         <input class="form-control" type="number" disabled [(ngModel)]="beneficiarios.MONTO_PAGO2" style="display: none;">
                                         <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SCLIENT" style="display: none;">
                                         <!--{{ beneficiarios.MONTO_PAGO | number : '1.2-2' }}-->                            
