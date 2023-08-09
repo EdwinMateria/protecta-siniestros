@@ -99,6 +99,7 @@ export class GastosCuracionComponent implements OnInit {
     this.FiltroCaso[0] = { PCASENUM: parseInt(ncaso)} 
 
     if (parseInt(ncaso) > 0){
+       SwalCarga();
        this.RetornarListaSiniestros(this.FiltroCaso[0]);
     }else{
        this.lst_siniestros = [];
@@ -281,6 +282,7 @@ export class GastosCuracionComponent implements OnInit {
         
         this.lst_siniestros = s;
         console.log(this.lst_siniestros);
+        Swal.close();
         if (this.lst_siniestros.length > 0){
             if(this.lst_siniestros.length == 1){   
               this.siniestro = (this.lst_siniestros[0].NCODIGO).toString();   
@@ -290,7 +292,9 @@ export class GastosCuracionComponent implements OnInit {
 
             }else{
               //this.mostrarTable = false;
-              return;
+              const selectSiniestro = document.getElementById("cboSiniestro") as HTMLSelectElement;
+              selectSiniestro.focus();            
+              return false;
             }            
         }else{
           Swal.fire('Información','El caso ingresado no tiene siniestros pendientes por liquidar', 'warning');
@@ -300,6 +304,7 @@ export class GastosCuracionComponent implements OnInit {
       },
       e => {
         console.log(e);
+        Swal.close();
         //dialogRefLoad.close();
       });
 
