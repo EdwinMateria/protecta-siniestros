@@ -82,17 +82,20 @@
                                         <span *ngIf="data == 4">GASTOS MÉDICOS</span>
                                         <span *ngIf="data == 5">GASTOS DE SEPELIO</span>
                                     </td>
-                                    <td>
-                                        <select class="form-control" [(ngModel)]="beneficiario.SBANK">
+                                    <td style="white-space: nowrap;">
+                                        {{beneficiario.SBANKNAME}}
+                                        <!-- <select class="form-control" [(ngModel)]="beneficiario.SBANK">
                                             <option *ngFor="let banco of bancos" [value]="banco.SCODIGO">{{banco.SDESCRIPCION}}
                                             </option>
-                                        </select>
+                                        </select> -->
                                     </td>
-                                    <td>
-                                        <input type="number" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER" maxlength="15">
+                                    <td style="white-space: nowrap;">
+                                        {{beneficiario.SACCOUNTNUMBER}}
+                                        <!-- <input type="number" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER" maxlength="15"> -->
                                     </td>
-                                    <td>
+                                    <td style="white-space: nowrap;">
                                         <button [disabled]="disabledBotones" class="btn btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>
+                                        <button [disabled]="disabledBotones" class="btn btn-sm ml-2" (click)="editarBeneficiario(beneficiario)"><i class="fa fa-edit"></i></button>                                        
                                     </td>
                                 </tr>
                             </tbody>

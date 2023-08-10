@@ -9,6 +9,7 @@ import { CasosService } from 'src/app/core/services/casos/casos.service';
 import { CombosGenericoVM } from 'src/app/core/models/caso';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 import { SwalCarga } from "src/app/core/swal-loading";
+import { DataResponse, EListClient } from 'src/app/core/models/data-response';
 
 export class TipoDocumento{
   id: number;
@@ -24,6 +25,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
   @Input() public reference: any;
   @Input() public origen: number;
+  @Input() public datosBeneficiario : EListClient = new EListClient();
   form!: FormGroup;
   documentos: TipoDocumento[]=[];
   labelNombres = 'Nombres';
@@ -33,7 +35,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
   data = new Data();
   provincias : CombosGenericoVM[]=[];
-  distritos: CombosGenericoVM[]=[]
+  distritos: CombosGenericoVM[]=[];
 
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -45,6 +47,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   constructor(public fb: FormBuilder, public reserveService: ReserveService, public casoService: CasosService, public authProtectaService: AuthProtectaService) { }
 
   ngOnInit(): void {
+    console.log(this.datosBeneficiario);
+    
     this.form = this.fb.group({
       P_NIDDOC_TYPE: [ '', Validators.required],
       P_SIDDOC: [ '', Validators.required],
@@ -83,8 +87,58 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       nroCuenta: [ '' ],
       nroCuentaCCI: [ '' ],
     })
-
     this.obtenerComboBeneficiarios()
+
+    if(this.datosBeneficiario){
+       this.obtenerBeneficiario()     
+    }
+  }
+
+  obtenerBeneficiario(){
+    this.form.patchValue({
+      ...this.datosBeneficiario,
+      ...this.datosBeneficiario.EListAddresClient[0]
+    })
+    let correo = this.datosBeneficiario.EListEmailClient;
+    if( correo.length > 0 ){
+      this.form.controls['P_SE_MAIL'].setValue(correo[0].P_SE_MAIL)
+    }
+    
+    this.form.controls['P_DBIRTHDAT'].setValue(new Date(this.datosBeneficiario.P_DBIRTHDAT).toLocaleDateString('en-GB'));
+
+    let direccion = this.datosBeneficiario.EListAddresClient[0];
+    this.changeDepartamento(direccion.P_NLOCAL);
+    this.changeProvincia(direccion.P_NMUNICIPALITY);
+
+    let moviles = this.datosBeneficiario.EListPhoneClient;
+    if(moviles.length > 0){
+      let celular = moviles.find(x => x.P_NPHONE_TYPE == "2");
+
+      if(celular){
+        this.form.controls['celular'].setValue(celular.P_SPHONE);
+      }
+
+      let telefOficina = moviles.find(x => x.P_NPHONE_TYPE == "1")
+      if(telefOficina){
+        this.form.controls['telefOfic'].setValue(telefOficina.P_SPHONE);
+        this.form.controls['anexo'].setValue(telefOficina.P_NEXTENS1);
+        this.form.controls['P_NAREA_CODE'].setValue(telefOficina.P_NAREA_CODE);
+      }
+
+      let telefDomi = moviles.find(x => x.P_NPHONE_TYPE == "4")
+      if(telefDomi){
+        this.form.controls['telefDom'].setValue(telefOficina.P_SPHONE);
+      }
+    }
+
+    //Obtener datos banco
+    this.reserveService.GetBank(this.datosBeneficiario.P_SCLIENT).subscribe(
+      res => {
+        console.log(res);
+      }
+    )
+
+
   }
   
   closeModal() {
@@ -145,7 +199,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       if(this.form.controls['telefDom'].value != ""){
         this.data.EListPhoneClient.push({
           P_SPHONE : this.form.controls['telefDom'].value,
-          P_NPHONE_TYPE : '4'
+          P_NPHONE_TYPE : '4',
+          P_NAREA_CODE : this.form.controls['P_NAREA_CODE'].value
         })
       }
 
@@ -243,7 +298,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   }
 
 
-  changeDepartamento(){
+  changeDepartamento(provincia?:any){
     let departamento = this.form.controls['P_NPROVINCE'].value;
     SwalCarga();
     this.casoService.GetProvincias(departamento).subscribe(
@@ -251,14 +306,18 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         Swal.close();
         this.provincias = [];
         this.distritos = [];
-        this.form.controls['P_NLOCAL'].setValue('0');
         this.form.controls['P_NMUNICIPALITY'].setValue('0');
         this.provincias = res
+        if(provincia){
+          this.form.controls['P_NLOCAL'].setValue(provincia);
+        }else{
+          this.form.controls['P_NLOCAL'].setValue('0');
+        }
       }
     )
   }
 
-  changeProvincia(){
+  changeProvincia(distrito?:any){
     let provincia = this.form.controls['P_NLOCAL'].value;
     SwalCarga();
     this.casoService.GetDistritos(provincia).subscribe(
@@ -266,7 +325,12 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         Swal.close();
         this.distritos = [];
         this.distritos = res;
-        this.form.controls['P_NMUNICIPALITY'].setValue('0');
+
+        if(provincia){
+          this.form.controls['P_NMUNICIPALITY'].setValue(distrito);
+        }else{
+          this.form.controls['P_NMUNICIPALITY'].setValue('0');
+        }
       }
     )
   }

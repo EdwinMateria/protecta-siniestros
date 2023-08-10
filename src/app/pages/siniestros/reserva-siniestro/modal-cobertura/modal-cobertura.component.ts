@@ -26,6 +26,9 @@ import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-pr
 import { SwalCarga } from "src/app/core/swal-loading";
 import { ClaimBenefValidRequest } from 'src/app/core/models/claimBenefValidRequest';
 import { ClaimBeneficiariesShowRequest } from 'src/app/core/models/claimBeneficiariesShowRequest';
+import { Data } from 'src/app/core/models/data';
+import { DataResponse } from 'src/app/core/models/data-response';
+import { ModalNuevoBeneficiarioComponent } from '../modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
 
 @Component({
   selector: 'app-modal-cobertura',
@@ -182,14 +185,38 @@ export class ModalCoberturaComponent implements OnInit {
         if (this.beneficiarios.length == 1) {
           this.obtenerBancos()
         }
-        console.log(res.ListBeneficiaries[0]);
-        
-
       }, err => {
         Swal.close();
         Swal.fire('Error', err, 'error');
       }
     )
+  }
+
+  editarBeneficiario(beneficiario: BeneficiariesVM ){
+    let data : Data = new Data();
+    data.P_SIDDOC = beneficiario.SDOCUMENTNUMBER
+    data.P_NIDDOC_TYPE = beneficiario.NCODDOCUMENTTYPE;
+    data.P_CodAplicacion = "SINIESTRO";
+    data.P_TipOper = "CON";
+    data.P_NUSERCODE = "JRENIQUE";
+    this.reserveService.GetApi(data).subscribe(
+      res => {
+        let beneficiario = JSON.parse(res) as DataResponse;
+        if(beneficiario.P_NCODE == "0"){
+          const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
+          modalRef.componentInstance.reference = modalRef;
+          modalRef.componentInstance.origen = 3;  
+          modalRef.componentInstance.datosBeneficiario = beneficiario.EListClient[0];
+          modalRef.result.then((json) => {
+            
+          });
+        }else{
+          Swal.fire('Información','No se pudo obtener la información del beneficiario', 'warning');
+          return;
+        }
+      }
+    )
+
   }
 
   obtenerCodigoDiagnostico(){

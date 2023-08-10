@@ -231,4 +231,17 @@ export class ReserveService {
     });
   }
 
+  public GetApi(data: Data): Observable<any> {
+    //const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/Reserve/GetApi', data, {
+      headers: this.headers,
+    });
+  }
+
+  public GetBank(codClient: string):Observable<any>{
+    return this.http.get<any>(this.Url + '/Reserve/GetBank?codClient='+codClient, {
+      headers: this.headers
+    })
+  }
+
 }
