@@ -21,7 +21,7 @@
                 </select>
             </div>
             <div class="form-inline" *ngIf="data == 4">
-                <label>Tipo de atención: </label>
+                <label>Tipo de atención<span *ngIf="tab == 1">(*)</span></label>
                 <select class="form-control ml-3" [formControl]="tipoAtencion" [ngClass]="{'is-invalid': tipoAtencion.invalid && tipoAtencion.touched}">
                     <option *ngFor="let atencion of tiposAtencion" [value]="atencion.SCODIGO" [disabled]="atencion.SCODIGO == '0'">{{atencion.SDESCRIPCION}}</option>
                 </select>
@@ -34,7 +34,7 @@
                 <div class="card-header py-1">
                     <div class="d-flex">
                         <div class="mr-auto p-2">
-                            <h5>Beneficiarios</h5>
+                            <h5>Beneficiarios <span *ngIf="tab == 1">(*)</span></h5>
                         </div>
                         <div class="p-2">
                             <button [disabled]="(tab == 1 && data != 1 && beneficiarios.length == 1) || disabledBotones" class="btn btn-primary btn-sm" align="end" (click)="openBeneficiario()"><i
@@ -162,7 +162,7 @@
                 
                         <div class="row" *ngIf="data == 3">
                             <div class="col-sm-3 form-group">
-                                <label>Menoscabo <span>(*)</span> </label>
+                                <label>Menoscabo <span *ngIf="tab == 1">(*)</span> </label>
                                 <div class="input-group">
                                     <input type="textbox" class="form-control" [(ngModel)]="modelCabo" [formControl]="menoscabo" [ngClass]="{'is-invalid': menoscabo.invalid && menoscabo.touched}" (ngModelChange)="changeMenoscabo()" appDecimales>
                                     <div class="input-group-append">
@@ -179,7 +179,7 @@
                         <div *ngIf="data == 2">
                             <div class="row">
                                 <div class="col-sm-3 form-group">
-                                    <label>Inicio de descanso <span>(*)</span> </label>
+                                    <label>Inicio de descanso <span *ngIf="tab == 1">(*)</span> </label>
                                     <div class="input-group">
                                         <input [type]="tab == 1 ? 'date': 'text'" class="form-control" [formControl]="inicioDescanso" (change)="changeFechasDescanso()"
                                         [ngClass]="{'is-invalid': inicioDescanso.invalid && inicioDescanso.touched}">
@@ -189,7 +189,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3 form-group">
-                                    <label>Fin de descanso <span>(*)</span> </label>
+                                    <label>Fin de descanso <span *ngIf="tab == 1">(*)</span> </label>
                                     <div class="input-group">
                                         <input [type]="tab == 1 ? 'date': 'text'" class="form-control" [formControl]="finDescanso" (change)="changeFechasDescanso()"
                                         [ngClass]="{'is-invalid': finDescanso.invalid && finDescanso.touched}">
@@ -320,7 +320,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-3 form-group">
-                            <label>Base Imponible <span>(*)</span></label>
+                            <label>Base Imponible <span *ngIf="tab == 1">(*)</span></label>
                             <input type="number" class="form-control" [formControl]="baseImponible" [(ngModel)]="modelBase" [ngClass]="{'is-invalid': baseImponible.invalid && baseImponible.touched}" (ngModelChange)="changeBaseImponible()">
                         </div>
                         <div class="col-sm-3 form-group">
@@ -349,7 +349,10 @@
     </div>
 
     <div class="row mt-3">
-        <div class="col-sm-12" align="end">
+        <div class="col-sm-6" *ngIf="tab == 1">
+            <small>(*) Campos obligatorios</small>
+        </div>
+        <div  [ngClass]="{'col-sm-6': tab == 1 , 'col-sm-12': tab == 2}" align="end">
             <button *ngIf="tab == 1" class="buttonN mb-2" [disabled]="disabledReembolso" (click)="guardarTablaTemporal()">Guardar</button>
             <button [disabled]="disabledBotones" *ngIf="tab == 2" class="buttonN mb-2" (click)="editarTablaTemporal()">Guardar</button>
         </div>
