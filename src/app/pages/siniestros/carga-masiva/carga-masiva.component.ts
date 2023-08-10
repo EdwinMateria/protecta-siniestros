@@ -317,7 +317,7 @@ export class CargaMasivaComponent implements OnInit {
             return;
           } else {
             for (var i = 0; i < this.cabeceraDataName.length; i++) {
-              if (this.cabeceraDataName[i].trim() != this.primeraColumna[i].trim()) {
+              if (this.cabeceraDataName[i].toUpperCase().trim() != this.primeraColumna[i].toUpperCase().trim()) {
                 this.isLoading = false;
                 Swal.fire('Información', 'Los nombres de la cabecera no coinciden.', 'warning');
                 return;
@@ -418,7 +418,7 @@ export class CargaMasivaComponent implements OnInit {
             return;
           } else {
             for (var i = 0; i < this.cabeceraDataName.length; i++) {
-              if (this.cabeceraDataName[i].trim() != this.primeraColumna[i].trim()) {
+              if (this.cabeceraDataName[i].toUpperCase().trim() != this.primeraColumna[i].toUpperCase().trim()) {
                 this.isLoading = false;
                 Swal.fire('Información', 'Los nombres de la cabecera no coinciden.', 'warning');
                 return;
@@ -515,7 +515,7 @@ export class CargaMasivaComponent implements OnInit {
             return;
           } else {
             for (var i = 0; i < this.cabeceraDataName.length; i++) {
-              if (this.cabeceraDataName[i].trim() != this.primeraColumna[i].trim()) {
+              if (this.cabeceraDataName[i].toUpperCase().trim() != this.primeraColumna[i].toUpperCase().trim()) {
                 this.isLoading = false;
                 Swal.fire('Información', 'Los nombres de la cabecera no coinciden.', 'warning');
                 return;
@@ -559,24 +559,28 @@ export class CargaMasivaComponent implements OnInit {
                 item.P_SIMPORTE_TOTAL = this.dataSet[i][31]?.trim();
                 item.P_SDESC_MONEDA = this.dataSet[i][32]?.trim();
                 item.P_SPLACA = this.dataSet[i][33]?.trim();
-                item.P_SDESC_COBERTURA_ = this.dataSet[i][34]?.trim();
+                item.P_SDESC_COBERTURA2 = this.dataSet[i][34]?.trim();
                 item.P_SFECHA_LIQUIDA = this.dataSet[i][35]?.trim();
                 item.P_SCONDICION_PAGO = this.dataSet[i][36]?.trim();
                 item.P_SGLOSA = this.dataSet[i][37]?.trim();
-                item.P_SFECHA_DENUNCIO = this.dataSet[i][38]?.trim();
-                item.P_SFEC_T_ANALISIS = this.dataSet[i][39]?.trim();
-                item.P_SFECHA_APERTURA = this.dataSet[i][40]?.trim();
-                item.P_STIPO_ATENCION = this.dataSet[i][41]?.trim();
-                item.P_SCOMPLEJ_DIAGNO = this.dataSet[i][42]?.trim();
-                item.P_SPROCEDIMIENTO = this.dataSet[i][43]?.trim();
-                item.P_SHOSPITAL_DIAS = this.dataSet[i][44]?.trim();
-                item.P_STIPO_DE_PAGO = this.dataSet[i][45]?.trim();
-                item.P_SBANCO = this.dataSet[i][46]?.trim();
-                item.P_SNRO_CUENTA = this.dataSet[i][47]?.trim();
-                item.P_SRED_IPRESS = this.dataSet[i][48]?.trim();
-                item.P_SESTADO_COBERTURA = this.dataSet[i][49]?.trim();
-                item.P_SIPRESS_AQ_EMITECG = this.dataSet[i][50]?.trim();
-                item.P_SIPRESS_RUC = this.dataSet[i][51]?.trim();
+                item.P_SFECHA_OCURRENCIA = this.dataSet[i][38]?.trim();
+                item.P_SFECHA_DENUNCIO = this.dataSet[i][39]?.trim();
+                item.P_SFEC_T_ANALISIS = this.dataSet[i][40]?.trim();
+                item.P_SFECHA_APERTURA = this.dataSet[i][41]?.trim();
+                item.P_SFEC_NAC_LESION = this.dataSet[i][42]?.trim();
+                item.P_SNOMBRES = this.dataSet[i][43]?.trim();
+                item.P_SNRO_DOCUMENTO = this.dataSet[i][44]?.trim();
+                item.P_STIPO_ATENCION = this.dataSet[i][45]?.trim();
+                item.P_SCOMPLEJ_DIAGNO = this.dataSet[i][46]?.trim();
+                item.P_SPROCEDIMIENTO = this.dataSet[i][47]?.trim();
+                item.P_SHOSPITAL_DIAS = this.dataSet[i][48]?.trim();
+                item.P_STIPO_DE_PAGO = this.dataSet[i][49]?.trim();
+                item.P_SBANCO = this.dataSet[i][50]?.trim();
+                item.P_SNRO_CUENTA = this.dataSet[i][51]?.trim();
+                item.P_SRED_IPRESS = this.dataSet[i][52]?.trim();
+                item.P_SESTADO_COBERTURA = this.dataSet[i][53]?.trim();
+                item.P_SIPRESS_AQ_EMITECG = this.dataSet[i][54]?.trim();
+                item.P_SIPRESS_RUC = this.dataSet[i][55]?.trim();
                 this.ListPreliminar.LIST.push(item);
               }
               this.CargaMasivaService.RecorrerListaLiquidacion(this.ListPreliminar).subscribe(
