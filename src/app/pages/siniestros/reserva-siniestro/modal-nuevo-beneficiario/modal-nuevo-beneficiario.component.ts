@@ -10,6 +10,7 @@ import { CombosGenericoVM } from 'src/app/core/models/caso';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 import { SwalCarga } from "src/app/core/swal-loading";
 import { DataResponse, EListClient } from 'src/app/core/models/data-response';
+import { DatePipe } from '@angular/common';
 
 export class TipoDocumento{
   id: number;
@@ -44,7 +45,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     };
   }
 
-  constructor(public fb: FormBuilder, public reserveService: ReserveService, public casoService: CasosService, public authProtectaService: AuthProtectaService) { }
+  constructor(public fb: FormBuilder, public reserveService: ReserveService, public casoService: CasosService, public authProtectaService: AuthProtectaService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     console.log(this.datosBeneficiario);
@@ -104,7 +105,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       this.form.controls['P_SE_MAIL'].setValue(correo[0].P_SE_MAIL)
     }
     
-    this.form.controls['P_DBIRTHDAT'].setValue(new Date(this.datosBeneficiario.P_DBIRTHDAT).toLocaleDateString('en-GB'));
+    this.form.controls['P_DBIRTHDAT'].setValue(this.datePipe.transform(this.datosBeneficiario.P_DBIRTHDAT, 'yyyy-MM-dd'));
 
     let direccion = this.datosBeneficiario.EListAddresClient[0];
     this.changeDepartamento(direccion.P_NLOCAL);
@@ -134,7 +135,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     //Obtener datos banco
     this.reserveService.GetBank(this.datosBeneficiario.P_SCLIENT).subscribe(
       res => {
-        console.log(res);
+        this.form.controls['viaPago'].setValue(res.viaPago);
+        this.form.controls['banco'].setValue(res.banco);
+        this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
+        this.form.controls['nroCuenta'].setValue(res.nroCuenta);
+        this.form.controls['nroCuentaCCI'].setValue(res.nroCuentaCCI.trim());
       }
     )
 
