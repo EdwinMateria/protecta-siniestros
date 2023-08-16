@@ -11,3 +11,46 @@
     max-height: 200px !important; /* Altura máxima para la lista de resultados */
     overflow-y: auto !important; /* Agregar una barra de desplazamiento vertical si los resultados exceden la altura máxima */
   }
+
+
+  .buttonN {
+    justify-content: center;
+    border: 1px solid rgb(129, 118, 157);
+    border-radius: 2px;
+    margin: 0px;
+    background: #fff;
+    padding: 8px 5px;
+    min-width: 200px;
+    height: 45px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.buttonN:hover {
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.buttonN:disabled {
+    cursor: not-allowed;
+    background-color: rgb(235, 235, 228);
+    color: #666666;
+}
+
+.btn{
+    border: 1px solid rgb(129, 118, 157);
+    border-radius: 2px;
+}
+
+.btn:hover {
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.border_table{
+    border-bottom: 1px solid rgb(247, 62, 62);
+    border-left: 1px solid rgb(247, 62, 62);
+    border-radius: 1px solid rgb(247, 62, 62);
+
+}

@@ -61,7 +61,7 @@
                         <div class="col-sm-3 form-group">
                             <label>Fecha de denuncia <span *ngIf="estadoForm != 3">(*)</span></label>
                             <div class="input-group">
-                                <input [type]="estadoForm == 2 ? 'date' : 'text'" class="form-control" formControlName="dFecDenuncia"
+                                <input [type]="estadoForm == 2 ? 'date' : 'text'" class="form-control" formControlName="dFecDenuncia" (keyup.enter)="changeDenuncia()" (keydown)="onKeyDown($event)" 
                                     [ngClass]="{'is-invalid': form.get('dFecDenuncia').invalid && form.get('dFecDenuncia').touched}">
                                 <div *ngIf="estadoForm != 2" class="input-group-append">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -105,7 +105,7 @@
                                 <input type="text" class="form-control" formControlName="afectado" readonly
                                     [ngClass]="{'is-invalid': form.get('afectado').invalid && form.get('afectado').touched, 'class_readonly' :  estadoForm != 3}">
                                 <div class="input-group-append">
-                                    <button [disabled]="estadoForm == 3" class="btn btn-primary" (click)="openBeneficiario()"><i class="fa fa-search"></i></button>
+                                    <span style="background-color: #2b0d61 !important; cursor: pointer;"  (click)="openBeneficiario()"><i class="fa fa-search fa-lg m-1 p-1" style="color: white;"></i></span>
                                 </div>
                             </div>
                         </div>
@@ -149,7 +149,7 @@
         <small>(*) Campos obligatorios</small>
     </div>
     <div class="col-sm-6" align="end">
-        <button class="btn btn-success mb-3" (click)="saveSiniestro()">Guardar</button>
+        <button class="buttonN mb-3" (click)="saveSiniestro()">Guardar</button>
     </div>
 </div>
 
@@ -171,7 +171,7 @@
     </div>
 
     <div [ngClass]="{'col-sm-9': eliminado == false, 'col-sm-5' : eliminado == true }" align="end">
-        <button class="btn mr-2 mt-3" (click)="opcionVolver()">Cancelar</button>
-        <button class="btn btn-success mt-3"[disabled]="eliminado" (click)="rechazoSiniestro()">Guardar</button>
+        <button class="buttonN mr-2 mt-3" (click)="opcionVolver()">Cancelar</button>
+        <button class="buttonN mt-3"[disabled]="eliminado" (click)="rechazoSiniestro()">Guardar</button>
     </div>
 </div>

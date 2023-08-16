@@ -116,4 +116,9 @@ export class LiquidacionService {
         return this.http.post(this.Url + '/LiquidacionManager/InsertarLiquidacionSoat', data, { headers: this.headers });
     }
 
+    public RetornarListaSiniestros(idata: any): Observable<any> {
+      const data = JSON.stringify(idata);
+      return this.http.post(this.Url + '/LiquidacionManager/RetornarListaSiniestros', data, { headers: this.headers });
+  }
+
 }

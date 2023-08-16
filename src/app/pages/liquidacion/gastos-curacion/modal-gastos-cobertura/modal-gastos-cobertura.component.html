@@ -36,11 +36,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-5 form-group">
+                        <div class="col-sm-6 form-group">
                             <label>Siniestrado</label>
                             <input type="text" class="form-control" disabled [(ngModel)]="siniestrado">
                         </div>
-                        <div class="col-sm-2 form-group" style="display: none;">
+                        <div class="col-sm-1 form-group" style="display: none;">
                             <label>Fecha de Ocurrencia</label>
                             <div class="input-group">
                                 <input type="date" class="form-control" disabled [(ngModel)]="fechaOcurrencia" id="Txt_fechaOcurrencia">
@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-2 form-group">
+                        <div class="col-sm-3 form-group">
                             <label>Fecha de denuncia</label>
                             <div class="input-group">
                                 <input type="date" class="form-control" disabled [(ngModel)]="fechaDenuncia" id="Txt_fechaDenuncia"> 
@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-2 form-group">
+                        <div class="col-sm-3 form-group">
                             <label>Fecha de apertura</label>
                             <div class="input-group">
                                 <input type="date" class="form-control" disabled [(ngModel)]="fechaApertura" id="Txt_fechaApertura">
@@ -69,7 +69,7 @@
                         </div>
                     </div>
                     <div class="row" *ngIf="tipoCobertura != 1">
-                        <div class="col-sm-5 form-group">
+                        <div class="col-sm-6 form-group">
                             <label>Beneficiario (*)</label>
                             <select class="form-control" (change)="cambioBeneficiario()" id="nomBeneficiarios" [(ngModel)]="CbonomBeneficiarios">
                                 <option  [value]="0">
@@ -87,17 +87,17 @@
                                 <!-- <option *ngFor="let benef of salidaBeneficiarios" [value]="benef.SSHORT_DES + '|' + benef.SCLIENT + '|' + benef.NOMBRE_BANCO + '|' + benef.SACCOUNT + '|' + benef.MONTO_PAGO + '|' + benef.NAMOUNT + '|' + benef.NBILL + '|' + benef.IGV + '|' + benef.TOTAL_COMP + '|' + benef.DIAGNOSTICO + '|' + benef.ESPECIALIDAD"> -->                  
                             </select>
                         </div>
-                        <div class="col-sm-2 form-group">
+                        <div class="col-sm-3 form-group">
                             <label>Tipo documento</label>
                             <input type="text" class="form-control" disabled [(ngModel)]="tipoDocumento">
                         </div>
-                        <div class="col-sm-2 form-group">
+                        <div class="col-sm-3 form-group">
                             <label>Número documento</label>
                             <input type="text" class="form-control" disabled [(ngModel)]="nroDocumento">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-5 form-group">
+                        <div class="col-sm-6 form-group">
                             <label> Código de diagnóstico (CIE10)</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" disabled [(ngModel)]="codDiagnostico">
@@ -108,11 +108,11 @@
                             <label>Diagnóstico (CIE10)</label>
                             <input type="text" class="form-control" disabled>
                         </div> -->
-                        <div class="col-sm-5 form-group">
+                        <div class="col-sm-3 form-group">
                             <label>Especialidad</label>
                             <input type="text" class="form-control" disabled [(ngModel)]="especialidad">
                         </div>
-                        <div class="col-sm-2 form-group">
+                        <div class="col-sm-3 form-group">
                             <label>Fecha fin de análisis</label>
                             <div class="input-group">
                                 <input type="date" class="form-control" id="TxtFechaFinAnalisis"  [(ngModel)]="FechaFinAnalisis" > <!-- [formControl]="formfecha_analisis"  [ngClass]="{'is-invalid': formfecha_analisis.invalid && formfecha_analisis.touched}"-->
@@ -236,7 +236,7 @@
                             </div>
                             <div class="col-sm-3 form-group">
                                 <label>Total a pagar <span *ngIf="baseImponible == 0">(*)</span></label>
-                                <input type="number" [ngModel]=" totalFactura > 999 ? totalFactura : (totalFactura | number:'1.2-2') " class="form-control" id="totalPago" style="text-align: right;" [formControl]="formimporte" [ngClass]="{'is-invalid': formimporte.invalid && formimporte.touched}" >
+                                <input type="number" [ngModel]=" totalFactura > 999 ? totalFactura : (totalFactura | number:'1.2-2') " class="form-control" id="totalPago" style="text-align: right;" [formControl]="formimporte" [ngClass]="{'is-invalid': formimporte.invalid && formimporte.touched}" (ngModelChange)="changePago(1,1)" >
                                 <input type="number" [value]="PendPagoClient" class="form-control" id="Txt_PendPagoClient" style="text-align: right;display: none;">
                                 <input type="number" [value]="pendpagofac" class="form-control" id="pendpagofac" style="text-align: right;display: none;">
                             </div>
@@ -288,7 +288,10 @@
                             </tbody>
                         </table>
                     </div> -->
-                    <div *ngIf="tipoCobertura == 1" style="overflow-y: auto;max-height: 440px;">
+
+                    <!--style="overflow-y: auto;max-height: 440px;"-->
+
+                    <div *ngIf="tipoCobertura == 1" class="table-responsive">
                         <table class="table table-striped w-100 mt-2">
                             <thead>
                                 <tr>
@@ -343,7 +346,7 @@
                                     <td><input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SACCOUNT"></td>  <!--[value]="beneficiarios.SACCOUNT">-->
                                     <td><input type="text" class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" maxlength="30" [(ngModel)]="beneficiarios.Observaciones"></td>
                                     <td>                        
-                                        <input class="form-control" type="number" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.MONTO_PAGO">
+                                        <input class="form-control" type="number" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.MONTO_PAGO" (keyup)="changePago(2,i)" > 
                                         <input class="form-control" type="number" disabled [(ngModel)]="beneficiarios.MONTO_PAGO2" style="display: none;">
                                         <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SCLIENT" style="display: none;">
                                         <!--{{ beneficiarios.MONTO_PAGO | number : '1.2-2' }}-->                            
