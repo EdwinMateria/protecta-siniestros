@@ -114,8 +114,8 @@ export class NavbarComponent implements OnInit {
   }
 
   logOut(){
-    window.location.href = AppConfig.URL_SINIESTROS_WEB;
     document.cookie = "AppSiniestro=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.close()
   }
 
 }
