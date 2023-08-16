@@ -207,13 +207,17 @@ export class ModalCoberturaComponent implements OnInit {
           modalRef.componentInstance.reference = modalRef;
           modalRef.componentInstance.origen = 3;  
           modalRef.componentInstance.datosBeneficiario = beneficiario.EListClient[0];
-          modalRef.result.then((json) => {
-            
+          modalRef.result.then((benef) => {
+            this.obtenerDatosBenef(benef, true)
           });
         }else{
           Swal.fire('Información','No se pudo obtener la información del beneficiario', 'warning');
           return;
         }
+      },
+      err => {
+        Swal.fire('Infromación','Ocurrió un error en la consulta del beneficiario','error');
+        return;
       }
     )
 
@@ -447,8 +451,6 @@ export class ModalCoberturaComponent implements OnInit {
     SwalCarga();
     this.reserveService.GetDatCoversTmp(data).subscribe(
       res => {
-        console.log(res);
-        
         if(res.SKEY != null){
           this.claimCoverReserveResponse = res;
           //Mapeo
@@ -573,52 +575,71 @@ export class ModalCoberturaComponent implements OnInit {
     modalRef.componentInstance.beneficiarios = this.beneficiarios;
     modalRef.componentInstance.origen = 2;  
     modalRef.result.then((benef) => {
-      if((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)){
-        SwalCarga();
-        let data = new ClaimBenefValidRequest();
-        if(benef.SCODE) data.SCLIENT = benef.SCODE.trim();
-        if(benef.P_SCOD_CLIENT) data.SCLIENT = benef.P_SCOD_CLIENT.trim();
-        data.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
-        data.NCLAIM = Number(this.reservaCaso.NCLAIM);
-        data.NCOVER = this.data;
-        data.SMOVETYPE = this.tipoMovimiento;
-        //caso siniestro cobertura cliente tipo Movimiento
-        
-        this.reserveService.GetBeneficiariesValidCover(data).subscribe(
-          res => {
-            Swal.close();
-            if(res.SRESULT == 'OK'){
-              Swal.close();
-            if(res.ListBeneficiariesValid[0].SBANK == "") res.ListBeneficiariesValid[0].SBANK = "0";
-            
-            this.validadorTabla = false;
-            this.beneficiarios.push(res.ListBeneficiariesValid[0])
-            if(this.beneficiarios.length == 1){
-              this.obtenerBancos()
-            }
-
-            if(this.data == Cobertura.Gastos_Medicos){
-              let benef = this.beneficiarios[0].SDOCUMENTTYPE;
-              if(benef == 'RUC'){
-                this.dataReserva.SREFUND = '2'
-              }else{
-                this.dataReserva.SREFUND = '1'
-              }
-            }
-
-            }else{
-              Swal.close();
-              Swal.fire('Información', res.SRESULT, 'warning');
-              return;
-            }
-          },
-          err => {
-            Swal.close();
-            Swal.fire('Información',err,'error');
-          }
-        )
-      }
+      this.obtenerDatosBenef(benef, false)
     });
+  }
+
+
+  obtenerDatosBenef(benef: any, edit :boolean){
+    if((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)){
+      SwalCarga();
+      let data = new ClaimBenefValidRequest();
+      if(benef.SCODE) data.SCLIENT = benef.SCODE.trim();
+      if(benef.P_SCOD_CLIENT) data.SCLIENT = benef.P_SCOD_CLIENT.trim();
+      data.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
+      data.NCLAIM = Number(this.reservaCaso.NCLAIM);
+      data.NCOVER = this.data;
+      data.SMOVETYPE = this.tipoMovimiento;
+      //caso siniestro cobertura cliente tipo Movimiento
+      
+      this.reserveService.GetBeneficiariesValidCover(data).subscribe(
+        res => {
+          Swal.close();
+          if(res.SRESULT == 'OK'){
+            Swal.close();
+          if(res.ListBeneficiariesValid[0].SBANK == "") res.ListBeneficiariesValid[0].SBANK = "0";
+          
+          this.validadorTabla = false;
+
+          if(edit){
+            //let benefEdit = this.beneficiarios.find(x => x.SCODE == benef.P_SCOD_CLIENT.trim())
+            console.log(res.ListBeneficiariesValid[0]);
+            
+            //benefEdit = res.ListBeneficiariesValid[0];
+            this.beneficiarios.forEach(benf => {
+              if(benf.SCODE == benef.P_SCOD_CLIENT.trim()){
+                benef = res.ListBeneficiariesValid[0]
+              }
+            })
+          }else{
+            this.beneficiarios.push(res.ListBeneficiariesValid[0])
+          }
+
+          if(this.beneficiarios.length == 1){
+            this.obtenerBancos()
+          }
+
+          if(this.data == Cobertura.Gastos_Medicos){
+            let benef = this.beneficiarios[0].SDOCUMENTTYPE;
+            if(benef == 'RUC'){
+              this.dataReserva.SREFUND = '2'
+            }else{
+              this.dataReserva.SREFUND = '1'
+            }
+          }
+
+          }else{
+            Swal.close();
+            Swal.fire('Información', res.SRESULT, 'warning');
+            return;
+          }
+        },
+        err => {
+          Swal.close();
+          Swal.fire('Información',err,'error');
+        }
+      )
+    }
   }
 
   borrarBeneficiario(i:number, sclient?:any){

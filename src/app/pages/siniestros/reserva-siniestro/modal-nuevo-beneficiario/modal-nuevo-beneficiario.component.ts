@@ -239,8 +239,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       this.reserveService.SaveApi(this.data).subscribe(
         res =>{
           Swal.close();
-          console.log(res);
-          
           let jsonResponse = JSON.parse(res);
           if(jsonResponse.P_NCODE == 1){
             Swal.fire('Información', jsonResponse.P_SMESSAGE ,'error')
@@ -249,7 +247,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             let request = new ClaimBeneficiarioModelRequestBM();
 
             request.SCLIENT_ANT = "";
-            request.Accion = "ING";
+            if(this.origen == 3){
+              request.Accion = "ACT"
+            }else{
+              request.Accion = "ING";
+            }
             request.SCLIENT = jsonResponse.P_SCOD_CLIENT;
             request.Sexo = this.data.P_SSEXCLIEN;
             //Apartamento
@@ -283,10 +285,12 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             request.FechaFinPagoPension = null;
             request.FechaFallecimientoPensionista = null;
             request.CondicionEstudiante = null;
-
+            console.log(request.NroCuentaCCI);
             this.reserveService.UPD_BANK(request).subscribe(res => {
               Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
               jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;
+              console.log(jsonResponse);
+              console.log(res);              
               this.reference.close(jsonResponse);
             },err => {
               jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;
@@ -331,7 +335,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         this.distritos = [];
         this.distritos = res;
 
-        if(provincia){
+        if(distrito){
           this.form.controls['P_NMUNICIPALITY'].setValue(distrito);
         }else{
           this.form.controls['P_NMUNICIPALITY'].setValue('0');

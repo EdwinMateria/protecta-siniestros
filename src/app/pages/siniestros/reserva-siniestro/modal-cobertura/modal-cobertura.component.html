@@ -95,7 +95,7 @@
                                     </td>
                                     <td style="white-space: nowrap;">
                                         <button [disabled]="disabledBotones" class="btn btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>
-                                        <button [disabled]="disabledBotones" class="btn btn-sm ml-2" (click)="editarBeneficiario(beneficiario)"><i class="fa fa-edit"></i></button>                                        
+                                        <button *ngIf="tab == 1" [disabled]="disabledBotones" class="btn btn-sm ml-2" (click)="editarBeneficiario(beneficiario)"><i class="fa fa-edit"></i></button>                                        
                                     </td>
                                 </tr>
                             </tbody>

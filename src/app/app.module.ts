@@ -25,6 +25,7 @@ import { DecimalesDirective } from './core/directive/decimales.directive';
 import { SiniestroIntercepInterceptor } from './core/services/interceptor/siniestro-intercep.interceptor';
 import { DecimalPipe } from './core/pipe/decimal.pipe';
 import { NumberMaxLengthDirective } from './core/directive/number-max-length.directive';
+import { OnlyNumberDirective } from './core/directive/only-number.directive';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { NumberMaxLengthDirective } from './core/directive/number-max-length.dir
     ReaperturaSiniestroComponent,
     DecimalesDirective,
     DecimalPipe,
-    NumberMaxLengthDirective
+    NumberMaxLengthDirective,
+    OnlyNumberDirective
   ],
   imports: [
     BrowserModule,
