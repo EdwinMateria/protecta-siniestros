@@ -23,9 +23,6 @@ const routes: Routes = [
     path: 'reserva-siniestro', component: ReservaSiniestroComponent,  canActivate: [SiniestroGuard]
   },
   {
-    path: 'liquidacion-siniestro', component: GastosCuracionComponent
-  },
-  {
     path: 'carga-masiva', component: CargaMasivaComponent,  canActivate: [SiniestroGuard]
   },
   {
