@@ -752,7 +752,7 @@ export class CargaMasivaComponent implements OnInit {
           let _data = res;
           if (_data.response == 0) {
             if (_data.Data != null) {
-              const file = new File([this.obtenerBlobFromBase64(_data.Data, '')], 'Reporte_Preliminar_Siniestros_SOAT_Apertura' + this.ReportePreliminar.P_CAUX_SOAT_OPE + '.xlsx', { type: 'text/xls' });
+              const file = new File([this.obtenerBlobFromBase64(_data.Data, '')], 'Reporte_Preliminar_Siniestros_SOAT_Apertura_' + this.ReportePreliminar.P_CAUX_SOAT_OPE + '.xlsx', { type: 'text/xls' });
               FileSaver.saveAs(file);
             }
           }
@@ -773,7 +773,7 @@ export class CargaMasivaComponent implements OnInit {
           let _data = res;
           if (_data.response == 0) {
             if (_data.Data != null) {
-              const file = new File([this.obtenerBlobFromBase64(_data.Data, '')], 'Reporte_Preliminar_Siniestros_SOAT_Reservas' + this.ReportePreliminar.P_CAUX_SOAT_OPE + '.xlsx', { type: 'text/xls' });
+              const file = new File([this.obtenerBlobFromBase64(_data.Data, '')], 'Reporte_Preliminar_Siniestros_SOAT_Reservas_' + this.ReportePreliminar.P_CAUX_SOAT_OPE + '.xlsx', { type: 'text/xls' });
               FileSaver.saveAs(file);
             }
           }
@@ -794,7 +794,7 @@ export class CargaMasivaComponent implements OnInit {
           let _data = res;
           if (_data.response == 0) {
             if (_data.Data != null) {
-              const file = new File([this.obtenerBlobFromBase64(_data.Data, '')], 'Reporte_Preliminar_Siniestros_SOAT_Liquidacion' + this.ReportePreliminar.P_CAUX_SOAT_OPE + '.xlsx', { type: 'text/xls' });
+              const file = new File([this.obtenerBlobFromBase64(_data.Data, '')], 'Reporte_Preliminar_Siniestros_SOAT_Liquidacion_' + this.ReportePreliminar.P_CAUX_SOAT_OPE + '.xlsx', { type: 'text/xls' });
               FileSaver.saveAs(file);
             }
           }
