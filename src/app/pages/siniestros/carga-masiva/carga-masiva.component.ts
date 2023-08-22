@@ -51,6 +51,7 @@ export class CargaMasivaComponent implements OnInit {
   ReportePreliminar: ReportePreliminar;
   ListDefinitivo: ListDefinitivo;
 
+  columnBool: boolean = true;
   isLoading: boolean = false;
   apertura: boolean = true;
   reserva: boolean = false;
@@ -363,6 +364,7 @@ export class CargaMasivaComponent implements OnInit {
               }
               this.CargaMasivaService.RecorrerListaApertura(this.ListPreliminar).subscribe(
                 res => {
+                  this.columnBool = true;
                   this.currentPage = 1;
                   this.listResults = res.Result.P_TABLE;
                   this.totalItems = this.listResults.length;
@@ -460,6 +462,7 @@ export class CargaMasivaComponent implements OnInit {
               }
               this.CargaMasivaService.RecorrerListaReservas(this.ListPreliminar).subscribe(
                 res => {
+                  this.columnBool = false;
                   this.currentPage = 1;
                   this.listResults = res.Result.P_TABLE;
                   this.totalItems = this.listResults.length;
@@ -585,6 +588,7 @@ export class CargaMasivaComponent implements OnInit {
               }
               this.CargaMasivaService.RecorrerListaLiquidacion(this.ListPreliminar).subscribe(
                 res => {
+                  this.columnBool = false;
                   this.currentPage = 1;
                   this.listResults = res.Result.P_TABLE;
                   this.totalItems = this.listResults.length;
