@@ -208,6 +208,7 @@ export class ModalCoberturaComponent implements OnInit {
           modalRef.componentInstance.origen = 3;  
           modalRef.componentInstance.datosBeneficiario = beneficiario.EListClient[0];
           modalRef.result.then((benef) => {
+            console.log(benef);
             this.obtenerDatosBenef(benef, true)
           });
         }else{
@@ -604,13 +605,9 @@ export class ModalCoberturaComponent implements OnInit {
           if(edit){
             //let benefEdit = this.beneficiarios.find(x => x.SCODE == benef.P_SCOD_CLIENT.trim())
             console.log(res.ListBeneficiariesValid[0]);
-            
-            //benefEdit = res.ListBeneficiariesValid[0];
-            this.beneficiarios.forEach(benf => {
-              if(benf.SCODE == benef.P_SCOD_CLIENT.trim()){
-                benef = res.ListBeneficiariesValid[0]
-              }
-            })
+            console.log(this.beneficiarios);
+            this.beneficiarios =  this.beneficiarios.filter(x => x.SCODE != benef.P_SCOD_CLIENT.trim());
+            this.beneficiarios.push(res.ListBeneficiariesValid[0])
           }else{
             this.beneficiarios.push(res.ListBeneficiariesValid[0])
           }

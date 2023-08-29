@@ -48,8 +48,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   constructor(public fb: FormBuilder, public reserveService: ReserveService, public casoService: CasosService, public authProtectaService: AuthProtectaService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
-    console.log(this.datosBeneficiario);
-    
     this.form = this.fb.group({
       P_NIDDOC_TYPE: [ '', Validators.required],
       P_SIDDOC: [ '', Validators.required],
@@ -90,27 +88,38 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     })
     this.obtenerComboBeneficiarios()
 
-    if(this.datosBeneficiario){
+    if(this.datosBeneficiario.P_SCLIENT != undefined){
        this.obtenerBeneficiario()     
     }
   }
 
   obtenerBeneficiario(){
     this.form.patchValue({
-      ...this.datosBeneficiario,
-      ...this.datosBeneficiario.EListAddresClient[0]
+      ...this.datosBeneficiario
     })
     let correo = this.datosBeneficiario.EListEmailClient;
     if( correo.length > 0 ){
       this.form.controls['P_SE_MAIL'].setValue(correo[0].P_SE_MAIL)
     }
+    const parts = this.datosBeneficiario.P_DBIRTHDAT.split('/');
+    let fecha = `${parts[1]}/${parts[0]}/${parts[2]}`;
+    this.form.controls['P_DBIRTHDAT'].setValue(this.datePipe.transform(fecha, 'yyyy-MM-dd'));
+
+    if(this.datosBeneficiario.EListAddresClient.length >  0){
+      let direccion = this.datosBeneficiario.EListAddresClient[0];
+      this.form.patchValue({
+        ...this.datosBeneficiario.EListAddresClient[0]
+      })
+
+      if(direccion.P_STI_DIRE == null) this.form.controls['P_STI_DIRE'].setValue('');
+      if(direccion.P_STI_INTERIOR == null) this.form.controls['P_STI_INTERIOR'].setValue('');
+      if(direccion.P_STI_CJHT == null) this.form.controls['P_STI_CJHT'].setValue('');
+      if(direccion.P_STI_BLOCKCHALET == null) this.form.controls['P_STI_BLOCKCHALET'].setValue('');
+
+      this.changeDepartamento(direccion.P_NLOCAL);
+      this.changeProvincia(direccion.P_NMUNICIPALITY);
+    }
     
-    this.form.controls['P_DBIRTHDAT'].setValue(this.datePipe.transform(this.datosBeneficiario.P_DBIRTHDAT, 'yyyy-MM-dd'));
-
-    let direccion = this.datosBeneficiario.EListAddresClient[0];
-    this.changeDepartamento(direccion.P_NLOCAL);
-    this.changeProvincia(direccion.P_NMUNICIPALITY);
-
     let moviles = this.datosBeneficiario.EListPhoneClient;
     if(moviles.length > 0){
       let celular = moviles.find(x => x.P_NPHONE_TYPE == "2");
@@ -135,15 +144,14 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     //Obtener datos banco
     this.reserveService.GetBank(this.datosBeneficiario.P_SCLIENT).subscribe(
       res => {
-        this.form.controls['viaPago'].setValue(res.viaPago);
-        this.form.controls['banco'].setValue(res.banco);
-        this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
-        this.form.controls['nroCuenta'].setValue(res.nroCuenta);
-        this.form.controls['nroCuentaCCI'].setValue(res.nroCuentaCCI.trim());
+        console.log(res);
+        if (res.viaPago != null) this.form.controls['viaPago'].setValue(res.viaPago);
+        if (res.banco != null) this.form.controls['banco'].setValue(res.banco);
+        if (res.tipoCuenta != null) this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
+        if (res.nroCuenta != null) this.form.controls['nroCuenta'].setValue(res.nroCuenta);
+        if (res.nroCuentaCCI != null) this.form.controls['nroCuentaCCI'].setValue(res.nroCuentaCCI.trim());
       }
     )
-
-
   }
   
   closeModal() {
@@ -173,14 +181,19 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     }
   }
 
+
+  
+
   saveBeneficiario(){
     if(this.form.invalid){
       this.form.markAllAsTouched();
     }else{
       SwalCarga();
+      let fecha = (this.form.controls['P_DBIRTHDAT'].value).split('-')
+
       this.data = {
         ...this.form.getRawValue(),
-        P_DBIRTHDAT : new Date(this.form.controls['P_DBIRTHDAT'].value).toLocaleDateString('en-GB'),
+        P_DBIRTHDAT : fecha[2]+'/'+fecha[1]+'/'+fecha[0],
         p_CodAplicacion : "SINIESTRO",
         p_TipOper : "INS",
         p_NUSERCODE : "JRENIQUE",
@@ -285,7 +298,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             request.FechaFinPagoPension = null;
             request.FechaFallecimientoPensionista = null;
             request.CondicionEstudiante = null;
-            console.log(request.NroCuentaCCI);
             this.reserveService.UPD_BANK(request).subscribe(res => {
               Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
               jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;
