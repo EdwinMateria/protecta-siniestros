@@ -228,6 +228,16 @@ export class FormCasoComponent implements OnInit {
               } else {
                 Swal.fire('Información', caso.sMensaje, 'error');
                 this.form.controls['dFecOcurrencia'].setValue('');
+                
+                this.form.controls['nCertif'].setValue('');
+                this.form.controls['sNroPlaca'].setValue('');
+                this.form.controls['nCaso'].setValue('');
+                this.form.controls['dInicioVigencia'].setValue('');
+                this.form.controls['dFinDeVigencia'].setValue('');
+                this.form.controls['sNombreContratante'].setValue('');
+                this.form.controls['sDocContratante'].setValue('');
+                this.form.controls['nBranch'].setValue('');
+                this.form.controls['nProduct'].setValue('');
                 return;
               }
             },
@@ -266,7 +276,7 @@ export class FormCasoComponent implements OnInit {
         }else{
           Swal.fire({
             title: 'Información',
-            text: "¿Deseas rechazar el caso del siniestro?",
+            text: "¿Deseas rechazar el siniestro?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Sí',
