@@ -339,5 +339,29 @@ export class FormSiniestroComponent implements OnInit {
     }
   }
 
+  changeDenuncia(){
+    //console.log(this.form.controls['dFecDenuncia'].value);
+    let fecha = this.form.controls['dFecDenuncia'].value;
+    if (fecha != '' || fecha != null) {
+      //let date = (this.form.controls['dFecDenuncia'].value).split('-');
+      console.log(fecha);
+      let docur = new Date(this.form.controls['dFecDenuncia'].value)
+      if(docur.getFullYear() > 1840){
+        let data = new SiniestroBM();
+        data.dFecDenuncia = this.form.controls['dFecDenuncia'].value;
+        data.nCaso = this.casoBM.nCaso;
+        this.casoService.ValidateClaim(data).subscribe(res => {
+          if(res.Message != 'Ok'){
+            Swal.fire('Información',res.Message,'warning');
+            this.form.controls['dFecDenuncia'].setValue('');
+            return;
+          }
+        })
+      }
+
+    }
+    //this.form.controls['dFecDenuncia'].setValue('');
+  }
+
 
 }

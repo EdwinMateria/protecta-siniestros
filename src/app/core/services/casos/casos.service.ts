@@ -116,6 +116,10 @@ export class CasosService {
     return this.http.post<any>(this.Url + '/CasosManager/ValidateRechazo', data);
   }
 
+  public ValidateClaim(data: SiniestroBM): Observable<GenericResponse>{
+    return this.http.post<GenericResponse>(this.Url + '/CasosManager/ValidateClaim', data);
+  }
+
   transformDate(date) {
     let a = this.datePipe.transform(date, 'dd/MM/yyyy'); //whatever format you need. 
     return a;
