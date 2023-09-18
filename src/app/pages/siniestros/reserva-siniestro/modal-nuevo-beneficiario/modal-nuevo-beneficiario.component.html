@@ -201,7 +201,57 @@
                     <input class="form-control" placeholder="Correo" formControlName="P_SE_MAIL">
                 </div>
             </div>
-            <div class="form-group row">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header py-2">
+                            <h5>Datos de cuentas bancarias</h5>
+                        </div>
+                        <div class="card-body py-1">
+                            <div class="mt-3 pb-4">
+                                <div>
+                                    <table class="table table-striped w-100">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Banco</th>
+                                                <th scope="col">Tipo De Cuenta</th>
+                                                <th scope="col">Nro. De Cuenta</th>
+                                                <th scope="col">Nro. Cuenta CCI</th>
+                                                <th scope="col">Moneda</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody *ngIf="listBank.length > 0">
+                                            <tr *ngFor="let bank of listBank; let i = index">
+                                                <td>{{bank.sbankName}}</td>
+                                                <td>{{bank.scuentaName}}</td>
+                                                <td>{{bank.scta}}</td>
+                                                <td>{{bank.scci}}</td>
+                                                <td>
+                                                    <span *ngIf="bank.scoin == 1">SOLES</span>
+                                                    <span *ngIf="bank.scoin == 2">DÓLARES</span>
+                                                </td>
+                                                <td>
+                                                    <i class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank)"></i>
+                                                    <i class="fa fa-trash ml-2" style="cursor: pointer;" (click)="deleteCuentaBancaria(i)"></i>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div *ngIf="listBank.length == 0" class="row">
+                                        <div class="col-sm-12 text-center mt-2">
+                                            No hay cuentas bancarias registradas.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Vía de Pago</label>
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="viaPago">
@@ -235,11 +285,12 @@
                 <div class="col-sm-10">
                     <input class="form-control" type="text" appOnlyNumber placeholder="Nro De Cuenta CCI" formControlName="nroCuentaCCI" maxlength="30">
                 </div>
-            </div>
+            </div> -->
     </form>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-sm-12" align="end">
             <button class="buttonN" (click)="saveBeneficiario()">Agregar</button>
+            <button class="buttonN ml-2" (click)="openCuentaBancaria()">Agregar Cuenta B.</button>
         </div>
     </div>
 </div>

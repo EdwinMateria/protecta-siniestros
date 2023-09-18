@@ -19,4 +19,5 @@ export class BeneficiariesVM {
     SACCOUNTNUMBER      : string;
     NCODDOCUMENTTYPE    : string;
     NCODBENEFICIARYTYPE : string;
+    SCCI                ?: string;
 }

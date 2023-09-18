@@ -11,6 +11,9 @@ import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-pr
 import { SwalCarga } from "src/app/core/swal-loading";
 import { DataResponse, EListClient } from 'src/app/core/models/data-response';
 import { DatePipe } from '@angular/common';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalCuentaBancariaComponent } from '../modal-cuenta-bancaria/modal-cuenta-bancaria.component';
+import { ClientBank } from 'src/app/core/models/clientBank';
 
 export class TipoDocumento{
   id: number;
@@ -37,6 +40,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   data = new Data();
   provincias : CombosGenericoVM[]=[];
   distritos: CombosGenericoVM[]=[];
+  listBank : ClientBank[] = [];
 
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -45,7 +49,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     };
   }
 
-  constructor(public fb: FormBuilder, public reserveService: ReserveService, public casoService: CasosService, public authProtectaService: AuthProtectaService, private datePipe: DatePipe) { }
+  constructor(public fb: FormBuilder, public reserveService: ReserveService, public casoService: CasosService, 
+    public authProtectaService: AuthProtectaService, private datePipe: DatePipe, private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -157,7 +162,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   closeModal() {
     this.reference.close();
   }
-
+  
   obtenerComboBeneficiarios(){
     this.reserveService.GetComboBeneficiarios().subscribe(
       res =>{
@@ -188,7 +193,29 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     if(this.form.invalid){
       this.form.markAllAsTouched();
     }else{
+
+      if(this.listBank.length == 0){
+            Swal.fire({
+              title: 'Información',
+              text: 'No esta registrando cuentas bancarias. ¿Desea continuar?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Sí',
+              cancelButtonText: 'No',
+              reverseButtons: true,
+              showCloseButton: true
+            }).then((result) => {
+              if(result.isDismissed){
+                return;
+              } 
+            })
+      }
+      
       SwalCarga();
+
+      let cookie = this.authProtectaService.getCookie('AppSiniestro');
+      let codUsuario = this.authProtectaService.getValueCookie('CodUsu', cookie);
+
       let fecha = (this.form.controls['P_DBIRTHDAT'].value).split('-')
 
       this.data = {
@@ -196,7 +223,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         P_DBIRTHDAT : fecha[2]+'/'+fecha[1]+'/'+fecha[0],
         p_CodAplicacion : "SINIESTRO",
         p_TipOper : "INS",
-        p_NUSERCODE : "JRENIQUE",
+        p_NUSERCODE : atob(codUsuario),
         p_NSPECIALITY : "99",
         p_NTITLE : "99",
         p_SISCLIENT_IND : "1",
@@ -245,9 +272,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         })
       }
       
-
-      let cookie = this.authProtectaService.getCookie('AppSiniestro');
-      let codUsuario = this.authProtectaService.getValueCookie('CodUsu', cookie);
 
       this.reserveService.SaveApi(this.data).subscribe(
         res =>{
@@ -354,6 +378,69 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         }
       }
     )
+  }
+
+  openCuentaBancaria(){
+    const modalRef = this.modalService.open(ModalCuentaBancariaComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
+    modalRef.componentInstance.reference = modalRef;
+    modalRef.componentInstance.bancos = this.objBeneficiarioModel.lstBanco;
+    modalRef.componentInstance.tipoCuentas  = this.objBeneficiarioModel.lstTipoCuenta;
+    modalRef.componentInstance.addCtaBank = true;
+    modalRef.result.then((cuentas) => {
+      console.log(cuentas);
+      console.log(this.listBank)
+      if(cuentas != undefined) {
+        this.listBank = this.listBank.concat(cuentas)
+        this.listBank.forEach((cte , i) => {
+          cte.num_movent = i + 1;
+        })
+      }
+      
+    });
+  }
+
+  editCuentaBancaria(ctaBancaria: ClientBank){
+    const modalRef = this.modalService.open(ModalCuentaBancariaComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
+    modalRef.componentInstance.reference = modalRef;
+    modalRef.componentInstance.addCtaBank = false;
+    modalRef.componentInstance.bancos = this.objBeneficiarioModel.lstBanco;
+    modalRef.componentInstance.tipoCuentas  = this.objBeneficiarioModel.lstTipoCuenta;
+    let cta = new ClientBank();
+    cta.sbank = ctaBancaria.sbank;
+    cta.scuenta = ctaBancaria.scuenta;
+    cta.scta = ctaBancaria.scta;
+    cta.scci = ctaBancaria.scci;
+    cta.state = ctaBancaria.state;
+    cta.scoin = ctaBancaria.scoin;
+    cta.num_movent = ctaBancaria.num_movent;
+    cta.length = ctaBancaria.length;
+    cta.sbankName = ctaBancaria.sbankName;
+    cta.scuentaName = ctaBancaria.scuentaName;
+    cta.scoinName = ctaBancaria.scoinName;
+
+    modalRef.componentInstance.ctaBancaria = cta;
+    modalRef.result.then((cuenta: ClientBank) => {
+      if(cuenta != undefined) ctaBancaria = cuenta;
+    })
+  }
+
+  deleteCuentaBancaria(i : number){
+    Swal.fire({
+      title: 'Información',
+      text: "¿Está seguro de borrar la cuenta bancaria?",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'No',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.listBank.splice(i,1);
+        this.listBank.forEach((cte , i) => {
+          cte.num_movent = i + 1;
+        })
+      }
+    })
   }
 
 }

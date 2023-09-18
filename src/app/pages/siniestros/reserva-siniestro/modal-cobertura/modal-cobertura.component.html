@@ -55,6 +55,7 @@
                                     <th scope="col">Cobertura</th>
                                     <th scope="col">Banco</th>
                                     <th scope="col">Nro. Cuenta</th>
+                                    <th scope="col">Nro. Cuenta CCI</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
@@ -92,6 +93,9 @@
                                     <td style="white-space: nowrap;">
                                         {{beneficiario.SACCOUNTNUMBER}}
                                         <!-- <input type="number" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER" maxlength="15"> -->
+                                    </td>
+                                    <td style="white-space: nowrap;"> 
+                                        {{beneficiario.SCCI}}
                                     </td>
                                     <td style="white-space: nowrap;">
                                         <button [disabled]="disabledBotones" class="btn btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>
