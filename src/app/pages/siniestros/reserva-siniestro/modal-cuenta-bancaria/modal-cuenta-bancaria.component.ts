@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ClaimBenefCuentasModelRequesBM } from 'src/app/core/models/benefCuentaResponse';
 import { ClaimComboBERequestBM } from 'src/app/core/models/claimBeneficiarioModelRequest';
 import { ClientBank } from 'src/app/core/models/clientBank';
 import Swal from 'sweetalert2';
@@ -14,7 +15,7 @@ export class ModalCuentaBancariaComponent implements OnInit {
   @Input() public bancos : ClaimComboBERequestBM[] = [];
   @Input() public tipoCuentas : ClaimComboBERequestBM[] = [];
   @Input() public addCtaBank: boolean;
-  @Input() public ctaBancaria: ClientBank = new ClientBank();
+  @Input() public ctaBancaria: ClaimBenefCuentasModelRequesBM = new ClaimBenefCuentasModelRequesBM();
 
   // tipoCuentas : ClaimComboBERequestBM[] = [
   //   {Codigo : '0' , Descripcion: 'SELECCIONE'},
@@ -33,7 +34,7 @@ export class ModalCuentaBancariaComponent implements OnInit {
     {Codigo : '0' , Descripcion: 'DESHABILITADO'}
   ]
 
-  listBank : ClientBank[] = [];
+  listBank : ClaimBenefCuentasModelRequesBM[] = [];
 
   constructor() { }
 
@@ -42,15 +43,13 @@ export class ModalCuentaBancariaComponent implements OnInit {
   }
 
   initCte(){
+    console.log(this.ctaBancaria);
+    
     if(this.addCtaBank){
+      let cteP = new ClaimBenefCuentasModelRequesBM();
       this.listBank.push({
-        sbank       :   '',
-        scuenta     :   '0',
-        scta        :   '',
-        scci        :   '',
-        state       :   '1',
-        scoin       :   '0',
-        num_movent  :   this.listBank.length + 1,
+        ...cteP,
+        Posicion  :   this.listBank.length + 1,
         length      :   20
       })
     }else{
@@ -62,27 +61,21 @@ export class ModalCuentaBancariaComponent implements OnInit {
     this.reference.close();
   }
 
-  deleteCuentasBancarias(index: number){
-    if(this.listBank.length > 1){
-      this.listBank.splice(index,1);
-    }
-  }
-
-  changeBank(bank: ClientBank){
-    bank.scta = '';
-    if(bank.sbank == "02" && bank.scuenta == "2"){
+  changeBank(bank: ClaimBenefCuentasModelRequesBM){
+    bank.NroCuenta = '';
+    if(bank.CodBanco == "02" && bank.NroCuenta == "2"){
       bank.length = 13
     }else{
-      if(bank.sbank == "02" && bank.scuenta == "1"){
+      if(bank.CodBanco == "02" && bank.NroCuenta == "1"){
         bank.length = 14
       }else{
-        if(bank.sbank == "11"){
+        if(bank.CodBanco == "11"){
           bank.length = 20
         }else{
-          if(bank.sbank == "03"){
+          if(bank.CodBanco == "03"){
             bank.length = 13
           }else{
-            if(bank.sbank == "41"){
+            if(bank.CodBanco == "41"){
               bank.length = 10
             }else{
               bank.length = 20
@@ -94,59 +87,59 @@ export class ModalCuentaBancariaComponent implements OnInit {
     //const numeros = ["02", "03", "11", "41"];
   }
 
-  changeCteBank(cte: ClientBank){
+  changeCteBank(cte: ClaimBenefCuentasModelRequesBM){
     const numeros = ["02", "03", "11", "41"];
 
-    if(cte.sbank == ''){
+    if(cte.CodBanco == ''){
       Swal.fire('Información','Debe seleccionar un banco','warning');
       return false;
     }
 
-    if(cte.scuenta == '0'){
+    if(cte.NroCuenta == '0'){
       Swal.fire('Información','Debe seleccionar el tipo de cuenta','warning');
       return false;
     }
 
-    if(cte.scoin == '0'){
+    if(cte.MonedaCod == '0'){
       Swal.fire('Información','Debe seleccionar una moneda','warning');
       return false;
     }
 
     //validacion numero de cuenta por banco
-    if(cte.sbank == "02"){ //BCP
-      if(cte.scuenta == "1" && cte.scta.toString().length != 14){
+    if(cte.CodBanco == "02"){ //BCP
+      if(cte.NroCuenta == "1" && cte.NroCuenta.toString().length != 14){
         Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 14 dígitos.','warning');
         return false;
       }
-      if(cte.scuenta == "2" && cte.scta.toString().length != 13){
+      if(cte.NroCuenta == "2" && cte.NroCuenta.toString().length != 13){
         Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 13 dígitos.','warning');
         return false;
       }
     }
 
-    if(cte.sbank == "11" && cte.scta.toString().length != 20){ //BBVA
+    if(cte.CodBanco == "11" && cte.NroCuenta.toString().length != 20){ //BBVA
       Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 20 dígitos.','warning');
       return false;
     }
 
-    if(cte.sbank == "03" && cte.scta.toString().length != 13){ //INTERBANK
+    if(cte.CodBanco == "03" && cte.NroCuenta.toString().length != 13){ //INTERBANK
       Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 13 dígitos.')
       return false;
     }
 
-    if(cte.sbank == "41" && cte.scta.toString().length != 10){ //SCOTIABANK
+    if(cte.CodBanco == "41" && cte.NroCuenta.toString().length != 10){ //SCOTIABANK
       Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 10 dígitos.')
       return false;
     }
 
-    if(numeros.includes(cte.sbank) && (cte.scci == "" || cte.scci == null || cte.scci == undefined)){
+    if(numeros.includes(cte.CodBanco) && (cte.NroCuentaCCI == "" || cte.NroCuentaCCI == null || cte.NroCuentaCCI == undefined)){
       Swal.fire('Información','Para el banco seleccionado es obligatorio ingresar el número CCI','warning');
       return false;
     }
     return true;
   }
 
-  controlCuentaBancaria(cte: ClientBank){
+  controlCuentaBancaria(cte: ClaimBenefCuentasModelRequesBM){
     let result = this.changeCteBank(cte);
     if(result){
       this.initCte();
@@ -157,16 +150,18 @@ export class ModalCuentaBancariaComponent implements OnInit {
     if(this.listBank.length > 0){
       let result : boolean;
       this.listBank.forEach((bank, index) => {
-        result = this.changeCteBank(bank)
-        if(!result) return;
-        bank.sbankName = this.bancos.find(x => x.Codigo == bank.sbank).Descripcion;
-        bank.scuentaName = this.tipoCuentas.find(x => x.Codigo == bank.scuenta).Descripcion;
-        bank.num_movent = index + 1
+         result = this.changeCteBank(bank)
+         if(!result) return;
+         bank.Banco = this.bancos.find(x => x.Codigo == bank.CodBanco).Descripcion;
+         bank.TipoCuenta = this.tipoCuentas.find(x => x.Codigo == Number(bank.CodTipoCuenta).toString()).Descripcion;
+         bank.SMoneda = this.monedas.find(x => x.Codigo == bank.MonedaCod).Descripcion;
+         bank.Insupd = "N";
+         bank.Posicion = index + 1;
+         bank.Modifica = "0"
       })
 
       if(!result) return;
-      
-      console.log(this.listBank);
+
       this.reference.close(this.listBank);
     }
   }
@@ -174,8 +169,9 @@ export class ModalCuentaBancariaComponent implements OnInit {
   editCteBancaria(){
     let result = this.changeCteBank(this.ctaBancaria)
     if(!result) return;
-    this.ctaBancaria.sbankName = this.bancos.find(x => x.Codigo == this.ctaBancaria.sbank).Descripcion;
-    this.ctaBancaria.scuentaName = this.tipoCuentas.find(x => x.Codigo == this.ctaBancaria.scuenta).Descripcion;
+    this.ctaBancaria.Banco = this.bancos.find(x => x.Codigo == this.ctaBancaria.CodBanco).Descripcion;
+    this.ctaBancaria.TipoCuenta = this.tipoCuentas.find(x => x.Codigo == this.ctaBancaria.CodTipoCuenta).Descripcion;
+    this.ctaBancaria.SMoneda = this.monedas.find(x => x.Codigo == this.ctaBancaria.MonedaCod).Descripcion;
     this.reference.close(this.ctaBancaria);
   }
 

@@ -202,13 +202,13 @@ export class ModalCoberturaComponent implements OnInit {
     this.reserveService.GetApi(data).subscribe(
       res => {
         let beneficiario = JSON.parse(res) as DataResponse;
+        
         if(beneficiario.P_NCODE == "0"){
           const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
           modalRef.componentInstance.reference = modalRef;
           modalRef.componentInstance.origen = 3;  
           modalRef.componentInstance.datosBeneficiario = beneficiario.EListClient[0];
           modalRef.result.then((benef) => {
-            console.log(benef);
             this.obtenerDatosBenef(benef, true)
           });
         }else{
@@ -604,8 +604,6 @@ export class ModalCoberturaComponent implements OnInit {
 
           if(edit){
             //let benefEdit = this.beneficiarios.find(x => x.SCODE == benef.P_SCOD_CLIENT.trim())
-            console.log(res.ListBeneficiariesValid[0]);
-            console.log(this.beneficiarios);
             this.beneficiarios =  this.beneficiarios.filter(x => x.SCODE != benef.P_SCOD_CLIENT.trim());
             this.beneficiarios.push(res.ListBeneficiariesValid[0])
           }else{
@@ -896,8 +894,6 @@ export class ModalCoberturaComponent implements OnInit {
       return;
     }
 
-    console.log(this.dataReserva);
-
 
     Swal.fire({
       title: 'Información',
@@ -1043,7 +1039,6 @@ export class ModalCoberturaComponent implements OnInit {
     }
 
     reservaUpdate.NUSERCODE = Number(atob(codUsuario));
-    console.log(reservaUpdate);
 
     if(msj != ""){
       Swal.fire('Información', msj, 'warning');

@@ -14,6 +14,8 @@ import { DatePipe } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalCuentaBancariaComponent } from '../modal-cuenta-bancaria/modal-cuenta-bancaria.component';
 import { ClientBank } from 'src/app/core/models/clientBank';
+import { ClaimBenefCuentasModelRequesBM } from 'src/app/core/models/benefCuentaResponse';
+import { map } from 'rxjs/operators';
 
 export class TipoDocumento{
   id: number;
@@ -40,7 +42,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   data = new Data();
   provincias : CombosGenericoVM[]=[];
   distritos: CombosGenericoVM[]=[];
-  listBank : ClientBank[] = [];
+  listBank : ClaimBenefCuentasModelRequesBM[] = [];
 
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -150,11 +152,12 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     this.reserveService.GetBank(this.datosBeneficiario.P_SCLIENT).subscribe(
       res => {
         console.log(res);
-        if (res.viaPago != null) this.form.controls['viaPago'].setValue(res.viaPago);
-        if (res.banco != null) this.form.controls['banco'].setValue(res.banco);
-        if (res.tipoCuenta != null) this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
-        if (res.nroCuenta != null) this.form.controls['nroCuenta'].setValue(res.nroCuenta);
-        if (res.nroCuentaCCI != null) this.form.controls['nroCuentaCCI'].setValue(res.nroCuentaCCI.trim());
+        this.listBank = res
+        // if (res.viaPago != null) this.form.controls['viaPago'].setValue(res.viaPago);
+        // if (res.banco != null) this.form.controls['banco'].setValue(res.banco);
+        // if (res.tipoCuenta != null) this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
+        // if (res.nroCuenta != null) this.form.controls['nroCuenta'].setValue(res.nroCuenta);
+        // if (res.nroCuentaCCI != null) this.form.controls['nroCuentaCCI'].setValue(res.nroCuentaCCI.trim());
       }
     )
   }
@@ -296,10 +299,10 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             request.ApellidoPaterno = this.data.P_SLASTNAME;
             request.ApellidoMaterno = this.data.P_SLASTNAME2;
             request.Celular = this.form.controls['celular'].value;
-            request.CodBanco = this.form.controls['banco'].value;
+            //request.CodBanco = this.form.controls['banco'].value;
             request.CodigoUsuario = atob(codUsuario);
-            request.CodTipoCuenta = this.form.controls['tipoCuenta'].value;
-            request.CodViaPago = this.form.controls['viaPago'].value;
+            // request.CodTipoCuenta = this.form.controls['tipoCuenta'].value;
+            // request.CodViaPago = this.form.controls['viaPago'].value;
             request.Departamento = this.data.EListAddresClient[0].P_NPROVINCE;
             request.Provincia = this.data.EListAddresClient[0].P_NLOCAL;
             request.Distrito = this.data.EListAddresClient[0].P_NMUNICIPALITY;
@@ -308,8 +311,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             request.Lote = this.form.controls['P_SLOTE'].value;
             request.Nacionalidad = this.data.P_NNATIONALITY;
             request.Nombres = this.data.P_SFIRSTNAME;
-            request.NroCuenta = this.form.controls['nroCuenta'].value;
-            request.NroCuentaCCI = this.form.controls['nroCuentaCCI'].value;
+            // request.NroCuenta = this.form.controls['nroCuenta'].value;
+            // request.NroCuentaCCI = this.form.controls['nroCuentaCCI'].value;
             request.NroDocumento = this.data.P_SIDDOC;
             //Piso
             request.Piso = null;
@@ -322,11 +325,10 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             request.FechaFinPagoPension = null;
             request.FechaFallecimientoPensionista = null;
             request.CondicionEstudiante = null;
+            request.CtasBeneficiario = this.listBank;
             this.reserveService.UPD_BANK(request).subscribe(res => {
               Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
-              jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;
-              console.log(jsonResponse);
-              console.log(res);              
+              jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;        
               this.reference.close(jsonResponse);
             },err => {
               jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;
@@ -387,59 +389,41 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     modalRef.componentInstance.tipoCuentas  = this.objBeneficiarioModel.lstTipoCuenta;
     modalRef.componentInstance.addCtaBank = true;
     modalRef.result.then((cuentas) => {
-      console.log(cuentas);
-      console.log(this.listBank)
       if(cuentas != undefined) {
         this.listBank = this.listBank.concat(cuentas)
-        this.listBank.forEach((cte , i) => {
-          cte.num_movent = i + 1;
-        })
+        // this.listBank.forEach((cte , i) => {
+        //   cte.num_movent = i + 1;
+        // })
       }
       
     });
   }
 
-  editCuentaBancaria(ctaBancaria: ClientBank){
+  editCuentaBancaria(ctaBancaria: ClaimBenefCuentasModelRequesBM){
     const modalRef = this.modalService.open(ModalCuentaBancariaComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;
     modalRef.componentInstance.addCtaBank = false;
     modalRef.componentInstance.bancos = this.objBeneficiarioModel.lstBanco;
     modalRef.componentInstance.tipoCuentas  = this.objBeneficiarioModel.lstTipoCuenta;
-    let cta = new ClientBank();
-    cta.sbank = ctaBancaria.sbank;
-    cta.scuenta = ctaBancaria.scuenta;
-    cta.scta = ctaBancaria.scta;
-    cta.scci = ctaBancaria.scci;
-    cta.state = ctaBancaria.state;
-    cta.scoin = ctaBancaria.scoin;
-    cta.num_movent = ctaBancaria.num_movent;
-    cta.length = ctaBancaria.length;
-    cta.sbankName = ctaBancaria.sbankName;
-    cta.scuentaName = ctaBancaria.scuentaName;
-    cta.scoinName = ctaBancaria.scoinName;
+    let cta = new ClaimBenefCuentasModelRequesBM();
+    cta.Nidacc  = ctaBancaria.Nidacc;
+    cta.SCLIENT = ctaBancaria.SCLIENT;
+    cta.CodTipoCuenta = ctaBancaria.CodTipoCuenta;
+    cta.TipoCuenta = ctaBancaria.TipoCuenta;
+    cta.CodBanco = ctaBancaria.CodBanco;
+    cta.Banco = ctaBancaria.Banco;
+    cta.NroCuenta = ctaBancaria.NroCuenta;
+    cta.NroCuentaCCI = ctaBancaria.NroCuentaCCI;
+    cta.SMoneda = ctaBancaria.SMoneda;
+    cta.MonedaCod = ctaBancaria.MonedaCod;
+    cta.Insupd = ctaBancaria.Insupd;
+    cta.ViaPago = ctaBancaria.ViaPago;
+    cta.Modifica = ctaBancaria.Modifica;
+    cta.Habilita = ctaBancaria.Habilita;
 
     modalRef.componentInstance.ctaBancaria = cta;
-    modalRef.result.then((cuenta: ClientBank) => {
+    modalRef.result.then((cuenta: ClaimBenefCuentasModelRequesBM) => {
       if(cuenta != undefined) ctaBancaria = cuenta;
-    })
-  }
-
-  deleteCuentaBancaria(i : number){
-    Swal.fire({
-      title: 'Información',
-      text: "¿Está seguro de borrar la cuenta bancaria?",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.listBank.splice(i,1);
-        this.listBank.forEach((cte , i) => {
-          cte.num_movent = i + 1;
-        })
-      }
     })
   }
 

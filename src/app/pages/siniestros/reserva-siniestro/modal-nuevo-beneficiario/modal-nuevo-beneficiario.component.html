@@ -224,17 +224,17 @@
                                         </thead>
                                         <tbody *ngIf="listBank.length > 0">
                                             <tr *ngFor="let bank of listBank; let i = index">
-                                                <td>{{bank.sbankName}}</td>
-                                                <td>{{bank.scuentaName}}</td>
-                                                <td>{{bank.scta}}</td>
-                                                <td>{{bank.scci}}</td>
+                                                <td>{{bank.Banco}}</td>
+                                                <td>{{bank.TipoCuenta}}</td>
+                                                <td>{{bank.NroCuenta}}</td>
+                                                <td>{{bank.NroCuentaCCI}}</td>
                                                 <td>
-                                                    <span *ngIf="bank.scoin == 1">SOLES</span>
-                                                    <span *ngIf="bank.scoin == 2">DÓLARES</span>
+                                                    {{bank.SMoneda}}
+                                                    <!-- <span *ngIf="bank.scoin == 1">SOLES</span>
+                                                    <span *ngIf="bank.scoin == 2">DÓLARES</span> -->
                                                 </td>
                                                 <td>
-                                                    <i class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank)"></i>
-                                                    <i class="fa fa-trash ml-2" style="cursor: pointer;" (click)="deleteCuentaBancaria(i)"></i>
+                                                    <i *ngIf="bank.Modifica == '0'" class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank)"></i>
                                                 </td>
                                             </tr>
                                         </tbody>

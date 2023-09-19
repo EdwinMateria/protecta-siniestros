@@ -85,17 +85,13 @@
                                     </td>
                                     <td style="white-space: nowrap;">
                                         {{beneficiario.SBANKNAME}}
-                                        <!-- <select class="form-control" [(ngModel)]="beneficiario.SBANK">
-                                            <option *ngFor="let banco of bancos" [value]="banco.SCODIGO">{{banco.SDESCRIPCION}}
-                                            </option>
-                                        </select> -->
                                     </td>
                                     <td style="white-space: nowrap;">
                                         {{beneficiario.SACCOUNTNUMBER}}
                                         <!-- <input type="number" class="form-control" [(ngModel)]="beneficiario.SACCOUNTNUMBER" maxlength="15"> -->
                                     </td>
                                     <td style="white-space: nowrap;"> 
-                                        {{beneficiario.SCCI}}
+                                        {{beneficiario.SACCOUNTCCINUMBER}}
                                     </td>
                                     <td style="white-space: nowrap;">
                                         <button [disabled]="disabledBotones" class="btn btn-sm" (click)="borrarBeneficiario(i, beneficiario.SCODE)"><i class="fa fa-trash"></i></button>

@@ -17,6 +17,7 @@ export class Data {
     P_NNATIONALITY          : string;
     P_SISCLIENT_IND         : string;
     P_SISRENIEC_IND         : string;
+    SCLIENT                 ?:string;
     EListAddresClient       : Direccion[];
     EListPhoneClient        : Telefono[];
     EListEmailClient        : Correo[];

@@ -22,35 +22,34 @@
                 <tbody>
                     <tr *ngFor="let bank of listBank; let i = index">
                         <td>
-                            <select class="form-control" [(ngModel)]="bank.sbank" (ngModelChange)="changeBank(bank)">
+                            <select class="form-control" [(ngModel)]="bank.CodBanco" (ngModelChange)="changeBank(bank)">
                                 <option value="" disabled>SELECCIONE</option>
                                 <option *ngFor="let banco of bancos" [value]="banco.Codigo">{{banco.Descripcion}}</option>
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="bank.scuenta" (ngModelChange)="changeBank(bank)">
+                            <select class="form-control" [(ngModel)]="bank.CodTipoCuenta" (ngModelChange)="changeBank(bank)">
                                 <option value="0" disabled>SELECCIONE</option>
-                                <option *ngFor="let cuenta of tipoCuentas" [value]="cuenta.Codigo">{{cuenta.Descripcion}}</option>
+                                <option *ngFor="let cuenta of tipoCuentas" [value]="'0' + cuenta.Codigo">{{cuenta.Descripcion}}</option>
                             </select>
                         </td>
                         <td>
-                            <input type="number" class="form-control w-100" [(ngModel)]="bank.scta" [maxlength]="bank.length" >
+                            <input type="number" class="form-control w-100" [(ngModel)]="bank.NroCuenta" [maxlength]="bank.length" >
                         </td>
                         <td>
-                            <input type="number" class="form-control w-100" [(ngModel)]="bank.scci">
+                            <input type="number" class="form-control w-100" [(ngModel)]="bank.NroCuentaCCI">
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="bank.scoin">
+                            <select class="form-control" [(ngModel)]="bank.MonedaCod">
                                 <option *ngFor="let moneda of monedas" [value]="moneda.Codigo" [disabled]="moneda.Codigo == '0'">{{moneda.Descripcion}}</option>
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" [(ngModel)]="bank.state">
+                            <select class="form-control" [(ngModel)]="bank.Habilita">
                                 <option *ngFor="let estado of estados" [value]="estado.Codigo">{{estado.Descripcion}}</option>
                             </select>
                         </td>
                         <td *ngIf="addCtaBank == true">
-                            <i *ngIf="i != listBank.length - 1" class="fa fa-trash mt-2" style="cursor: pointer;" (click)="deleteCuentasBancarias(i)"></i>
                             <i *ngIf="i == listBank.length - 1" class="fa fa-plus mt-2" style="cursor: pointer;" (click)="controlCuentaBancaria(bank)"></i>
                         </td>
                     </tr>
