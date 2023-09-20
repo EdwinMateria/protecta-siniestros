@@ -7,6 +7,7 @@ export class ClientBank{
     scoin       :   string;
     num_movent  :   number;
     length      :   number;
+    modifica    :   string;
 
     //names
     sbankName   ?:   string;

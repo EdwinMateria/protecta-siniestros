@@ -76,6 +76,25 @@ export class LiquidacionService {
         );
       }
 
+      GetListaBancos(): Observable<any> {
+        const url = `${this.Url}/LiquidacionManager/GetComboBanco`;
+        const payload = {
+          SCODIGO: 0,
+          SDESCRIPCION: '',
+        };
+        return this.http.post(url, { data: btoa(JSON.stringify(payload)) }).pipe(
+          map((response: any) =>
+            response.map((value: any) => ({
+              Codigo: +value.SCODIGO,
+              Descripcion: (<string>value.SDESCRIPCION)
+                .toString()
+                .trim()
+                .toUpperCase(),
+            }))
+          )
+        );
+      }
+
     //Retorna la lista de siniestros pendientes de pago
     public RetornarListaSiniPendPago(idata: any): Observable<any> {
         const data = JSON.stringify(idata);

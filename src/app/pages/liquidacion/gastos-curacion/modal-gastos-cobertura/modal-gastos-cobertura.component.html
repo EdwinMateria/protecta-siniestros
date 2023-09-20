@@ -219,7 +219,21 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-sm-3 form-group">
+                            <div class="row" *ngIf="formaPagoVal == '4'">
+                                <div class="col-sm-3 form-group">
+                                    <label>Transferencia</label>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="formaPagoVal == '8'">
+                                <div class="col-sm-12 form-group">
+                                    <label>Banco (*)</label>
+                                    <select class="form-control" id="bancoCheque">
+                                        <option value="" disabled>SELECCIONE</option>
+                                        <option *ngFor="let banco of bancos" [value]="banco.Codigo">{{banco.Descripcion}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- <div class="col-sm-3 form-group">
                                 <label>Banco</label>
                                 <input type="text" class="form-control" disabled [(ngModel)]="banco">
                                 <input type="text" class="form-control" disabled [(ngModel)]="idBanco" id="idBanco" style="display: none;">
@@ -227,7 +241,7 @@
                             <div class="col-sm-3 form-group">
                                 <label>Nro. de cuenta</label>
                                 <input type="text" class="form-control" disabled [(ngModel)]="nroCuenta" id="TxtnroCuenta" >
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <div class="col-sm-6 form-group">
