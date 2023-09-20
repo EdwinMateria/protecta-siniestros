@@ -48,15 +48,9 @@ export class ModalCuentaBancariaComponent implements OnInit {
     if(this.addCtaBank){
       let cteP = new ClaimBenefCuentasModelRequesBM();
       this.listBank.push({
-        sbank       :   '',
-        scuenta     :   '0',
-        scta        :   '',
-        scci        :   '',
-        state       :   '1',
-        scoin       :   '0',
-        num_movent  :   this.listBank.length + 1,
-        length      :   20,
-        modifica    :   '0'
+        ...cteP,
+        Posicion  :   this.listBank.length + 1,
+        length      :   20
       })
     }else{
       console.log(this.ctaBancaria);
