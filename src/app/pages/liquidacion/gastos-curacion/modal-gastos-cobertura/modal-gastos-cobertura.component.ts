@@ -10,6 +10,8 @@ import { LiquidacionService } from 'src/app/core/services/liquidacion/liquidacio
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 import { SwalCarga } from 'src/app/core/swal-loading';
 import { Movimiento } from '../../models/GastoCuracionModel';
+import { ClaimComboBERequestBM } from 'src/app/core/models/claimBeneficiarioModelRequest';
+import { ClaimComboResponse } from 'src/app/core/models/claimComboResponse';
 
 export class DatosSiniestro{
   PNCLAIM : string;
@@ -217,6 +219,7 @@ export class Campospago_validar{
  vMontoPago: number;
  vObserv : string;
  vReembolso: number;
+ //vBancoCheque: number;
 }
 
 @Component({
@@ -275,6 +278,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
   formtipopago = new FormControl("0", [Validators.required, this.notAllowed(/^0/)]);
   formformapago = new FormControl("0", [Validators.required, this.notAllowed(/^0/)]);
   formimporte = new FormControl(0, [Validators.required, this.notAllowed(/^0/)]);
+
+  formaPagoVal = "";
+  bancos : ClaimComboBERequestBM[] = [];
   
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -325,6 +331,8 @@ export class ModalGastosCoberturaComponent implements OnInit {
     //llenamos las listas
     this.GetListaTipoPago();
     this.GetListaFormaPago();
+    this.GetListaBancos();
+    
 
     //TITULO MODAL
     this.tipoCobertura = this.data[0].NCOVER;
@@ -479,6 +487,18 @@ export class ModalGastosCoberturaComponent implements OnInit {
       s => {        
         this.formaPago = s;
         console.log(this.formaPago);        
+      },
+      e => {
+        console.log(e);
+        //dialogRefLoad.close();
+      });
+  }
+
+  GetListaBancos(){
+    this.service.GetListaBancos().subscribe(
+      s => {        
+        this.bancos = s;
+        console.log(this.bancos);        
       },
       e => {
         console.log(e);
@@ -839,8 +859,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
   cambioFormaPago(){
     const selectElement = document.getElementById("formaPago") as HTMLSelectElement;
     const selectedValue = selectElement.value;
+    this.formaPagoVal = selectElement.value;
 
-    if(selectedValue == "11" && this.banco != '' &&  this.nroCuenta != '' ){
+    if(selectedValue == "3" && this.banco != '' &&  this.nroCuenta != '' ){
       Swal.fire('Información','Esta cambiando la forma de pago a Cheque.', 'warning');
     }    
   }
@@ -862,6 +883,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
       
         let lstbenef = this.salidaBenef_Origen.filter(x => x.SCLIENT == vsclient);
+
+        let vBancoCheque = 0;
+        
 
         const vreembolso = lstbenef[0].REEMBOLSO;
         //const tipoclient = vBenef.split("|")[1];  
@@ -888,6 +912,10 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
         //console.log("fechas:" + FinAnalisis +  "|" + this.datos_siniestro[0].DOCCURDAT  +  "|" + this.datosPago.FECHADECLARACION  +  "|" + this.datosPago.FECHAAPERTURA)
 
+        if(vFormaPago == 8){
+          const selectElementBancoCheque = document.getElementById("bancoCheque") as HTMLSelectElement;
+          vBancoCheque = parseInt(selectElementBancoCheque.value);
+        }
 
         if(lstbenef[0].CANT_FACTURAS > 0 && this.nroFactura!= '' ){//vreembolso == 2  tipoclient=='RUC'
           //const selectElementFactura = document.getElementById("nroFactura") as HTMLSelectElement;
@@ -1138,6 +1166,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
                       vPendPagoClient: benef.MONTO_PAGO2,
                       vMontoPago: (benef.MONTO_PAGO == null ? 0 : benef.MONTO_PAGO),
                       vObserv : benef.Observaciones
+                      //vBancoCheque : 0
                     };
                     
                     //this.messageMVal = await this.Validaciones_Muerte(this.Campospago_validar[0]);
