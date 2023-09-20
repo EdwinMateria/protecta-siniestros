@@ -226,7 +226,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         P_DBIRTHDAT : fecha[2]+'/'+fecha[1]+'/'+fecha[0],
         p_CodAplicacion : "SINIESTRO",
         p_TipOper : "INS",
-        p_NUSERCODE : atob(codUsuario),
+        p_NUSERCODE : "JRENIQUE",
         p_NSPECIALITY : "99",
         p_NTITLE : "99",
         p_SISCLIENT_IND : "1",
@@ -325,6 +325,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             request.FechaFinPagoPension = null;
             request.FechaFallecimientoPensionista = null;
             request.CondicionEstudiante = null;
+            request.CodViaPago = this.form.controls['viaPago'].value;
             request.CtasBeneficiario = this.listBank;
             this.reserveService.UPD_BANK(request).subscribe(res => {
               Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
@@ -412,8 +413,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     cta.TipoCuenta = ctaBancaria.TipoCuenta;
     cta.CodBanco = ctaBancaria.CodBanco;
     cta.Banco = ctaBancaria.Banco;
-    cta.NroCuenta = ctaBancaria.NroCuenta;
-    cta.NroCuentaCCI = ctaBancaria.NroCuentaCCI;
+    cta.NroCuenta = ctaBancaria.NroCuenta.trim();
+    cta.NroCuentaCCI = ctaBancaria.NroCuentaCCI.trim();
     cta.SMoneda = ctaBancaria.SMoneda;
     cta.MonedaCod = ctaBancaria.MonedaCod;
     cta.Insupd = ctaBancaria.Insupd;
@@ -423,6 +424,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
     modalRef.componentInstance.ctaBancaria = cta;
     modalRef.result.then((cuenta: ClaimBenefCuentasModelRequesBM) => {
+      console.log(cuenta);
       if(cuenta != undefined) ctaBancaria = cuenta;
     })
   }

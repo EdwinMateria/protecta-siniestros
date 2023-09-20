@@ -202,6 +202,7 @@ export class ModalCoberturaComponent implements OnInit {
     this.reserveService.GetApi(data).subscribe(
       res => {
         let beneficiario = JSON.parse(res) as DataResponse;
+        console.log(JSON.parse(res));
         
         if(beneficiario.P_NCODE == "0"){
           const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});

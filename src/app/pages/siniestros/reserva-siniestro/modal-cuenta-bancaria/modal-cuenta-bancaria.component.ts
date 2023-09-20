@@ -53,6 +53,7 @@ export class ModalCuentaBancariaComponent implements OnInit {
         length      :   20
       })
     }else{
+      console.log(this.ctaBancaria);
       this.listBank.push(this.ctaBancaria)
     }
   }
@@ -169,8 +170,9 @@ export class ModalCuentaBancariaComponent implements OnInit {
   editCteBancaria(){
     let result = this.changeCteBank(this.ctaBancaria)
     if(!result) return;
+    this.ctaBancaria = this.listBank[0]
     this.ctaBancaria.Banco = this.bancos.find(x => x.Codigo == this.ctaBancaria.CodBanco).Descripcion;
-    this.ctaBancaria.TipoCuenta = this.tipoCuentas.find(x => x.Codigo == this.ctaBancaria.CodTipoCuenta).Descripcion;
+    this.ctaBancaria.TipoCuenta = this.tipoCuentas.find(x => x.Codigo == Number(this.ctaBancaria.CodTipoCuenta).toString()).Descripcion;
     this.ctaBancaria.SMoneda = this.monedas.find(x => x.Codigo == this.ctaBancaria.MonedaCod).Descripcion;
     this.reference.close(this.ctaBancaria);
   }
