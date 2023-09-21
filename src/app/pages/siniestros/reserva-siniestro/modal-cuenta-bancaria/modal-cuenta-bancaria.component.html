@@ -30,7 +30,7 @@
                         <td>
                             <select class="form-control" [(ngModel)]="bank.CodTipoCuenta" (ngModelChange)="changeBank(bank)">
                                 <option value="0" disabled>SELECCIONE</option>
-                                <option *ngFor="let cuenta of tipoCuentas" [value]="'0' + cuenta.Codigo">{{cuenta.Descripcion}}</option>
+                                <option *ngFor="let cuenta of tipoCuentas" [value]="cuenta.Codigo">{{cuenta.Descripcion}}</option>
                             </select>
                         </td>
                         <td>

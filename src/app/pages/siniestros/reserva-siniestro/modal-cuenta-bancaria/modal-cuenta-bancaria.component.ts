@@ -64,10 +64,12 @@ export class ModalCuentaBancariaComponent implements OnInit {
 
   changeBank(bank: ClaimBenefCuentasModelRequesBM){
     bank.NroCuenta = '';
-    if(bank.CodBanco == "02" && bank.NroCuenta == "2"){
+    console.log("bank.CodBanco: " + bank.CodBanco);
+    
+    if(bank.CodBanco == "02" && bank.CodTipoCuenta == "2"){
       bank.length = 13
     }else{
-      if(bank.CodBanco == "02" && bank.NroCuenta == "1"){
+      if(bank.CodBanco == "02" && bank.CodTipoCuenta == "1"){
         bank.length = 14
       }else{
         if(bank.CodBanco == "11"){
@@ -85,6 +87,7 @@ export class ModalCuentaBancariaComponent implements OnInit {
         }
       }
     }
+    console.log("bank.length: " + bank.length);
     //const numeros = ["02", "03", "11", "41"];
   }
 
