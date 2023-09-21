@@ -282,10 +282,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
       this.reserveService.SaveApi(this.data).subscribe(
         res =>{
-          Swal.close();
           let jsonResponse = JSON.parse(res);
           if(jsonResponse.P_NCODE == 1){
+            Swal.close();
             Swal.fire('Información', jsonResponse.P_SMESSAGE ,'error')
+            return;
           }else{
             //UPD_BANK
             let request = new ClaimBeneficiarioModelRequestBM();
@@ -332,10 +333,12 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             request.CodViaPago = this.form.controls['viaPago'].value;
             request.CtasBeneficiario = this.listBank;
             this.reserveService.UPD_BANK(request).subscribe(res => {
+              Swal.close();
               Swal.fire('Información', jsonResponse.P_SMESSAGE ,'success')
               jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;        
               this.reference.close(jsonResponse);
             },err => {
+              Swal.close();
               jsonResponse.SCODE = jsonResponse.P_SCOD_CLIENT;
               this.reference.close(jsonResponse);
             });
@@ -396,6 +399,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     modalRef.result.then((cuentas) => {
       if(cuentas != undefined) {
         this.listBank = this.listBank.concat(cuentas)
+        console.log(this.listBank);
+        
         // this.listBank.forEach((cte , i) => {
         //   cte.num_movent = i + 1;
         // })
