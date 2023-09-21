@@ -198,12 +198,12 @@
                 </div>
                 <label class="col-sm-2 col-form-label">Correo</label>
                  <div class="col-sm-2 pl-0">
-                    <input class="form-control" placeholder="Correo" formControlName="P_SE_MAIL">
+                    <input class="form-control" placeholder="Correo" formControlName="P_SE_MAIL" [(ngModel)]="correo">
                 </div>
             </div>
 
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Vía de Pago</label>
+                <label class="col-sm-2 col-form-label">Forma de Pago</label>
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="viaPago">
                         <option value="">(SELECCIONE)</option>
@@ -240,11 +240,9 @@
                                                 <td>{{bank.NroCuentaCCI}}</td>
                                                 <td>
                                                     {{bank.SMoneda}}
-                                                    <!-- <span *ngIf="bank.scoin == 1">SOLES</span>
-                                                    <span *ngIf="bank.scoin == 2">DÓLARES</span> -->
                                                 </td>
                                                 <td>
-                                                    <i *ngIf="bank.Modifica == '0'" class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank)"></i>
+                                                    <i *ngIf="bank.Modifica == '0'" class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank, i)"></i>
                                                 </td>
                                             </tr>
                                         </tbody>

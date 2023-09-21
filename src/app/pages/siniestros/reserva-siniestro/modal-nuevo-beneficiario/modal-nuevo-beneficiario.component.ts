@@ -43,6 +43,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   provincias : CombosGenericoVM[]=[];
   distritos: CombosGenericoVM[]=[];
   listBank : ClaimBenefCuentasModelRequesBM[] = [];
+  correo = '';
 
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -104,8 +105,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     this.form.patchValue({
       ...this.datosBeneficiario
     })
+
     let correo = this.datosBeneficiario.EListEmailClient;
+    
     if( correo.length > 0 ){
+      this.correo = correo[0].P_SE_MAIL;
       this.form.controls['P_SE_MAIL'].setValue(correo[0].P_SE_MAIL)
     }
     const parts = this.datosBeneficiario.P_DBIRTHDAT.split('/');
@@ -151,8 +155,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     //Obtener datos banco
     this.reserveService.GetBank(this.datosBeneficiario.P_SCLIENT).subscribe(
       res => {
-        console.log(res);
         this.listBank = res
+        this.form.controls['viaPago'].setValue(this.listBank[0].CodViaPago);
         // if (res.viaPago != null) this.form.controls['viaPago'].setValue(res.viaPago);
         // if (res.banco != null) this.form.controls['banco'].setValue(res.banco);
         // if (res.tipoCuenta != null) this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
@@ -400,12 +404,14 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     });
   }
 
-  editCuentaBancaria(ctaBancaria: ClaimBenefCuentasModelRequesBM){
+  editCuentaBancaria(ctaBancaria: ClaimBenefCuentasModelRequesBM, i: number){
     const modalRef = this.modalService.open(ModalCuentaBancariaComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;
     modalRef.componentInstance.addCtaBank = false;
     modalRef.componentInstance.bancos = this.objBeneficiarioModel.lstBanco;
     modalRef.componentInstance.tipoCuentas  = this.objBeneficiarioModel.lstTipoCuenta;
+    console.log(ctaBancaria);
+    
     let cta = new ClaimBenefCuentasModelRequesBM();
     cta.Nidacc  = ctaBancaria.Nidacc;
     cta.SCLIENT = ctaBancaria.SCLIENT;
@@ -425,7 +431,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     modalRef.componentInstance.ctaBancaria = cta;
     modalRef.result.then((cuenta: ClaimBenefCuentasModelRequesBM) => {
       console.log(cuenta);
-      if(cuenta != undefined) ctaBancaria = cuenta;
+      //if(cuenta != undefined) ctaBancaria = cuenta;
+      if(cuenta != undefined){
+        this.listBank[i] = cuenta
+        this.listBank[i].Nidacc = ctaBancaria.Nidacc;
+      }
     })
   }
 

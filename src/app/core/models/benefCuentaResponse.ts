@@ -15,6 +15,7 @@ export class ClaimBenefCuentasModelRequesBM {
     Habilita        : string;
     length          ?: number;
     Posicion        ?: number;
+    CodViaPago      ?: string;
     constructor(){
         this.CodBanco = "";
         this.CodTipoCuenta = "0";

@@ -34,10 +34,10 @@
                             </select>
                         </td>
                         <td>
-                            <input type="number" class="form-control w-100" [(ngModel)]="bank.NroCuenta" [maxlength]="bank.length" >
+                            <input type="text" appOnlyNumber class="form-control w-100" [(ngModel)]="bank.NroCuenta" [maxlength]="bank.length" >
                         </td>
                         <td>
-                            <input type="number" class="form-control w-100" [(ngModel)]="bank.NroCuentaCCI">
+                            <input class="form-control w-100" [(ngModel)]="bank.NroCuentaCCI" type="text" appOnlyNumber maxlength="20">
                         </td>
                         <td>
                             <select class="form-control" [(ngModel)]="bank.MonedaCod">
