@@ -153,14 +153,14 @@
                                     <option *ngFor="let fact of salidaFacturas" [value]="fact.NUM_FACTURA">
                                         {{ fact.NUM_FACTURA }}
                                     </option>
-                                <!--
-                                    <option  [value]="'|||0.00|0.00|0.00|0.00'">
-                                        Seleccionar
-                                    </option>
-                                    <option *ngFor="let fact of salidaFacturas" [value]="fact.NUM_FACTURA + '|' + fact.FECHAEMISIONFACTURA + '|' + fact.FECHARECEPCIONFACTURA + '|' + fact.BASE_IMPONIBLE+ '|' +  fact.IGV + '|' + fact.TOTAL_COMP + '|' + fact.TOTAL_PAGAR_FAC">
-                                        {{ fact.NUM_FACTURA }}
-                                    </option>
-                                -->   
+                                    <!--
+                                        <option  [value]="'|||0.00|0.00|0.00|0.00'">
+                                            Seleccionar
+                                        </option>
+                                        <option *ngFor="let fact of salidaFacturas" [value]="fact.NUM_FACTURA + '|' + fact.FECHAEMISIONFACTURA + '|' + fact.FECHARECEPCIONFACTURA + '|' + fact.BASE_IMPONIBLE+ '|' +  fact.IGV + '|' + fact.TOTAL_COMP + '|' + fact.TOTAL_PAGAR_FAC">
+                                            {{ fact.NUM_FACTURA }}
+                                        </option>
+                                    --> 
                                 </select>
                             </div>
                             <div class="col-sm-3 form-group" *ngIf="baseImponible > 0">
@@ -315,8 +315,8 @@
                                     <th scope="col">Documento</th>
                                     <th scope="col">Tipo de pago (*)</th>
                                     <th scope="col">Forma de pago (*)</th>
-                                    <th scope="col">Banco</th>
-                                    <th scope="col">Nro. de cuenta</th>
+                                    <th scope="col" *ngIf="formaPagoVal == '4'">Cuenta (*)</th>
+                                    <th scope="col" *ngIf="formaPagoVal == '8'">Banco (*)</th>
                                     <th scope="col">Observaciones</th>
                                     <th scope="col">Total a pagar (*)</th>
                                 </tr>
@@ -344,7 +344,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_formapago" (change)="cambioFormaPagoGrilla($event,beneficiarios.NBANKEXT,beneficiarios.SACCOUNT,i + 1)">
+                                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_formapago" id="formaPago" (change)="cambioFormaPagoGrilla($event,beneficiarios.NBANKEXT,beneficiarios.SACCOUNT,i + 1)">
                                             <option  [value]="0">
                                                 Seleccionar
                                             </option>
@@ -352,13 +352,26 @@
                                                 {{ data.description }}
                                             </option>
                                         </select>
-                                    </td>                    
-                                    <td>
+                                    </td>   
+                                    <td *ngIf="formaPagoVal == '4'">
+                                        <label>Transferencia</label>
+                                    </td>    
+                                    <td *ngIf="formaPagoVal == '8'">
+                                        <select class="form-control" id="bancoCheque">
+                                            <option value="" disabled>SELECCIONE</option>
+                                            <option *ngFor="let banco of bancos" [value]="banco.Codigo">{{banco.Descripcion}}</option>
+                                        </select>
+                                    </td>           
+                                    <!-- <td>
                                         <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NBANKEXT" style="display: none;">
                                         <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NOMBRE_BANCO">
                                     </td>                  
-                                    <td><input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SACCOUNT"></td>  <!--[value]="beneficiarios.SACCOUNT">-->
-                                    <td><input type="text" class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" maxlength="30" [(ngModel)]="beneficiarios.Observaciones"></td>
+                                     <td>
+                                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SACCOUNT">
+                                    </td>  -->
+                                    <td>
+                                        <input type="text" class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" maxlength="30" [(ngModel)]="beneficiarios.Observaciones">
+                                    </td>
                                     <td>                        
                                         <input class="form-control" type="number" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.MONTO_PAGO" (keyup)="changePago(2,i)" > 
                                         <input class="form-control" type="number" disabled [(ngModel)]="beneficiarios.MONTO_PAGO2" style="display: none;">
