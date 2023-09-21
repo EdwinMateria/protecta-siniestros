@@ -88,7 +88,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       telefOfic: [ '' ],
       anexo: [ '' ],
       P_SE_MAIL: [ '' ],
-      viaPago: [ '' ],
+      viaPago: [ '' , [Validators.required]],
       banco: [ '' ],
       tipoCuenta: [ '' ],
       nroCuenta: [ '' ],
