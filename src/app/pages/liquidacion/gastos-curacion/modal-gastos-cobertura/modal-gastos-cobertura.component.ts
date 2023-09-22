@@ -85,6 +85,10 @@ export class SalidaBeneficiarios{
   //NBILL: string;
   //IGV: number;
   //TOTAL_COMP: number;
+  CTASBENEFICIARIO: ClaimBenefCuentasModelRequesBM[];
+  CTASBENEFPAGO: LstBancoBenef[];
+  LSTBANCOS: ClaimComboBERequestBM[] = [];
+  LSTFORMAPAGO: FormaPago[] = [];
 }
 
 export class SalidaBeneficiariosMuerte{
@@ -329,6 +333,8 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
  FiltroValidar : FiltroValidar[] = [];
 
+ aparecer: boolean;
+
   ngOnInit(): void {
     this.inicializadorModal()
   }
@@ -567,7 +573,20 @@ export class ModalGastosCoberturaComponent implements OnInit {
                   this.txtformapago = "10";  
                 }else{
                   this.txtformapago = "11";
-                }                
+                  this.formaPagoVal = "11";
+                }  
+                
+                // this.lstBancoBenef = [];
+                // for (let obj of this.salidaBeneficiarios[0].CTASBENEFICIARIO){
+                //   let nidacca = obj.nidacc;
+                //   let descrip = obj.Banco + ' '  + obj.NroCuenta;
+                //   let nuevoElemento: LstBancoBenef = {
+                //     ID: nidacca,
+                //     SDESCRIPT: descrip
+                //   };
+                //   this.lstBancoBenef.push(nuevoElemento);
+                // }
+                this.ctaBenef = this.salidaBeneficiarios[0].CTASBENEFICIARIO
                 
                 if( (this.tipoCobertura == 4 || this.tipoCobertura == 5) && this.cant_facturas > 0){//this.reembolso == 2   gastos medicos y gastos de sepelio && this.salidaBeneficiarios[0].SCLIENT 
                   
@@ -637,7 +656,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
             console.log(benef.CTASBENEFICIARIO); 
             this.lstBancoBenef = [];
             for (let obj of this.ctaBenef){
-              let nidacca = obj.Nidacc;
+              let nidacca = obj.nidacc;
               let descrip = obj.Banco + ' '  + obj.NroCuenta;
               let nuevoElemento: LstBancoBenef = {
                 ID: nidacca,
@@ -890,7 +909,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     const selectedValue = selectElement.value;
     this.formaPagoVal = selectElement.value;
 
-    if(selectedValue == "3" && this.banco != '' &&  this.nroCuenta != '' ){
+    if(selectedValue == "11" && this.banco != '' &&  this.nroCuenta != '' ){
       Swal.fire('Información','Esta cambiando la forma de pago a Cheque.', 'warning');
     }    
   }
@@ -1879,5 +1898,15 @@ changePago(tipo,nro){//campo
       const next: string = [current.slice(0, position), event.key == 'Decimal' ? '.' : event.key, current.slice(position)].join('');
        if (next && !String(next).match(regex)) { event.preventDefault();}
     }
+
+    aparecerTabla(){
+      if (this.aparecer){
+        this.aparecer = false;
+      }else{
+        this.aparecer = true;
+      }
+      
+    }
+
 
 }

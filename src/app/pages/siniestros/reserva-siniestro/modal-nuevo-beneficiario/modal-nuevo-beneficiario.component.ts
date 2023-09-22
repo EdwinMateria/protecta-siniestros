@@ -175,12 +175,20 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       .GetBank(this.datosBeneficiario.P_SCLIENT)
       .subscribe((res) => {
         this.listBank = res;
+        
+        this.listBank.forEach(function (value){
+          console.log('Dentro del for');
+          console.log(value);
+        });
+
         this.form.controls["viaPago"].setValue(this.listBank[0].CodViaPago);
-        // if (res.viaPago != null) this.form.controls['viaPago'].setValue(res.viaPago);
+        // if (res.viaPago != null) this.form.controls['viaPago'].setValue(res.viaPago); 
         // if (res.banco != null) this.form.controls['banco'].setValue(res.banco);
         // if (res.tipoCuenta != null) this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
         // if (res.nroCuenta != null) this.form.controls['nroCuenta'].setValue(res.nroCuenta);
         // if (res.nroCuentaCCI != null) this.form.controls['nroCuentaCCI'].setValue(res.nroCuentaCCI.trim());
+        console.log('this.listBank: ');
+        console.log(this.listBank);
       });
   }
 
@@ -370,6 +378,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
             this.SaveApiBenef()
           }
         });
+      }else{
+        this.SaveApiBenef()
       }
     }
   }
@@ -441,10 +451,12 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     modalRef.componentInstance.bancos = this.objBeneficiarioModel.lstBanco;
     modalRef.componentInstance.tipoCuentas =
       this.objBeneficiarioModel.lstTipoCuenta;
+    console.log('ctaBancaria');
     console.log(ctaBancaria);
-
+    console.log('NID');
+    console.log(ctaBancaria.nidacc);
     let cta = new ClaimBenefCuentasModelRequesBM();
-    cta.Nidacc = ctaBancaria.Nidacc;
+    cta.nidacc = ctaBancaria.nidacc;
     cta.SCLIENT = ctaBancaria.SCLIENT;
     cta.CodTipoCuenta = ctaBancaria.CodTipoCuenta;
     cta.TipoCuenta = ctaBancaria.TipoCuenta;
@@ -458,14 +470,16 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     cta.ViaPago = ctaBancaria.ViaPago;
     cta.Modifica = ctaBancaria.Modifica;
     cta.Habilita = ctaBancaria.Habilita;
+    //cta.nidacc = ctaBancaria.nidacc;
 
     modalRef.componentInstance.ctaBancaria = cta;
     modalRef.result.then((cuenta: ClaimBenefCuentasModelRequesBM) => {
+      console.log('cuenta');
       console.log(cuenta);
       //if(cuenta != undefined) ctaBancaria = cuenta;
       if (cuenta != undefined) {
         this.listBank[i] = cuenta;
-        this.listBank[i].Nidacc = ctaBancaria.Nidacc;
+        this.listBank[i].nidacc = ctaBancaria.nidacc;
       }
     });
   }

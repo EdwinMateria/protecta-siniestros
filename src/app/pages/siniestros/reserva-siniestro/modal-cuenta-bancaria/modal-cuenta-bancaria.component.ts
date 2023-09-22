@@ -43,6 +43,7 @@ export class ModalCuentaBancariaComponent implements OnInit {
   }
 
   initCte(){
+    console.log('1');
     console.log(this.ctaBancaria);
     
     if(this.addCtaBank){
@@ -53,6 +54,7 @@ export class ModalCuentaBancariaComponent implements OnInit {
         length      :   20
       })
     }else{
+      console.log('2');
       console.log(this.ctaBancaria);
       this.listBank.push(this.ctaBancaria)
     }
@@ -94,13 +96,13 @@ export class ModalCuentaBancariaComponent implements OnInit {
 
   validateCCI(cte: ClaimBenefCuentasModelRequesBM){
     const numeros = ["02", "03", "11", "41"];
-    debugger;
+    
     if(!numeros.includes(cte.CodBanco) && (cte.NroCuentaCCI == "" ||  cte.NroCuentaCCI == undefined || cte.NroCuentaCCI == null )){
-      debugger;
+      
       Swal.fire('Información','Para el banco seleccionado debe ingresar el Número CCI','warning');
       return false;
     }else{
-      debugger;
+    
       return true;
     }
   }

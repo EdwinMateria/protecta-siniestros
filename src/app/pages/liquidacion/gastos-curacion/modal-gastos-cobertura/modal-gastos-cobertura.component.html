@@ -219,16 +219,48 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="row" *ngIf="formaPagoVal == '4'">
-                                <div class="col-sm-3 form-group">
-                                    <label>Transferencia</label>
-                                </div>
+                            <div class="col-sm-6 form-group" *ngIf="formaPagoVal == '10'">
+                                <label>Cuenta (*)</label>
+                                <input type="text" class="form-control w-100" value="SELECCIONAR CUENTA" (click)="aparecerTabla()" >
+                                    <table *ngIf="aparecer" class="table w-100">
+                                        <tr>
+                                            <td>Banco</td>
+                                            <td>Nro</td>
+                                            <td>CCI</td>
+                                            <td>Moneda</td>
+                                        </tr>
+                                        <tr *ngFor="let ctabenefi of ctaBenef">
+                                            <td>{{ctabenefi.Banco}}</td>
+                                            <td>{{ctabenefi.NroCuenta}}</td>
+                                            <td>{{ctabenefi.NroCuentaCCI}}</td>
+                                            <td>{{ctabenefi.SMoneda}}</td>
+                                        </tr>                                                
+                                    </table>
+                                <!-- <select class="form-control" id="transfer">
+                                    <option *ngFor="let ctabenefi of ctaBenef" [value]="ctabenefi.nidacc">
+                                        <label>Banco</label><br />
+                                        <label>{{ctabenefi.Banco}}</label>
+                                        <table>
+                                            <tr>
+                                                <td>Banco</td>
+                                                <td>Nro</td>
+                                                <td>CCI</td>
+                                                <td>Moneda</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ctabenefi.Banco}}</td>
+                                                <td>{{ctabenefi.NroCuenta}}</td>
+                                                <td>{{ctabenefi.NroCuentaCCI}}</td>
+                                                <td>{{ctabenefi.SMoneda}}</td>
+                                            </tr>                                                
+                                        </table>
+                                    </option>          
+                                </select>-->
                             </div>
-                            <div class="row" *ngIf="formaPagoVal == '8'">
+                            <div class="row" *ngIf="formaPagoVal == '11'">
                                 <div class="col-sm-12 form-group">
                                     <label>Banco (*)</label>
                                     <select class="form-control" id="bancoCheque">
-                                        <option value="" disabled>SELECCIONE</option>
                                         <option *ngFor="let banco of bancos" [value]="banco.Codigo">{{banco.Descripcion}}</option>
                                     </select>
                                 </div>
@@ -353,7 +385,7 @@
                                             </option>
                                         </select>
                                     </td>   
-                                    <td *ngIf="formaPagoVal == '4'">
+                                    <td *ngIf="formaPagoVal == '10'">
                                         <select class="form-control" id="transfer">
                                             <option value="" disabled>SELECCIONE</option>
                                             <optgroup label="Banco" title="Descripción de la opción 1">
@@ -361,7 +393,7 @@
                                             </optgroup>                                            
                                         </select>
                                     </td>    
-                                    <td *ngIf="formaPagoVal == '8'">
+                                    <td *ngIf="formaPagoVal == '11'">
                                         <select class="form-control" id="bancoCheque">
                                             <option value="" disabled>SELECCIONE</option>
                                             <option *ngFor="let banco of beneficiarios.LSTBANCOS" [value]="banco.Codigo">{{banco.Descripcion}}</option>

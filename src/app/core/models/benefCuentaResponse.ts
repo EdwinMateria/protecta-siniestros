@@ -1,5 +1,5 @@
 export class ClaimBenefCuentasModelRequesBM {
-    Nidacc          : number;
+    nidacc          : number;
     SCLIENT         : string;
     CodTipoCuenta   : string;
     TipoCuenta      : string;
