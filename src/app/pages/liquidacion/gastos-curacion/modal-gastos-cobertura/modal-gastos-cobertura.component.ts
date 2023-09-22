@@ -117,6 +117,9 @@ export class SalidaBeneficiariosMuerte{
   //IGV: number;
   //TOTAL_COMP: number;
   CTASBENEFICIARIO: ClaimBenefCuentasModelRequesBM[];
+  CTASBENEFPAGO: LstBancoBenef[];
+  LSTBANCOS: ClaimComboBERequestBM[] = [];
+  LSTFORMAPAGO: FormaPago[] = [];
 }
 
 export class FiltroList_Fact{
@@ -288,6 +291,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   formaPagoVal = "";
   bancos : ClaimComboBERequestBM[] = [];
   ctaBenef : ClaimBenefCuentasModelRequesBM[] = [];
+  lstBancoBenef : LstBancoBenef[] = [];
   
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -629,9 +633,22 @@ export class ModalGastosCoberturaComponent implements OnInit {
             this.sfila = (this.sfila + 1)
 
             this.ctaBenef = benef.CTASBENEFICIARIO;
-
             console.log('Beneficiarios Muerte SUS CUENTAS: '); 
-            console.log(this.ctaBenef); 
+            console.log(benef.CTASBENEFICIARIO); 
+            this.lstBancoBenef = [];
+            for (let obj of this.ctaBenef){
+              let nidacca = obj.Nidacc;
+              let descrip = obj.Banco + ' '  + obj.NroCuenta;
+              let nuevoElemento: LstBancoBenef = {
+                ID: nidacca,
+                SDESCRIPT: descrip
+              };
+              this.lstBancoBenef.push(nuevoElemento);
+            }
+
+            benef.LSTFORMAPAGO = this.formaPago;
+            benef.CTASBENEFPAGO = this.lstBancoBenef;
+            benef.LSTBANCOS = this.bancos;
 
             benef.m_tipopago = "10";
 
@@ -1814,7 +1831,7 @@ cambioFormaPagoGrilla(e,sbanco, scuenta, nro){//nro, svalue, sbanco, scuenta
   const selectElement = document.getElementById("formaPago") as HTMLSelectElement;
     const selectedValue = selectElement.value;
     this.formaPagoVal = selectElement.value;
-
+    console.log(this.formaPagoVal);
     if(val_fp == 3 && sbanco != '' &&  scuenta != '' ){
     Swal.fire('Información','Esta cambiando la forma de pago a Cheque. <br /> Beneficiario N°' + nro, 'warning');
   }    

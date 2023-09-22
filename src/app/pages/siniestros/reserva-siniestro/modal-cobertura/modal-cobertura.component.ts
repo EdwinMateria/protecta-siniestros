@@ -199,29 +199,43 @@ export class ModalCoberturaComponent implements OnInit {
     data.P_CodAplicacion = "SINIESTRO";
     data.P_TipOper = "CON";
     data.P_NUSERCODE = "JRENIQUE";
-    this.reserveService.GetApi(data).subscribe(
-      res => {
-        let beneficiario = JSON.parse(res) as DataResponse;
-        console.log(JSON.parse(res));
-        
-        if(beneficiario.P_NCODE == "0"){
-          const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
-          modalRef.componentInstance.reference = modalRef;
-          modalRef.componentInstance.origen = 3;  
-          modalRef.componentInstance.datosBeneficiario = beneficiario.EListClient[0];
-          modalRef.result.then((benef) => {
-            this.obtenerDatosBenef(benef, true)
-          });
-        }else{
-          Swal.fire('Información','No se pudo obtener la información del beneficiario', 'warning');
-          return;
-        }
-      },
-      err => {
-        Swal.fire('Infromación','Ocurrió un error en la consulta del beneficiario','error');
-        return;
+
+    Swal.fire({
+      title: 'Confirmación',
+      text: 'Esta seguro que desea modificar los datos del Beneficiario. ¿Desea continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+      showCloseButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reserveService.GetApi(data).subscribe(
+          res => {
+            let beneficiario = JSON.parse(res) as DataResponse;
+            console.log(JSON.parse(res));
+            
+            if(beneficiario.P_NCODE == "0"){
+              const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
+              modalRef.componentInstance.reference = modalRef;
+              modalRef.componentInstance.origen = 3;  
+              modalRef.componentInstance.datosBeneficiario = beneficiario.EListClient[0];
+              modalRef.result.then((benef) => {
+                this.obtenerDatosBenef(benef, true)
+              });
+            }else{
+              Swal.fire('Información','No se pudo obtener la información del beneficiario', 'warning');
+              return;
+            }
+          },
+          err => {
+            Swal.fire('Infromación','Ocurrió un error en la consulta del beneficiario','error');
+            return;
+          }
+        )
       }
-    )
+    })
 
   }
 
