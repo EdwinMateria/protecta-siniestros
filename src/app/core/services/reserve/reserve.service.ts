@@ -31,6 +31,7 @@ import { ClaimBenefValidRequest } from '../../models/claimBenefValidRequest';
 import { ClaimBenefValidResponseVM } from '../../models/claimBenefValidResponse';
 import { ClaimBeneficiariesShowRequest } from '../../models/claimBeneficiariesShowRequest';
 import { ClaimBeneficiariesShowResponse } from '../../models/claimBeneficiariesShowResponse';
+import { ClaimBenefCuentasModelRequesBM } from '../../models/benefCuentaResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -227,6 +228,27 @@ export class ReserveService {
   public GetCodDiagnosticCover(data: ClaimValCoverRequest): Observable<ClaimGetDatAddResponseVM> {
     const body = JSON.stringify(data);
     return this.http.post<ClaimGetDatAddResponseVM>(this.Url + '/Reserve/GetCodDiagnosticCover', body, {
+      headers: this.headers,
+    });
+  }
+
+
+  public GetApi(data: Data): Observable<any> {
+    //const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/Reserve/GetApi', data, {
+      headers: this.headers,
+    });
+  }
+
+  public GetBank(codClient: string):Observable<ClaimBenefCuentasModelRequesBM[]>{
+    return this.http.get<ClaimBenefCuentasModelRequesBM[]>(this.Url + '/Reserve/GetBank?codClient='+codClient, { 
+      headers: this.headers
+    })
+  }
+
+  public GetBeneficiario(data: Data): Observable<any> {
+    //const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/Reserve/GetBeneficiario', data, {
       headers: this.headers,
     });
   }

@@ -26,6 +26,9 @@ import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-pr
 import { SwalCarga } from "src/app/core/swal-loading";
 import { ClaimBenefValidRequest } from 'src/app/core/models/claimBenefValidRequest';
 import { ClaimBeneficiariesShowRequest } from 'src/app/core/models/claimBeneficiariesShowRequest';
+import { Data } from 'src/app/core/models/data';
+import { DataResponse } from 'src/app/core/models/data-response';
+import { ModalNuevoBeneficiarioComponent } from '../modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
 
 @Component({
   selector: 'app-modal-cobertura',
@@ -190,6 +193,53 @@ export class ModalCoberturaComponent implements OnInit {
         Swal.fire('Error', err, 'error');
       }
     )
+  }
+
+  editarBeneficiario(beneficiario: BeneficiariesVM ){
+    let data : Data = new Data();
+    data.P_SIDDOC = beneficiario.SDOCUMENTNUMBER
+    data.P_NIDDOC_TYPE = beneficiario.NCODDOCUMENTTYPE;
+    data.P_CodAplicacion = "SINIESTRO";
+    data.P_TipOper = "CON";
+    data.P_NUSERCODE = "JRENIQUE";
+
+    Swal.fire({
+      title: 'Confirmación',
+      text: 'Esta seguro que desea modificar los datos del Beneficiario. ¿Desea continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+      showCloseButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reserveService.GetApi(data).subscribe(
+          res => {
+            let beneficiario = JSON.parse(res) as DataResponse;
+            console.log(JSON.parse(res));
+            
+            if(beneficiario.P_NCODE == "0"){
+              const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
+              modalRef.componentInstance.reference = modalRef;
+              modalRef.componentInstance.origen = 3;  
+              modalRef.componentInstance.datosBeneficiario = beneficiario.EListClient[0];
+              modalRef.result.then((benef) => {
+                this.obtenerDatosBenef(benef, true)
+              });
+            }else{
+              Swal.fire('Información','No se pudo obtener la información del beneficiario', 'warning');
+              return;
+            }
+          },
+          err => {
+            Swal.fire('Infromación','Ocurrió un error en la consulta del beneficiario','error');
+            return;
+          }
+        )
+      }
+    })
+
   }
 
   obtenerCodigoDiagnostico(){
@@ -546,6 +596,12 @@ export class ModalCoberturaComponent implements OnInit {
     modalRef.componentInstance.beneficiarios = this.beneficiarios;
     modalRef.componentInstance.origen = 2;  
     modalRef.result.then((benef) => {
+      this.obtenerDatosBenef(benef, false)
+    });
+  }
+
+
+  obtenerDatosBenef(benef: any, edit :boolean){
       if((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)){
         SwalCarga();
         let data = new ClaimBenefValidRequest();
@@ -565,7 +621,15 @@ export class ModalCoberturaComponent implements OnInit {
             if(res.ListBeneficiariesValid[0].SBANK == "") res.ListBeneficiariesValid[0].SBANK = "0";
             
             this.validadorTabla = false;
+
+          if(edit){
+            //let benefEdit = this.beneficiarios.find(x => x.SCODE == benef.P_SCOD_CLIENT.trim())
+            this.beneficiarios =  this.beneficiarios.filter(x => x.SCODE != benef.P_SCOD_CLIENT.trim());
             this.beneficiarios.push(res.ListBeneficiariesValid[0])
+          }else{
+            this.beneficiarios.push(res.ListBeneficiariesValid[0])
+          }
+
             if(this.beneficiarios.length == 1){
               this.obtenerBancos()
             }
@@ -591,7 +655,6 @@ export class ModalCoberturaComponent implements OnInit {
           }
         )
       }
-    });
   }
 
   borrarBeneficiario(i:number, sclient?:any){

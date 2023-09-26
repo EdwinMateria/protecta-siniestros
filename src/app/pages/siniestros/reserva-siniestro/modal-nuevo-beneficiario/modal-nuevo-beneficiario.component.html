@@ -197,18 +197,69 @@
                 </div>
                 <label class="col-sm-2 col-form-label">Correo</label>
                  <div class="col-sm-2 pl-0">
-                    <input class="form-control" placeholder="Correo" formControlName="P_SE_MAIL">
+                    <input class="form-control" placeholder="Correo" formControlName="P_SE_MAIL" [(ngModel)]="correo">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Vía de Pago</label>
+                <label class="col-sm-2 col-form-label">Forma de Pago</label>
                 <div class="col-sm-4">
-                    <select class="form-control" formControlName="viaPago">
+                    <select class="form-control" formControlName="viaPago" [ngClass]="{'is-invalid': form.get('viaPago').invalid && form.get('viaPago').touched}">
                         <option value="">(SELECCIONE)</option>
                         <option *ngFor="let viaPago of objBeneficiarioModel.lstViaPago" [value]="viaPago.Codigo">{{viaPago.Descripcion}}</option>
                     </select>
                 </div>
-                <label class="col-sm-2 col-form-label">Banco</label>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header py-2">
+                            <h5>Datos de cuentas bancarias</h5>
+                        </div>
+                        <div class="card-body py-1">
+                            <div class="mt-3 pb-4">
+                                <div>
+                                    <table class="table table-striped w-100">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Banco</th>
+                                                <th scope="col">Tipo De Cuenta</th>
+                                                <th scope="col">Nro. De Cuenta</th>
+                                                <th scope="col">Nro. Cuenta CCI</th>
+                                                <th scope="col">Moneda</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody *ngIf="listBank.length > 0">
+                                            <tr *ngFor="let bank of listBank; let i = index">
+                                                <td>{{bank.Banco}}</td>
+                                                <td>{{bank.TipoCuenta}}</td>
+                                                <td>{{bank.NroCuenta}}</td>
+                                                <td>{{bank.NroCuentaCCI}}</td>
+                                                <td>
+                                                    {{bank.SMoneda}}
+                                                </td>
+                                                <td>
+                                                    <i *ngIf="bank.Modifica == '0'" class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank, i)"></i>
+                                                </td>
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div *ngIf="listBank.length == 0" class="row">
+                                        <div class="col-sm-12 text-center mt-2">
+                                            No hay cuentas bancarias registradas.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            
+            <!--     <label class="col-sm-2 col-form-label">Banco</label>
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="banco">
                         <option value="">(SELECCIONE)</option>
@@ -232,13 +283,14 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nro De Cuenta CCI</label>
                 <div class="col-sm-10">
-                    <input class="form-control" type="number" placeholder="Nro De Cuenta CCI" formControlName="nroCuentaCCI" maxlength="30">
-                </div>
+                    <input class="form-control" type="text" appOnlyNumber placeholder="Nro De Cuenta CCI" formControlName="nroCuentaCCI" maxlength="30">
             </div>
+            </div> -->
     </form>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-sm-12" align="end">
             <button class="buttonN" (click)="saveBeneficiario()">Agregar</button>
+            <button class="buttonN ml-2" (click)="openCuentaBancaria()">Agregar Cuenta B.</button>
         </div>
     </div>
 </div>

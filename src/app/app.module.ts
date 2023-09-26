@@ -26,6 +26,7 @@ import { DecimalesDirective } from './core/directive/decimales.directive';
 import { SiniestroIntercepInterceptor } from './core/services/interceptor/siniestro-intercep.interceptor';
 import { DecimalPipe } from './core/pipe/decimal.pipe';
 import { NumberMaxLengthDirective } from './core/directive/number-max-length.directive';
+import { ModalCuentaBancariaComponent } from './pages/siniestros/reserva-siniestro/modal-cuenta-bancaria/modal-cuenta-bancaria.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { NumberMaxLengthDirective } from './core/directive/number-max-length.dir
     ReaperturaSiniestroComponent,
     DecimalesDirective,
     DecimalPipe,
-    NumberMaxLengthDirective
+    NumberMaxLengthDirective,
+    ModalCuentaBancariaComponent
   ],
   imports: [
     BrowserModule,

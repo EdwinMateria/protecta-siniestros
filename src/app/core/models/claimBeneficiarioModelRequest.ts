@@ -1,3 +1,5 @@
+import { ClaimBenefCuentasModelRequesBM } from "./benefCuentaResponse";
+
 export class ClaimComboBERequestBM{
     Codigo      :   string;
     Descripcion :   string;
@@ -72,4 +74,5 @@ export class ClaimBeneficiarioModelRequestBM {
     CondicionEstudiante :   string;
     Edad                :   number;
     PorcentajeBeneficiario: number;
+    CtasBeneficiario    : ClaimBenefCuentasModelRequesBM[];
 }

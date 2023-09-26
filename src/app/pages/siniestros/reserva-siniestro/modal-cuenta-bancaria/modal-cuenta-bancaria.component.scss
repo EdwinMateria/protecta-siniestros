@@ -1,0 +1,29 @@
+.buttonN {
+    justify-content: center;
+    border: 1px solid rgb(129, 118, 157);
+    border-radius: 2px;
+    margin: 0px;
+    background: #fff;
+    padding: 8px 5px;
+    min-width: 60px;
+    height: 40px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.buttonN:hover {
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.buttonN:disabled {
+    cursor: not-allowed;
+    background-color: rgb(235, 235, 228);
+    color: #666666;
+}
+
+.card-header{
+    background-color: #2b0d61;
+    color: #fff;
+}
