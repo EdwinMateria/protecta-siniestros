@@ -219,7 +219,55 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-sm-3 form-group">
+                            <div class="col-sm-6 form-group" *ngIf="txtformapago == '10'" (blur) = "cerrarTabla()">
+                                <label>Cuenta (*)</label>
+                                <input type="text" class="form-control w-100" value="SELECCIONAR CUENTA" (click)="aparecerTabla()" [(ngModel)]="Txt_ViewCuenta" readonly style="background-color: white !important;"><!--(blur) = "cerrarTabla()"-->
+                                    <div class="table-responsive" *ngIf="aparecer" style="width: 97% !important;position: absolute;z-index: 999999;height: 236px;overflow:auto;"> 
+                                        <table class="table w-100 table_fp" style="border: 1px solid #6565658f;background-color: white;">
+                                            <tr style="background-color: #e9ecef !important;color: #212529 !important;">
+                                                <td>Banco</td>
+                                                <td>Nro</td>
+                                                <td>CCI</td>
+                                                <td>Moneda</td>
+                                            </tr>
+                                            <tr *ngFor="let ctabenefi of ctaBenef" style="cursor:pointer;" (click)="Selec_Cuenta(1, ctabenefi.CodBanco, ctabenefi.Banco, ctabenefi.NroCuenta, ctabenefi.NroCuentaCCI, ctabenefi.MonedaCod, ctabenefi.SMoneda, 0)">
+                                                <td>{{ctabenefi.Banco}}</td>
+                                                <td>{{ctabenefi.NroCuenta}}</td>
+                                                <td>{{ctabenefi.NroCuentaCCI}}</td>
+                                                <td>{{ctabenefi.SMoneda}}</td>
+                                            </tr>                                                
+                                        </table>
+                                    </div>
+                                <!-- <select class="form-control" id="transfer">
+                                    <option *ngFor="let ctabenefi of ctaBenef" [value]="ctabenefi.nidacc">
+                                        <label>Banco</label><br />
+                                        <label>{{ctabenefi.Banco}}</label>
+                                        <table>
+                                            <tr>
+                                                <td>Banco</td>
+                                                <td>Nro</td>
+                                                <td>CCI</td>
+                                                <td>Moneda</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ctabenefi.Banco}}</td>
+                                                <td>{{ctabenefi.NroCuenta}}</td>
+                                                <td>{{ctabenefi.NroCuentaCCI}}</td>
+                                                <td>{{ctabenefi.SMoneda}}</td>
+                                            </tr>                                                
+                                        </table>
+                                    </option>          
+                                </select>-->
+                            </div>
+                            
+                             <div class="col-sm-6 form-group" *ngIf="txtformapago == '11'">
+                                 <label>Banco (*)</label>
+                                 <select class="form-control" id="bancoCheque" [(ngModel)]="idBanco">
+                                     <option *ngFor="let banco of bancos" [value]="banco.Codigo">{{banco.Descripcion}}</option>
+                                 </select>
+                             </div>
+                            
+                            <!-- <div class="col-sm-3 form-group">
                                 <label>Banco</label>
                                 <input type="text" class="form-control" disabled [(ngModel)]="banco">
                                 <input type="text" class="form-control" disabled [(ngModel)]="idBanco" id="idBanco" style="display: none;">
@@ -227,7 +275,7 @@
                             <div class="col-sm-3 form-group">
                                 <label>Nro. de cuenta</label>
                                 <input type="text" class="form-control" disabled [(ngModel)]="nroCuenta" id="TxtnroCuenta" >
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row">
                             <div class="col-sm-6 form-group">
@@ -301,8 +349,9 @@
                                     <th scope="col">Documento</th>
                                     <th scope="col">Tipo de pago (*)</th>
                                     <th scope="col">Forma de pago (*)</th>
-                                    <th scope="col">Banco</th>
-                                    <th scope="col">Nro. de cuenta</th>
+                                    <th scope="col">Banco (*)</th>
+                                    <!--<th scope="col" *ngIf="txtformapago == '10'">Cuenta (*)</th>
+                                    <th scope="col" *ngIf="txtformapago == '11'">Banco (*)</th>-->
                                     <th scope="col">Observaciones</th>
                                     <th scope="col">Total a pagar (*)</th>
                                 </tr>
@@ -330,21 +379,55 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_formapago" (change)="cambioFormaPagoGrilla($event,beneficiarios.NBANKEXT,beneficiarios.SACCOUNT,i + 1)">
+                                        <select class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.m_formapago" id="formaPago" (change)="cambioFormaPagoGrilla($event,beneficiarios.NBANKEXT,beneficiarios.SACCOUNT,i + 1)">
                                             <option  [value]="0">
                                                 Seleccionar
                                             </option>
-                                            <option *ngFor="let data of formaPago" [value]="data.id">
+                                            <option *ngFor="let data of formaPago" [value]="data.id"><!--beneficiarios.LSTFORMAPAGO-->
                                                 {{ data.description }}
                                             </option>
                                         </select>
                                     </td>                    
-                                    <td>
+                                    <td *ngIf="beneficiarios.m_formapago == '10'" (blur) = "cerrarTablaGrilla(i)"> <!-- (blur) = "cerrarTablaGrilla(i)"-->
+                                            <input type="text" class="form-control w-100" value="SELECCIONAR CUENTA" (click)="aparecerTablaGrilla(i)" [(ngModel)]="beneficiarios.Txt_ViewCuenta" readonly [disabled]="beneficiarios.SELECT == true ? false : true"  [ngClass]="{'cls_input': beneficiarios.SELECT == true}" >
+                                            <div class="table-responsive" *ngIf="beneficiarios.aparecerTb && beneficiarios.SELECT" style="width: 41% !important;position: absolute;z-index: 999999;height: 150px;overflow:auto;"> 
+                                                <table class="table w-100 table_fp" style="border: 1px solid #6565658f; background-color: white;" >
+                                                    <tr style="background-color: #e9ecef !important;color: #212529 !important;">
+                                                        <td>Banco</td>
+                                                        <td>Nro</td>
+                                                        <td>CCI</td>
+                                                        <td>Moneda</td>
+                                                    </tr>
+                                                    <tr *ngFor="let ctabenef of beneficiarios.CTASBENEFICIARIO" style="cursor:pointer;" (click)="Selec_Cuenta(2, ctabenef.CodBanco, ctabenef.Banco, ctabenef.NroCuenta, ctabenef.NroCuentaCCI, ctabenef.MonedaCod, ctabenef.SMoneda, i)">
+                                                        <td>{{ctabenef.Banco}}</td>
+                                                        <td>{{ctabenef.NroCuenta}}</td>
+                                                        <td>{{ctabenef.NroCuentaCCI}}</td>
+                                                        <td>{{ctabenef.SMoneda}}</td>
+                                                    </tr>                                                
+                                                </table>
+                                            </div>
+                                            <!--<optgroup label="Banco" title="Descripción de la opción 1">
+                                                    <option *ngFor="let ctabenef of beneficiarios.CTASBENEFPAGO" [value]="ctabenef.ID">{{ctabenef.SDESCRIPT}}</option>
+                                                </optgroup> 
+                                             -->                                           
+                                    </td>    
+                                    <td *ngIf="beneficiarios.m_formapago == '11'"  >
+                                        <select class="form-control" [(ngModel)]="beneficiarios.NBANKEXT" [disabled]=" beneficiarios.SELECT == true ? false : true">
+                                            <!--<option value="" disabled>SELECCIONE</option>-->
+                                            <option *ngFor="let banco of bancos" [value]="banco.Codigo">{{banco.Descripcion}}</option> <!--beneficiarios.LSTBANCOS-->
+                                        </select>
+                                    </td>
+                                    <td *ngIf="beneficiarios.m_formapago != '10' && beneficiarios.m_formapago != '11'"><input type="text" class="form-control" disabled/></td>           
+                                    <!-- <td>
                                         <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NBANKEXT" style="display: none;">
                                         <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.NOMBRE_BANCO">
                                     </td>                  
-                                    <td><input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SACCOUNT"></td>  <!--[value]="beneficiarios.SACCOUNT">-->
-                                    <td><input type="text" class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" maxlength="30" [(ngModel)]="beneficiarios.Observaciones"></td>
+                                     <td>
+                                        <input type="text" class="form-control" disabled [(ngModel)]="beneficiarios.SACCOUNT">
+                                    </td>  -->
+                                    <td>
+                                        <input type="text" class="form-control" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" maxlength="30" [(ngModel)]="beneficiarios.Observaciones">
+                                    </td>
                                     <td>                        
                                         <input class="form-control" type="number" disabled [disabled]=" beneficiarios.SELECT == true ? false : true" [(ngModel)]="beneficiarios.MONTO_PAGO" (keyup)="changePago(2,i)" > 
                                         <input class="form-control" type="number" disabled [(ngModel)]="beneficiarios.MONTO_PAGO2" style="display: none;">
