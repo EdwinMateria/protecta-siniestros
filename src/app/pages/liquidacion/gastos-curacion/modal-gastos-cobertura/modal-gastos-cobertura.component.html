@@ -383,7 +383,7 @@
                                             <option  [value]="0">
                                                 Seleccionar
                                             </option>
-                                            <option *ngFor="let data of beneficiarios.LSTFORMAPAGO" [value]="data.id">
+                                            <option *ngFor="let data of formaPago" [value]="data.id"><!--beneficiarios.LSTFORMAPAGO-->
                                                 {{ data.description }}
                                             </option>
                                         </select>
