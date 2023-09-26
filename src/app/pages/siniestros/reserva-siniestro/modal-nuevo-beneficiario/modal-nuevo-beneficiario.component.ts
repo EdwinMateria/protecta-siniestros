@@ -176,19 +176,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       .subscribe((res) => {
         this.listBank = res;
         
-        this.listBank.forEach(function (value){
-          console.log('Dentro del for');
-          console.log(value);
-        });
-
         this.form.controls["viaPago"].setValue(this.listBank[0].CodViaPago);
-        // if (res.viaPago != null) this.form.controls['viaPago'].setValue(res.viaPago); 
-        // if (res.banco != null) this.form.controls['banco'].setValue(res.banco);
-        // if (res.tipoCuenta != null) this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
-        // if (res.nroCuenta != null) this.form.controls['nroCuenta'].setValue(res.nroCuenta);
-        // if (res.nroCuentaCCI != null) this.form.controls['nroCuentaCCI'].setValue(res.nroCuentaCCI.trim());
+        
         console.log('this.listBank: ');
         console.log(this.listBank);
+
       });
   }
 

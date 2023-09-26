@@ -347,8 +347,8 @@
                                     <th scope="col">Documento</th>
                                     <th scope="col">Tipo de pago (*)</th>
                                     <th scope="col">Forma de pago (*)</th>
-                                    <th scope="col" *ngIf="formaPagoVal == '4'">Cuenta (*)</th>
-                                    <th scope="col" *ngIf="formaPagoVal == '8'">Banco (*)</th>
+                                    <th scope="col" *ngIf="formaPagoVal == '10'">Cuenta (*)</th>
+                                    <th scope="col" *ngIf="formaPagoVal == '11'">Banco (*)</th>
                                     <th scope="col">Observaciones</th>
                                     <th scope="col">Total a pagar (*)</th>
                                 </tr>
@@ -380,7 +380,7 @@
                                             <option  [value]="0">
                                                 Seleccionar
                                             </option>
-                                            <option *ngFor="let data of formaPago" [value]="data.id">
+                                            <option *ngFor="let data of beneficiarios.LSTFORMAPAGO" [value]="data.id">
                                                 {{ data.description }}
                                             </option>
                                         </select>

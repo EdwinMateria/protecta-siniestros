@@ -1851,7 +1851,7 @@ cambioFormaPagoGrilla(e,sbanco, scuenta, nro){//nro, svalue, sbanco, scuenta
     const selectedValue = selectElement.value;
     this.formaPagoVal = selectElement.value;
     console.log(this.formaPagoVal);
-    if(val_fp == 3 && sbanco != '' &&  scuenta != '' ){
+    if(val_fp == 12 && sbanco != '' &&  scuenta != '' ){
     Swal.fire('Información','Esta cambiando la forma de pago a Cheque. <br /> Beneficiario N°' + nro, 'warning');
   }    
 }

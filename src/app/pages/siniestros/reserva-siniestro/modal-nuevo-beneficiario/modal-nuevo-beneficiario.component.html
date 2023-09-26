@@ -242,7 +242,12 @@
                                                     {{bank.SMoneda}}
                                                 </td>
                                                 <td>
-                                                    <i *ngIf="bank.Modifica == '0'" class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank, i)"></i>
+                                                    <div *ngIf="bank.Modifica == '0' && bank.Habilita == '1'">
+                                                        <i class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank, i)"></i>
+                                                    </div>
+                                                    <div *ngIf="bank.Modifica == '0' && bank.Habilita == '0'">
+                                                        <i class="fa fa-edit" style="cursor: pointer;" disabled></i>
+                                                    </div>
                                                 </td>
                                                 
                                             </tr>
