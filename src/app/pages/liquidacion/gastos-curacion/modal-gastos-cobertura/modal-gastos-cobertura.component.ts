@@ -74,6 +74,7 @@ export class SalidaBeneficiarios{
   NBANKEXT: string;
   NOMBRE_BANCO: string;
   SACCOUNT: string;
+  SACCOUNTCCI: string;
   MONTO_PAGO: number; 
   MONTO_PAGO2: number;
   DIAGNOSTICO : string;
@@ -86,9 +87,9 @@ export class SalidaBeneficiarios{
   //IGV: number;
   //TOTAL_COMP: number;
   CTASBENEFICIARIO: ClaimBenefCuentasModelRequesBM[];
-  CTASBENEFPAGO: LstBancoBenef[];
-  LSTBANCOS: ClaimComboBERequestBM[] = [];
-  LSTFORMAPAGO: FormaPago[] = [];
+  //CTASBENEFPAGO: LstBancoBenef[];
+  //LSTBANCOS: ClaimComboBERequestBM[] = [];
+  //LSTFORMAPAGO: FormaPago[] = [];
 }
 
 export class SalidaBeneficiariosMuerte{
@@ -104,6 +105,8 @@ export class SalidaBeneficiariosMuerte{
   NBANKEXT: string;
   NOMBRE_BANCO: string;
   SACCOUNT: string;
+  SACCOUNTCCI: string;
+  NCURRENCY_SACCOUNT : number;
   MONTO_PAGO: number;
   DIAGNOSTICO : string;
   ESPECIALIDAD : string;
@@ -113,6 +116,7 @@ export class SalidaBeneficiariosMuerte{
   SELECT : boolean;
   m_tipopago:string;
   m_formapago:string;
+  txtformapagoClient:string;
   Observaciones: string;
 
   MONTO_PAGO2: number;
@@ -121,9 +125,11 @@ export class SalidaBeneficiariosMuerte{
   //IGV: number;
   //TOTAL_COMP: number;
   CTASBENEFICIARIO: ClaimBenefCuentasModelRequesBM[];
-  CTASBENEFPAGO: LstBancoBenef[];
-  LSTBANCOS: ClaimComboBERequestBM[] = [];
-  LSTFORMAPAGO: FormaPago[] = [];
+  //CTASBENEFPAGO: LstBancoBenef[];
+  //LSTBANCOS: ClaimComboBERequestBM[] = [];
+  //LSTFORMAPAGO: FormaPago[] = [];
+  Txt_ViewCuenta: string;
+  aparecerTb: boolean;
 }
 
 export class FiltroList_Fact{
@@ -161,6 +167,7 @@ export class FiltroProcesoPago{
   P_NPAY_FORM : number;
   P_NBANKEXT : string;
   P_SACCOUNT : string;
+  P_SACCOUNT_CCI: string;
   P_NAMOUNT : number;
   P_OBSERVACIONES : string;
   P_NUSERCODE : number;
@@ -186,6 +193,7 @@ export class FiltroProcesoPagoEnvio{
   P_NPAY_FORM : number;
   P_NBANKEXT : string;
   P_SACCOUNT : string;
+  P_SACCOUNT_CCI: string;
   P_NAMOUNT : number;
   P_OBSERVACIONES : string;
   P_NUSERCODE : number;
@@ -219,7 +227,9 @@ export class Campospago_validar{
  vfactura : string;
  vfinanalisis : string; 
  vbanco: string; 
- vnroCuenta : string;         
+ vnroCuenta : string;   
+ vnroCuentaCci : string;    
+ vmonedacuenta : number;   
  vTipoPago : number;
  vFormaPago :number;
  vPendPagarCob : number;
@@ -258,6 +268,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
   idBanco = "";
   banco = "";
   nroCuenta = "";
+  nroCuentaCci = "";
+  monedacuenta = 0;
+  Txt_ViewCuenta = "";
   nroFactura = "";
   fechaEmisionFac = "";
   fechaRecibeFac = "";
@@ -283,6 +296,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   FechaFinAnalisis = "";
   txttipopago = "";
   txtformapago = "";  
+  txtformapagoClient = ""; 
   BtnDisabled1 = false;
   BtnDisabled2 = false;  
   messageMVal = "";
@@ -295,7 +309,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   formaPagoVal = "";
   bancos : ClaimComboBERequestBM[] = [];
   ctaBenef : ClaimBenefCuentasModelRequesBM[] = [];
-  lstBancoBenef : LstBancoBenef[] = [];
+  //lstBancoBenef : LstBancoBenef[] = [];
   
   notAllowed(input: RegExp): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -558,35 +572,69 @@ export class ModalGastosCoberturaComponent implements OnInit {
                 }                
 
                 this.especialidad = this.salidaBeneficiarios[0].ESPECIALIDAD;
-                this.idBanco = this.salidaBeneficiarios[0].NBANKEXT;
-                this.banco = this.salidaBeneficiarios[0].NOMBRE_BANCO;
-                this.nroCuenta = this.salidaBeneficiarios[0].SACCOUNT;   
+                //this.idBanco = this.salidaBeneficiarios[0].NBANKEXT;
+                //this.banco = this.salidaBeneficiarios[0].NOMBRE_BANCO;
+                //this.nroCuenta = this.salidaBeneficiarios[0].SACCOUNT;   
                 this.totalFactura = this.redondearDecimales(this.salidaBeneficiarios[0].MONTO_PAGO,2);//monto a pagar por beneficario
                 this.PendPagoClient = this.redondearDecimales(this.salidaBeneficiarios[0].MONTO_PAGO,2);//monto a pagar por beneficario
                 this.pendientePagoCob = this.redondearDecimales(this.salidaBeneficiarios[0].MONTO_PAGO2,2);
                 this.cant_facturas = this.salidaBeneficiarios[0].CANT_FACTURAS;  
                 this.reembolso = this.salidaBeneficiarios[0].REEMBOLSO;
-                this.txttipopago = "10";                
-                this.txtformapago = "0";
+                this.txttipopago = "10";            
+                //this.txtformapago = "0";
 
-                if(this.salidaBeneficiarios[0].NOMBRE_BANCO!= "" && this.salidaBeneficiarios[0].SACCOUNT!= ""){
+                /*if(this.salidaBeneficiarios[0].NOMBRE_BANCO!= "" && this.salidaBeneficiarios[0].SACCOUNT!= ""){
                   this.txtformapago = "10";  
                 }else{
                   this.txtformapago = "11";
                   this.formaPagoVal = "11";
-                }  
+                } */ 
                 
-                // this.lstBancoBenef = [];
-                // for (let obj of this.salidaBeneficiarios[0].CTASBENEFICIARIO){
-                //   let nidacca = obj.nidacc;
-                //   let descrip = obj.Banco + ' '  + obj.NroCuenta;
-                //   let nuevoElemento: LstBancoBenef = {
-                //     ID: nidacca,
-                //     SDESCRIPT: descrip
-                //   };
-                //   this.lstBancoBenef.push(nuevoElemento);
-                // }
-                this.ctaBenef = this.salidaBeneficiarios[0].CTASBENEFICIARIO
+                 /*this.lstBancoBenef = [];
+                 for (let obj of this.salidaBeneficiarios[0].CTASBENEFICIARIO){
+                   let nidacca = obj.nidacc;
+                   let descrip = obj.Banco + ' '  + obj.NroCuenta;
+                   let nuevoElemento: LstBancoBenef = {
+                     ID: nidacca,
+                     SDESCRIPT: descrip
+                   };
+                   this.lstBancoBenef.push(nuevoElemento);
+                 }*/
+                  /*if(this.ctaBenef.length  > 0){
+                  this.txtformapago = "10";
+                }else{
+                  this.txtformapago = "11";
+                }*/
+
+                this.ctaBenef = this.salidaBeneficiarios[0].CTASBENEFICIARIO; 
+
+                let sCodViaPago = '12';
+
+                if ((this.salidaBeneficiarios[0].CTASBENEFICIARIO).length > 0){
+                    sCodViaPago = this.salidaBeneficiarios[0].CTASBENEFICIARIO[0].CodViaPago;
+                }
+                this.txtformapagoClient = sCodViaPago;
+  
+                if(sCodViaPago == '3' ){//CHEQUE
+                  this.txtformapago = "12";
+
+                }else if(sCodViaPago == '8'){//CHEQUE DE GERENCIA
+                  this.txtformapago = "11";
+
+                }else if(sCodViaPago == '4'){//TRANSFERENCIA
+                  this.txtformapago = "10";
+
+                }else if(sCodViaPago == ''){
+                  this.txtformapago = "12";
+
+                }else{
+                    this.txtformapago = sCodViaPago;
+                }
+
+
+              if (this.txtformapago == "11"){
+                  this.idBanco = "0";
+              }
                 
                 if( (this.tipoCobertura == 4 || this.tipoCobertura == 5) && this.cant_facturas > 0){//this.reembolso == 2   gastos medicos y gastos de sepelio && this.salidaBeneficiarios[0].SCLIENT 
                   
@@ -647,14 +695,56 @@ export class ModalGastosCoberturaComponent implements OnInit {
         selectfinanalisis.focus();    
 
         this.sfila = 1;
+
         this.salidaBeneficiariosMuerte.forEach(benef => {
             benef.FILA = this.sfila;
             this.sfila = (this.sfila + 1)
 
+            benef.SACCOUNTCCI = '';
+            benef.m_tipopago = "10";
+
             this.ctaBenef = benef.CTASBENEFICIARIO;
             console.log('Beneficiarios Muerte SUS CUENTAS: '); 
             console.log(benef.CTASBENEFICIARIO); 
-            this.lstBancoBenef = [];
+
+            this.ctaBenef = benef.CTASBENEFICIARIO; 
+
+            let sCodViaPago = '12';
+
+            if ((benef.CTASBENEFICIARIO).length > 0){
+                sCodViaPago = benef.CTASBENEFICIARIO[0].CodViaPago;
+            }
+
+            benef.txtformapagoClient = sCodViaPago;
+
+          if(sCodViaPago == '3' ){//CHEQUE
+              benef.m_formapago = "12";
+
+          }else if(sCodViaPago == '8'){//CHEQUE DE GERENCIA
+              benef.m_formapago = "11";
+
+          }else if(sCodViaPago == '4'){//TRANSFERENCIA
+              benef.m_formapago = "10";
+
+          }else if(sCodViaPago == ''){
+              benef.m_formapago = "12";
+          }else{
+              benef.m_formapago = sCodViaPago;
+          }
+
+          if (benef.m_formapago == "11"){
+              benef.NBANKEXT = "0";
+          }
+            /*
+            if(this.ctaBenef.length  > 0){
+              benef.m_formapago= "10";
+              //this.txtformapago = "10";
+            }else{
+              benef.m_formapago= "11";
+              //this.txtformapago = "11";
+            }*/
+
+            /*this.lstBancoBenef = [];
             for (let obj of this.ctaBenef){
               let nidacca = obj.nidacc;
               let descrip = obj.Banco + ' '  + obj.NroCuenta;
@@ -668,14 +758,17 @@ export class ModalGastosCoberturaComponent implements OnInit {
             benef.LSTFORMAPAGO = this.formaPago;
             benef.CTASBENEFPAGO = this.lstBancoBenef;
             benef.LSTBANCOS = this.bancos;
-
-            benef.m_tipopago = "10";
+            */
+           /*
+            
 
             if(benef.NOMBRE_BANCO!="" && benef.SACCOUNT!=""){
               benef.m_formapago= "10";
             }else{
               benef.m_formapago= "11";
-            }            
+            } 
+            */
+
         });
         console.log('Beneficiarios Muerte: '); 
         console.log(this.salidaBeneficiariosMuerte);      
@@ -721,9 +814,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
           const cod_client = lstbenef[0].SCLIENT; 
           const tipoDoc = lstbenef[0].SSHORT_DES; 
           const numDoc = lstbenef[0].DOCUMENTO; 
-          const idBanco = lstbenef[0].NBANKEXT; 
-          const nomBanco = lstbenef[0].NOMBRE_BANCO; 
-          const numCuenta = lstbenef[0].SACCOUNT; 
+          //const idBanco = lstbenef[0].NBANKEXT; 
+          //const nomBanco = lstbenef[0].NOMBRE_BANCO; 
+          //const numCuenta = lstbenef[0].SACCOUNT; 
           const montoPago = lstbenef[0].MONTO_PAGO; 
           const m_diagn = lstbenef[0].DIAGNOSTICO; 
           const m_espec = lstbenef[0].ESPECIALIDAD; 
@@ -756,28 +849,62 @@ export class ModalGastosCoberturaComponent implements OnInit {
           }  
 
           this.especialidad = m_espec;
-          this.idBanco = idBanco;
-          this.banco = nomBanco;
-          this.nroCuenta = numCuenta;    
+          //this.idBanco = idBanco;
+          //this.banco = nomBanco;
+          //this.nroCuenta = numCuenta;    
           this.totalFactura = this.redondearDecimales((montoPago),2); //monto a pagar por factura del beneficario
           this.PendPagoClient = this.redondearDecimales((montoPago),2);//monto a pagar por beneficario
           this.cant_facturas = cant_fac;  
 
-          this.nroFactura = "";
-          this.fechaEmisionFac = "";
-          this.fechaRecibeFac = "";
-          this.baseImponible = 0;
-          this.igv = 0;
-          this.totalComprobante = 0;
-          this.pendpagofac = 0;
-          this.txttipopago = "10";                
-          this.txtformapago = "0";
-          this.salidaFacturas = [];
+          //this.nroFactura = "";
+          //this.fechaEmisionFac = "";
+          //this.fechaRecibeFac = "";
+          //this.baseImponible = 0;
+          //this.igv = 0;
+          //this.totalComprobante = 0;
+          //this.pendpagofac = 0;
+          //this.txttipopago = "10";                
+          //this.txtformapago = "0";
+          //this.salidaFacturas = [];
 
-          if(this.banco!= "" && this.nroCuenta!= ""){
+          /*if(this.banco!= "" && this.nroCuenta!= ""){
             this.txtformapago = "10";  
           }else{
             this.txtformapago = "11";
+          }*/
+
+          //this.idBanco = '';
+          //this.nroCuenta= '';
+          //this.nroCuentaCci = '';
+          //this.monedacuenta = 0;
+
+          this.ctaBenef = lstbenef[0].CTASBENEFICIARIO; 
+
+          let sCodViaPago = '12';
+
+          if ((lstbenef[0].CTASBENEFICIARIO).length > 0){
+              sCodViaPago = lstbenef[0].CTASBENEFICIARIO[0].CodViaPago;
+          }
+          this.txtformapagoClient = sCodViaPago;
+
+          if(sCodViaPago == '3' ){//CHEQUE
+            this.txtformapago = "12";
+
+          }else if(sCodViaPago == '8'){//CHEQUE DE GERENCIA
+            this.txtformapago = "11";
+
+          }else if(sCodViaPago == '4'){//TRANSFERENCIA
+            this.txtformapago = "10";
+
+          }else if(sCodViaPago == ''){
+            this.txtformapago = "12";
+
+          }else{
+              this.txtformapago = sCodViaPago;
+          }
+
+          if (this.txtformapago == "11"){
+              this.idBanco = "0";
           }
 
           if((this.tipoCobertura == 4 || this.tipoCobertura == 5) && this.cant_facturas > 0){ //this.reembolso == 2  gastos medicos y gastos de sepelio  && this.salidaBeneficiarios[0].SCLIENT 
@@ -905,13 +1032,43 @@ export class ModalGastosCoberturaComponent implements OnInit {
   }
   
   cambioFormaPago(){
+    this.idBanco = '';
+    this.nroCuenta= '';
+    this.nroCuentaCci = '';
+    this.monedacuenta = 0;
+
     const selectElement = document.getElementById("formaPago") as HTMLSelectElement;
     const selectedValue = selectElement.value;
-    this.formaPagoVal = selectElement.value;
+    //this.formaPagoVal = selectElement.value;
 
-    if(selectedValue == "11" && this.banco != '' &&  this.nroCuenta != '' ){
+    if(selectedValue == "12" && this.txtformapagoClient != '12' && this.txtformapagoClient != ''){//this.idBanco != '' &&  (this.nroCuenta != '' || this.nroCuentaCci != '')){
       Swal.fire('Información','Esta cambiando la forma de pago a Cheque.', 'warning');
-    }    
+
+    }else if (selectedValue == "10"){
+      this.Txt_ViewCuenta = "SELECCIONAR CUENTA";
+    }else if (selectedValue == "11"){
+      this.idBanco = "0";
+    }
+  }
+
+  cambioFormaPagoGrilla(e,sbanco, scuenta, nro){//nro, svalue, sbanco, scuenta
+    this.salidaBeneficiariosMuerte[nro].NBANKEXT = '';
+    this.salidaBeneficiariosMuerte[nro].SACCOUNT = '';
+    this.salidaBeneficiariosMuerte[nro].SACCOUNTCCI = '';
+    this.salidaBeneficiariosMuerte[nro].NCURRENCY_SACCOUNT = 0;
+
+    const val_fp = Number(e.target.value);
+    //this.txtformapago = val_fp.toString();
+    //const selectElement = document.getElementById("formaPago") as HTMLSelectElement;
+    //const selectedValue = selectElement.value;
+      //this.formaPagoVal = selectElement.value;
+      //console.log(this.formaPagoVal);
+      if(val_fp == 12 && this.salidaBeneficiariosMuerte[nro].txtformapagoClient != '12' ){// sbanco != '' &&  scuenta != '' ){
+          Swal.fire('Información','Esta cambiando la forma de pago a Cheque. <br /> Beneficiario N°' + nro, 'warning');
+
+      }else if (val_fp == 11){
+        this.salidaBeneficiariosMuerte[nro].NBANKEXT = "0";
+      }    
   }
 
   async IniciarPago(){
@@ -932,16 +1089,18 @@ export class ModalGastosCoberturaComponent implements OnInit {
       
         let lstbenef = this.salidaBenef_Origen.filter(x => x.SCLIENT == vsclient);
 
-        let vBancoCheque = 0;
+        //let vBancoCheque = 0;
         let vbanco = '';
-
+        let vnroCuenta = '';
+        let vnroCuentaCci = '';
+        let vmonedacuenta = 0;
         const vreembolso = lstbenef[0].REEMBOLSO;
         //const tipoclient = vBenef.split("|")[1];  
 
-        const selectElementbanco = document.getElementById("idBanco") as HTMLSelectElement;
+        //const selectElementbanco = document.getElementById("idBanco") as HTMLSelectElement;
         //vbanco = (selectElementbanco.value);
         //const selectElementnroCuenta = document.getElementById("TxtnroCuenta") as HTMLSelectElement;
-        const vnroCuenta = ''; //(selectElementnroCuenta.value);
+        //let vnroCuenta = (selectElementnroCuenta.value);
 
         const selectElementTipoPago = document.getElementById("tipoPago") as HTMLSelectElement;
         const vTipoPago = parseInt(selectElementTipoPago.value);
@@ -960,9 +1119,15 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
         //console.log("fechas:" + FinAnalisis +  "|" + this.datos_siniestro[0].DOCCURDAT  +  "|" + this.datosPago.FECHADECLARACION  +  "|" + this.datosPago.FECHAAPERTURA)
 
-        if(vFormaPago == 8){
+        if(vFormaPago == 11){
           const selectElementBancoCheque = document.getElementById("bancoCheque") as HTMLSelectElement;
           vbanco = (selectElementBancoCheque.value);
+
+        }else if(vFormaPago == 10){
+          vbanco = this.idBanco;
+          vnroCuenta = this.nroCuenta;
+          vnroCuentaCci = this.nroCuentaCci;
+          vmonedacuenta = this.monedacuenta;
         }
 
         if(lstbenef[0].CANT_FACTURAS > 0 && this.nroFactura!= '' ){//vreembolso == 2  tipoclient=='RUC'
@@ -978,8 +1143,10 @@ export class ModalGastosCoberturaComponent implements OnInit {
             //vtipoclient: tipoclient, 
             vfactura : this.nroFactura ,//Factura,
             vfinanalisis : FinAnalisis,
-            vbanco: vbanco, 
-            vnroCuenta : vnroCuenta,         
+            vbanco: (vbanco != '' ?  (parseInt(vbanco)).toString() : ''), 
+            vnroCuenta : vnroCuenta,
+            vnroCuentaCci : vnroCuentaCci,
+            vmonedacuenta : vmonedacuenta,       
             vTipoPago : vTipoPago,
             vFormaPago :vFormaPago,
             vPendPagarCob : vPendPagarCob,
@@ -997,8 +1164,10 @@ export class ModalGastosCoberturaComponent implements OnInit {
             //vtipoclient: tipoclient, 
             vfactura : '',
             vfinanalisis : FinAnalisis,
-            vbanco: vbanco, 
-            vnroCuenta : vnroCuenta,         
+            vbanco: (vbanco != '' ?  (parseInt(vbanco)).toString() : ''), 
+            vnroCuenta : vnroCuenta,
+            vnroCuentaCci : vnroCuentaCci,
+            vmonedacuenta : vmonedacuenta,        
             vTipoPago : vTipoPago,
             vFormaPago :vFormaPago,
             vPendPagarCob : vPendPagarCob,
@@ -1035,6 +1204,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
           P_NPAY_FORM : this.Campospago_validar[0].vFormaPago,
           P_NBANKEXT : this.Campospago_validar[0].vbanco,
           P_SACCOUNT :this.Campospago_validar[0].vnroCuenta,
+          P_SACCOUNT_CCI: this.Campospago_validar[0].vnroCuentaCci,
           P_NAMOUNT : this.Campospago_validar[0].vMontoPago,
           P_OBSERVACIONES : this.Campospago_validar[0].vObserv,
           P_COD_DIAG : this.codDiagnostico,
@@ -1111,7 +1281,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     let Envio_Data : any[];
     Envio_Data = [];
     this.messageMVal = "";
-    let vbanco = '';
+    //let vbanco = '';
 
     this.Campospago_validar =[];
     const selectElementFinAnalisis = document.getElementById("TxtFechaFinAnalisis") as HTMLSelectElement;
@@ -1120,11 +1290,12 @@ export class ModalGastosCoberturaComponent implements OnInit {
     const vfinanalisis = parseInt((this.FechaFinAnalisis).replace(/-/g, ""));
     const selectElementFormaPago = document.getElementById("formaPago") as HTMLSelectElement;
     
-    const vFormaPago = parseInt(selectElementFormaPago.value);
-    if(vFormaPago == 8){
-      const selectElementBancoCheque = document.getElementById("bancoCheque") as HTMLSelectElement;
-      vbanco = (selectElementBancoCheque.value);
-    }
+    //PASAR ABAJO EN EL FOR
+    //const vFormaPago = parseInt(selectElementFormaPago.value);
+    //if(vFormaPago == 11){
+    //  const selectElementBancoCheque = document.getElementById("bancoCheque") as HTMLSelectElement;
+    //  vbanco = (selectElementBancoCheque.value);
+    //}
 
     let result = this.salidaBeneficiariosMuerte.filter(x => x.SELECT == true);
    
@@ -1212,8 +1383,10 @@ export class ModalGastosCoberturaComponent implements OnInit {
                       //vtipoclient: "", 
                       vfactura : "",
                       vfinanalisis : this.FechaFinAnalisis,
-                      vbanco: vbanco, //benef.NBANKEXT, 
-                      vnroCuenta : '', //benef.SACCOUNT,         
+                      vbanco:  (benef.NBANKEXT != '' ?  (parseInt(benef.NBANKEXT)).toString() : '') , 
+                      vnroCuenta : benef.SACCOUNT,    
+                      vnroCuentaCci : benef.SACCOUNTCCI,  
+                      vmonedacuenta : benef.NCURRENCY_SACCOUNT,     
                       vTipoPago : parseInt(benef.m_tipopago),
                       vFormaPago : parseInt(benef.m_formapago),
                       vPendPagarCob : 0,//llamar a la bd
@@ -1263,8 +1436,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
                             P_FEC_RECEP_FAC : '',                            
                             P_NOPER_TYPE : benef.m_tipopago,
                             P_NPAY_FORM : benef.m_formapago,
-                            P_NBANKEXT : vbanco, //benef.NBANKEXT,
+                            P_NBANKEXT :(benef.NBANKEXT != '' ?  (parseInt(benef.NBANKEXT)).toString() : ''),
                             P_SACCOUNT : benef.SACCOUNT,
+                            P_SACCOUNT_CCI : benef.SACCOUNTCCI,
                             P_NAMOUNT : benef.MONTO_PAGO,
                             P_OBSERVACIONES : benef.Observaciones,
                             P_COD_DIAG : this.codDiagnostico,
@@ -1473,7 +1647,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
       } 
 
     } 
-    
+    var lst_banco = [2, 3, 11, 41];
     
     if (vCampospago_validar.vTipoPago == 0 && this.mensaje==''){
       this.mensaje = "E|tp|Seleccione un tipo de pago";
@@ -1483,19 +1657,34 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.mensaje = "E|fp|Seleccione una forma de pago";
       return this.mensaje;
 
-    }else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vbanco== ''&& this.mensaje==''){
+    }else if (vCampospago_validar.vFormaPago == 11 && vCampospago_validar.vbanco=='0' && this.mensaje==''){//cheque de gerencia
+      this.mensaje = "E|fp|Debe seleccionar un banco.";
+      return this.mensaje;
+    }else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vnroCuenta == '' && vCampospago_validar.vnroCuentaCci == '' && this.mensaje==''){
+      this.mensaje = "E|fp|Debe seleccionar una cuenta.";
+      return this.mensaje;
+    }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))>= 0 && vCampospago_validar.vnroCuenta == '' && this.mensaje==''){
+      this.mensaje = "E|fp|El banco seleccionado debe tener número de cuenta.";
+      return this.mensaje;
+    }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))<= 0 && vCampospago_validar.vnroCuentaCci == '' && this.mensaje==''){
+      this.mensaje = "E|fp|El banco seleccionado debe tener el número de cuenta CCI.";
+      return this.mensaje;
+    }else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vmonedacuenta != 1 && this.mensaje==''){
+      this.mensaje = "E|fp|La moneda de la cuenta es diferente a la moneda de la liquidación";
+      return this.mensaje;
+
+    }
+    /*else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vbanco== ''&& this.mensaje==''){
       this.mensaje = "E|fp|No existe un banco asociado al beneficiario";
       return this.mensaje;
 
-    }else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vnroCuenta==''&& this.mensaje==''){
+    }else if (vCampospago_validar.vFormaPago == 10 && this.mensaje == '' && vCampospago_validar.vnroCuenta == '' && vCampospago_validar.vnroCuentaCci == ''){
       this.mensaje = "E|fp|No existe un número de cuenta asociado al beneficiario";
       return this.mensaje;
 
-    }else if (vCampospago_validar.vMontoPago < 1  && this.mensaje==''){
+    }*/
+    else if (vCampospago_validar.vMontoPago < 1  && this.mensaje==''){
       this.mensaje = "E|mp|Ingrese el importe a pagar";
-      return this.mensaje;
-    }else if (vCampospago_validar.vFormaPago == 8 && vCampospago_validar.vbanco=='0' && this.mensaje==''){
-      this.mensaje = "E|fp|Debe seleccionar un banco.";
       return this.mensaje;
     }
 
@@ -1616,6 +1805,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
    Validaciones_Muerte(vCampospago_validar: Campospago_validar){//sclient : string , tipoclient :string, Factura : string, FinAnalisis : string , TipoPago : number, FormaPago : number, PendPagarCob: number, PendPagoFact: number,PendPagoClient: number, MontoPago: number){
      
     this.mensaje ='';
+    var lst_banco = [2, 3, 11, 41];
     
     if (vCampospago_validar.vTipoPago ==0 && this.mensaje==''){
       this.mensaje = "E|tp|Seleccione un tipo de pago.";
@@ -1625,22 +1815,42 @@ export class ModalGastosCoberturaComponent implements OnInit {
       this.mensaje = "E|fp|Seleccione una forma de pago.";
       return this.mensaje;
 
-    }else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vbanco== ''&& this.mensaje==''){
-      this.mensaje = "E|fp|No existe un banco asociado al beneficiario.";
-      return this.mensaje;
-
-    }else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vnroCuenta==''&& this.mensaje==''){
-      this.mensaje = "E|fp|No existe un número de cuenta asociado al beneficiario.";
-      return this.mensaje;
-
-    }else if (vCampospago_validar.vMontoPago < 1  && this.mensaje==''){
-      this.mensaje = "E|mp|Ingrese el importe a pagar.";
-      return this.mensaje;
-    }else if (vCampospago_validar.vFormaPago == 8 && vCampospago_validar.vbanco== '0' && this.mensaje==''){
+    }else if (vCampospago_validar.vFormaPago == 11 && vCampospago_validar.vbanco== '0' && this.mensaje==''){//cheque de gerencia
       this.mensaje = "E|fp|Debe seleccionar un banco.";
       return this.mensaje;
 
     } 
+    else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vnroCuenta == '' && vCampospago_validar.vnroCuentaCci == '' && this.mensaje==''){
+      this.mensaje = "E|fp|Debe seleccionar una cuenta.";
+      return this.mensaje;
+
+    }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))>= 0 && vCampospago_validar.vnroCuenta == '' && this.mensaje==''){
+      this.mensaje = "E|fp|El banco seleccionado debe tener número de cuenta.";
+      return this.mensaje;
+    }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))<= 0 && vCampospago_validar.vnroCuentaCci == '' && this.mensaje==''){
+      this.mensaje = "E|fp|El banco seleccionado debe tener el número de cuenta CCI.";
+      return this.mensaje;
+    }else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vmonedacuenta != 1 && this.mensaje==''){
+      this.mensaje = "E|fp|La moneda de la cuenta es diferente a la moneda de la liquidación";
+      return this.mensaje;
+
+    }
+
+
+
+    /*else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vbanco== ''&& this.mensaje==''){
+      this.mensaje = "E|fp|No existe un banco asociado al beneficiario.";
+      return this.mensaje;
+
+    }else if (vCampospago_validar.vFormaPago == 10 && this.mensaje=='' && vCampospago_validar.vnroCuenta == '' && vCampospago_validar.vnroCuentaCci == '' ){
+      this.mensaje = "E|fp|No existe un número de cuenta asociado al beneficiario.";
+      return this.mensaje;
+
+    }*/
+    else if (vCampospago_validar.vMontoPago < 1  && this.mensaje==''){
+      this.mensaje = "E|mp|Ingrese el importe a pagar.";
+      return this.mensaje;
+    }
 
    //********VALIDACIONES PERSONA NATURA****************************
     ////else if((vCampospago_validar.vTipoPago == 11 && vCampospago_validar.vMontoPago < vCampospago_validar.vPendPagarCob) && this.mensaje==''){
@@ -1800,10 +2010,13 @@ export class ModalGastosCoberturaComponent implements OnInit {
     this.idBanco = "";
     this.banco = "";
     this.nroCuenta = "";
+    this.nroCuentaCci = '';
+    this.monedacuenta = 0;
     this.totalFactura = 0;
     this.PendPagoClient = 0 ;
     this.txttipopago = "10";                
-    this.txtformapago = "0";
+    this.txtformapago = "0";    
+    this.txtformapagoClient = '';
     this.nroFactura = "";
     this.fechaEmisionFac = "";
     this.fechaRecibeFac = "";
@@ -1814,6 +2027,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
     this.FechaFinAnalisis = "";
     this.cant_facturas = 0;
     this.reembolso = 0;
+
+    this.ctaBenef = [];
+    this.salidaFacturas = [];
   }
 
   formatoFecha(fecha, formato) {
@@ -1845,17 +2061,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
     return (sdia + "/"  + smes + "/" + saño )
   }
 */
-cambioFormaPagoGrilla(e,sbanco, scuenta, nro){//nro, svalue, sbanco, scuenta
-  const val_fp = Number(e.target.value);
-  const selectElement = document.getElementById("formaPago") as HTMLSelectElement;
-    const selectedValue = selectElement.value;
-    this.formaPagoVal = selectElement.value;
-    console.log(this.formaPagoVal);
-    if(val_fp == 3 && sbanco != '' &&  scuenta != '' ){
-    Swal.fire('Información','Esta cambiando la forma de pago a Cheque. <br /> Beneficiario N°' + nro, 'warning');
-  }    
-}
-
 
 changePago(tipo,nro){//campo
 
@@ -1874,10 +2079,10 @@ changePago(tipo,nro){//campo
 
         let nMontoPago = (this.salidaBeneficiariosMuerte[nro].MONTO_PAGO).toString();
         if (numeroRegexp.test(nMontoPago)) { 
-          nMontoPago = nMontoPago.substring(0, nMontoPago.length - 1);
-          let _num =  Number((nMontoPago).toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2')); //(Number(nMontoPago).toFixed(2));
-          this.salidaBeneficiariosMuerte[nro].MONTO_PAGO = _num;
-          return;
+           nMontoPago = nMontoPago.substring(0, nMontoPago.length - 1);
+           let _num =  Number((nMontoPago).toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2')); //(Number(nMontoPago).toFixed(2));
+           this.salidaBeneficiariosMuerte[nro].MONTO_PAGO = _num;
+           return;
         } 
         //if (campo > 0) {
         //  campo = Number(((campo).toString()).toFixed(2))  
@@ -1904,9 +2109,52 @@ changePago(tipo,nro){//campo
         this.aparecer = false;
       }else{
         this.aparecer = true;
-      }
-      
+      }      
     }
 
+    cerrarTabla(){
+      this.aparecer = false;
+    }
 
+    aparecerTablaGrilla(nro){
+      if (this.salidaBeneficiariosMuerte[nro].aparecerTb){
+        this.salidaBeneficiariosMuerte[nro].aparecerTb  = false;
+      }else{
+        this.salidaBeneficiariosMuerte[nro].aparecerTb  = true;
+      }   
+      
+      //cerrar los demas
+      for (let i = 0; i < this.salidaBeneficiariosMuerte.length; i++) {
+        if (i != nro){
+          this.salidaBeneficiariosMuerte[i].aparecerTb  = false;
+        }
+      }
+    }
+
+    cerrarTablaGrilla(nro){
+      this.salidaBeneficiariosMuerte[nro].aparecerTb  = false;
+    }
+
+    Selec_Cuenta(tipo, scodbanco, sbanco, scuent, scci, codmoneda, moneda, nro){
+
+      if(tipo == 1){
+
+        this.idBanco = (parseInt(scodbanco)).toString();
+        this.nroCuenta= scuent;
+        this.nroCuentaCci = scci;
+        this.monedacuenta = codmoneda;
+
+        this.Txt_ViewCuenta = "BANCO: " + sbanco + "   CUENTA: " +  scuent  + "   CCI: " +  scci + "   MONEDA:" + moneda ;
+        this.aparecer = false;
+
+      }else{
+          this.salidaBeneficiariosMuerte[nro].NBANKEXT = (parseInt(scodbanco)).toString();
+          this.salidaBeneficiariosMuerte[nro].SACCOUNT = scuent;
+          this.salidaBeneficiariosMuerte[nro].SACCOUNTCCI = scci;
+          this.salidaBeneficiariosMuerte[nro].NCURRENCY_SACCOUNT = codmoneda;
+          this.salidaBeneficiariosMuerte[nro].Txt_ViewCuenta = "BANCO: " + sbanco + "   CUENTA: " +  scuent  + "   CCI: " +  scci + "   MONEDA:" + moneda ;
+          
+          this.salidaBeneficiariosMuerte[nro].aparecerTb  = false;
+      }
+    }
 }
