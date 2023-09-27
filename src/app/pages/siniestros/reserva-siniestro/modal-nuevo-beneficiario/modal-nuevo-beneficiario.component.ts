@@ -176,13 +176,9 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       .GetBank(this.datosBeneficiario.P_SCLIENT)
       .subscribe((res) => {
         this.listBank = res;
-  
-        this.listBank.forEach(function (value){
-          console.log('Dentro del for');
-          console.log(value);
-        });
-
-        this.form.controls["viaPago"].setValue(this.listBank[0].CodViaPago);
+        console.log(this.listBank);
+        
+        if(this.listBank.length > 0) this.form.controls["viaPago"].setValue(this.listBank[0].CodViaPago);
         // if (res.viaPago != null) this.form.controls['viaPago'].setValue(res.viaPago); 
         // if (res.banco != null) this.form.controls['banco'].setValue(res.banco);
         // if (res.tipoCuenta != null) this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
