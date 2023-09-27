@@ -115,7 +115,7 @@ export class ModalCuentaBancariaComponent implements OnInit {
       return false;
     }
 
-    if(cte.NroCuenta == '0'){
+    if(cte.CodTipoCuenta == '0'){
       Swal.fire('Información','Debe seleccionar el tipo de cuenta','warning');
       return false;
     }
@@ -127,35 +127,48 @@ export class ModalCuentaBancariaComponent implements OnInit {
 
     //validacion numero de cuenta por banco
     if(cte.CodBanco == "02"){ //BCP
-      if(cte.NroCuenta == "1" && cte.NroCuenta.toString().length != 14){
-        Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 14 dígitos.','warning');
+      if(cte.CodTipoCuenta == "1" && cte.NroCuenta.toString().length != 14){
+        Swal.fire('Información','El número de cuenta para el banco seleccionado debe tener 14 dígitos.','warning');
         return false;
       }
-      if(cte.NroCuenta == "2" && cte.NroCuenta.toString().length != 13){
-        Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 13 dígitos.','warning');
+      if(cte.CodTipoCuenta == "2" && cte.NroCuenta.toString().length != 13){
+        Swal.fire('Información','El número de cuenta para el banco seleccionado debe tener 13 dígitos.','warning');
         return false;
       }
     }
 
     if(cte.CodBanco == "11" && cte.NroCuenta.toString().length != 20){ //BBVA
-      Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 20 dígitos.','warning');
+      Swal.fire('Información','El número de cuenta para el banco seleccionado debe tener 20 dígitos.','warning');
       return false;
     }
 
     if(cte.CodBanco == "03" && cte.NroCuenta.toString().length != 13){ //INTERBANK
-      Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 13 dígitos.', 'warning')
+      Swal.fire('Información','El número de cuenta para el banco seleccionado debe tener 13 dígitos.', 'warning')
       return false;
     }
 
     if(cte.CodBanco == "41" && cte.NroCuenta.toString().length != 10){ //SCOTIABANK
-      Swal.fire('Información','La cuenta de ahorros para el banco seleccionado debe tener 10 dígitos.', 'warning')
+      Swal.fire('Información','El número de cuenta para el banco seleccionado debe tener 10 dígitos.', 'warning')
       return false;
     }
 
     if(numeros.includes(cte.CodBanco) && (cte.NroCuentaCCI == "" || cte.NroCuentaCCI == null || cte.NroCuentaCCI == undefined)){
-      Swal.fire('Información','Para el banco seleccionado es obligatorio ingresar el número CCI','warning');
-      return false;
+      if(cte.CodBanco != "02" && cte.CodBanco != "11" && cte.CodBanco != "03" && cte.CodBanco != "41") {
+        Swal.fire('Información','Para el banco seleccionado es obligatorio ingresar el número CCI','warning');
+        return false;
+      }
     }
+
+    //if(numeros.includes(cte.CodBanco) && (cte.NroCuentaCCI.toString().length != 20)){
+      if((cte.CodBanco != "02" && cte.CodBanco != "11" && cte.CodBanco != "03" && cte.CodBanco != "41") && (cte.NroCuentaCCI.toString().length != 20)) {
+        Swal.fire('Información','El número CCI debe tener 20 dígitos.','warning');
+        return false;
+      }
+    //}
+    
+
+    
+
     return true;
   }
 

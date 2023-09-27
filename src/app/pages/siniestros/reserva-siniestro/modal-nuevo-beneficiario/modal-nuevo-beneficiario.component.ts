@@ -109,6 +109,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     this.obtenerComboBeneficiarios();
 
     if (this.datosBeneficiario.P_SCLIENT != undefined) {
+      this.form.controls["P_SFIRSTNAME"].setValue(this.datosBeneficiario.P_SLEGALNAME);
+      this.tipoDocumentoSeleccion2(this.datosBeneficiario.P_NIDDOC_TYPE);
       this.obtenerBeneficiario();
     }
   }
@@ -119,6 +121,10 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     });
 
     let correo = this.datosBeneficiario.EListEmailClient;
+    let value = this.form.get("P_NIDDOC_TYPE").value;
+    if (value == 1) {
+      this.form.controls["P_SFIRSTNAME"].setValue(this.datosBeneficiario.P_SLEGALNAME);
+    }
 
     if (correo.length > 0) {
       this.correo = correo[0].P_SE_MAIL;
@@ -168,6 +174,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       if (telefDomi) {
         this.form.controls["telefDom"].setValue(telefOficina.P_SPHONE);
       }
+      
     }
 
     //Obtener datos banco
@@ -200,10 +207,33 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     this.reserveService.GetComboBeneficiarios().subscribe((res) => {
       this.objBeneficiarioModel = res;
     });
+    //this.tipoDocumentoSeleccion2(this.form.get("P_NIDDOC_TYPE").value);
+    
+    //this.tipoDocumentoSeleccion();
   }
 
   tipoDocumentoSeleccion() {
     let value = this.form.get("P_NIDDOC_TYPE").value;
+    if (value == 1) {
+      this.showApellidos = false;
+      this.form.removeControl("P_SLASTNAME");
+      this.form.removeControl("P_SLASTNAME2");
+      this.labelNombres = "Razón Social";
+    } else {
+      this.showApellidos = true;
+      this.form.addControl(
+        "P_SLASTNAME",
+        this.fb.control("", [Validators.required])
+      );
+      this.form.addControl(
+        "P_SLASTNAME2",
+        this.fb.control("", [Validators.required])
+      );
+      this.labelNombres = "Nombres";
+    }
+  }
+
+  tipoDocumentoSeleccion2(value: any) {
     if (value == 1) {
       this.showApellidos = false;
       this.form.removeControl("P_SLASTNAME");
@@ -230,7 +260,15 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     let codUsuario = this.authProtectaService.getValueCookie("CodUsu", cookie);
 
     let fecha = this.form.controls["P_DBIRTHDAT"].value.split("-");
+    let nombreLegal = "";
 
+    if(this.form.controls["P_NIDDOC_TYPE"].value == '1'){
+      nombreLegal = this.form.controls["P_SFIRSTNAME"].value;
+    }else{
+      nombreLegal = "NOMBRE LEGAL";
+    }
+
+    
     this.data = {
       ...this.form.getRawValue(),
       P_DBIRTHDAT: fecha[2] + "/" + fecha[1] + "/" + fecha[0],
@@ -241,7 +279,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       p_NTITLE: "99",
       p_SISCLIENT_IND: "1",
       p_SISRENIEC_IND: "2",
-      P_SLEGALNAME: "NOMBRE LEGAL",
+      P_SLEGALNAME: nombreLegal,
       EListAddresClient: [],
       EListPhoneClient: [],
       EListEmailClient: [],
@@ -470,6 +508,9 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     cta.ViaPago = ctaBancaria.ViaPago;
     cta.Modifica = ctaBancaria.Modifica;
     cta.Habilita = ctaBancaria.Habilita;
+
+    this.changeBank(cta);
+    
     //cta.nidacc = ctaBancaria.nidacc;
 
     modalRef.componentInstance.ctaBancaria = cta;
@@ -483,4 +524,34 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       }
     });
   }
+
+  changeBank(bank: ClaimBenefCuentasModelRequesBM){
+    //bank.NroCuenta = '';
+    console.log("bank.CodBanco: " + bank.CodBanco);
+    
+    if(bank.CodBanco == "02" && bank.CodTipoCuenta == "2"){
+      bank.length = 13
+    }else{
+      if(bank.CodBanco == "02" && bank.CodTipoCuenta == "1"){
+        bank.length = 14
+      }else{
+        if(bank.CodBanco == "11"){
+          bank.length = 20
+        }else{
+          if(bank.CodBanco == "03"){
+            bank.length = 13
+          }else{
+            if(bank.CodBanco == "41"){
+              bank.length = 10
+            }else{
+              bank.length = 20
+            }
+          }
+        }
+      }
+    }
+    console.log("bank.length: " + bank.length);
+    //const numeros = ["02", "03", "11", "41"];
+  }
+
 }
