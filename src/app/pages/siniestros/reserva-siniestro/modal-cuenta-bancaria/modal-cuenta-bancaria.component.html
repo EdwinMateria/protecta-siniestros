@@ -11,42 +11,42 @@
                 <table class="table table-striped w-100">
                     <thead>
                         <tr>
-                            <th scope="col">Banco</th>
-                            <th scope="col">Tipo De Cuenta</th>
-                            <th scope="col">Nro. De Cuenta</th>
-                            <th scope="col">Nro. Cuenta CCI</th>
-                            <th scope="col">Moneda</th>
-                            <th scope="col">Estado</th>
+                            <th scope="col" style="white-space: nowrap !important;">Banco</th>
+                            <th scope="col" style="white-space: nowrap !important;">Tipo De Cuenta</th>
+                            <th scope="col" style="white-space: nowrap !important;">Nro. De Cuenta</th>
+                            <th scope="col" style="white-space: nowrap !important;">Nro. Cuenta CCI</th>
+                            <th scope="col" style="white-space: nowrap !important;">Moneda</th>
+                            <th scope="col" style="white-space: nowrap !important;">Estado</th>
                             <th scope="col" *ngIf="addCtaBank == true"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let bank of listBank; let i = index">
                             <td>
-                                <select class="form-control" [(ngModel)]="bank.CodBanco" (ngModelChange)="changeBank(bank)">
+                                <select class="form-control" [(ngModel)]="bank.CodBanco" (ngModelChange)="changeBank(bank)" style="min-width: 150px !important;">
                                     <option value="" disabled>SELECCIONE</option>
                                     <option *ngFor="let banco of bancos" [value]="banco.Codigo">{{banco.Descripcion}}</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control" [(ngModel)]="bank.CodTipoCuenta" (ngModelChange)="changeBank(bank)">
+                                <select class="form-control" [(ngModel)]="bank.CodTipoCuenta" (ngModelChange)="changeBank(bank)" style="min-width: 150px !important;">
                                     <option value="0" disabled>SELECCIONE</option>
                                     <option *ngFor="let cuenta of tipoCuentas" [value]="cuenta.Codigo">{{cuenta.Descripcion}}</option>
                                 </select>
                             </td>
                             <td>
-                                <input type="text" appOnlyNumber class="form-control w-100" [(ngModel)]="bank.NroCuenta" [maxlength]="bank.length" >
+                                <input type="text" appOnlyNumber class="form-control w-100" [(ngModel)]="bank.NroCuenta" [maxlength]="bank.length" style="min-width: 150px !important;">
                             </td>
                             <td>
-                                <input class="form-control w-100" [(ngModel)]="bank.NroCuentaCCI" type="text" appOnlyNumber maxlength="20">
+                                <input class="form-control w-100" [(ngModel)]="bank.NroCuentaCCI" type="text" appOnlyNumber maxlength="20" style="min-width: 150px !important;">
                             </td>
                             <td>
-                                <select class="form-control" [(ngModel)]="bank.MonedaCod">
+                                <select class="form-control" [(ngModel)]="bank.MonedaCod" style="min-width: 150px !important;">
                                     <option *ngFor="let moneda of monedas" [value]="moneda.Codigo" [disabled]="moneda.Codigo == '0'">{{moneda.Descripcion}}</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control" [(ngModel)]="bank.Habilita">
+                                <select class="form-control" [(ngModel)]="bank.Habilita" style="min-width: 150px !important;">
                                     <option *ngFor="let estado of estados" [value]="estado.Codigo">{{estado.Descripcion}}</option>
                                 </select>
                             </td>

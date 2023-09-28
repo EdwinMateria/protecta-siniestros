@@ -206,7 +206,7 @@
                 <div class="col-sm-4">
                     <select class="form-control" formControlName="viaPago" [ngClass]="{'is-invalid': form.get('viaPago').invalid && form.get('viaPago').touched}">
                         <option value="">(SELECCIONE)</option>
-                        <option *ngFor="let viaPago of objBeneficiarioModel.lstViaPago" [value]="viaPago.Codigo">{{viaPago.Descripcion}}</option>
+                        <option *ngFor="let viaPago of objBeneficiarioModel.lstViaPago" [value]="viaPago.Codigo" style="text-transform: uppercase !important;">{{viaPago.Descripcion}}</option>
                     </select>
                 </div>
             </div>
@@ -290,7 +290,7 @@
     </form>
     <div class="row mt-3">
         <div class="col-sm-12" align="end">
-            <button class="buttonN" (click)="saveBeneficiario()">Agregar</button>
+            <button class="buttonN" (click)="saveBeneficiario()">Guardar</button>
             <button class="buttonN ml-2" (click)="openCuentaBancaria()">Agregar Cuenta B.</button>
         </div>
     </div>
