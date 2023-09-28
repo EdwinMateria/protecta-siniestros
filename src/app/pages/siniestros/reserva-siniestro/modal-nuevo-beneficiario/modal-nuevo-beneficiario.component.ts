@@ -73,7 +73,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       P_NIDDOC_TYPE: ["", Validators.required],
       P_SIDDOC: ["", Validators.required],
       P_SLASTNAME: ["", Validators.required],
-      P_SLASTNAME2: ["", Validators.required],
+      P_SLASTNAME2: [""],
       P_SFIRSTNAME: ["", Validators.required],
       P_DBIRTHDAT: ["", Validators.required],
       P_SSEXCLIEN: ["", Validators.required],
@@ -492,8 +492,10 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     cta.TipoCuenta = ctaBancaria.TipoCuenta;
     cta.CodBanco = ctaBancaria.CodBanco;
     cta.Banco = ctaBancaria.Banco;
-    cta.NroCuenta = ctaBancaria.NroCuenta.trim();
-    cta.NroCuentaCCI = ctaBancaria.NroCuentaCCI.trim();
+    //cta.NroCuenta = ctaBancaria.NroCuenta.trim();
+    //cta.NroCuentaCCI = ctaBancaria.NroCuentaCCI.trim();
+    cta.NroCuenta = ctaBancaria.NroCuenta;
+    cta.NroCuentaCCI = ctaBancaria.NroCuentaCCI;
     cta.SMoneda = ctaBancaria.SMoneda;
     cta.MonedaCod = ctaBancaria.MonedaCod;
     cta.Insupd = ctaBancaria.Insupd;

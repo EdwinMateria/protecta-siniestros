@@ -31,7 +31,7 @@
                 <div class="col-sm-4">
                     <input class="form-control" placeholder="Apellido Paterno" formControlName="P_SLASTNAME" [ngClass]="{'is-invalid': form.get('P_SLASTNAME').invalid && form.get('P_SLASTNAME').touched}">
                 </div>
-                <label class="col-sm-2 col-form-label">Apellido Materno(*)</label>
+                <label class="col-sm-2 col-form-label">Apellido Materno</label>
                 <div class="col-sm-4">
                     <input class="form-control" placeholder="Apellido Materno" formControlName="P_SLASTNAME2" [ngClass]="{'is-invalid': form.get('P_SLASTNAME2').invalid && form.get('P_SLASTNAME2').touched}">
                 </div>
@@ -241,9 +241,9 @@
                                                     {{bank.SMoneda}}
                                                 </td>
                                                 <td>
-                                                    <i *ngIf="bank.Modifica == '0'" class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank, i)"></i>
+                                                    <i *ngIf="bank.Modifica == '0' && bank.Habilita == '1'" class="fa fa-edit" style="cursor: pointer;" (click)="editCuentaBancaria(bank, i)"></i>
+                                                    <i *ngIf="bank.Modifica == '0' && bank.Habilita == '0'" class="fa fa-ban" style="cursor: default;" disable="disable" ></i>
                                                 </td>
-                                                
                                             </tr>
                                         </tbody>
                                     </table>

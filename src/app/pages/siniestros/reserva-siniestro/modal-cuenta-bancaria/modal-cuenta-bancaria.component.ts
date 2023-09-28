@@ -31,7 +31,7 @@ export class ModalCuentaBancariaComponent implements OnInit {
 
   estados: ClaimComboBERequestBM[]=[
     {Codigo : '1' , Descripcion: 'HABILITADO'},
-    {Codigo : '0' , Descripcion: 'DESHABILITADO'}
+    {Codigo : '0' , Descripcion: 'INHABILITADO'}
   ]
 
   listBank : ClaimBenefCuentasModelRequesBM[] = [];
@@ -125,14 +125,19 @@ export class ModalCuentaBancariaComponent implements OnInit {
       return false;
     }
 
+    if((cte.CodBanco == "02" || cte.CodBanco == "11" || cte.CodBanco == "03" || cte.CodBanco == "41") && (cte.NroCuenta == "" || cte.NroCuenta == null || cte.NroCuenta == undefined)) {
+      Swal.fire('Información','Para el banco seleccionado es obligatorio ingresar el número de cuenta','warning');
+      return false;
+    }
+
     //validacion numero de cuenta por banco
     if(cte.CodBanco == "02"){ //BCP
       if(cte.CodTipoCuenta == "1" && cte.NroCuenta.toString().length != 14){
-        Swal.fire('Información','El número de cuenta para el banco seleccionado debe tener 14 dígitos.','warning');
+        Swal.fire('Información','El número de Cuenta de Ahorro debe tener una longitud de 14 digitos.','warning');
         return false;
       }
       if(cte.CodTipoCuenta == "2" && cte.NroCuenta.toString().length != 13){
-        Swal.fire('Información','El número de cuenta para el banco seleccionado debe tener 13 dígitos.','warning');
+        Swal.fire('Información','El número de Cuenta Corriente debe tener una longitud de 13 digitos.','warning');
         return false;
       }
     }
@@ -152,12 +157,12 @@ export class ModalCuentaBancariaComponent implements OnInit {
       return false;
     }
 
-    if(numeros.includes(cte.CodBanco) && (cte.NroCuentaCCI == "" || cte.NroCuentaCCI == null || cte.NroCuentaCCI == undefined)){
-      if(cte.CodBanco != "02" && cte.CodBanco != "11" && cte.CodBanco != "03" && cte.CodBanco != "41") {
+    //if(numeros.includes(cte.CodBanco) && (cte.NroCuentaCCI == "" || cte.NroCuentaCCI == null || cte.NroCuentaCCI == undefined)){
+      if((cte.CodBanco != "02" && cte.CodBanco != "11" && cte.CodBanco != "03" && cte.CodBanco != "41") && (cte.NroCuentaCCI == "" || cte.NroCuentaCCI == null || cte.NroCuentaCCI == undefined)) {
         Swal.fire('Información','Para el banco seleccionado es obligatorio ingresar el número CCI','warning');
         return false;
       }
-    }
+    //}
 
     //if(numeros.includes(cte.CodBanco) && (cte.NroCuentaCCI.toString().length != 20)){
       if((cte.CodBanco != "02" && cte.CodBanco != "11" && cte.CodBanco != "03" && cte.CodBanco != "41") && (cte.NroCuentaCCI.toString().length != 20)) {
