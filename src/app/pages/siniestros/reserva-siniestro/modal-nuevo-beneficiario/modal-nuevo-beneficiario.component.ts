@@ -157,23 +157,31 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     }
 
     let moviles = this.datosBeneficiario.EListPhoneClient;
+    console.log('moviles: ' + moviles);
+    console.log('moviles.length 0 ' + moviles.length);
     if (moviles.length > 0) {
+      console.log('moviles.length 1: ' + moviles.length);
       let celular = moviles.find((x) => x.P_NPHONE_TYPE == "2");
+      if (celular != undefined){
+        console.log('celular 1: ' + celular);
+        console.log('celular.P_SPHONE 1: ' + celular.P_SPHONE);
+        if (celular) {
+          this.form.controls["celular"].setValue(celular.P_SPHONE);
+        }
 
-      if (celular) {
-        this.form.controls["celular"].setValue(celular.P_SPHONE);
-      }
+        let telefOficina = moviles.find((x) => x.P_NPHONE_TYPE == "1");
+        if (telefOficina) {
+          this.form.controls["telefOfic"].setValue(telefOficina.P_SPHONE);
+          console.log('celular.P_SPHONE 2: ' + celular.P_SPHONE);
+          this.form.controls["anexo"].setValue(telefOficina.P_NEXTENS1);
+          this.form.controls["P_NAREA_CODE"].setValue(telefOficina.P_NAREA_CODE);
+        }
 
-      let telefOficina = moviles.find((x) => x.P_NPHONE_TYPE == "1");
-      if (telefOficina) {
-        this.form.controls["telefOfic"].setValue(telefOficina.P_SPHONE);
-        this.form.controls["anexo"].setValue(telefOficina.P_NEXTENS1);
-        this.form.controls["P_NAREA_CODE"].setValue(telefOficina.P_NAREA_CODE);
-      }
-
-      let telefDomi = moviles.find((x) => x.P_NPHONE_TYPE == "4");
-      if (telefDomi) {
-        this.form.controls["telefDom"].setValue(telefOficina.P_SPHONE);
+        let telefDomi = moviles.find((x) => x.P_NPHONE_TYPE == "4");
+        if (telefDomi) {
+          this.form.controls["telefDom"].setValue(telefOficina.P_SPHONE);
+          console.log('celular.P_SPHONE 3: ' + celular.P_SPHONE);
+        }
       }
   }
 
