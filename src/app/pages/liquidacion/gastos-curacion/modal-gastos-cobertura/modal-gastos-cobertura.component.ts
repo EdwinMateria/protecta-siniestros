@@ -1666,7 +1666,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))>= 0 && vCampospago_validar.vnroCuenta == '' && this.mensaje==''){
       this.mensaje = "E|fp|El banco seleccionado debe tener número de cuenta.";
       return this.mensaje;
-    }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))<= 0 && vCampospago_validar.vnroCuentaCci == '' && this.mensaje==''){
+    }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))< 0 && vCampospago_validar.vnroCuentaCci == '' && this.mensaje==''){
       this.mensaje = "E|fp|El banco seleccionado debe tener el número de cuenta CCI.";
       return this.mensaje;
     }else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vmonedacuenta != 1 && this.mensaje==''){
@@ -1827,7 +1827,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))>= 0 && vCampospago_validar.vnroCuenta == '' && this.mensaje==''){
       this.mensaje = "E|fp|El banco seleccionado debe tener número de cuenta.";
       return this.mensaje;
-    }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))<= 0 && vCampospago_validar.vnroCuentaCci == '' && this.mensaje==''){
+    }else if (vCampospago_validar.vFormaPago == 10 && lst_banco.indexOf(parseInt(vCampospago_validar.vbanco))< 0 && vCampospago_validar.vnroCuentaCci == '' && this.mensaje==''){
       this.mensaje = "E|fp|El banco seleccionado debe tener el número de cuenta CCI.";
       return this.mensaje;
     }else if (vCampospago_validar.vFormaPago == 10 && vCampospago_validar.vmonedacuenta != 1 && this.mensaje==''){
