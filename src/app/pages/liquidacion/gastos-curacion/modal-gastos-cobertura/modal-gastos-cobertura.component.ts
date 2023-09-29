@@ -2144,7 +2144,8 @@ changePago(tipo,nro){//campo
         this.nroCuentaCci = scci;
         this.monedacuenta = codmoneda;
 
-        this.Txt_ViewCuenta = "BANCO: " + sbanco + "   CUENTA: " +  scuent  + "   CCI: " +  scci + "   MONEDA:" + moneda ;
+        //this.Txt_ViewCuenta = "BANCO: " + sbanco + "   CUENTA: " +  scuent  + "   CCI: " +  scci + "   MONEDA:" + moneda ;
+        this.Txt_ViewCuenta = "BANCO: " + sbanco + "   |  CUENTA: " +  scuent  + "   |  CCI: " +  scci + "   |  MONEDA:" + moneda ;
         this.aparecer = false;
 
       }else{
@@ -2152,7 +2153,8 @@ changePago(tipo,nro){//campo
           this.salidaBeneficiariosMuerte[nro].SACCOUNT = scuent;
           this.salidaBeneficiariosMuerte[nro].SACCOUNTCCI = scci;
           this.salidaBeneficiariosMuerte[nro].NCURRENCY_SACCOUNT = codmoneda;
-          this.salidaBeneficiariosMuerte[nro].Txt_ViewCuenta = "BANCO: " + sbanco + "   CUENTA: " +  scuent  + "   CCI: " +  scci + "   MONEDA:" + moneda ;
+          //this.salidaBeneficiariosMuerte[nro].Txt_ViewCuenta = "BANCO: " + sbanco + "   CUENTA: " +  scuent  + "   CCI: " +  scci + "   MONEDA:" + moneda ;
+          this.salidaBeneficiariosMuerte[nro].Txt_ViewCuenta = "BANCO: " + sbanco + "   |  CUENTA: " +  scuent  + "   |  CCI: " +  scci + "   |  MONEDA:" + moneda ;
           
           this.salidaBeneficiariosMuerte[nro].aparecerTb  = false;
       }

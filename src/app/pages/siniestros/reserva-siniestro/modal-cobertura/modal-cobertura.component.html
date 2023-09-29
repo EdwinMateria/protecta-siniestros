@@ -324,7 +324,7 @@
                     <div class="row">
                         <div class="col-sm-3 form-group">
                             <label>Base Imponible <span *ngIf="tab == 1">(*)</span></label>
-                            <input type="number" class="form-control" [formControl]="baseImponible" [(ngModel)]="modelBase" [ngClass]="{'is-invalid': baseImponible.invalid && baseImponible.touched}" (ngModelChange)="changeBaseImponible()">
+                            <input type="number" maxlength="10" class="form-control" [formControl]="baseImponible" [(ngModel)]="modelBase" [ngClass]="{'is-invalid': baseImponible.invalid && baseImponible.touched}" (ngModelChange)="changeBaseImponible()">
                         </div>
                         <div class="col-sm-3 form-group">
                             <label>IGV</label>

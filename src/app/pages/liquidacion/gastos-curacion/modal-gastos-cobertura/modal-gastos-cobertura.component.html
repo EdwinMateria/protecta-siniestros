@@ -219,10 +219,11 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-sm-6 form-group" *ngIf="txtformapago == '10'" (blur) = "cerrarTabla()">
+                            <!-- <div class="col-sm-6 form-group" *ngIf="txtformapago == '10'" (blur) = "cerrarTabla()">
                                 <label>Cuenta (*)</label>
-                                <input type="text" class="form-control w-100" value="SELECCIONAR CUENTA" (click)="aparecerTabla()" [(ngModel)]="Txt_ViewCuenta" readonly style="background-color: white !important;"><!--(blur) = "cerrarTabla()"-->
-                                    <div class="table-responsive" *ngIf="aparecer" style="width: 97% !important;position: absolute;z-index: 999999;height: 236px;overflow:auto;"> 
+                                <input type="text" class="form-control w-100" value="SELECCIONAR CUENTA" (click)="aparecerTabla()" [(ngModel)]="Txt_ViewCuenta" readonly style="background-color: white !important;"> -->
+                                <!--(blur) = "cerrarTabla()"-->
+                                    <!-- <div class="table-responsive" *ngIf="aparecer" style="width: 97% !important;position: absolute;z-index: 999999;height: 236px;overflow:auto;"> 
                                         <table class="table w-100 table_fp" style="border: 1px solid #6565658f;background-color: white;">
                                             <tr style="background-color: #e9ecef !important;color: #212529 !important;">
                                                 <td>Banco</td>
@@ -237,7 +238,7 @@
                                                 <td>{{ctabenefi.SMoneda}}</td>
                                             </tr>                                                
                                         </table>
-                                    </div>
+                                    </div> -->
                                 <!-- <select class="form-control" id="transfer">
                                     <option *ngFor="let ctabenefi of ctaBenef" [value]="ctabenefi.nidacc">
                                         <label>Banco</label><br />
@@ -258,7 +259,7 @@
                                         </table>
                                     </option>          
                                 </select>-->
-                            </div>
+                            <!-- </div> -->
                             
                              <div class="col-sm-6 form-group" *ngIf="txtformapago == '11'">
                                  <label>Banco (*)</label>
@@ -277,6 +278,30 @@
                                 <input type="text" class="form-control" disabled [(ngModel)]="nroCuenta" id="TxtnroCuenta" >
                             </div> -->
                         </div>
+
+                        <div class="row" *ngIf="txtformapago == '10'" (blur) = "cerrarTabla()">
+                            <div class="col-sm-9 form-group">
+                                <label>Cuenta (*)</label>
+                                <input type="text" class="form-control w-100" value="SELECCIONAR CUENTA" (click)="aparecerTabla()" [(ngModel)]="Txt_ViewCuenta" readonly style="background-color: white !important;"><!--(blur) = "cerrarTabla()"-->
+                                    <div class="table-responsive" *ngIf="aparecer" style="width: 97% !important;position: absolute;z-index: 999999;height: 236px;overflow:auto;"> 
+                                        <table class="table w-100 table_fp" style="border: 1px solid #6565658f;background-color: white;">
+                                            <tr style="background-color: #e9ecef !important;color: #212529 !important;">
+                                                <td>Banco</td>
+                                                <td>Nro</td>
+                                                <td>CCI</td>
+                                                <td>Moneda</td>
+                                            </tr>
+                                            <tr *ngFor="let ctabenefi of ctaBenef" style="cursor:pointer;" (click)="Selec_Cuenta(1, ctabenefi.CodBanco, ctabenefi.Banco, ctabenefi.NroCuenta, ctabenefi.NroCuentaCCI, ctabenefi.MonedaCod, ctabenefi.SMoneda, 0)">
+                                                <td>{{ctabenefi.Banco}}</td>
+                                                <td>{{ctabenefi.NroCuenta}}</td>
+                                                <td>{{ctabenefi.NroCuentaCCI}}</td>
+                                                <td>{{ctabenefi.SMoneda}}</td>
+                                            </tr>                                                
+                                        </table>
+                                    </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-sm-6 form-group">
                                 <label>Observaciones</label>
