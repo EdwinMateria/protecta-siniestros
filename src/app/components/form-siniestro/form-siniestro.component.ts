@@ -212,6 +212,11 @@ export class FormSiniestroComponent implements OnInit {
       this.form.markAllAsTouched();
       this.validacionFormularioSiniestro();
     } else {
+      let validFechaFallecimiento = this.changeFechaFallecimiento();
+      if(validFechaFallecimiento){
+        Swal.fire('Información','La fecha de fallecido debe ser igual o menor a la fecha actual','warning');
+        return;
+      }
       if (this.estadoForm == 2) {
         //Creacion siniestro
         let siniestroBM = new SiniestroBM();
@@ -389,6 +394,27 @@ export class FormSiniestroComponent implements OnInit {
 
     }
     //this.form.controls['dFecDenuncia'].setValue('');
+  }
+
+
+  changeFechaFallecimiento(){
+    let invalid : boolean = false;
+    let docur = new Date(this.form.controls['dFecFallecido'].value)
+    // console.log(docur);
+    // console.log(this.form.controls['dFecFallecido'].value);
+    
+    if(this.form.controls['dFecFallecido'].value != ''){
+      if(isNaN(docur.getTime())) {
+        invalid = true;
+        this.form.controls['dFecFallecido'].setValue('');
+      }else{
+        if(docur > new Date()){
+          invalid = true;
+          this.form.controls['dFecFallecido'].setValue('');
+        }
+      }
+    }
+    return invalid;
   }
 
   onKeyDown(event: KeyboardEvent) {
