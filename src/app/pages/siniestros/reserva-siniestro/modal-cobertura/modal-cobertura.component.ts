@@ -399,6 +399,12 @@ export class ModalCoberturaComponent implements OnInit {
           if(res.FECHAEMISIONFACTURA){
             let fEmi = res.FECHAEMISIONFACTURA.split("/");
             let fechaEmi = new Date(fEmi[2] + '/' + fEmi[1] + '/' + fEmi[0]);
+
+            if(fechaEmi > new Date()){
+              Swal.fire('Información','La fecha de emisión debe ser igual o menor a la fecha actual','warning');
+              return;
+            } 
+
             this.fechaEmision = this.datePipe.transform(fechaEmi, 'yyyy-MM-dd');
           }
 
