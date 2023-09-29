@@ -287,7 +287,9 @@ export class ModalCoberturaComponent implements OnInit {
               SCOVER_DESC : this.data,
               SBANK : benef.NBANK_CODE.toString(),
               SACCOUNTNUMBER :  benef.SACCOUNT.trim(),
-              NCODDOCUMENTTYPE : benef.NTYPCLIENTDOC.toString()
+              NCODDOCUMENTTYPE : benef.NTYPCLIENTDOC.toString(),
+              SBANKNAME : benef.SBANKNAME,
+              SACCOUNTCCINUMBER : benef.SACCOUNTCCINUMBER
             })
             this.listCodeBeneficiarios.push(benef.SCLIENT);
           })
@@ -544,7 +546,9 @@ export class ModalCoberturaComponent implements OnInit {
               NCODBENEFICIARYTYPE : res.LIST_BENEF_COVERS[0].SBENEFICIARYTYPE,
               NCODDOCUMENTTYPE : res.LIST_BENEF_COVERS[0].SDOCUMENTTYPE,
               SBANK : res.LIST_BENEF_COVERS[0].SBANK,
-              SACCOUNTNUMBER : res.LIST_BENEF_COVERS[0].SACCOUNTNUMBER
+              SACCOUNTNUMBER : res.LIST_BENEF_COVERS[0].SACCOUNTNUMBER,
+              SBANKNAME : res.LIST_BENEF_COVERS[0].SBANKNAME,
+              SACCOUNTCCINUMBER : res.LIST_BENEF_COVERS[0].SACCOUNTCCINUMBER
             })
             if(this.beneficiarios.length == 1){
               this.obtenerBancos()

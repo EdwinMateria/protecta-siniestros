@@ -172,8 +172,8 @@ export class ModalCuentaBancariaComponent implements OnInit {
     //}
     
     if((cte.CodBanco != "02" && cte.CodBanco != "11" && cte.CodBanco != "03" && cte.CodBanco != "41") && (cte.NroCuenta == "" || cte.NroCuenta == null || cte.NroCuenta == undefined)) {
-      Swal.fire('Error','No esta ingresando un número de cuenta','error');
-      return false;
+      Swal.fire('Información','No esta ingresando un número de cuenta','warning');
+      //return false;
     }
 
     return true;

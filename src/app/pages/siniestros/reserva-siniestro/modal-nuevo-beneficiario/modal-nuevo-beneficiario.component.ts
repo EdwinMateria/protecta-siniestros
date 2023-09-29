@@ -73,7 +73,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       P_NIDDOC_TYPE: ["", Validators.required],
       P_SIDDOC: ["", Validators.required],
       P_SLASTNAME: ["", Validators.required],
-      P_SLASTNAME2: [""],
+      P_SLASTNAME2: ["", Validators.required],
       P_SFIRSTNAME: ["", Validators.required],
       P_DBIRTHDAT: ["", Validators.required],
       P_SSEXCLIEN: ["", Validators.required],
@@ -219,35 +219,33 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
   tipoDocumentoSeleccion(){
     let value = this.form.get('P_NIDDOC_TYPE').value;
-    if(value == 1){
-      this.showApellidos = false;
-      this.form.removeControl('P_SLASTNAME');
-      this.form.removeControl('P_SLASTNAME2');
-      this.labelNombres = 'Razón Social'
-    }else{
-      this.showApellidos = true;
-      this.form.addControl('P_SLASTNAME', this.fb.control('', [Validators.required])); 
-      this.form.addControl('P_SLASTNAME2', this.fb.control('', [Validators.required])); 
-      this.labelNombres = 'Nombres'
-    }
-  }
-
-  tipoDocumentoSeleccion2(value: any) {
     if (value == 1) {
+      console.log('Aqui 1');
       this.showApellidos = false;
       this.form.removeControl("P_SLASTNAME");
       this.form.removeControl("P_SLASTNAME2");
       this.labelNombres = "Razón Social";
     } else {
+      console.log('Aqui 2');
       this.showApellidos = true;
-      this.form.addControl(
-        "P_SLASTNAME",
-        this.fb.control("", [Validators.required])
-      );
-      this.form.addControl(
-        "P_SLASTNAME2",
-        this.fb.control("", [Validators.required])
-      );
+      this.form.addControl("P_SLASTNAME",this.fb.control("", [Validators.required]));
+      this.form.addControl("P_SLASTNAME2",this.fb.control("", [Validators.required]));
+      this.labelNombres = "Nombres";
+    }
+  }
+
+  tipoDocumentoSeleccion2(value: any) {
+    if (value == 1) {
+      console.log('Aqui 1');
+      this.showApellidos = false;
+      this.form.removeControl("P_SLASTNAME");
+      this.form.removeControl("P_SLASTNAME2");
+      this.labelNombres = "Razón Social";
+    } else {
+      console.log('Aqui 2');
+      this.showApellidos = true;
+      this.form.addControl("P_SLASTNAME",this.fb.control("", [Validators.required]));
+      this.form.addControl("P_SLASTNAME2",this.fb.control("", [Validators.required]));
       this.labelNombres = "Nombres";
     }
   }
@@ -265,7 +263,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       nombreLegal = "NOMBRE LEGAL";
     }
 
-      this.data = {
+    this.data = {
         ...this.form.getRawValue(),
       P_DBIRTHDAT: fecha[2] + "/" + fecha[1] + "/" + fecha[0],
       p_CodAplicacion: "SINIESTRO",
@@ -281,7 +279,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       EListEmailClient: [],
       EListContactClient: [],
     };
-
+      console.log(this.data.P_SLASTNAME);
       this.data.EListAddresClient.push({
         ...this.form.getRawValue(),
         P_SRECTYPE : "2",
@@ -322,7 +320,8 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
       let cookie = this.authProtectaService.getCookie('AppSiniestro');
       let codUsuario = this.authProtectaService.getValueCookie('CodUsu', cookie);
-
+      console.log('this.form.controls["P_NIDDOC_TYPE"].value');
+      console.log(this.form.controls["P_NIDDOC_TYPE"].value);
       this.reserveService.SaveApi(this.data).subscribe(
       (res) => {
         let jsonResponse = JSON.parse(res);

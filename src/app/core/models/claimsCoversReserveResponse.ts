@@ -59,4 +59,6 @@ export class ClaimsBenefTmpVM {
 	SCOVER_DESC             : string;
 	SBANK                   : string;
 	SACCOUNTNUMBER          : string;
+	SBANKNAME               : string;
+	SACCOUNTCCINUMBER       : string;
 }
