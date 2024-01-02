@@ -61,4 +61,5 @@ export class ClaimsBenefTmpVM {
 	SACCOUNTNUMBER          : string;
 	SBANKNAME               : string;
 	SACCOUNTCCINUMBER       : string;
+	NCODDOCUMENTTYPE		: string;
 }

@@ -196,6 +196,8 @@ export class ModalCoberturaComponent implements OnInit {
   }
 
   editarBeneficiario(beneficiario: BeneficiariesVM ){
+    console.log(beneficiario);
+    
     let data : Data = new Data();
     data.P_SIDDOC = beneficiario.SDOCUMENTNUMBER
     data.P_NIDDOC_TYPE = beneficiario.NCODDOCUMENTTYPE;
@@ -550,7 +552,7 @@ export class ModalCoberturaComponent implements OnInit {
               SBENEFICIARYTYPE : res.LIST_BENEF_COVERS[0].SBENEFICIARYTYPE,
               SCOVER_DESC : this.data,
               NCODBENEFICIARYTYPE : res.LIST_BENEF_COVERS[0].SBENEFICIARYTYPE,
-              NCODDOCUMENTTYPE : res.LIST_BENEF_COVERS[0].SDOCUMENTTYPE,
+              NCODDOCUMENTTYPE : res.LIST_BENEF_COVERS[0].NCODDOCUMENTTYPE,
               SBANK : res.LIST_BENEF_COVERS[0].SBANK,
               SACCOUNTNUMBER : res.LIST_BENEF_COVERS[0].SACCOUNTNUMBER,
               SBANKNAME : res.LIST_BENEF_COVERS[0].SBANKNAME,
