@@ -157,14 +157,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     }
 
     let moviles = this.datosBeneficiario.EListPhoneClient;
-    console.log('moviles: ' + moviles);
-    console.log('moviles.length 0 ' + moviles.length);
+
     if (moviles.length > 0) {
-      console.log('moviles.length 1: ' + moviles.length);
+      
       let celular = moviles.find((x) => x.P_NPHONE_TYPE == "2");
       if (celular != undefined){
-        console.log('celular 1: ' + celular);
-        console.log('celular.P_SPHONE 1: ' + celular.P_SPHONE);
         if (celular) {
           this.form.controls["celular"].setValue(celular.P_SPHONE);
         }
@@ -172,7 +169,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         let telefOficina = moviles.find((x) => x.P_NPHONE_TYPE == "1");
         if (telefOficina) {
           this.form.controls["telefOfic"].setValue(telefOficina.P_SPHONE);
-          console.log('celular.P_SPHONE 2: ' + celular.P_SPHONE);
           this.form.controls["anexo"].setValue(telefOficina.P_NEXTENS1);
           this.form.controls["P_NAREA_CODE"].setValue(telefOficina.P_NAREA_CODE);
         }
@@ -180,7 +176,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         let telefDomi = moviles.find((x) => x.P_NPHONE_TYPE == "4");
         if (telefDomi) {
           this.form.controls["telefDom"].setValue(telefOficina.P_SPHONE);
-          console.log('celular.P_SPHONE 3: ' + celular.P_SPHONE);
         }
       }
   }
@@ -190,7 +185,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       .GetBank(this.datosBeneficiario.P_SCLIENT)
       .subscribe((res) => {
         this.listBank = res;
-        console.log(this.listBank);
         
         if(this.listBank.length > 0) this.form.controls["viaPago"].setValue(this.listBank[0].CodViaPago);
         // if (res.viaPago != null) this.form.controls['viaPago'].setValue(res.viaPago); 
@@ -198,8 +192,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         // if (res.tipoCuenta != null) this.form.controls['tipoCuenta'].setValue(res.tipoCuenta);
         // if (res.nroCuenta != null) this.form.controls['nroCuenta'].setValue(res.nroCuenta);
         // if (res.nroCuentaCCI != null) this.form.controls['nroCuentaCCI'].setValue(res.nroCuentaCCI.trim());
-        console.log('this.listBank: ');
-        console.log(this.listBank);
       });
   }
 
@@ -220,13 +212,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
   tipoDocumentoSeleccion(){
     let value = this.form.get('P_NIDDOC_TYPE').value;
     if (value == 1) {
-      console.log('Aqui 1');
       this.showApellidos = false;
       this.form.removeControl("P_SLASTNAME");
       this.form.removeControl("P_SLASTNAME2");
       this.labelNombres = "Razón Social";
     } else {
-      console.log('Aqui 2');
       this.showApellidos = true;
       this.form.addControl("P_SLASTNAME",this.fb.control("", [Validators.required]));
       this.form.addControl("P_SLASTNAME2",this.fb.control("", [Validators.required]));
@@ -236,13 +226,11 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
   tipoDocumentoSeleccion2(value: any) {
     if (value == 1) {
-      console.log('Aqui 1');
       this.showApellidos = false;
       this.form.removeControl("P_SLASTNAME");
       this.form.removeControl("P_SLASTNAME2");
       this.labelNombres = "Razón Social";
     } else {
-      console.log('Aqui 2');
       this.showApellidos = true;
       this.form.addControl("P_SLASTNAME",this.fb.control("", [Validators.required]));
       this.form.addControl("P_SLASTNAME2",this.fb.control("", [Validators.required]));
@@ -279,7 +267,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
       EListEmailClient: [],
       EListContactClient: [],
     };
-      console.log(this.data.P_SLASTNAME);
       this.data.EListAddresClient.push({
         ...this.form.getRawValue(),
         P_SRECTYPE : "2",
@@ -320,8 +307,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
       let cookie = this.authProtectaService.getCookie('AppSiniestro');
       let codUsuario = this.authProtectaService.getValueCookie('CodUsu', cookie);
-      console.log('this.form.controls["P_NIDDOC_TYPE"].value');
-      console.log(this.form.controls["P_NIDDOC_TYPE"].value);
       this.reserveService.SaveApi(this.data).subscribe(
       (res) => {
         let jsonResponse = JSON.parse(res);
@@ -468,7 +453,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     modalRef.result.then((cuentas) => {
       if (cuentas != undefined) {
         this.listBank = this.listBank.concat(cuentas);
-        console.log(this.listBank);
 
         // this.listBank.forEach((cte , i) => {
         //   cte.num_movent = i + 1;
@@ -488,10 +472,7 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
     modalRef.componentInstance.bancos = this.objBeneficiarioModel.lstBanco;
     modalRef.componentInstance.tipoCuentas =
       this.objBeneficiarioModel.lstTipoCuenta;
-    console.log('ctaBancaria');
-    console.log(ctaBancaria);
-    console.log('NID');
-    console.log(ctaBancaria.nidacc);
+
     let cta = new ClaimBenefCuentasModelRequesBM();
     cta.nidacc = ctaBancaria.nidacc;
     cta.SCLIENT = ctaBancaria.SCLIENT;
@@ -515,8 +496,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
     modalRef.componentInstance.ctaBancaria = cta;
     modalRef.result.then((cuenta: ClaimBenefCuentasModelRequesBM) => {
-      console.log('cuenta');
-      console.log(cuenta);
       //if(cuenta != undefined) ctaBancaria = cuenta;
       if (cuenta != undefined) {
         this.listBank[i] = cuenta;
@@ -528,7 +507,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
 
   changeBank(bank: ClaimBenefCuentasModelRequesBM){
     //bank.NroCuenta = '';
-    console.log("bank.CodBanco: " + bank.CodBanco);
 
     if(bank.CodBanco == "02" && bank.CodTipoCuenta == "2"){
       bank.length = 13
@@ -551,7 +529,6 @@ export class ModalNuevoBeneficiarioComponent implements OnInit {
         }
       }
     }
-    console.log("bank.length: " + bank.length);
     //const numeros = ["02", "03", "11", "41"];
   }
 

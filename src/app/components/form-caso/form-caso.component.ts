@@ -156,7 +156,6 @@ export class FormCasoComponent implements OnInit {
               this.casoBM = res.GenericResponse[0];
 
               let d : string []=[];
-              console.log(this.casoBM.dFecNacConductor);
               
               if(this.casoBM.dFecNacConductor != null){
                 d = this.casoBM.dFecNacConductor .split("-");
@@ -203,10 +202,9 @@ export class FormCasoComponent implements OnInit {
       } else {
 
         let date1 = this.form.controls['dFecOcurrencia'].value;
-        console.log(date1);
         
         let docur = new Date(this.form.controls['dFecOcurrencia'].value)
-        console.log(docur);
+
         if (docur.getFullYear() > 1840 || date1 == "") {
           SwalCarga();
           let date = new Date(docur.setDate(docur.getDate() + 1)).toLocaleDateString('en-GB');
@@ -470,7 +468,6 @@ export class FormCasoComponent implements OnInit {
       caso.nCertif = 0;
       const data: FormData = new FormData();
       data.append('casosData', JSON.stringify(caso));
-      console.log(this.form.controls['dFecOcurrencia'].value);
       
       
 
@@ -501,7 +498,6 @@ export class FormCasoComponent implements OnInit {
                 dateFechaOcurrencia.setDate(new Date(this.form.controls['dFecOcurrencia'].value).getDate() + 1);
                 
                 this.casoBM.dFecOcurrencia = dateFechaOcurrencia.toString();
-                console.log(this.casoBM.dFecOcurrencia , dateFechaOcurrencia);
 
                 this.declararActive = 'active'
                 this.modificarActive = ''

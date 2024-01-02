@@ -43,8 +43,6 @@ export class ModalCuentaBancariaComponent implements OnInit {
   }
 
   initCte(){
-    console.log('1');
-    console.log(this.ctaBancaria);
     
     if(this.addCtaBank){
       let cteP = new ClaimBenefCuentasModelRequesBM();
@@ -54,8 +52,6 @@ export class ModalCuentaBancariaComponent implements OnInit {
         length      :   20
       })
     }else{
-      console.log('2');
-      console.log(this.ctaBancaria);
       this.listBank.push(this.ctaBancaria)
     }
   }
@@ -66,7 +62,6 @@ export class ModalCuentaBancariaComponent implements OnInit {
 
   changeBank(bank: ClaimBenefCuentasModelRequesBM){
     bank.NroCuenta = '';
-    console.log("bank.CodBanco: " + bank.CodBanco);
     
     if(bank.CodBanco == "02" && bank.CodTipoCuenta == "2"){
       bank.length = 13
@@ -89,7 +84,6 @@ export class ModalCuentaBancariaComponent implements OnInit {
         }
       }
     }
-    console.log("bank.length: " + bank.length);
     //const numeros = ["02", "03", "11", "41"];
   }
 

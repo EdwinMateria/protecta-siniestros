@@ -185,7 +185,6 @@ export class ModalCoberturaComponent implements OnInit {
         if (this.beneficiarios.length == 1) {
           this.obtenerBancos()
         }
-        console.log(res.ListBeneficiaries[0]);
         
 
       }, err => {
@@ -196,7 +195,6 @@ export class ModalCoberturaComponent implements OnInit {
   }
 
   editarBeneficiario(beneficiario: BeneficiariesVM ){
-    console.log(beneficiario);
     
     let data : Data = new Data();
     data.P_SIDDOC = beneficiario.SDOCUMENTNUMBER
@@ -219,7 +217,6 @@ export class ModalCoberturaComponent implements OnInit {
         this.reserveService.GetApi(data).subscribe(
           res => {
             let beneficiario = JSON.parse(res) as DataResponse;
-            console.log(JSON.parse(res));
             
             if(beneficiario.P_NCODE == "0"){
               const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
@@ -253,7 +250,6 @@ export class ModalCoberturaComponent implements OnInit {
     this.reserveService.GetCodDiagnosticCover(request).subscribe(
       res => {
         Swal.close();
-        console.log(res);
         if(res.SCODIGODIAGNOSTICO){
           this.model.CCODCIE10 = res.SCODIGODIAGNOSTICO;
           this.model.CDESCRIPT = res.CDESCRIPT;
@@ -480,7 +476,6 @@ export class ModalCoberturaComponent implements OnInit {
     SwalCarga();
     this.reserveService.GetDatCoversTmp(data).subscribe(
       res => {
-        console.log(res);
         
         if(res.SKEY != null){
           this.claimCoverReserveResponse = res;
@@ -926,8 +921,6 @@ export class ModalCoberturaComponent implements OnInit {
       return;
     }
 
-    console.log(this.dataReserva);
-
 
     Swal.fire({
       title: 'Información',
@@ -1073,7 +1066,6 @@ export class ModalCoberturaComponent implements OnInit {
     }
 
     reservaUpdate.NUSERCODE = Number(atob(codUsuario));
-    console.log(reservaUpdate);
 
     if(msj != ""){
       Swal.fire('Información', msj, 'warning');
