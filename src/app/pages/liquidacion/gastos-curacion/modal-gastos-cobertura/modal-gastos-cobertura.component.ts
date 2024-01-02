@@ -367,7 +367,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
     //TITULO MODAL
     this.tipoCobertura = this.data[0].NCOVER;
-    console.log(this.tipoCobertura);
     this.titulo = this.data[0].DESC_COBERTURA;
 
     this.siniestro = this.data[0].NCLAIM;
@@ -453,10 +452,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
     
      this.service.ObtenerDatosGastosSepMed(data).subscribe(
       s => {
-        console.log(s);
-        this.datosPago = s;
-        console.log('ObtenerDatosGastosSepMed: '); 
-        console.log(this.datosPago);    
+        this.datosPago = s;  
 
         this.poliza = this.datosPago.NPOLICY;
         //this.placa = "ABC 123";
@@ -495,7 +491,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
         
       },
       e => {
-        console.log(e);
+        
       });
       
       return this.datosPago;
@@ -504,11 +500,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
   GetListaTipoPago(){
     this.service.GetListaTipoPago().subscribe(
       s => {        
-        this.tipoPago = s;
-        console.log(this.tipoPago);        
+        this.tipoPago = s;   
       },
       e => {
-        console.log(e);
         //dialogRefLoad.close();
       });
   }
@@ -516,11 +510,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
   GetListaFormaPago(){
     this.service.GetListaFormaPago().subscribe(
       s => {        
-        this.formaPago = s;
-        console.log(this.formaPago);        
+        this.formaPago = s;       
       },
       e => {
-        console.log(e);
         //dialogRefLoad.close();
       });
   }
@@ -528,11 +520,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
   GetListaBancos(){
     this.service.GetListaBancos().subscribe(
       s => {        
-        this.bancos = s;
-        console.log(this.bancos);        
+        this.bancos = s;     
       },
       e => {
-        console.log(e);
         //dialogRefLoad.close();
       });
   }
@@ -665,20 +655,16 @@ export class ModalGastosCoberturaComponent implements OnInit {
           }
           
         //} 
-        Swal.close();  
-        console.log('Beneficiarios: '); 
-        console.log(this.salidaBeneficiarios);        
+        Swal.close();        
       },
       e => {
         Swal.close();
-        console.log(e);
         //dialogRefLoad.close();
       });
   }
 
   ObtenerBeneficiariosMuerte(data : DatosBeneficiarios){
   SwalCarga();
-    console.log(data);
     this.service.ObtenerBeneficiariosMuerte(data).subscribe(
       s => {        
         this.salidaBeneficiariosMuerte = s;
@@ -704,8 +690,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
             benef.m_tipopago = "10";
 
             this.ctaBenef = benef.CTASBENEFICIARIO;
-            console.log('Beneficiarios Muerte SUS CUENTAS: '); 
-            console.log(benef.CTASBENEFICIARIO); 
 
             this.ctaBenef = benef.CTASBENEFICIARIO; 
 
@@ -769,14 +753,11 @@ export class ModalGastosCoberturaComponent implements OnInit {
             }            
             */
 
-        });
-        console.log('Beneficiarios Muerte: '); 
-        console.log(this.salidaBeneficiariosMuerte);      
+        });   
         Swal.close();    
       },
       e => {
         Swal.close();
-        console.log(e);
         //dialogRefLoad.close();
       });
   }
@@ -806,7 +787,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
     const selectElement = document.getElementById("nomBeneficiarios") as HTMLSelectElement;
     const vsclient = selectElement.value;
-    console.log(vsclient);
 
     if (vsclient != "0"){
           let lstbenef = this.salidaBenef_Origen.filter(x => x.SCLIENT == vsclient);
@@ -839,7 +819,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
           this.reembolso = parseInt(selectedValue.split("|")[11]); 
           */
           //his.pendientePagoCob = this.redondearDecimales(this.salidaBeneficiarios[0].MONTO_PAGO2,2);
-          console.log(montoPago);
           this.tipoDocumento = tipoDoc;
           this.nroDocumento = numDoc;
 
@@ -939,7 +918,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
       s => {        
         this.salidaFacturas = s;
         this.salidaFact_Origen = s;
-        console.log(s);
         if (this.salidaFacturas.length > 0 ){
           if (this.salidaFacturas.length  == 1){
             
@@ -958,12 +936,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
         }
         const selectfinanalisis = document.getElementById("TxtFechaFinAnalisis") as HTMLSelectElement;
         selectfinanalisis.focus();
-
-        console.log('Facturas: '); 
-        console.log(this.salidaFacturas);        
+               
       },
       e => {
-        console.log(e);
         //dialogRefLoad.close();
       });
   }
@@ -972,7 +947,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
 
     const selectElement = document.getElementById("CboFactura") as HTMLSelectElement;
     const vfact = selectElement.value;
-    console.log(vfact);
 
     if(vfact !='0'){
       let lstfact = this.salidaFact_Origen.filter(x => x.NUM_FACTURA == vfact);
@@ -1248,7 +1222,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
                   this.EnviarPago(this.FiltroProcesoPago[0]);
               }else{
                 this.BtnDisabled1 = false;
-                console.log('Nos quedamos.');
               }
             });
           }
@@ -1262,11 +1235,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
             cancelButtonText: 'No'
           }).then((result) => {
             if(result.value){
-              console.log(this.FiltroProcesoPago);
                 this.EnviarPago(this.FiltroProcesoPago[0]);
             }else{
               this.BtnDisabled1 = false;
-              console.log('Nos quedamos.');
             }
           });
         }
@@ -1484,8 +1455,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
           
                 let vdata = await this.validarbd();
                 
-                this.salidaValidaciones[0] = vdata[0]; 
-                console.log(vdata);      
+                this.salidaValidaciones[0] = vdata[0];     
                 if (this.salidaValidaciones.length > 0){ 
                   if(this.salidaValidaciones[0].STATUS == '1'){
                     this.messageMVal = this.salidaValidaciones[0].MENSAJE;      
@@ -1516,10 +1486,8 @@ export class ModalGastosCoberturaComponent implements OnInit {
                         if(result.value){
                           
                             this.FiltProcPagoMuerteEnvio = Envio_Data;
-                            console.log(this.FiltProcPagoMuerteEnvio);
                             this.EnviarPagoMuerte(this.FiltProcPagoMuerteEnvio);
                         }else{
-                          console.log('Nos quedamos.');
                           this.BtnDisabled2 = false;
                         }
                       });
@@ -1538,10 +1506,8 @@ export class ModalGastosCoberturaComponent implements OnInit {
                         if(result.value){
                           
                             this.FiltProcPagoMuerteEnvio = Envio_Data;
-                            console.log(this.FiltProcPagoMuerteEnvio);
                             this.EnviarPagoMuerte(this.FiltProcPagoMuerteEnvio);
                         }else{
-                          console.log('Nos quedamos.');
                           this.BtnDisabled2 = false;
                         }
                       });
@@ -1702,8 +1668,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
       }
 
       let vdata = await this.validarbd();
-      this.salidaValidaciones[0] = vdata[0]; 
-      console.log(vdata);      
+      this.salidaValidaciones[0] = vdata[0];     
       if (this.salidaValidaciones.length > 0){ 
         if(this.salidaValidaciones[0].STATUS == '1'){
           this.mensaje = this.salidaValidaciones[0].MENSAJE;
@@ -1795,10 +1760,7 @@ export class ModalGastosCoberturaComponent implements OnInit {
   }
 
   async validarbd() {
-    console.log('inicio');
     let sdata = await this.service.Validaciones_Coberturas(this.FiltroValidar[0]);
-    console.log('resultado');
-    console.log(sdata);
     return sdata;
   }
 
@@ -1936,13 +1898,11 @@ export class ModalGastosCoberturaComponent implements OnInit {
   EnviarPago(sFiltroProcesoPago: FiltroProcesoPago){
    //SwalCarga();
     this.FiltroProcesoPagoEnvio[0]= sFiltroProcesoPago;
-    console.log(this.FiltroProcesoPagoEnvio);
     //this.reference.close(true);
     
     this.service.InsertarLiquidacionSoat(this.FiltroProcesoPagoEnvio).subscribe(
       s => { 
         this.salidaProcesoPago = s;
-        console.log(s);
         //Swal.close();
         if (this.salidaProcesoPago){ 
               if(this.salidaProcesoPago.STATUS == ''){
@@ -1960,7 +1920,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
        
       },
       e => {
-        console.log(e);
         //Swal.close();
         //dialogRefLoad.close();
         this.BtnDisabled1 = false;
@@ -1972,11 +1931,9 @@ export class ModalGastosCoberturaComponent implements OnInit {
   EnviarPagoMuerte(sFiltroProcesoPago: FiltroProcesoPago[]){
     //SwalCarga();
     
-    console.log(sFiltroProcesoPago);
     this.service.InsertarLiquidacionSoat(sFiltroProcesoPago).subscribe(
       s => { 
         this.salidaProcesoPago = s;
-        console.log(s);
         //Swal.close();
         if (this.salidaProcesoPago){ 
               if(this.salidaProcesoPago.STATUS == ''){
@@ -1992,7 +1949,6 @@ export class ModalGastosCoberturaComponent implements OnInit {
         
       },
       e => {
-        console.log(e);
         //Swal.close();
         //dialogRefLoad.close();
         this.BtnDisabled2 = false;

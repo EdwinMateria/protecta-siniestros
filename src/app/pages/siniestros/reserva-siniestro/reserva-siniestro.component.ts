@@ -120,7 +120,6 @@ export class ReservaSiniestroComponent implements OnInit {
   }
 
   openSelect(event: any){
-    console.log(event);
     
   }
 

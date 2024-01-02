@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('home');
     this.route.queryParams.subscribe(params => {
       let usuario = params['usuario']
       if(usuario != undefined){

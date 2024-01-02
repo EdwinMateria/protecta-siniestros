@@ -346,13 +346,11 @@ export class FormSiniestroComponent implements OnInit {
       modalRef.componentInstance.reference = modalRef;
       modalRef.componentInstance.origen = 1;
       modalRef.result.then((benef) => {
-        console.log(benef);
         if ((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)) {
           SwalCarga();
           let data = new ClaimBeneficiarioRequest();
           if (benef.SCODE) data.SCODCLI = benef.SCODE.trim();
           if (benef.P_SCOD_CLIENT) data.SCODCLI = benef.P_SCOD_CLIENT.trim();
-          console.log(data);
           this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
             res => {
               Swal.close();
@@ -377,7 +375,6 @@ export class FormSiniestroComponent implements OnInit {
     let fecha = this.form.controls['dFecDenuncia'].value;
     if (fecha != '' || fecha != null) {
       //let date = (this.form.controls['dFecDenuncia'].value).split('-');
-      console.log(fecha);
       let docur = new Date(this.form.controls['dFecDenuncia'].value)
       if(docur.getFullYear() > 1840){
         let data = new SiniestroBM();

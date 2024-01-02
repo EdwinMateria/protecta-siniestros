@@ -127,7 +127,6 @@ export class GastosCuracionComponent implements OnInit {
 
       this.service.RetornarDatosCasoSiniestro(datosCasoSiniestro).subscribe(
         s => {
-          console.log(s);
           this.dataSourceLiquidacion = s;
           if (scerrar){
            Swal.close();
@@ -189,7 +188,6 @@ export class GastosCuracionComponent implements OnInit {
           //dialogRefLoad.close();
         },
         e => {
-          console.log(e);
           if (scerrar){
             Swal.close();
           }
@@ -204,7 +202,6 @@ export class GastosCuracionComponent implements OnInit {
       s => {
         
         this.movimientos = s;
-        console.log(this.movimientos);
         if (this.movimientos.length > 0){
             this.mostrarTable = true;
         }else{
@@ -214,7 +211,6 @@ export class GastosCuracionComponent implements OnInit {
         }
       },
       e => {
-        console.log(e);
         //dialogRefLoad.close();
       });
 
@@ -231,11 +227,9 @@ export class GastosCuracionComponent implements OnInit {
           x.SELECCION = true;
           x.NCASENUM = this.caso;
           this.movimientosPago.push(x);
-          console.log(this.movimientosPago);
         }else{
           x.SELECCION = false
           //this.movimientosPago = this.movimientosPago.filter(m => m.NCOVER != x.NCOVER);
-          console.log(this.movimientosPago);
         }
       })
     }else{
@@ -281,7 +275,6 @@ export class GastosCuracionComponent implements OnInit {
       s => {
         
         this.lst_siniestros = s;
-        console.log(this.lst_siniestros);
         Swal.close();
         if (this.lst_siniestros.length > 0){
             if(this.lst_siniestros.length == 1){   
@@ -303,7 +296,6 @@ export class GastosCuracionComponent implements OnInit {
         }
       },
       e => {
-        console.log(e);
         Swal.close();
         //dialogRefLoad.close();
       });
