@@ -77,14 +77,14 @@ export class CargaMasivaComponent implements OnInit {
   primeraColumna: any = [];
   correctos: any = [];
   errores: any = [];
-  
+
   listResults: any = [];
   listToShow: any = [];
   currentPage = 1;
   itemsPerPage = 10;
   totalItems = 0;
   maxSize = 10;
-  
+
   listResultsError: any = [];
   listToShowError: any = [];
   currentPageError = 1;
@@ -98,7 +98,9 @@ export class CargaMasivaComponent implements OnInit {
     public authProtectaService: AuthProtectaService
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log('carga masiva');
+  }
 
   pageChanged = (currentPage) => {
     this.currentPage = currentPage;
@@ -197,6 +199,7 @@ export class CargaMasivaComponent implements OnInit {
     if (this.codigo == 1) {
       this.CargaMasivaService.ListarErroresApertura(item).subscribe(
         res => {
+          console.log(res);
           this.currentPageError = 1;
           this.listResultsError = res.Result.P_TABLE;
           this.totalItemsError = this.listResultsError.length;
@@ -210,6 +213,7 @@ export class CargaMasivaComponent implements OnInit {
     } else if (this.codigo == 2) {
       this.CargaMasivaService.ListarErroresReservas(item).subscribe(
         res => {
+          console.log(res);
           this.currentPageError = 1;
           this.listResultsError = res.Result.P_TABLE;
           this.totalItemsError = this.listResultsError.length;
@@ -223,6 +227,7 @@ export class CargaMasivaComponent implements OnInit {
     } else if (this.codigo == 3) {
       this.CargaMasivaService.ListarErroresLiquidacion(item).subscribe(
         res => {
+          console.log(res);
           this.currentPageError = 1;
           this.listResultsError = res.Result.P_TABLE;
           this.totalItemsError = this.listResultsError.length;
@@ -302,6 +307,7 @@ export class CargaMasivaComponent implements OnInit {
     if (this.codigo == 1) {
       this.CargaMasivaService.ListarCabeceraData(this.ListCabecera).subscribe(
         res => {
+          console.log(res);
           this.cabeceraData = res.Result.P_TABLE;
           this.ListPreliminar = {};
           this.ListPreliminar.LIST = [];
@@ -364,6 +370,7 @@ export class CargaMasivaComponent implements OnInit {
               }
               this.CargaMasivaService.RecorrerListaApertura(this.ListPreliminar).subscribe(
                 res => {
+                  console.log(res);
                   this.columnBool = true;
                   this.currentPage = 1;
                   this.listResults = res.Result.P_TABLE;
@@ -404,6 +411,7 @@ export class CargaMasivaComponent implements OnInit {
     } else if (this.codigo == 2) {
       this.CargaMasivaService.ListarCabeceraData(this.ListCabecera).subscribe(
         res => {
+          console.log(res);
           this.cabeceraData = res.Result.P_TABLE;
           this.ListPreliminar = {};
           this.ListPreliminar.LIST = [];
@@ -462,6 +470,7 @@ export class CargaMasivaComponent implements OnInit {
               }
               this.CargaMasivaService.RecorrerListaReservas(this.ListPreliminar).subscribe(
                 res => {
+                  console.log(res);
                   this.columnBool = false;
                   this.currentPage = 1;
                   this.listResults = res.Result.P_TABLE;
@@ -502,6 +511,7 @@ export class CargaMasivaComponent implements OnInit {
     } else if (this.codigo == 3) {
       this.CargaMasivaService.ListarCabeceraData(this.ListCabecera).subscribe(
         res => {
+          console.log(res);
           this.cabeceraData = res.Result.P_TABLE;
           this.ListPreliminar = {};
           this.ListPreliminar.LIST = [];
@@ -588,6 +598,7 @@ export class CargaMasivaComponent implements OnInit {
               }
               this.CargaMasivaService.RecorrerListaLiquidacion(this.ListPreliminar).subscribe(
                 res => {
+                  console.log(res);
                   this.columnBool = false;
                   this.currentPage = 1;
                   this.listResults = res.Result.P_TABLE;
@@ -636,6 +647,7 @@ export class CargaMasivaComponent implements OnInit {
     if (this.codigo == 1) {
       this.CargaMasivaService.CargarDefinitivoApertura(this.ListDefinitivo).subscribe(
         res => {
+          console.log(res);
           if (res.Result.P_NCODE == 0) {
             this.isLoading = false;
             this.archivoNombre = null;
@@ -660,6 +672,7 @@ export class CargaMasivaComponent implements OnInit {
     } else if (this.codigo == 2) {
       this.CargaMasivaService.CargarDefinitivoReservas(this.ListDefinitivo).subscribe(
         res => {
+          console.log(res);
           if (res.Result.P_NCODE == 0) {
             this.isLoading = false;
             this.archivoNombre = null;
@@ -684,6 +697,7 @@ export class CargaMasivaComponent implements OnInit {
     } else if (this.codigo == 3) {
       this.CargaMasivaService.CargarDefinitivoLiquidacion(this.ListDefinitivo).subscribe(
         res => {
+          console.log(res);
           if (res.Result.P_NCODE == 0) {
             this.isLoading = false;
             this.archivoNombre = null;
@@ -753,6 +767,7 @@ export class CargaMasivaComponent implements OnInit {
     if (this.codigo == 1) {
       this.CargaMasivaService.ProcessReportePreliminarApertura(this.ReportePreliminar).subscribe(
         res => {
+          console.log(res);
           let _data = res;
           if (_data.response == 0) {
             if (_data.Data != null) {
@@ -774,6 +789,7 @@ export class CargaMasivaComponent implements OnInit {
     } else if (this.codigo == 2) {
       this.CargaMasivaService.ProcessReportePreliminarReservas(this.ReportePreliminar).subscribe(
         res => {
+          console.log(res);
           let _data = res;
           if (_data.response == 0) {
             if (_data.Data != null) {
@@ -795,6 +811,7 @@ export class CargaMasivaComponent implements OnInit {
     } else if (this.codigo == 3) {
       this.CargaMasivaService.ProcessReportePreliminarLiquidacion(this.ReportePreliminar).subscribe(
         res => {
+          console.log(res);
           let _data = res;
           if (_data.response == 0) {
             if (_data.Data != null) {
@@ -835,7 +852,7 @@ export class CargaMasivaComponent implements OnInit {
     return blob;
   }
 
-  showModal(openSidebar:boolean){
+  showModal(openSidebar: boolean) {
     this.openModal = openSidebar
   }
 }
