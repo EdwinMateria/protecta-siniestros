@@ -14,6 +14,7 @@ export class ReaperturaSiniestroComponent implements OnInit {
   
   nroSiniestro = new FormControl('', Validators.required);
   fechaSiniestro = new FormControl(null, Validators.required);
+  openModal = false;
 
   constructor(public casoService: CasosService) { }
 
@@ -33,7 +34,7 @@ export class ReaperturaSiniestroComponent implements OnInit {
         text: 'Se actualizará el estado del siniestro. ¿Desea continuar?',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'De acuerdo',
+        confirmButtonText: 'Sí',
         cancelButtonText: 'No',
         reverseButtons: true
       }).then((result) => {
@@ -69,6 +70,10 @@ export class ReaperturaSiniestroComponent implements OnInit {
   limpiarForm(){
     this.nroSiniestro.reset();
     this.fechaSiniestro.reset();
+  }
+
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
   }
 
 }

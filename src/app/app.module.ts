@@ -19,10 +19,15 @@ import { ModalBeneficiarioComponent } from './pages/siniestros/reserva-siniestro
 import { ModalNuevoBeneficiarioComponent } from './pages/siniestros/reserva-siniestro/modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgbPaginationModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
-import { DatePipe } from '@angular/common';
+import { CargaMasivaComponent } from './pages/siniestros/carga-masiva/carga-masiva.component';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-siniestro/reapertura-siniestro.component';
 import { DecimalesDirective } from './core/directive/decimales.directive';
 import { SiniestroIntercepInterceptor } from './core/services/interceptor/siniestro-intercep.interceptor';
+import { DecimalPipe } from './core/pipe/decimal.pipe';
+import { NumberMaxLengthDirective } from './core/directive/number-max-length.directive';
+import { ModalCuentaBancariaComponent } from './pages/siniestros/reserva-siniestro/modal-cuenta-bancaria/modal-cuenta-bancaria.component';
+import { OnlyNumberDirective } from './core/directive/only-number.directive';
 
 @NgModule({
   declarations: [
@@ -40,8 +45,13 @@ import { SiniestroIntercepInterceptor } from './core/services/interceptor/sinies
     ModalGastosCoberturaComponent,
     ModalBeneficiarioComponent,
     ModalNuevoBeneficiarioComponent,
+    CargaMasivaComponent,
     ReaperturaSiniestroComponent,
-    DecimalesDirective
+    DecimalesDirective,
+    DecimalPipe,
+    NumberMaxLengthDirective,
+    ModalCuentaBancariaComponent,
+    OnlyNumberDirective
   ],
   imports: [
     BrowserModule,
@@ -50,7 +60,8 @@ import { SiniestroIntercepInterceptor } from './core/services/interceptor/sinies
     FormsModule,
     ReactiveFormsModule,
     NgbTypeaheadModule,
-    NgbPaginationModule
+    NgbPaginationModule,
+    CommonModule
   ],
   providers: [
     DatePipe

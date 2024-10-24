@@ -1,2 +1,8 @@
-<app-navbar></app-navbar>
-<p>home works!</p>
+<app-navbar (showModal)="showModal($event)"></app-navbar>
+<div [ngClass]="{'empujar': openModal === true , 'restaurar' : openModal === false}">
+    <div class="row">
+        <div class="col-sm-12 mt-5 text-center float-center title_principal">
+            <a> BIENVENIDO A SINIESTRO SOAT </a>
+        </div>
+    </div>
+</div>

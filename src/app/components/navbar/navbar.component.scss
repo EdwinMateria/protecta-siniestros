@@ -82,18 +82,19 @@ body {
   /***EL SUBMENU***/
   
   .sideNav2 {
-    display: none;
   }
   
   .sideNav2 a {
     font-size: 15px;
-    padding-left: 50px;
+    padding-left: 20px;
     padding-top: 8px;
     
     
   }
   .sideNav2 a:hover {
-    color: #2f3697;
+    color: #ffffff;
+    background-color: #2b0d61;
+    border-radius: 10px;
   }
   
   
@@ -105,7 +106,6 @@ body {
   
   .sidenav::-webkit-scrollbar-track{
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-      border-radius: 10px;
       background-color: #F5F5F5;
   }
   .sidenav::-webkit-scrollbar{
@@ -113,7 +113,6 @@ body {
       background-color: #F5F5F5;
   }
   .sidenav::-webkit-scrollbar-thumb{
-    border-radius: 10px;
       -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
       background-color: #555;
   }

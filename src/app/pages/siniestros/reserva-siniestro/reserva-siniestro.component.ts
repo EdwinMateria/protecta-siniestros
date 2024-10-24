@@ -13,6 +13,7 @@ import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-pr
 import { ClaimComboResponse } from 'src/app/core/models/claimComboResponse';
 import { ClaimValCoverRequest } from 'src/app/core/models/claimValCoverRequest';
 import { SwalCarga } from "src/app/core/swal-loading";
+import { ClaimBeneficiariesShowRequest } from 'src/app/core/models/claimBeneficiariesShowRequest';
 
 @Component({
   selector: 'app-reserva-siniestro',
@@ -21,6 +22,7 @@ import { SwalCarga } from "src/app/core/swal-loading";
 })
 export class ReservaSiniestroComponent implements OnInit {
 
+  
   tipoTab = 1;
   registroActive = 'active';
   consultaActive = '';
@@ -37,6 +39,10 @@ export class ReservaSiniestroComponent implements OnInit {
   showTable = false;
   disabledCobertura = false;
   disabledTodo = false;
+  openModal = false;
+  sclient = "";
+  edit = false;
+  estadoSiniestro = "";
 
   constructor(private modalService: NgbModal, public reserveService: ReserveService, public authProtectaService: AuthProtectaService) { }
 
@@ -65,12 +71,16 @@ export class ReservaSiniestroComponent implements OnInit {
     }
     this.claimRequest = new ClaimRequest();
     this.siniestro = 0;
-    this.showTable = false
+    this.showTable = false;
+    this.siniestros = [];
+    this.siniestros.push({ CODIGO: 0, DESCRIPCION: 'SELECCIONE', ESTADO: '0' })
+    this.disabledTodo = false;
   }
 
   resetBuscado() {
     this.showTable = false;
     this.siniestros = [];
+    this.siniestros.push({ CODIGO: 0, DESCRIPCION: 'SELECCIONE', ESTADO: '0' })
     this.reservaCaso = new ClaimCoverResponse();
     this.siniestro = 0;
   }
@@ -89,6 +99,7 @@ export class ReservaSiniestroComponent implements OnInit {
           this.siniestros = res;
           this.posicion = 0;
           this.posicionActual = 0;
+          this.disabledTodo = false;
           if (res.length == 1) {
             Swal.fire('Información', 'No se encontraron siniestros para el caso ingresado', 'warning');
             return;
@@ -108,10 +119,13 @@ export class ReservaSiniestroComponent implements OnInit {
     }
   }
 
+  openSelect(event: any){
+    
+  }
+
   buscadorGlobal() {
     if (this.siniestro != 0) {
       SwalCarga();
-      this.disabledCobertura = false;
       this.datosAdicionales = [];
       let data = new ClaimCaseDataRequest();
       data.NCLAIM = this.siniestro;
@@ -124,9 +138,18 @@ export class ReservaSiniestroComponent implements OnInit {
           this.reservaCaso = res;
           let siniestroEstado = this.siniestros.find(x => x.CODIGO == this.siniestro).ESTADO;
           if (siniestroEstado == '1' || siniestroEstado == '5' || siniestroEstado == '7') {
-            if(siniestroEstado == '1') Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Anulado.', 'warning');
-            if(siniestroEstado == '5') Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Pagado Total.', 'warning');
-            if(siniestroEstado == '7') Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Rechazado.', 'warning');
+            if(siniestroEstado == '1'){
+              Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Anulado.', 'warning');
+              this.estadoSiniestro = "Anulado"
+            };
+            if(siniestroEstado == '5'){
+              Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Pagado Total.', 'warning');
+              this.estadoSiniestro = "Pago total"
+            };
+            if(siniestroEstado == '7'){
+              Swal.fire('Información', 'No se puede generar reserva para este siniestro. El estado del siniestro: Rechazado.', 'warning');
+              this.estadoSiniestro = "Rechazado"
+            };
             this.disabledTodo = true;
             return;
           } else {
@@ -149,17 +172,18 @@ export class ReservaSiniestroComponent implements OnInit {
     modalRef.componentInstance.reservaCaso = this.reservaCaso;
     modalRef.componentInstance.tab = this.tipoTab;
     modalRef.componentInstance.disabledBotones = this.disabledTodo;
+    modalRef.componentInstance.tipoMovimiento = this.tipoMovimiento;
+    modalRef.componentInstance.sclient = this.sclient;
+    modalRef.componentInstance.edit = this.edit;
     modalRef.result.then((res) => {
       if (res != undefined) {
+
         this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NRESERVEAMOUNT = res.NMONTO;
+        this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE = 0;
+        this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE = this.tipoMovimiento == "D" ? this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE2 - res.NMONTO : this.reservaCaso.LISTA_COVERCLAIM[this.posicion].NACCUMRESERVE2 + res.NMONTO;
         if (origen == 4) this.reservaCaso.LISTA_COVERCLAIM[this.posicion].SNROLETTER = res.SNROLETTER;
         this.disabledCobertura = true;
       } else {
-        // const adElement = document.getElementById(`a${this.posicion}`) as HTMLInputElement;
-        // adElement.checked = false;
-        // const ddElement = document.getElementById(`d${this.posicion}`) as HTMLInputElement;
-        // ddElement.checked = false;
-        // this.tipoMovimiento[this.posicion] = null;
          this.datosAdicionales[this.posicion] = null;
       }
     });
@@ -202,7 +226,7 @@ export class ReservaSiniestroComponent implements OnInit {
       text: '¿Está seguro de eliminar los datos adicionales para esta cobertura?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'De acuerdo',
+      confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       reverseButtons: true
     }).then((result) => {
@@ -212,10 +236,10 @@ export class ReservaSiniestroComponent implements OnInit {
           res => {
             Swal.close();
             if (res == "OK") {
-              Swal.fire('Información', 'SE ELIMINARON LOS DATOS ADICIONALES DE LA COBERTURA.', 'success');
+              Swal.fire('Información', 'Se eliminaron los datos adicionales de la cobertura.', 'success');
               this.disabledCobertura = false;
               //this.tipoMovimiento[posicion] = null;
-
+              this.tipoMovimiento = ""
               const adElement = document.getElementById(`a${posicion}`) as HTMLInputElement;
               adElement.checked = false;
               const ddElement = document.getElementById(`d${posicion}`) as HTMLInputElement;
@@ -223,6 +247,9 @@ export class ReservaSiniestroComponent implements OnInit {
               //document.getElementById(`${posicion}`).checked = false
               this.reservaCaso.LISTA_COVERCLAIM[posicion].NRESERVEAMOUNT = null;
               this.reservaCaso.LISTA_COVERCLAIM[posicion].SNROLETTER = null;
+              
+              this.reservaCaso.LISTA_COVERCLAIM[posicion].NACCUMRESERVE = 0;
+              this.reservaCaso.LISTA_COVERCLAIM[posicion].NACCUMRESERVE = this.reservaCaso.LISTA_COVERCLAIM[posicion].NACCUMRESERVE2;
               this.datosAdicionales[posicion] = null;
               return;
             } else {
@@ -239,8 +266,19 @@ export class ReservaSiniestroComponent implements OnInit {
     })
   }
 
-  reserva(event: any, origen: number, i: number) {
+  reserva(event: any, claim: ClaimDataCoverVM, i: number) {
     if (event.target.checked) {
+
+      this.edit = false;
+      if(claim.NACCUMRESERVE == claim.NSUMINSURED){
+        Swal.fire('Información', 'Cobertura no tiene saldo.','warning');
+        const adElement = document.getElementById(`a${i}`) as HTMLInputElement;
+        adElement.checked = false;
+        const ddElement = document.getElementById(`d${i}`) as HTMLInputElement;
+        ddElement.checked = false;
+        event.target.checked = false;
+        return;
+      }
 
       if (this.disabledCobertura) {
         Swal.fire('Información', 'Ya tiene datos para una cobertura', 'warning');
@@ -263,7 +301,8 @@ export class ReservaSiniestroComponent implements OnInit {
             return;
           }else{
             this.reservaCaso.SMOVETYPE = this.tipoMovimiento;
-            this.openModalCobertura(origen)
+            this.sclient = claim.SCLIENT;
+            this.openModalCobertura(claim.NCOVER)
           }
         }
       }
@@ -303,7 +342,7 @@ export class ReservaSiniestroComponent implements OnInit {
         text: `¿Está seguro de registrar una reserva para la cobertura ${cover.SDESCOVER}?`,
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'De acuerdo',
+        confirmButtonText: 'Sí',
         cancelButtonText: 'No',
         reverseButtons: true
       }).then((result) => {
@@ -370,9 +409,15 @@ export class ReservaSiniestroComponent implements OnInit {
 
   changeRadio(i:number, event: any){
     this.posicionActual = i;
-    console.log(i);
-    console.log(this.tipoMovimiento)
   }
 
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
+  }
+
+  editarTemporal(data: ClaimDataCoverVM){
+    this.edit = true;
+    this.modalCobverturaAction(data.NCOVER);
+  }
 
 }

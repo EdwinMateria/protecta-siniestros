@@ -241,3 +241,12 @@ export class Movimiento{
    vObserv : string;
    vReembolso: number;
   }
+
+  export class FiltroCaso{    
+    PCASENUM : number;
+}
+
+ export class Lista_Siniestros{    
+    NCODIGO : number;
+    SDESCRIPT : string;
+ } 

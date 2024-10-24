@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import * as $ from 'jQuery';
 import { AppConfig } from 'src/app/app.config';
@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit {
   public pruebaSubmenu: any = [];
   public updateModal = false;
   public STIPO_USUARIO
-
+  @Output() showModal = new EventEmitter<boolean>();
   sidebarNav: any;
   contentButton: any;
   linkactual = "";
@@ -56,14 +56,17 @@ export class NavbarComponent implements OnInit {
 
   closeNav(){
     this.renderer.removeClass(this.contenido.nativeElement, "abrirNav");
+    this.showModal.emit(false)
   }
 
   openNav(){
     if (this.contenido.nativeElement.classList.contains("abrirNav")){
       this.renderer.removeClass(this.contenido.nativeElement, "abrirNav");
+      this.showModal.emit(false)
     }
     else {
       this.renderer.addClass(this.contenido.nativeElement, "abrirNav");
+      this.showModal.emit(true)
     }
   }
 
@@ -72,7 +75,7 @@ export class NavbarComponent implements OnInit {
     let nav = div.getElementsByClassName("sideNav2");
     for (let i = 0; i< nav.length ; i++){
       if (nav[i].getAttribute("style") == "display: block")
-        nav[i].setAttribute("style","display: none");
+        nav[i].setAttribute("style","display: block");
       else
         nav[i].setAttribute("style","display: block");
     } 
@@ -105,13 +108,14 @@ export class NavbarComponent implements OnInit {
       {sName : 'TRATAMIENTO DE CASO / SINIESTRO', sRouterLink : 'tratamiento-caso-siniestro'},
       {sName : 'RESERVA DE SINIESTRO', sRouterLink: 'reserva-siniestro'},
       {sName : 'LIQUIDACION DE SINIESTRO', sRouterLink: 'liquidacion-siniestro'},
+      {sName : 'CARGA MASIVA', sRouterLink: 'carga-masiva'},
       {sName : 'REAPERTURA DE SINIESTRO', sRouterLink: 'reapertura-siniestro'}
     ]})
   }
 
   logOut(){
-    window.location.href = AppConfig.URL_SINIESTROS_WEB;
     document.cookie = "AppSiniestro=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.close()
   }
 
 }

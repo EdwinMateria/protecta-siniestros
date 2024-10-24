@@ -10,12 +10,12 @@ import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-pr
 })
 export class HomeComponent implements OnInit {
 
+  openModal = false;
   constructor(public authProtectaService: AuthProtectaService, public route: ActivatedRoute, public router: Router) {
     
   }
 
   ngOnInit(): void {
-    console.log('home');
     this.route.queryParams.subscribe(params => {
       let usuario = params['usuario']
       if(usuario != undefined){
@@ -37,6 +37,11 @@ export class HomeComponent implements OnInit {
         }
       }
   });
+  }
+
+
+  showModal(openSidebar:boolean){
+    this.openModal = openSidebar
   }
 
 }

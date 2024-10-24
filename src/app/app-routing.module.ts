@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { TratamientoCasoSiniestroComponent } from './pages/siniestros/tratamiento-caso-siniestro/tratamiento-caso-siniestro.component';
 import { ReservaSiniestroComponent } from './pages/siniestros/reserva-siniestro/reserva-siniestro.component';
 import { GastosCuracionComponent } from './pages/liquidacion/gastos-curacion/gastos-curacion.component';
+import { CargaMasivaComponent } from './pages/siniestros/carga-masiva/carga-masiva.component';
 import { ReaperturaSiniestroComponent } from './pages/siniestros/reapertura-siniestro/reapertura-siniestro.component';
 import { SiniestroGuard } from './core/guard/siniestro.guard';
 
 
 const routes: Routes = [
   {
-     path: '', component: HomeComponent, pathMatch: 'full'
+    path: '', component: HomeComponent, pathMatch: 'full'
   },
   { 
     path: 'home', component: HomeComponent
@@ -21,6 +21,9 @@ const routes: Routes = [
   },
   {
     path: 'reserva-siniestro', component: ReservaSiniestroComponent,  canActivate: [SiniestroGuard]
+  },
+  {
+    path: 'carga-masiva', component: CargaMasivaComponent,  canActivate: [SiniestroGuard]
   },
   {
     path: 'liquidacion-siniestro', component: GastosCuracionComponent,  canActivate: [SiniestroGuard]
@@ -34,4 +37,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }

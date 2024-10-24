@@ -1,5 +1,5 @@
 ::ng-deep .my-class .modal-dialog { 
-    max-width: 50%;
+    max-width: 70%;
 }
 
 .nav-decla{
@@ -16,4 +16,51 @@
     background-color: #fdb477!important;
 }
 
+.border_head{
+    padding-top: 10px !important;
+    border-bottom: 1px solid #ccc!important;
+}
 
+.card-header{
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.card{
+    border-radius: 0px;
+}
+
+.buttonN {
+    justify-content: center;
+    border: 1px solid rgb(129, 118, 157);
+    border-radius: 2px;
+    margin: 0px;
+    background: #fff;
+    padding: 8px 5px;
+    min-width: 200px;
+    height: 45px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.buttonN:hover {
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.buttonN:disabled {
+    cursor: not-allowed;
+    background-color: rgb(235, 235, 228);
+    color: #666666;
+}
+
+.btn{
+    border: 1px solid rgb(129, 118, 157);
+    border-radius: 2px;
+}
+
+.btn:hover {
+    background-color: #2b0d61;
+    color: #fff;
+}

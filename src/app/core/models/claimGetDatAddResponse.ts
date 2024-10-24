@@ -47,4 +47,6 @@ export class BeneficiaresUltimatesVM {
 	SBENEFICIARYTYPE            : string;
 	NBANK_CODE                  : number;
 	SACCOUNT                    : string;
+	SBANKNAME                   : string;
+	SACCOUNTCCINUMBER           : string;
 }

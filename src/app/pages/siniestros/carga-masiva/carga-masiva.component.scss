@@ -1,0 +1,388 @@
+table tr.highlight {
+    background-color: #27246d !important;
+}
+
+table td.highlight {
+    color: #ffffff !important;
+}
+
+span, textarea {
+    margin-top: 0.7em;
+    display: block;
+}
+
+.card {
+    margin-top: 0.7em;
+}
+
+.grid {
+    width: 100%;
+    margin: 20px auto;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.grid table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.grid table tr td {
+    padding: 15px 15px;
+    color: #000;
+}
+
+.grid table .grid-title td {
+    padding: 25px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #27246d;
+}
+
+.grid table tr td button {
+    border: none;
+    display: block;
+    padding: 7px 9px;
+    border-radius: 2px;
+    background: #27246d;
+    color: #fff;
+    margin: 0 2px;
+    height: 30px;
+    width: 25px;
+}
+
+.grid table tr .flex {
+    display: flex;
+    justify-content: center;
+}
+
+.header-content {
+    width: 100%;
+    margin-top: 10px;
+    border-bottom: 1px solid #27246d;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0px;
+}
+
+.header-content .containt-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-content .header-item {
+    display: block;
+    padding: 5px 0;
+}
+
+.header-content .header-item .title {
+    color: #27246d;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 31px;
+    display: block;
+    margin-top: 8px;
+    margin-right: 18px;
+    margin-left: 2px;
+}
+
+.header-content .header-item button {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #27246d;
+    border-radius: 2px;
+    margin: 0 5px;
+    background: #fff;
+    padding: 8px 5px;
+    min-width: 170px;
+    height: 45px;
+}
+
+.header-content .header-item button:hover {
+    cursor: pointer;
+}
+
+.header-content .header-item button span {
+    display: block;
+    margin-left: 10px;
+    font-weight: 600;
+    color: #27246d;
+}
+
+.header-content .header-item .purple {
+    background: #27246d;
+}
+
+.header-content .header-item .purple span {
+    color: #fff;
+}
+
+.header-content .rigth-item {
+    float: right;
+}
+
+.header-content .rigth-item {
+    float: right;
+}
+
+.full-color {
+    background: #27246d !important;
+    cursor: pointer;
+    width: 100%;
+}
+
+.full-colorN {
+    background: #ffffff !important;
+    cursor: pointer;
+    width: 100%;
+}
+
+.full-color span {
+    margin: 0 10px;
+    color: #fff !important;
+}
+
+.full-color img, button img {
+    display: table-cell;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.header-content .header-item .full-color button {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #27246d;
+    border-radius: 2px;
+    margin: 0 5px;
+    background: #27246d;
+    color: #fff;
+    padding: 8px 5px;
+    min-width: 177px;
+    height: 45px;
+    outline: none;
+}
+
+.div-date {
+    display: inline-block;
+    margin-top: 5px;
+}
+
+button {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #27246d;
+    border-radius: 2px;
+    margin: 0px;
+    background: #fff;
+    padding: 8px 5px;
+    height: 45px;
+    outline: none;
+    font-size: 16px;
+}
+
+.buttonN {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #27246d;
+    border-radius: 2px;
+    margin: 0px;
+    background: #fff;
+    padding: 8px 5px;
+    min-width: 200px;
+    height: 45px;
+    outline: none;
+    font-size: 16px;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+button span {
+    margin: 0 10px;
+    display: block;
+    margin-left: 10px;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    color: #27246d;
+}
+
+.btn-secondary:hover {
+    cursor: pointer;
+    color: rgb(235, 156, 9);
+    background-color: white;
+}
+
+.btn-secondary {
+    border-color: rgb(235, 156, 9);
+    color: white;
+    background-color: rgb(235, 156, 9);
+}
+
+td span {
+    font-size: 24px;
+    margin-top: 0;
+}
+
+.loadingScreen {
+    opacity: 0.7;
+    transition: opacity 0.8s ease-in-out;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: #000;
+    z-index: 10000000000;
+}
+
+.onHover:hover {
+    cursor: pointer;
+    background-color: rgb(235, 156, 9);
+    color: #fff !important;
+}
+
+.titleN {
+    color: #27246d;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 31px;
+    display: block;
+    margin-top: 8px;
+    margin-right: 18px;
+    margin-left: 2px;
+}
+
+.titleM {
+    color: #27246d;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 31px;
+    display: block;
+    margin-top: 8px;
+    margin-right: 18px;
+    margin-left: 2px;
+}
+
+.disabled {
+  border: 1px solid #999999;
+  background-color: rgb(235, 235, 235);
+  color: #666666;
+  cursor: not-allowed;
+  pointer-events:none;
+  width: 100%;
+}
+
+.disabled span {
+    margin: 0 10px;
+    color: #fff !important;
+}
+
+.body-carga-masiva{
+    margin-left: 20% !important;
+    margin-right: 20% !important;
+}
+
+.checkbox {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    display: inline-block;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+}
+
+.checkbox:after {
+    content: "";
+    position: absolute;
+    display: block;
+    z-index: 1;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #aa9ec0;
+    border-radius: 2px;
+}
+
+.checkbox[type="checkbox"]:before {
+    background-size: 10px 8px;
+    background-repeat: no-repeat;
+    background-position: 2px 3px;
+    position: absolute;
+    left: 2px;
+    z-index: 2;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    color: #2b0d61;
+}
+
+.checkbox[type="checkbox"]:checked:before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    opacity: 1;
+    left: 0px;
+    border: 1px solid #2b0d61;
+    border-radius: 2px;
+}
+
+input[type=checkbox] {
+    -ms-transform: scale(2);
+    -moz-transform: scale(2);
+    -webkit-transform: scale(2);
+    -o-transform: scale(2);
+    transform: scale(2);
+    padding: 10px;
+}
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.chk input[type="checkbox"] {
+    position: absolute;
+    top: 80%;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #27246d!important;
+}
+
+.border_head{
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-bottom: 1px solid #ccc!important;
+}
+
+.body-tratamiento{
+    margin-left: 8% !important;
+    margin-right: 8% !important;
+}
+
+.input-container input {
+    border: none;
+    box-sizing: border-box;
+    outline: 0;
+    padding: .75rem;
+    position: relative;
+    width: 100%;
+}
+
+.card-header{
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.card{
+    border-radius: 0px;
+}

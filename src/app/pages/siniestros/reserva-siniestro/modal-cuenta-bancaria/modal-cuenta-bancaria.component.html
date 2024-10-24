@@ -1,0 +1,68 @@
+<div class="modal-header w-100">
+    <h4 class="modal-title" id="modal-basic-title">DATOS DE CUENTAS BANCARIAS</h4>
+    <button type="button" aria-label="Close" (click)="closeModal()" style="cursor: pointer;">
+        <i class="fa fa-close"></i>
+    </button>
+</div>
+<div class="modal-body w-100">
+    <div class="row mt-2">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table class="table table-striped w-100">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="white-space: nowrap !important;">Banco</th>
+                            <th scope="col" style="white-space: nowrap !important;">Tipo De Cuenta</th>
+                            <th scope="col" style="white-space: nowrap !important;">Nro. De Cuenta</th>
+                            <th scope="col" style="white-space: nowrap !important;">Nro. Cuenta CCI</th>
+                            <th scope="col" style="white-space: nowrap !important;">Moneda</th>
+                            <th scope="col" style="white-space: nowrap !important;">Estado</th>
+                            <th scope="col" *ngIf="addCtaBank == true"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let bank of listBank; let i = index">
+                            <td>
+                                <select class="form-control" [(ngModel)]="bank.CodBanco" (ngModelChange)="changeBank(bank)" style="min-width: 150px !important;">
+                                    <option value="" disabled>SELECCIONE</option>
+                                    <option *ngFor="let banco of bancos" [value]="banco.Codigo">{{banco.Descripcion}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" [(ngModel)]="bank.CodTipoCuenta" (ngModelChange)="changeBank(bank)" style="min-width: 150px !important;">
+                                    <option value="0" disabled>SELECCIONE</option>
+                                    <option *ngFor="let cuenta of tipoCuentas" [value]="cuenta.Codigo">{{cuenta.Descripcion}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" appOnlyNumber class="form-control w-100" [(ngModel)]="bank.NroCuenta" [maxlength]="bank.length" style="min-width: 150px !important;">
+                            </td>
+                            <td>
+                                <input class="form-control w-100" [(ngModel)]="bank.NroCuentaCCI" type="text" appOnlyNumber maxlength="20" style="min-width: 150px !important;">
+                            </td>
+                            <td>
+                                <select class="form-control" [(ngModel)]="bank.MonedaCod" style="min-width: 150px !important;">
+                                    <option *ngFor="let moneda of monedas" [value]="moneda.Codigo" [disabled]="moneda.Codigo == '0'">{{moneda.Descripcion}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control" [(ngModel)]="bank.Habilita" style="min-width: 150px !important;">
+                                    <option *ngFor="let estado of estados" [value]="estado.Codigo">{{estado.Descripcion}}</option>
+                                </select>
+                            </td>
+                            <td *ngIf="addCtaBank == true">
+                                <i *ngIf="i == listBank.length - 1" class="fa fa-plus mt-2" style="cursor: pointer;" (click)="controlCuentaBancaria(bank)"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-12" align="end">
+            <button *ngIf="addCtaBank == true" class="buttonN" (click)="addCtesBancarias()">Agregar</button>
+            <button *ngIf="addCtaBank == false" class="buttonN" (click)="editCteBancaria()">Guardar</button>
+        </div>
+    </div>
+</div>

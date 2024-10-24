@@ -24,6 +24,11 @@ import { ClaimDeleteBenefRequest } from 'src/app/core/models/claimDeleteBenefReq
 import { ClaimUpdateDatAddRequestBM } from 'src/app/core/models/claimUpdateDatAddRequest';
 import { AuthProtectaService } from 'src/app/core/services/auth-protecta/auth-protecta.service';
 import { SwalCarga } from "src/app/core/swal-loading";
+import { ClaimBenefValidRequest } from 'src/app/core/models/claimBenefValidRequest';
+import { ClaimBeneficiariesShowRequest } from 'src/app/core/models/claimBeneficiariesShowRequest';
+import { Data } from 'src/app/core/models/data';
+import { DataResponse } from 'src/app/core/models/data-response';
+import { ModalNuevoBeneficiarioComponent } from '../modal-nuevo-beneficiario/modal-nuevo-beneficiario.component';
 
 @Component({
   selector: 'app-modal-cobertura',
@@ -37,9 +42,14 @@ export class ModalCoberturaComponent implements OnInit {
   @Input() public reservaCaso: ClaimCoverResponse;
   @Input() public tab : number;
   @Input() public disabledBotones : boolean;
+  @Input() public tipoMovimiento: string;
+  @Input() public sclient : string;
+  @Input() public edit : boolean = false;
+
 
   beneficiarios: BeneficiariesVM[] = [];
   listCodeBeneficiarios : string[] = [];
+  validadorTabla = false;
 
   datosTramitador = "1";
   comboGeneral$ = this.reserveService.GetComboGeneral();
@@ -63,6 +73,9 @@ export class ModalCoberturaComponent implements OnInit {
   menoscabo= new FormControl('', Validators.required)
   tipoAtencion= new FormControl('0', [Validators.required, this.notAllowed(/^0/)])
   baseImponible= new FormControl(0, [Validators.required, this.notAllowed(/^0/)])
+  nombreTramitador= new FormControl('')
+  zonaTramitador= new FormControl('')
+
 
   fechaDerivacion : any;
   fechaRespuesta : any;
@@ -75,6 +88,7 @@ export class ModalCoberturaComponent implements OnInit {
 
   diagnosticoValue = "";
   tiposAtencion : ClaimComboResponse[]=[];
+  disabledReembolso = false;
 
 	search = (text$: Observable<string>) =>
 		text$.pipe(
@@ -98,11 +112,133 @@ export class ModalCoberturaComponent implements OnInit {
 
   ngOnInit(): void {
     this.validacionPorCobertura();
-    //this.getCobertura();
 
-    if(this.tab == 2) this.obtenerReservaDefinitiva();
+    if(this.edit) this.getCobertura();
+
+    if(this.tab == 2){
+      this.obtenerReservaDefinitiva();
+    }else{
+      this.dataReserva.SINR_REFERRAL = "2";
+    }
+
+    if(this.tab == 1 && !this.edit){
+      SwalCarga();
+      let request = new ClaimBeneficiariesShowRequest();
+      request.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
+      request.NCLAIM = Number(this.reservaCaso.NCLAIM);
+      request.NCOVER = this.data;
+      request.SCLIENT = this.sclient;
+      this.reserveService.GetBeneficiariesShowCover(request).subscribe(
+        res => {
+          if(this.data != 1 && this.data != 5 && res.NFLAT_SCLIENT == 1){
+            this.sclient = res.SCLIENT;
+            this.obtenerCliente();
+          }else{
+            if(this.data != 1 && res.NFLAT_SCLIENT == 2){
+              this.sclient = res.SCLIENT;
+              this.obtenerCliente();
+            }else{
+              this.dataReserva.SREFUND = "0";
+            }
+          }
+        },
+        err => {
+          Swal.close();
+          Swal.fire('Error', err, 'error');
+        }
+      )
+    }
+
 
     this.obtenerCodigoDiagnostico();
+
+  }
+
+  cambioTramitador(){
+    if(this.dataReserva.SPROCESSOR == '1'){
+      this.nombreTramitador.setValidators([Validators.required]);
+      this.zonaTramitador.setValidators([Validators.required]);
+    }else{
+      this.nombreTramitador.clearValidators();
+      this.zonaTramitador.clearValidators();
+    }
+  }
+
+  obtenerCliente(){
+    let request = new ClaimBeneficiarioRequest();
+    request.SCODCLI = this.sclient;
+    this.reserveService.GetBeneficiariesAdditionalDataCover(request).subscribe(
+      res => {
+        Swal.close();
+        if (res.ListBeneficiaries[0].SBANK == "") res.ListBeneficiaries[0].SBANK = "0";
+
+        this.beneficiarios.push(res.ListBeneficiaries[0])
+
+        if(this.data == Cobertura.Gastos_Medicos && res.ListBeneficiaries[0].SDOCUMENTTYPE != "RUC"){
+          this.dataReserva.SREFUND = "1"
+        }else{
+          if(this.data == Cobertura.Gastos_Medicos && res.ListBeneficiaries[0].SDOCUMENTTYPE == "RUC"){
+            this.dataReserva.SREFUND = "2"
+          }
+        }
+
+        if (this.beneficiarios.length == 1) {
+          this.obtenerBancos()
+        }
+        
+
+      }, err => {
+        Swal.close();
+        Swal.fire('Error', err, 'error');
+      }
+    )
+  }
+
+  editarBeneficiario(beneficiario: BeneficiariesVM ){
+    
+    let data : Data = new Data();
+    data.P_SIDDOC = beneficiario.SDOCUMENTNUMBER
+    data.P_NIDDOC_TYPE = beneficiario.NCODDOCUMENTTYPE;
+    data.P_CodAplicacion = "SINIESTRO";
+    data.P_TipOper = "CON";
+    data.P_NUSERCODE = "JRENIQUE";
+
+    Swal.fire({
+      title: 'Confirmación',
+      text: 'Esta seguro que desea modificar los datos del Beneficiario. ¿Desea continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true,
+      showCloseButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reserveService.GetApi(data).subscribe(
+          res => {
+            let beneficiario = JSON.parse(res) as DataResponse;
+            
+            if(beneficiario.P_NCODE == "0"){
+              const modalRef = this.modalService.open(ModalNuevoBeneficiarioComponent,  { windowClass : "my-class", backdrop:'static', keyboard: false});
+              modalRef.componentInstance.reference = modalRef;
+              modalRef.componentInstance.origen = 3;  
+              modalRef.componentInstance.datosBeneficiario = beneficiario.EListClient[0];
+              modalRef.result.then((benef) => {
+                this.obtenerDatosBenef(benef, true)
+              });
+            }else{
+              Swal.fire('Información','No se pudo obtener la información del beneficiario', 'warning');
+              return;
+            }
+          },
+          err => {
+            Swal.fire('Infromación','Ocurrió un error en la consulta del beneficiario','error');
+            return;
+          }
+        )
+      }
+    })
+
   }
 
   obtenerCodigoDiagnostico(){
@@ -114,7 +250,6 @@ export class ModalCoberturaComponent implements OnInit {
     this.reserveService.GetCodDiagnosticCover(request).subscribe(
       res => {
         Swal.close();
-        console.log(res);
         if(res.SCODIGODIAGNOSTICO){
           this.model.CCODCIE10 = res.SCODIGODIAGNOSTICO;
           this.model.CDESCRIPT = res.CDESCRIPT;
@@ -149,8 +284,10 @@ export class ModalCoberturaComponent implements OnInit {
               NCODBENEFICIARYTYPE : benef.NCODBENEFICIARYTYPE.toString(),
               SCOVER_DESC : this.data,
               SBANK : benef.NBANK_CODE.toString(),
-              SACCOUNTNUMBER :  benef.SACCOUNT,
-              NCODDOCUMENTTYPE : benef.NTYPCLIENTDOC.toString()
+              SACCOUNTNUMBER :  benef.SACCOUNT.trim(),
+              NCODDOCUMENTTYPE : benef.NTYPCLIENTDOC.toString(),
+              SBANKNAME : benef.SBANKNAME,
+              SACCOUNTCCINUMBER : benef.SACCOUNTCCINUMBER
             })
             this.listCodeBeneficiarios.push(benef.SCLIENT);
           })
@@ -260,6 +397,12 @@ export class ModalCoberturaComponent implements OnInit {
           if(res.FECHAEMISIONFACTURA){
             let fEmi = res.FECHAEMISIONFACTURA.split("/");
             let fechaEmi = new Date(fEmi[2] + '/' + fEmi[1] + '/' + fEmi[0]);
+
+            if(fechaEmi > new Date()){
+              Swal.fire('Información','La fecha de emisión debe ser igual o menor a la fecha actual','warning');
+              return;
+            } 
+
             this.fechaEmision = this.datePipe.transform(fechaEmi, 'yyyy-MM-dd');
           }
 
@@ -284,7 +427,6 @@ export class ModalCoberturaComponent implements OnInit {
       this.dataReserva.SAFFECTIGV = "1";
 
       if(this.data == Cobertura.Gastos_Medicos) {
-        this.dataReserva.SREFUND = '0';
         this.reserveService.GetComboTipoAtencion().subscribe(
           res => {
             this.tiposAtencion = res;
@@ -302,7 +444,7 @@ export class ModalCoberturaComponent implements OnInit {
       this.dataReserva.SINR_REFERRAL = '0';
     }
 
-    this.dataReserva.SPROCESSOR = '1';
+    this.dataReserva.SPROCESSOR = '2';
     this.dataReserva.SLOCATED = '0';
     this.dataReserva.SPROCESSORNAME = "";
     this.dataReserva.SPROCESSORZONE = "";
@@ -316,7 +458,7 @@ export class ModalCoberturaComponent implements OnInit {
       text: 'Desea salir de la operación',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si',
+      confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       reverseButtons: true,
       showCloseButton: true
@@ -334,6 +476,7 @@ export class ModalCoberturaComponent implements OnInit {
     SwalCarga();
     this.reserveService.GetDatCoversTmp(data).subscribe(
       res => {
+        
         if(res.SKEY != null){
           this.claimCoverReserveResponse = res;
           //Mapeo
@@ -394,6 +537,26 @@ export class ModalCoberturaComponent implements OnInit {
             if(res.DDATERECEPTION) this.fechaRecepcion = this.datePipe.transform(res.DDATERECEPTION, 'yyyy-MM-dd');
           }
 
+          if(res.LIST_BENEF_COVERS[0].SBANK == "") res.LIST_BENEF_COVERS[0].SBANK = "0";
+            
+            this.beneficiarios.push({
+              SCODE : res.LIST_BENEF_COVERS[0].SCODCLI,
+              SNAME : res.LIST_BENEF_COVERS[0].SBENEFICIARY,
+              SDOCUMENTTYPE : res.LIST_BENEF_COVERS[0].SDOCUMENTTYPE,
+              SDOCUMENTNUMBER : res.LIST_BENEF_COVERS[0].SDOCUMENTNUMBER,
+              SBENEFICIARYTYPE : res.LIST_BENEF_COVERS[0].SBENEFICIARYTYPE,
+              SCOVER_DESC : this.data,
+              NCODBENEFICIARYTYPE : res.LIST_BENEF_COVERS[0].SBENEFICIARYTYPE,
+              NCODDOCUMENTTYPE : res.LIST_BENEF_COVERS[0].NCODDOCUMENTTYPE,
+              SBANK : res.LIST_BENEF_COVERS[0].SBANK,
+              SACCOUNTNUMBER : res.LIST_BENEF_COVERS[0].SACCOUNTNUMBER,
+              SBANKNAME : res.LIST_BENEF_COVERS[0].SBANKNAME,
+              SACCOUNTCCINUMBER : res.LIST_BENEF_COVERS[0].SACCOUNTCCINUMBER
+            })
+            if(this.beneficiarios.length == 1){
+              this.obtenerBancos()
+            }
+
         }
         Swal.close()
       },
@@ -435,24 +598,62 @@ export class ModalCoberturaComponent implements OnInit {
   }
 
   openBeneficiario(){
-    const modalRef = this.modalService.open(ModalBeneficiarioComponent, { size: 'lg', backdrop:'static', keyboard: false});
+    const modalRef = this.modalService.open(ModalBeneficiarioComponent, { windowClass: "my-class", backdrop:'static', keyboard: false});
     modalRef.componentInstance.reference = modalRef;  
     modalRef.componentInstance.beneficiarios = this.beneficiarios;
+    modalRef.componentInstance.origen = 2;  
     modalRef.result.then((benef) => {
+      this.obtenerDatosBenef(benef, false)
+    });
+  }
+
+
+  obtenerDatosBenef(benef: any, edit :boolean){
       if((benef != undefined && benef.SCODE) || (benef != undefined && benef.P_SCOD_CLIENT)){
         SwalCarga();
-        let data = new ClaimBeneficiarioRequest();
-        if(benef.SCODE) data.SCODCLI = benef.SCODE.trim();
-        if(benef.P_SCOD_CLIENT) data.SCODCLI = benef.P_SCOD_CLIENT.trim();
-
-        this.reserveService.GetBeneficiariesAdditionalDataCover(data).subscribe(
-          res =>{
+        let data = new ClaimBenefValidRequest();
+        if(benef.SCODE) data.SCLIENT = benef.SCODE.trim();
+        if(benef.P_SCOD_CLIENT) data.SCLIENT = benef.P_SCOD_CLIENT.trim();
+        data.NCASE_NUM = Number(this.reservaCaso.NCASE_NUM);
+        data.NCLAIM = Number(this.reservaCaso.NCLAIM);
+        data.NCOVER = this.data;
+        data.SMOVETYPE = this.tipoMovimiento;
+        //caso siniestro cobertura cliente tipo Movimiento
+        
+        this.reserveService.GetBeneficiariesValidCover(data).subscribe(
+          res => {
             Swal.close();
-            if(res.ListBeneficiaries[0].SBANK == "") res.ListBeneficiaries[0].SBANK = "0";
+            if(res.SRESULT == 'OK'){
+              Swal.close();
+            if(res.ListBeneficiariesValid[0].SBANK == "") res.ListBeneficiariesValid[0].SBANK = "0";
             
-            this.beneficiarios.push(res.ListBeneficiaries[0])
+            this.validadorTabla = false;
+
+          if(edit){
+            //let benefEdit = this.beneficiarios.find(x => x.SCODE == benef.P_SCOD_CLIENT.trim())
+            this.beneficiarios =  this.beneficiarios.filter(x => x.SCODE != benef.P_SCOD_CLIENT.trim());
+            this.beneficiarios.push(res.ListBeneficiariesValid[0])
+          }else{
+            this.beneficiarios.push(res.ListBeneficiariesValid[0])
+          }
+
             if(this.beneficiarios.length == 1){
               this.obtenerBancos()
+            }
+
+            if(this.data == Cobertura.Gastos_Medicos){
+              let benef = this.beneficiarios[0].SDOCUMENTTYPE;
+              if(benef == 'RUC'){
+                this.dataReserva.SREFUND = '2'
+              }else{
+                this.dataReserva.SREFUND = '1'
+              }
+            }
+
+            }else{
+              Swal.close();
+              Swal.fire('Información', res.SRESULT, 'warning');
+              return;
             }
           },
           err => {
@@ -461,12 +662,17 @@ export class ModalCoberturaComponent implements OnInit {
           }
         )
       }
-    });
   }
 
   borrarBeneficiario(i:number, sclient?:any){
     if(this.tab == 1){
       this.beneficiarios.splice(i,1);
+
+      if(this.beneficiarios.length == 0 && this.data == Cobertura.Gastos_Medicos){
+        this.dataReserva.SREFUND = "0";
+        this.disabledReembolso = false;
+      }
+
     }else{
       let clientDelete = this.listCodeBeneficiarios.find(x => x == sclient);
       if(!clientDelete){
@@ -477,7 +683,7 @@ export class ModalCoberturaComponent implements OnInit {
           text: "¿Está seguro de eliminar al beneficiario?",
           icon: 'question',
           showCancelButton: true,
-          confirmButtonText: 'De acuerdo',
+          confirmButtonText: 'Sí',
           cancelButtonText: 'No',
           reverseButtons: true
         }).then((result) => {
@@ -510,17 +716,27 @@ export class ModalCoberturaComponent implements OnInit {
     }
   }
 
-  changeFechasDescanso(){
+  changeFechasDescanso() {
     let inicio = new Date(this.inicioDescanso.value);
     let fin = new Date(this.finDescanso.value);
-    if(this.inicioDescanso.value != "" && this.finDescanso.value != ""){
-      if(inicio > fin){
-        Swal.fire('Información','La fecha de inicio de descanso no debe ser mayor a la fecha fin de descanso', 'warning');
+
+    let docurFin = new Date(this.finDescanso.value);
+    let Ini = new Date(this.inicioDescanso.value);
+
+    if(docurFin.getFullYear() < 2000 || Ini.getFullYear() < 2000){
+      this.dataReserva.NDAYSOFF = null;
+      this.dataReserva.NRESERVEAMOUNT = null;
+      return;
+    }
+
+    if (this.inicioDescanso.value != "" && this.finDescanso.value != "") {
+      if (inicio > fin) {
+        Swal.fire('Información', 'La fecha de inicio de descanso no debe ser mayor a la fecha fin de descanso', 'warning');
         this.dataReserva.NDAYSOFF = null;
         this.dataReserva.NRESERVEAMOUNT = null;
         return;
-      }else{
-        this.dataReserva.NDAYSOFF = ((fin.getTime() - inicio.getTime())/(1000*60*60*24)) + 1;
+      } else {
+        this.dataReserva.NDAYSOFF = ((fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24)) + 1;
         this.dataReserva.NRESERVEAMOUNT = Number(((this.rmvResponse.N_RMV / 30) * this.dataReserva.NDAYSOFF).toFixed(2))
       }
     }
@@ -558,7 +774,7 @@ export class ModalCoberturaComponent implements OnInit {
     this.dataReserva.NUITAMOUNT = this.reservaCaso.UIT;
     this.dataReserva.NAMOUNT = claimData.NSUMINSURED;
     this.dataReserva.SMOVETYPE = this.reservaCaso.SMOVETYPE;
-    if(this.data == Cobertura.Muerte) this.dataReserva.NRESERVEAMOUNT = claimData.NSUMINSURED;
+    if(this.data == Cobertura.Muerte) this.dataReserva.NRESERVEAMOUNT = claimData.NSUMINSURED - claimData.NACCUMRESERVE;
     this.dataReserva.SKEY = this.reservaCaso.SKEY;
     this.dataReserva.NCASE = Number(this.reservaCaso.NCASE_NUM);
     this.dataReserva.NCLAIM = Number(this.reservaCaso.NCLAIM);
@@ -568,18 +784,23 @@ export class ModalCoberturaComponent implements OnInit {
       this.dataReserva.SDIAGNOSTIC = this.model.CDESCRIPT;
     }
 
+    let msj = '';
+
     if(this.data == Cobertura.Gastos_Medicos){
         if(this.modelBase < 0){
-          Swal.fire('Información', 'Base imponible inválida.','error');
+          //Swal.fire('Información', 'Base imponible inválida.','error');
+          msj += 'Base imponible inválida. <br/>'
           this.dataReserva.LIST_BENEF_COVERS = [];
-          return;
+          //return;
         }
 
         if(this.tipoAtencion.invalid || this.baseImponible.invalid){
           this.tipoAtencion.markAllAsTouched();
+          if(this.tipoAtencion.invalid) msj += 'Debe seleccionar el tipo de atención. <br/>'
           this.baseImponible.markAllAsTouched();
+          if(this.baseImponible.invalid) msj += 'Debe ingresar base imponible. <br/>'
           this.dataReserva.LIST_BENEF_COVERS = [];
-          return;
+          //return;
         }else{
           this.dataReserva.STYPEATTENTION = this.tipoAtencion.value;
           this.dataReserva.NAMOUNTBASE = this.baseImponible.value;
@@ -588,14 +809,16 @@ export class ModalCoberturaComponent implements OnInit {
 
     if(this.data == Cobertura.Gastos_Sepelio){
       if(this.modelBase < 0){
-        Swal.fire('Información', 'Base imponible inválida.','error');
+        //Swal.fire('Información', 'Base imponible inválida.','error');
+        msj += 'Base imponible inválida. <br/>'
         this.dataReserva.LIST_BENEF_COVERS = [];
-        return;
+        //return;
       }
       if(this.baseImponible.invalid){
         this.baseImponible.markAllAsTouched();
+        msj += 'Debe ingresar base imponible. <br/>'
         this.dataReserva.LIST_BENEF_COVERS = [];
-        return;
+        //return;
       }else{
         this.dataReserva.STYPEATTENTION = this.tipoAtencion.value;
         this.dataReserva.NAMOUNTBASE = this.baseImponible.value;
@@ -607,37 +830,59 @@ export class ModalCoberturaComponent implements OnInit {
     if(this.data == Cobertura.Incapacidad_Temporal){
       if(this.inicioDescanso.invalid || this.finDescanso.invalid){
         this.inicioDescanso.markAllAsTouched();
+        if(this.inicioDescanso.invalid) msj += 'Debe ingresar la fecha inicio de descanso. <br/>'
         this.finDescanso.markAllAsTouched();
+        if(this.finDescanso.invalid) msj += 'Debe ingresar la fecha fin de descanso. <br/>'
         this.dataReserva.LIST_BENEF_COVERS = [];
-        return;
+        //return;
       }else{
         this.changeFechasDescanso() //Validacion de fechas;
-        this.dataReserva.DRESTSTART =  this.datePipe.transform(this.inicioDescanso.value, 'dd/MM/yyyy')
-        this.dataReserva.DRESTEND = this.datePipe.transform(this.finDescanso.value, 'dd/MM/yyyy');
-        this.dataReserva.DOCCURDAT = this.reservaCaso.DOCCURDAT;
+
+        if(this.dataReserva.NDAYSOFF == null && this.dataReserva.NRESERVEAMOUNT == null){
+          // Swal.fire('Información','Debe ingresar fechas válidas','warning');
+          // return;
+          msj += "Debe ingresar fechas de descanso válidas. <br/>"
+        }else{
+          this.dataReserva.DRESTSTART =  this.datePipe.transform(this.inicioDescanso.value, 'dd/MM/yyyy')
+          this.dataReserva.DRESTEND = this.datePipe.transform(this.finDescanso.value, 'dd/MM/yyyy');
+          this.dataReserva.DOCCURDAT = this.reservaCaso.DOCCURDAT;
+        }
+
       }
     }
 
     if(this.data == Cobertura.Invalidez_Permanente){
       if(this.menoscabo.invalid){
         this.menoscabo.markAllAsTouched();
+        msj += 'Debe ingresar el menoscabo. <br/>'
         this.dataReserva.LIST_BENEF_COVERS = [];
-        return;
+        //return;
       }else{
         this.changeMenoscabo()
       }
     }
 
     if(this.data == Cobertura.Incapacidad_Temporal || this.data == Cobertura.Invalidez_Permanente){
-      this.dataReserva.DINR_REFERRALDATE =  this.datePipe.transform(this.fechaDerivacion, 'dd/MM/yyyy')
-      this.dataReserva.DINR_RESPONSEDATE = this.datePipe.transform(this.fechaRespuesta, 'dd/MM/yyyy')
+
+      if(this.dataReserva.SINR_REFERRAL == "1"){
+        this.dataReserva.DINR_REFERRALDATE =  this.datePipe.transform(this.fechaDerivacion, 'dd/MM/yyyy')
+        this.dataReserva.DINR_RESPONSEDATE = this.datePipe.transform(this.fechaRespuesta, 'dd/MM/yyyy')
+      }else{
+        this.dataReserva.DINR_REFERRALDATE = null;
+        this.dataReserva.DINR_RESPONSEDATE = null;
+        this.dataReserva.SINR_FILENUMBER = "";
+      }
+
     }
 
     if(this.dataReserva.SPROCESSOR == "1"){
-      if (this.dataReserva.SPROCESSORNAME.replace(/ /g, "") == "" || this.dataReserva.SPROCESSORZONE.replace(/ /g, "") == ""){
-        Swal.fire('Información','Debe completar los campos de tramitador.', 'warning');
+      if (this.nombreTramitador.invalid || this.zonaTramitador.invalid){
+        //Swal.fire('Información','Debe completar los campos de tramitador.', 'warning');
+        this.nombreTramitador.markAllAsTouched();
+        if(this.nombreTramitador.invalid) msj += 'Debe ingresar el nombre del tramitador. <br/>'
+        this.zonaTramitador.markAllAsTouched();
+        if(this.zonaTramitador.invalid) msj += 'Debe ingresar la zona del tramitador. <br/>'
         this.dataReserva.LIST_BENEF_COVERS = [];
-        return;
       }
     }else{
       this.dataReserva.SPROCESSORNAME = "";
@@ -650,6 +895,7 @@ export class ModalCoberturaComponent implements OnInit {
     }
 
     if(this.beneficiarios.length > 0){
+      this.dataReserva.LIST_BENEF_COVERS = [];
       this.beneficiarios.forEach(benef => {
         this.dataReserva.LIST_BENEF_COVERS.push({
           SCODCLI : benef.SCODE,
@@ -664,12 +910,16 @@ export class ModalCoberturaComponent implements OnInit {
       })
     }else{
       this.dataReserva.LIST_BENEF_COVERS = [];
-      Swal.fire('Información', 'Debe ingresar al menos un beneficiario', 'warning');
-      return;
+      msj += "Debe ingresar al menos un beneficiario. <br/>";
+      this.validadorTabla = true;
+      //Swal.fire('Información', 'Debe ingresar al menos un beneficiario', 'warning');
+      //return;
     }
 
-
-    console.log(this.dataReserva);
+    if(msj != ""){
+      Swal.fire('Información', msj, 'warning');
+      return;
+    }
 
 
     Swal.fire({
@@ -677,7 +927,7 @@ export class ModalCoberturaComponent implements OnInit {
       text: 'Se procederá a grabar la información. ¿Desea continuar?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si',
+      confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       reverseButtons: true,
       showCloseButton: true
@@ -730,10 +980,18 @@ export class ModalCoberturaComponent implements OnInit {
     reservaUpdate.SPROCESSOR = this.dataReserva.SPROCESSOR;
     reservaUpdate.SLOCATED = this.dataReserva.SLOCATED;
     reservaUpdate.NTRANSAC = this.dataReserva.NTRANSAC;
+
+    let msj = '';
+
     if(this.dataReserva.SPROCESSOR == "1"){
-      if (this.dataReserva.SPROCESSORNAME.replace(/ /g, "") == "" || this.dataReserva.SPROCESSORZONE.replace(/ /g, "") == ""){
-        Swal.fire('Información','Debe completar los campos de tramitador.', 'warning');
-        return;
+      if (this.nombreTramitador.invalid || this.zonaTramitador.invalid){
+        //Swal.fire('Información','Debe completar los campos de tramitador.', 'warning');
+        this.nombreTramitador.markAllAsTouched();
+        if(this.nombreTramitador.invalid) msj += 'Debe ingresar el nombre del tramitador. <br/>'
+        this.zonaTramitador.markAllAsTouched();
+        if(this.zonaTramitador.invalid) msj += 'Debe ingresar la zona del tramitador. <br/>'
+        this.dataReserva.LIST_BENEF_COVERS = [];
+        //return;
       }else{
         reservaUpdate.SPROCESSOR_NAME = this.dataReserva.SPROCESSORNAME;
         reservaUpdate.SPROCESSOR_AREA = this.dataReserva.SPROCESSORZONE;
@@ -742,14 +1000,49 @@ export class ModalCoberturaComponent implements OnInit {
       reservaUpdate.SPROCESSOR_NAME = "";
       reservaUpdate.SPROCESSOR_AREA = "";
     }
+
     reservaUpdate.SNOMBREDOCTOR = this.dataReserva.SATTENDINGMEDIC;
     reservaUpdate.SIPRESS_AT = this.dataReserva.SATENTIONIPRESS;
 
     if(this.data == Cobertura.Incapacidad_Temporal || this.data == Cobertura.Invalidez_Permanente){
-      reservaUpdate.FDERIVATION =  this.datePipe.transform(this.fechaDerivacion, 'dd/MM/yyyy')
-      reservaUpdate.FANSWER = this.datePipe.transform(this.fechaRespuesta, 'dd/MM/yyyy')
-      reservaUpdate.SDERIVATIONINR = this.dataReserva.SINR_REFERRAL;
-      reservaUpdate.SPROCEEDING = this.dataReserva.SINR_FILENUMBER
+
+      if(this.dataReserva.SINR_REFERRAL == "1" ){
+        reservaUpdate.FDERIVATION =  this.datePipe.transform(this.fechaDerivacion, 'dd/MM/yyyy')
+        reservaUpdate.FANSWER = this.datePipe.transform(this.fechaRespuesta, 'dd/MM/yyyy')
+        reservaUpdate.SDERIVATIONINR = this.dataReserva.SINR_REFERRAL;
+        reservaUpdate.SPROCEEDING = this.dataReserva.SINR_FILENUMBER
+      }else{
+        reservaUpdate.FDERIVATION =  null
+        reservaUpdate.FANSWER = null
+        reservaUpdate.SDERIVATIONINR = this.dataReserva.SINR_REFERRAL;
+        reservaUpdate.SPROCEEDING = ""
+      }
+
+    }
+
+    if(this.beneficiarios.length > 0){
+      this.beneficiarios.forEach(benef => {
+        reservaUpdate.ListBeneficiariesMod.push({
+          SCLIENT : benef.SCODE,
+          SCLIENTNAME : benef.SNAME,
+          NTYPCLIENTDOC : Number(benef.NCODDOCUMENTTYPE),
+          SDESCRIPTYPCLIENTDOC : benef.SDOCUMENTTYPE,
+          SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
+          NCODBENEFICIARYTYPE : Number(benef.NCODBENEFICIARYTYPE),
+          SBENEFICIARYTYPE : benef.SBENEFICIARYTYPE,
+          NBANK_CODE : benef.SBANK,
+          SACCOUNT :  benef.SACCOUNTNUMBER,
+          NCLAIM : Number(this.reservaCaso.NCLAIM),
+          NCASE_NUM : Number(this.reservaCaso.NCASE_NUM),
+          NCOVER : this.data,
+          NUSERCODE: Number(atob(codUsuario)),
+        })
+      })
+    }else{
+      //Swal.fire('Información', 'Debe ingresar al menos un beneficiario','warning');
+      msj += "Debe ingresar al menos un beneficiario. <br/>";
+      this.validadorTabla = true;
+      //return;
     }
 
     if(this.data == Cobertura.Gastos_Medicos || this.data == Cobertura.Gastos_Sepelio){
@@ -774,37 +1067,17 @@ export class ModalCoberturaComponent implements OnInit {
 
     reservaUpdate.NUSERCODE = Number(atob(codUsuario));
 
-    if(this.beneficiarios.length > 0){
-      this.beneficiarios.forEach(benef => {
-        reservaUpdate.ListBeneficiariesMod.push({
-          SCLIENT : benef.SCODE,
-          SCLIENTNAME : benef.SNAME,
-          NTYPCLIENTDOC : Number(benef.NCODDOCUMENTTYPE),
-          SDESCRIPTYPCLIENTDOC : benef.SDOCUMENTTYPE,
-          SDOCUMENTNUMBER : benef.SDOCUMENTNUMBER,
-          NCODBENEFICIARYTYPE : Number(benef.NCODBENEFICIARYTYPE),
-          SBENEFICIARYTYPE : benef.SBENEFICIARYTYPE,
-          NBANK_CODE : benef.SBANK,
-          SACCOUNT :  benef.SACCOUNTNUMBER,
-          NCLAIM : Number(this.reservaCaso.NCLAIM),
-          NCASE_NUM : Number(this.reservaCaso.NCASE_NUM),
-          NCOVER : this.data,
-          NUSERCODE: Number(atob(codUsuario)),
-        })
-      })
-    }else{
-      Swal.fire('Información', 'Debe ingresar al menos un beneficiario','warning');
+    if(msj != ""){
+      Swal.fire('Información', msj, 'warning');
       return;
     }
-
-    console.log(reservaUpdate);
 
     Swal.fire({
       title: 'Información',
       text: 'Se procederá a actualizar la información. ¿Desea continuar?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si',
+      confirmButtonText: 'Sí',
       cancelButtonText: 'No',
       reverseButtons: true,
       showCloseButton: true
@@ -832,5 +1105,37 @@ export class ModalCoberturaComponent implements OnInit {
 
   }
 
+  changeReembolso(){
+    if(this.beneficiarios.length == 0 && (this.dataReserva.SREFUND == '1' || this.dataReserva.SREFUND == '2')){
+
+      Swal.fire({
+        title: 'Información',
+        text: 'Debe elegir un beneficiario.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.dataReserva.SREFUND = '0';
+          return;
+        }
+      })
+    }
+
+    let benef = this.beneficiarios[0].SDOCUMENTTYPE;
+
+    if( benef == 'RUC' && this.dataReserva.SREFUND == '1' ){
+      Swal.fire('Información','Se selecciono Reembolso SI.El tipo de documento no puede ser RUC.','warning');
+      this.disabledReembolso = true;
+    }else{
+      if(benef != 'RUC' && this.dataReserva.SREFUND == '2'){
+        Swal.fire('Información','Se selecciono Reembolso NO.El tipo de documento tiene que ser RUC.','warning');
+        this.disabledReembolso = true;
+      }else{
+        this.disabledReembolso = false;
+      }
+    }
+
+  }
 
 }

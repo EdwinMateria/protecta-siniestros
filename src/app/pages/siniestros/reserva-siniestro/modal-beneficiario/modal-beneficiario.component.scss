@@ -3,5 +3,30 @@
 }
 
 .seleccion_fila{
-    background-color: rgb(145, 145, 47);
+    background-color: #78b5f7;
+}
+
+.buttonN {
+    justify-content: center;
+    border: 1px solid rgb(129, 118, 157);
+    border-radius: 2px;
+    margin: 0px;
+    background: #fff;
+    padding: 8px 5px;
+    min-width: 130px;
+    height: 45px;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.buttonN:hover {
+    background-color: #2b0d61;
+    color: #fff;
+}
+
+.buttonN:disabled {
+    cursor: not-allowed;
+    background-color: rgb(235, 235, 228);
+    color: #666666;
 }

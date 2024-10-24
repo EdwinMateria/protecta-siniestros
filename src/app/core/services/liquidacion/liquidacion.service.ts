@@ -116,4 +116,28 @@ export class LiquidacionService {
         return this.http.post(this.Url + '/LiquidacionManager/InsertarLiquidacionSoat', data, { headers: this.headers });
     }
 
+    public RetornarListaSiniestros(idata: any): Observable<any> {
+      const data = JSON.stringify(idata);
+      return this.http.post(this.Url + '/LiquidacionManager/RetornarListaSiniestros', data, { headers: this.headers });
+  }
+
+  GetListaBancos(): Observable<any> {
+    const url = `${this.Url}/LiquidacionManager/GetComboBanco`;
+    const payload = {
+      SCODIGO: 0,
+      SDESCRIPCION: '',
+    };
+    return this.http.post(url, { data: btoa(JSON.stringify(payload)) }).pipe(
+      map((response: any) =>
+        response.map((value: any) => ({
+          Codigo: +value.SCODIGO,
+          Descripcion: (<string>value.SDESCRIPCION)
+            .toString()
+            .trim()
+            .toUpperCase(),
+        }))
+      )
+    );
+  }
+
 }

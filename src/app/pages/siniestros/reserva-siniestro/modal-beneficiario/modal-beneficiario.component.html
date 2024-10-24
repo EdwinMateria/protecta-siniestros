@@ -1,5 +1,6 @@
 <div class="modal-header w-100">
-    <h4 class="modal-title" id="modal-basic-title">BUSCAR BENEFICIARIO</h4>
+    <h4 *ngIf="origen == 1" class="modal-title" id="modal-basic-title">BUSCAR AFECTADO</h4>
+    <h4 *ngIf="origen == 2" class="modal-title" id="modal-basic-title">BUSCAR BENEFICIARIO</h4>
     <button type="button" aria-label="Close" (click)="closeModal()" style="cursor: pointer;">
         <i class="fa fa-close"></i>
     </button>
@@ -25,7 +26,7 @@
             <input class="form-control" [(ngModel)]="buscador.SNRODOCUMENT">
         </div>
         <div class="col-sm-2">
-            <button class="btn btn-primary mt-4" (click)="buscadorBeneficiario()">
+            <button class="buttonN mt-4" (click)="buscadorBeneficiario()">
                 <i class="fa fa-search mr-1"></i> Buscar
             </button>
         </div>
@@ -34,7 +35,10 @@
         <thead>
             <tr>
                 <th scope="col">Código</th>
-                <th scope="col">Beneficiario</th>
+                <th scope="col">
+                    <span *ngIf="origen == 1">Afectado</span>
+                    <span *ngIf="origen == 2">Beneficiario</span>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -49,9 +53,9 @@
     </div>
     <div class="row">
         <div class="col-sm-12" align="end">
-            <button class="btn btn-danger" (click)="limpiarBeneficiario()">Limpiar</button>
-            <button class="btn btn-primary ml-2" (click)="openBeneficiario()">Nuevo</button>
-            <button class="btn btn-success ml-2"  (click)="agregarBeneficiario()">Agregar</button>
+            <button class="buttonN" (click)="limpiarBeneficiario()">Limpiar</button>
+            <button class="buttonN ml-2" (click)="openBeneficiario()">Nuevo</button>
+            <button class="buttonN ml-2"  (click)="agregarBeneficiario()">Agregar</button>
         </div>
     </div>
 </div>

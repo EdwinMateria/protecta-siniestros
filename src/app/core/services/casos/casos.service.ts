@@ -24,6 +24,11 @@ export class CasosService {
     });
   }
 
+  public ValidateCase(casos: CasosBM): Observable<any> {
+    //const body = JSON.stringify(data);
+    return this.http.post<any>(this.Url + '/CasosManager/ValidateCase', casos);
+  }
+  
   public GetProvincias(nDepartamento: number): Observable<CombosGenericoVM[]> {
     return this.http.get<CombosGenericoVM[]>(this.Url + '/CasosManager/GetProvincias?nDepartamento='+ nDepartamento, {
       headers: this.headers
@@ -68,8 +73,8 @@ export class CasosService {
     });
   }
 
-  public GetSearchClaim(Siniestro: number): Observable<GenericResponse> {
-    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetSearchClaim?Siniestro='+ Siniestro, {
+  public GetSearchClaim(Siniestro: number, nproceso: number): Observable<GenericResponse> {
+    return this.http.get<GenericResponse>(this.Url + '/CasosManager/GetSearchClaim?Siniestro='+ Siniestro + '&Nproceso=' +  nproceso, {
       headers: this.headers
     });
   }
@@ -105,6 +110,14 @@ export class CasosService {
     return this.http.get<AutocompleteBE[]>(this.Url + '/CasosManager/Delegaciones?sDeleg='+ delegacion, {
       headers: this.headers
     });
+  }
+
+  public ValidateRechazo(data: any): Observable<any> {
+    return this.http.post<any>(this.Url + '/CasosManager/ValidateRechazo', data);
+  }
+
+  public ValidateClaim(data: SiniestroBM): Observable<GenericResponse>{
+    return this.http.post<GenericResponse>(this.Url + '/CasosManager/ValidateClaim', data);
   }
 
   transformDate(date) {
